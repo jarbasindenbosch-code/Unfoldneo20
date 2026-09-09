@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Unfold Neo</title>
+  <meta name="description" content="Unfold Neo — AI-leercoach voor topsporttalenten." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    html, body { margin: 0; padding: 0; background: #F4F2EE; }
+    #root { min-height: 100vh; }
+    /* eenvoudige laadindicator tot de app is geladen */
+    #boot { position: fixed; inset: 0; display: grid; place-items: center;
+            font-family: "Space Grotesk", system-ui, sans-serif; color: #7E8C77; }
+  </style>
+</head>
+<body>
+  <div id="root"><div id="boot">Unfold Neo laden…</div></div>
+  <script>
+    /* Waar de NEO-varianten (WebP) staan — relatief t.o.v. deze pagina. */
+    window.NEO_ASSET_BASE = "./assets/neo/";
+  </script>
+  <script src="./assets/app.js" defer></script>
+</body>
+</html>
