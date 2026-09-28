@@ -152,10 +152,17 @@ Error generating stack: `+o.message+`
 /* v76: pop-ups staan (via een portal) buiten .tc \u2014 zelfde typografie meegeven */
 .tc-portaal,.tc-portaal *{font-family:'Inter',system-ui,sans-serif}
 .tc-portaal{color:var(--inkt);-webkit-font-smoothing:antialiased;letter-spacing:-.005em;line-height:1.5}
-.grow-root button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
-.grow-root input,.grow-root select,.grow-root textarea{font-family:inherit}
+/* v101-fix: deze resets stonden v\xF3\xF3r de platformintegratie op de elementen zelf
+   (button als elementselector). Door ze te scopen naar .grow-root werden ze
+   zwaarder dan de componentklassen: ".grow-root button" (0,1,1) won van
+   ".hub-tegel" (0,1,0),
+   waardoor tegels en pill-knoppen hun achtergrond verloren en randen op de
+   standaardkleur (zwart) terugvielen. :where() houdt de scope maar telt niet mee
+   in de specificiteit, dus het gedrag is weer precies als voorheen. */
+:where(.grow-root,.tc-portaal) button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+:where(.grow-root,.tc-portaal) input,:where(.grow-root,.tc-portaal) select,:where(.grow-root,.tc-portaal) textarea{font-family:inherit}
 :focus-visible{outline:2px solid var(--accent-diep);outline-offset:2px;border-radius:8px}
-.grow-root a{color:inherit}
+:where(.grow-root,.tc-portaal) a{color:inherit}
 
 /* Pricing: 3 op een rij op desktop, 1 kolom op mobiel */
 .prijs-grid{grid-template-columns:1fr}
