@@ -398,8 +398,12 @@ Error generating stack: `+o.message+`
 
 /* v101: wachtscherm tijdens het genereren van een uitdaging \u2014 Neo plus drie
    rustige puntjes. Geen spinner: de leerling ziet dat Neo aan het werk is. */
+/* v101-fix: het wachtscherm is een eigen, dekkend vlak in de warme GROW-kleur \u2014
+   niet een doorzichtige kaart waar de pagina doorheen schemert. */
 .neo-laad{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-  text-align:center;padding:40px 24px;width:min(420px,100%);margin:auto}
+  text-align:center;padding:40px 24px;width:100%;min-height:100dvh;margin:0;
+  background:#F4F3EF;opacity:1}
+.neo-laad>*{max-width:420px}
 .neo-laad-figuur{animation:neoLaadZweef 3.2s ease-in-out infinite}
 .neo-laad h2{margin:18px 0 0;font-weight:800;font-size:clamp(1.3rem,4vw,1.6rem);letter-spacing:-.02em}
 .neo-laad p{margin:6px 0 0;color:var(--grijs);font-size:.95rem}
