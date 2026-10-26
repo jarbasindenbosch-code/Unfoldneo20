@@ -48858,6 +48858,17 @@
      inkt voor ondersteunende tekst op wit */
   --lijn-fijn:rgba(28,27,25,.11);--inkt-zacht:#5E5B55;
   --werk-bg:#FAF9F6;
+  /* v110 (C2): binnen een witte kaart stonden drie bijna-gelijke grijzen hard
+     ingetypt \u2014 #F2F1ED (23\xD7), #F7F6F2 (9\xD7) en #FBFAF7 (9\xD7). Het verschil was
+     te klein om iets te betekenen en te groot om gelijk te ogen als twee van
+     die vlakken naast elkaar stonden. Nu twee niveaus:
+
+       --tegel         een vlak binnen een witte kaart   (was #F2F1ED)
+       --tegel-licht   een genest of aanwijsvlak         (was #F7F6F2/#FBFAF7)
+
+     De kleuridentiteit verandert niet: --tegel houdt de meest gebruikte waarde
+     en --tegel-licht ligt tussen de twee lichte tinten in. */
+  --tegel:#F2F1ED;--tegel-licht:#F8F7F3;
   /* v106a: salie uit het bestaande palet (#7E8C77, dezelfde familie als de
      tegel Persoonlijke groei). De diepe variant is voor tekst \u2014 die haalt AA
      op wit (5,5:1), op de beige achtergrond en op het zachte salievlak. */
@@ -49029,7 +49040,7 @@
   .pu-sfeer-l{position:absolute;right:-50px;bottom:-40px;width:340px}
   .pu-sfeer-r{position:absolute;left:-40px;top:42%;width:170px}
   .pu-sfeer svg{width:100%;height:auto;display:block}
-  .pu-sfeer .ta-accent{color:#F47721}
+  .pu-sfeer .ta-accent{color:var(--accent)}
   .pu>*:not(.pu-sfeer){position:relative;z-index:1}
   .pu-kop{display:flex;gap:16px;align-items:flex-start;margin-bottom:18px}
   .pu-eyebrow{font-size:9px;font-weight:800;letter-spacing:.14em;color:var(--accent-diep)}
@@ -49045,14 +49056,14 @@
   .pu-p{font-size:11px;line-height:1.5;margin:0 0 6px;color:#2E2B27}
   .pu-lijst,.pu-check{list-style:none;margin:0;padding:0}
   .pu-lijst li,.pu-check li{font-size:11px;line-height:1.5;padding-left:16px;position:relative;margin-bottom:4px}
-  .pu-lijst li:before{content:"";position:absolute;left:2px;top:7px;width:5px;height:5px;border-radius:50%;background:#F47721}
-  .pu-check li:before{content:"";position:absolute;left:0;top:4px;width:9px;height:9px;border:1.2px solid #F47721;border-radius:2px}
+  .pu-lijst li:before{content:"";position:absolute;left:2px;top:7px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+  .pu-check li:before{content:"";position:absolute;left:0;top:4px;width:9px;height:9px;border:1.2px solid var(--accent);border-radius:2px}
   .pu-info{display:grid;gap:6px}
-  .pu-inforij{background:#F7F6F2;border-radius:9px;padding:8px 12px;break-inside:avoid}
+  .pu-inforij{background:var(--tegel-licht);border-radius:9px;padding:8px 12px;break-inside:avoid}
   .pu-inforij span{display:block;font-size:8px;font-weight:800;letter-spacing:.1em;color:#6B6A66;text-transform:uppercase}
   .pu-inforij p{margin:2px 0 0;font-size:11px}
   .pu-stappen{display:grid;gap:7px}
-  .pu-stap{display:flex;gap:12px;align-items:flex-start;background:#F7F6F2;border-radius:11px;padding:10px 12px;break-inside:avoid}
+  .pu-stap{display:flex;gap:12px;align-items:flex-start;background:var(--tegel-licht);border-radius:11px;padding:10px 12px;break-inside:avoid}
   .pu-nr{flex:0 0 26px;height:26px;border-radius:8px;background:#C2510A;color:#fff;font-weight:800;font-size:12px;display:grid;place-items:center}
   .pu-stap b{display:block;font-size:11.5px;margin-top:3px}
   .pu-stap p{margin:2px 0 0;font-size:10.5px;line-height:1.45;color:#3A362F}
@@ -49096,6 +49107,19 @@
 .lv-zoekrij .field{flex:1 1 200px;min-width:0}
 .lv-zoekrij select.field{flex:0 1 190px}
 
+/* v110 (C1) \u2014 wat op de mentor wacht, b\xF3ven de lijst en in beide weergaven.
+   Bewust \xE9\xE9n rustige regel: geen tegel, geen kaart, geen telling die om
+   aandacht vraagt als er niets is (dan rendert het blok niet). */
+.lv-attentie{display:grid;gap:1px;margin:0 0 16px;border-radius:12px;overflow:hidden;
+  border:1px solid var(--lijn-fijn);background:var(--lijn-fijn)}
+.lv-attentie-rij{appearance:none;border:0;cursor:pointer;font:inherit;text-align:left;width:100%;
+  display:flex;align-items:center;gap:12px;padding:11px 16px;min-height:46px;
+  background:var(--kaart);transition:background-color .15s ease}
+.lv-attentie-rij:hover{background:var(--tegel)}
+.lv-attentie-rij:focus-visible{outline:3px solid var(--accent-diep);outline-offset:-3px}
+.lv-attentie-tekst{font-size:.88rem;font-weight:700;color:var(--accent-op-vlak)}
+.lv-attentie-rij.is-zacht .lv-attentie-tekst{color:var(--inkt-zacht);font-weight:600}
+
 /* v108 \u2014 het kruimelpad: waar ben ik, en hoe kom ik terug */
 .kruimels{display:flex;align-items:center;flex-wrap:wrap;gap:2px;margin:0 0 10px;font-size:.84rem}
 .kruimel-deel{display:inline-flex;align-items:center;gap:2px;min-width:0}
@@ -49133,7 +49157,7 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .vaardig-status{font-size:.78rem;font-weight:700;padding:.14rem .6rem;border-radius:999px;white-space:nowrap}
 .vaardig-status.is-vol{background:#EDF3EA;color:#3E6633}
 .vaardig-status.is-beperkt{background:var(--accent-zacht);color:var(--accent-diep)}
-.vaardig-status.is-wacht{background:#F2F1ED;color:var(--grijs)}
+.vaardig-status.is-wacht{background:var(--tegel);color:var(--grijs)}
 .vaardig-balk{height:7px;border-radius:99px;background:#EEE;overflow:hidden;margin:9px 0 6px}
 .vaardig-balk>span{display:block;height:100%;background:var(--accent);border-radius:99px}
 .vaardig-grond{font-size:.78rem;margin-top:6px;line-height:1.45}
@@ -49173,7 +49197,7 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .vp-item.is-open .vp-regel{background:var(--accent-zacht)}
 .vp-naam{flex:1 1 auto;min-width:0;font-weight:700;font-size:.92rem}
 .vp-status{flex:0 0 auto;font-size:.76rem;font-weight:700;padding:.14rem .62rem;border-radius:999px;white-space:nowrap}
-.vp-status.is-leeg{background:#F2F1ED;color:var(--grijs)}
+.vp-status.is-leeg{background:var(--tegel);color:var(--grijs)}
 .vp-status.is-groei{background:var(--accent-zacht);color:var(--accent-diep)}
 .vp-status.is-sterk{background:var(--salie-zacht);color:var(--salie-diep)}
 .vp-trend{flex:0 0 auto;font-size:.76rem}
@@ -49300,7 +49324,6 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
   display:inline-flex;align-items:center;gap:5px}
 .lp-link:hover{background:var(--accent-zacht);color:var(--accent-op-vlak)}
 .lp-link:focus-visible{outline:3px solid var(--accent-diep);outline-offset:2px}
-.lp-terugsub{margin:0 0 14px;padding-left:0}
 .lp-stil{margin:0;font-size:.9rem;color:var(--grijs);line-height:1.55}
 
 /* vier ontwikkeltegels \u2014 rustig, zonder gevulde iconenblokken */
@@ -49637,7 +49660,7 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .neo-vraagtekst,.neo-acties{flex:0 0 auto}
 .neo-vraagtekst{margin:4px 0 0;font-weight:800}
 .neo-acties{display:grid;gap:8px}
-.neo-actie{text-align:left;padding:12px 14px;border-radius:14px;background:#FBFAF7;border:1px solid var(--lijn);
+.neo-actie{text-align:left;padding:12px 14px;border-radius:14px;background:var(--tegel-licht);border:1px solid var(--lijn);
   font-size:.92rem;font-weight:700;cursor:pointer;min-height:44px;transition:background-color .2s ease,border-color .2s ease}
 @media (hover:hover) and (pointer:fine){ .neo-actie:hover:not(:disabled){background:#fff;border-color:var(--accent-rand)} }
 .neo-actie:disabled{opacity:.5;cursor:default}
@@ -49703,7 +49726,7 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
   .vp-poort-knoppen .btn,.vp-poort-knoppen .admin-btn-sec{width:100%;justify-content:center}
 }
 /* v106: vaardigheidsportfolio */
-.vp{margin-top:14px;padding:16px;border-radius:16px;background:#FBFAF7;border:1px solid var(--lijn)}
+.vp{margin-top:14px;padding:16px;border-radius:16px;background:var(--tegel-licht);border:1px solid var(--lijn)}
 .vp-kop{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
 .vp-zichtbaar{padding:12px 14px;border-radius:12px;background:#fff;border:1px solid var(--lijn);margin-bottom:14px}
 .vp-zichtbaar-rij{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -49757,7 +49780,7 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
   background:#FBEEEA;border:1px solid #F0D8CE;color:#8E3A1C;font-size:.86rem;line-height:1.5;margin:0 0 12px}
 .praktijk-keuze{display:grid;gap:9px;margin:10px 0 2px}
 .praktijk-optie{display:flex;gap:11px;align-items:flex-start;padding:12px 14px;border-radius:14px;
-  background:#FBFAF7;border:1px solid var(--lijn);text-align:left;width:100%;cursor:pointer}
+  background:var(--tegel-licht);border:1px solid var(--lijn);text-align:left;width:100%;cursor:pointer}
 .praktijk-optie:hover{background:#fff;border-color:var(--accent-rand)}
 .praktijk-optie.is-aan{border-color:var(--accent-knop);background:var(--accent-zacht)}
 .praktijk-optie>span>b{display:block;font-size:.95rem}
@@ -49885,7 +49908,7 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .bday-spel{position:relative}
 .bday-spel-balk{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;font-size:.9rem}
 .bday-tel{font-weight:800}
-.bday-veld{position:relative;height:min(46vh,320px);border-radius:16px;background:#FBFAF7;border:1px solid rgba(28,27,25,.07);overflow:hidden}
+.bday-veld{position:relative;height:min(46vh,320px);border-radius:16px;background:var(--tegel-licht);border:1px solid rgba(28,27,25,.07);overflow:hidden}
 .bday-doel{position:absolute;width:52px;height:52px;display:grid;place-items:center;cursor:pointer;transform:translate(-50%,-50%);
   animation:bdayPop 160ms ease both}
 .bday-doel.is-goed{border-radius:50%;background:var(--accent-knop);color:var(--accent-opdruk);box-shadow:0 6px 16px -8px rgba(244,119,33,.8)}
@@ -50002,13 +50025,13 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
   font-size:.74rem;font-weight:800;letter-spacing:.02em}
 .rb-status.is-behaald{background:var(--salie-zacht);color:var(--salie-diep)}
 .rb-status.is-huidig{background:var(--accent-zacht);color:var(--accent-diep)}
-.rb-status.is-dicht{background:#F2F1ED;color:var(--grijs)}
+.rb-status.is-dicht{background:var(--tegel);color:var(--grijs)}
 .rb-rang{margin:9px 0 2px;font-size:1.45rem;font-weight:800;letter-spacing:-.02em;line-height:1.15;
   /* flex, niet inline-flex: anders schoof de statuschip ernaast op dezelfde regel */
   display:flex;justify-content:center;align-items:center;gap:9px}
 .rb-icoon{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;flex-shrink:0;
   background:var(--salie-zacht);color:var(--salie-diep)}
-.rb-icoon.is-dicht{background:#F2F1ED;color:#B7B1A7}
+.rb-icoon.is-dicht{background:var(--tegel);color:#B7B1A7}
 .rb-vanaf{margin:0;font-size:.86rem;color:var(--grijs)}
 .rb-alt{margin:9px 0 0;font-size:.84rem;color:var(--grijs);line-height:1.5}
 .rb-volgende{margin:16px 0 0;padding-top:13px;border-top:1px solid var(--lijn);
@@ -50075,7 +50098,7 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .pad-rij{display:flex;align-items:center;gap:12px;padding:14px 16px;width:100%;text-align:left}
 .pad-rij+.pad-rij{border-top:1px solid rgba(28,27,25,.06)}
 button.pad-rij{cursor:pointer;transition:background-color .15s ease}
-button.pad-rij:hover{background:#FBFAF7}
+button.pad-rij:hover{background:var(--tegel-licht)}
 button.pad-rij:focus-visible,.meer-rij:focus-visible,.profiel-link:focus-visible{outline:2.5px solid var(--accent);outline-offset:-2px}
 .pad-icoon{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;flex-shrink:0}
 .pad-label{display:block;font-weight:800;font-size:.98rem;line-height:1.25}
@@ -50094,7 +50117,7 @@ button.pad-rij:focus-visible,.meer-rij:focus-visible,.profiel-link:focus-visible
 .meer-lijst{display:flex;flex-direction:column;border:1px solid rgba(28,27,25,.07);border-radius:16px;overflow:hidden;background:#fff}
 .meer-rij{display:flex;align-items:center;gap:12px;padding:14px 16px;width:100%;text-align:left;font-size:.96rem;font-weight:700;cursor:pointer;transition:background-color .15s ease}
 .meer-rij+.meer-rij{border-top:1px solid rgba(28,27,25,.06)}
-.meer-rij:hover{background:#FBFAF7}
+.meer-rij:hover{background:var(--tegel-licht)}
 .meer-icoon{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--accent-zacht);color:var(--accent-diep);flex-shrink:0}
 .pad-lijst+.meer-rij{margin-top:10px;border:1px solid rgba(28,27,25,.07);border-radius:14px}
 @media(max-width:600px){
@@ -50124,7 +50147,7 @@ button.pad-rij:focus-visible,.meer-rij:focus-visible,.profiel-link:focus-visible
 .admin-rij{display:flex;align-items:center;gap:12px;padding:12px 20px;flex-wrap:wrap;min-height:52px}
 .admin-rij+.admin-rij{border-top:1px solid rgba(28,27,25,.06)}
 button.admin-rij{width:100%;text-align:left;cursor:pointer;transition:background-color .15s ease}
-button.admin-rij:hover{background:#FBFAF7}
+button.admin-rij:hover{background:var(--tegel-licht)}
 button.admin-rij:focus-visible{outline:2.5px solid var(--accent);outline-offset:-2px}
 .admin-rij.is-attentie{background:#FDF8F2}
 .admin-rij-pijl{margin-left:auto;color:var(--grijs);line-height:0}
@@ -50143,7 +50166,7 @@ button.admin-rij:focus-visible{outline:2.5px solid var(--accent);outline-offset:
 .admin-btn-icoon:hover{background:rgba(28,27,25,.05);color:var(--inkt)}
 .admin-btn-icoon:disabled{opacity:.4}
 .admin-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:.74rem;font-weight:700;background:var(--accent-zacht);color:var(--accent-diep)}
-.admin-chip.is-uit{background:#F2F1ED;color:var(--grijs)}
+.admin-chip.is-uit{background:var(--tegel);color:var(--grijs)}
 .admin-chip button{line-height:1;font-weight:800;color:inherit;opacity:.7}
 .admin-status{display:inline-flex;align-items:center;gap:6px;font-size:.8rem}
 .admin-status-tekst{font-weight:700;color:var(--grijs);padding:4px 6px;border-radius:8px}
@@ -60545,7 +60568,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
         pseudo,
         "), zonder persoonsgegevens. Zo is elke beslissing later te verklaren, te evalueren en te verbeteren."
       ] }),
-      leer && leer.mogelijk && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { background: "#F7F6F2", borderRadius: 12, padding: "10px 12px", marginBottom: 12 }, children: [
+      leer && leer.mogelijk && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { background: "var(--tegel-licht)", borderRadius: 12, padding: "10px 12px", marginBottom: 12 }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { fontSize: ".78rem", fontWeight: 800, marginBottom: 4 }, children: [
           "Zelflerende laag \xB7 ",
           leer.nEval,
@@ -61032,7 +61055,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Stat, { w: s.niveau, l: "niveau" })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8, alignItems: "center" }, children: [
-        tabs.map(([k, l]) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => setTab(k), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".76rem", background: tab === k ? "var(--accent-zacht)" : "#F2F1ED", color: tab === k ? "var(--accent-diep)" : "var(--grijs)", border: tab === k ? "1px solid var(--accent)" : "1px solid transparent" }, children: l }, k)),
+        tabs.map(([k, l]) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => setTab(k), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".76rem", background: tab === k ? "var(--accent-zacht)" : "var(--tegel)", color: tab === k ? "var(--accent-diep)" : "var(--grijs)", border: tab === k ? "1px solid var(--accent)" : "1px solid transparent" }, children: l }, k)),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "muted", style: { fontSize: ".7rem", marginLeft: "auto" }, children: aiBezig ? "AI verfijnt\u2026" : ai ? "verrijkt door AI" : "lokale samenvatting" })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "card", style: { padding: 16, marginBottom: 16, background: "#FAFAF8" }, children: [
@@ -61165,7 +61188,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
               /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }, children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { minWidth: 0 }, children: [
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }, children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".68rem", fontWeight: 700, background: "#F2F1ED", color: "var(--grijs)", padding: "1px 8px" }, children: k.categorie }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".68rem", fontWeight: 700, background: "var(--tegel)", color: "var(--grijs)", padding: "1px 8px" }, children: k.categorie }),
                     k.scope && !isOuder && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "muted", style: { fontSize: ".7rem" }, children: k.scope })
                   ] }),
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { fontWeight: 700, fontSize: ".88rem", marginTop: 3 }, children: k.titel })
@@ -61212,7 +61235,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }, children: groepen.map((g) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { onClick: () => {
         setFilter(g);
         setOpen(null);
-      }, className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".74rem", background: filter === g ? "var(--grafiet,#1E1F22)" : "#F2F1ED", color: filter === g ? "#fff" : "var(--grijs)", border: "1px solid transparent" }, children: [
+      }, className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".74rem", background: filter === g ? "var(--grafiet,#1E1F22)" : "var(--tegel)", color: filter === g ? "#fff" : "var(--grijs)", border: "1px solid transparent" }, children: [
         g,
         g !== "Alles" ? ` \xB7 ${zichtbaar.filter((e) => e.groep === g).length}` : ""
       ] }, g)) }),
@@ -61462,7 +61485,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
     if (!profiel || !rapport) return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { margin: 0, fontSize: ".86rem" }, children: "Rapporten verschijnen zodra er voldoende ontwikkeling is vastgelegd." });
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { margin: "0 0 10px", fontSize: ".8rem", lineHeight: 1.5 }, children: "Automatisch samengesteld uit je profiel en Growth Journey. Kies een rapport en download het als PDF." }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }, children: RAPPORT_TYPES.map((t) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => setType(t.key), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".74rem", background: type === t.key ? "var(--accent)" : "#F2F1ED", color: type === t.key ? "#fff" : "var(--grijs)", border: "1px solid transparent" }, title: t.voor, children: t.label }, t.key)) }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }, children: RAPPORT_TYPES.map((t) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => setType(t.key), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".74rem", background: type === t.key ? "var(--accent)" : "var(--tegel)", color: type === t.key ? "#fff" : "var(--grijs)", border: "1px solid transparent" }, title: t.voor, children: t.label }, t.key)) }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8, flexWrap: "wrap", marginBottom: 8 }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { style: { fontSize: ".98rem" }, children: rapport.titel }),
@@ -61518,7 +61541,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
     if (!inz) return null;
     const items = [inz.vandaag, inz.overwinning, inz.kans, inz.motivatie, inz.bijnaKlaar].filter(Boolean);
     if (!items.length) return null;
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "card", style: { padding: 18, marginBottom: 12, background: "linear-gradient(135deg,#FAFAF8,#F2F1ED)", border: "1px solid #E7E4DE" }, children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "card", style: { padding: 18, marginBottom: 12, background: "linear-gradient(135deg,#FAFAF8,var(--tegel))", border: "1px solid #E7E4DE" }, children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap", marginBottom: 8 }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "eyebrow", style: { margin: 0 }, children: "Vandaag" }),
         onCheckin && (() => {
@@ -61683,7 +61706,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
           ] }),
           weergave === "leerling" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", gap: 8, marginTop: 12, alignItems: "center", flexWrap: "wrap" }, children: [
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "muted", style: { fontSize: ".8rem" }, children: "Bekijk als:" }),
-            ["leerling", "mentor"].map((r) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => setPreviewRol(r), className: "pill", style: { cursor: "pointer", fontWeight: 700, background: previewRol === r ? "var(--accent-zacht)" : "#F2F1ED", color: previewRol === r ? "var(--accent-diep)" : "var(--grijs)", border: previewRol === r ? "1px solid var(--accent)" : "1px solid transparent" }, children: r === "leerling" ? "Ikzelf" : "Mentor" }, r))
+            ["leerling", "mentor"].map((r) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => setPreviewRol(r), className: "pill", style: { cursor: "pointer", fontWeight: 700, background: previewRol === r ? "var(--accent-zacht)" : "var(--tegel)", color: previewRol === r ? "var(--accent-diep)" : "var(--grijs)", border: previewRol === r ? "1px solid var(--accent)" : "1px solid transparent" }, children: r === "leerling" ? "Ikzelf" : "Mentor" }, r))
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "eyebrow pf-eyebrow", children: [
             "Samenvatting",
@@ -61704,7 +61727,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
                   st.uitleg,
                   st.pct != null ? " \xB7 mastery \xB1" + st.pct + "%" : ""
                 ] }),
-                t.competenties.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "vaardig-pillen", children: t.competenties.slice(0, 6).map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { background: "#F2F1ED", fontSize: ".74rem" }, children: c }, c)) }),
+                t.competenties.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "vaardig-pillen", children: t.competenties.slice(0, 6).map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { background: "var(--tegel)", fontSize: ".74rem" }, children: c }, c)) }),
                 !isOuder && onOpen && t.challenges.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
                   Vouw,
                   {
@@ -66957,7 +66980,7 @@ ${kiesInstr}${variatieInstr}${praktijkInstr}${adviesInstr}${persoonlijkInstr}${p
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { fontSize: ".8rem", margin: "2px 0 12px" }, children: "Voorbeelden van sterke eindproducten per didactische categorie \u2014 zo weten leerlingen wat er van hen wordt verwacht." }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }, children: cats.map((c) => {
         const CM = WERKVORM_CATEGORIE[c] || { label: c, kleur: "#7E8C77" };
-        return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => setCat(c), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".74rem", background: cat === c ? CM.kleur : "#F2F1ED", color: cat === c ? "#fff" : "var(--grijs)", border: "1px solid transparent" }, children: CM.label }, c);
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => setCat(c), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".74rem", background: cat === c ? CM.kleur : "var(--tegel)", color: cat === c ? "#fff" : "var(--grijs)", border: "1px solid transparent" }, children: CM.label }, c);
       }) }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "card", style: { padding: 16, background: "#FAFAF8" }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }, children: [
@@ -68670,12 +68693,13 @@ ${String(stapTekst).slice(0, 900)}` : ""
       ] })
     ] });
   }
-  function MijnVaardigheden({ oordelen, tp, onTerug }) {
+  function MijnVaardigheden({ oordelen, tp, onTerug, records, onOpen, onNieuw }) {
     const vrij = (0, import_react2.useMemo)(() => alleenVrijgegeven(oordelen || []), [oordelen]);
     const standen = (0, import_react2.useMemo)(() => standPerVaardigheid(vrij), [vrij]);
     const metGegevens = standen.filter((s) => s.aantal > 0);
     const aangetoond = metGegevens.filter((s) => s.niveau === "voldoende" || s.niveau === "zelfstandig");
     const oefenen = metGegevens.filter((s) => s.niveau === "ontwikkeling" || s.niveau === "nog-niet");
+    const werk = (0, import_react2.useMemo)(() => [...records || []].filter((r) => r && r.afgerond && r.type !== "event" && r.type !== "bonus").sort((a, b) => String(b.afgerondOp || b.datum || "").localeCompare(String(a.afgerondOp || a.datum || ""))).slice(0, 3), [records]);
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Section, { eyebrow: "Jouw ontwikkeling", titel: "Mijn vaardigheden", sub: "Wat je hebt laten zien, en waar je nog aan werkt.", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "card", style: { padding: 22 }, children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { style: { margin: "0 0 18px", fontSize: "1.02rem", lineHeight: 1.6 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LT, { tekst: leerlingSamenvatting(standen), tp }) }),
       aangetoond.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
@@ -68701,6 +68725,22 @@ ${String(stapTekst).slice(0, 900)}` : ""
         ] }, st.vaardigheid.key)) })
       ] }),
       metGegevens.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { margin: 0, lineHeight: 1.55 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LT, { tekst: "Je begeleider heeft nog geen vaardigheden beoordeeld. Zodra dat gebeurt, zie je het hier.", tp }) }),
+      werk.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "eyebrow", style: { margin: "22px 0 8px" }, children: "Wat je hebt gedaan" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "pad-lijst", children: werk.map((r) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { className: "pad-rij", onClick: () => onOpen && onOpen(r), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pad-icoon", style: { background: "var(--accent-zacht)" }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: r.niveau, size: 20 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { style: { flex: 1, minWidth: 0 }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pad-label", children: r.data && r.data.titel || themaLabel(r.thema) }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pad-sub", children: datumNL(r.afgerondOp || r.datum) })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pad-pijl", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 16 }) })
+        ] }, r.id)) })
+      ] }),
+      onNieuw && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "eyebrow", style: { margin: "22px 0 8px" }, children: "Wat je nu kunt proberen" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { style: { margin: "0 0 12px", lineHeight: 1.55 }, children: oefenen.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LT, { tekst: "Je werkt nu aan " + oefenen[0].vaardigheid.label.toLowerCase() + ". Kies een uitdaging waarin je dat kunt laten zien.", tp }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LT, { tekst: "Kies een uitdaging om te laten zien wat je kunt.", tp }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "btn btn-accent", style: { width: "auto" }, onClick: onNieuw, children: "Kies een nieuwe uitdaging" })
+      ] }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "btn btn-licht", style: { marginTop: 22, width: "auto" }, onClick: onTerug, children: "Terug" })
     ] }) });
   }
@@ -69749,7 +69789,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
         "Ingeleverd op ",
         datumNL(inl.ingeleverdOp)
       ] }),
-      inl.tekst && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { padding: "10px 12px", borderRadius: 12, background: "#F7F6F2", fontSize: ".92rem", lineHeight: 1.55, whiteSpace: "pre-wrap" }, children: inl.tekst }),
+      inl.tekst && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { padding: "10px 12px", borderRadius: 12, background: "var(--tegel-licht)", fontSize: ".92rem", lineHeight: 1.55, whiteSpace: "pre-wrap" }, children: inl.tekst }),
       inl.link && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("a", { href: inl.link, target: "_blank", rel: "noopener noreferrer", style: { display: "inline-flex", alignItems: "center", gap: 6, fontWeight: 700, color: "var(--accent-diep)", wordBreak: "break-all" }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "globe", size: 15 }),
         " ",
@@ -69863,7 +69903,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
             " MB per bestand \xB7 foto's worden verkleind"
           ] })
         ] }),
-        bestanden.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 6 }, children: bestanden.map((f, k) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: 8, padding: "7px 10px", borderRadius: 10, background: "#F7F6F2", fontSize: ".84rem" }, children: [
+        bestanden.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 6 }, children: bestanden.map((f, k) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: 8, padding: "7px 10px", borderRadius: 10, background: "var(--tegel-licht)", fontSize: ".84rem" }, children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: /^image\//.test(f.type) ? "camera" : "download", size: 15 }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }, children: f.name }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "muted", style: { fontSize: ".74rem" }, children: inleverGrootte(f.size) }),
@@ -70079,7 +70119,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const [datum, setDatum] = (0, import_react2.useState)(leerling && leerling.geboortedatum || "");
     const [bevestig, setBevestig] = (0, import_react2.useState)(false);
     const huidig = leerling && leerling.geboortedatum;
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "admin-rij", style: { borderRadius: 12, background: "#FBFAF7", padding: "10px 14px" }, children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "admin-rij", style: { borderRadius: 12, background: "var(--tegel-licht)", padding: "10px 14px" }, children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { style: { flex: 1, minWidth: 0 }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { style: { display: "block", fontSize: ".82rem" }, children: "Geboortedatum" }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "muted", style: { fontSize: ".86rem" }, children: huidig ? datumNL(huidig) : "niet bekend" })
@@ -70174,7 +70214,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
         }, children: "Koppelcode invoeren" })
       ] }) : gevonden ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { margin: "0 0 8px", fontSize: ".86rem" }, children: "Is dit jouw klas?" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { background: "#FBFAF7", border: "1px solid var(--lijn)", borderRadius: 14, padding: "12px 14px" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { background: "var(--tegel-licht)", border: "1px solid var(--lijn)", borderRadius: 14, padding: "12px 14px" }, children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { style: { margin: 0, fontWeight: 800, fontSize: "1.05rem" }, children: gevonden.naam }),
           gevonden.schoolnaam && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { style: { margin: "2px 0 0" }, children: gevonden.schoolnaam }),
           klasMentorLijst(gevonden)[0] && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "muted", style: { margin: "2px 0 0", fontSize: ".86rem" }, children: [
@@ -70407,7 +70447,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "hub-groot", children: paden.length }),
                     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "hub-regel", children: paden.slice(0, 3).map((p) => p.label).join(" \xB7 ") })
                   ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "hub-regel muted", children: "Nog geen paden gekozen" }) }),
-                  vaardighedenVrij && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(Tegel, { titel: "Mijn vaardigheden", icoon: "medal", onClick: () => onVaardigheden && onVaardigheden(), children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Tegel, { titel: "Mijn vaardigheden", icoon: "medal", onClick: () => onVaardigheden && onVaardigheden(), children: vaardighedenVrij ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
                     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "hub-regel", children: vaardighedenAantal > 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
                       vaardighedenAantal,
                       " vaardighe",
@@ -70415,7 +70455,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                       " beoordeeld"
                     ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "muted", children: "Nog geen beoordeling" }) }),
                     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "hub-regel muted", children: "Wat je hebt laten zien" })
-                  ] }),
+                  ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "hub-regel muted", children: "Zodra je begeleider iets deelt, zie je het hier" }) }),
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(Tegel, { titel: "Mijn resultaten", icoon: "chart", onClick: () => setDetail("resultaten"), children: [
                     /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "hub-regel", children: [
                       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: stats.afgerond }),
@@ -70595,7 +70635,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
               }
               return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { marginTop: 16, display: "grid", gap: 16 }, children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "card", style: { padding: 0, overflow: "hidden" }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "grid", gridTemplateColumns: "200px 1fr", gap: 0, alignItems: "stretch" }, className: "id-grid", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", alignItems: "center", justifyContent: "center", padding: 16, background: "#F7F6F2" }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(IdentityPortret, { identiteit: id, size: 200 }) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", alignItems: "center", justifyContent: "center", padding: 16, background: "var(--tegel-licht)" }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(IdentityPortret, { identiteit: id, size: 200 }) }),
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { padding: "22px 24px" }, children: [
                     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "eyebrow", children: "Jouw identiteit" }),
                     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { style: { margin: "6px 0 4px", fontSize: "1.4rem", fontWeight: 800, color: id.accent }, children: id.titel }),
@@ -70703,7 +70743,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
               const stappen = [["groeireis", "Groeireis"], ["vaardigheden", "Vaardigheden"], ["prestaties", "Prestaties"]];
               const idx = Math.max(0, stappen.findIndex((s) => s[0] === vsub));
               return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "in", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, marginBottom: 16, flexWrap: "wrap" }, children: stappen.map(([k, label], i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { onClick: () => setVsub(k), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".82rem", background: vsub === k ? "var(--accent)" : "#F2F1ED", color: vsub === k ? "#fff" : "var(--grijs)", border: "1px solid transparent" }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, marginBottom: 16, flexWrap: "wrap" }, children: stappen.map(([k, label], i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { onClick: () => setVsub(k), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".82rem", background: vsub === k ? "var(--accent)" : "var(--tegel)", color: vsub === k ? "#fff" : "var(--grijs)", border: "1px solid transparent" }, children: [
                   i + 1,
                   ". ",
                   label
@@ -71816,6 +71856,41 @@ ${String(stapTekst).slice(0, 900)}` : ""
       const nieuw = { id: nieuwId(), naam: leerling.naam, email: leerling.email || "", graphUserId: leerling.graphUserId || "", entraId: leerling.graphUserId || "" };
       await onKlassen(klassen.map((k) => k.id !== klasId ? k : { ...k, leerlingen: (k.leerlingen || []).some((l) => zelfdeLeerling(l, nieuw)) ? k.leerlingen : [...k.leerlingen || [], nieuw] }));
     };
+    const inKlas = (l) => klassen.some((k) => (k.leerlingen || []).some((x) => zelfdeLeerling(x, l)));
+    const losse = [];
+    (alle || []).forEach((r) => {
+      const l = r && r.leerling;
+      if (!l || !l.naam || r.type === "event" || inKlas(l)) return;
+      if (!losse.some((x) => zelfdeLeerling(x, l))) losse.push({ naam: l.naam, email: l.email || "", graphUserId: l.graphUserId || l.entraId || "" });
+    });
+    const teBeoordelen = [];
+    klassen.forEach((k) => (k.leerlingen || []).forEach((l) => statsVoor(l).recs.forEach((r) => {
+      const ist = inleverStatus(r);
+      if (ist && ist.kort && !teBeoordelen.some((x) => x.r.id === r.id)) teBeoordelen.push({ r, k, l });
+    })));
+    const AttentieRegels = () => {
+      if (!teBeoordelen.length && !(!readOnly && losse.length)) return null;
+      return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lv-attentie", children: [
+        teBeoordelen.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { className: "lv-attentie-rij", onClick: () => setKlasPopup("__inleveringen"), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lv-attentie-tekst", children: [
+            teBeoordelen.length,
+            " inlevering",
+            teBeoordelen.length === 1 ? "" : "en",
+            " te beoordelen"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "admin-rij-pijl", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 16 }) })
+        ] }),
+        !readOnly && losse.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { className: "lv-attentie-rij is-zacht", onClick: () => setKlasPopup("__los"), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lv-attentie-tekst", children: [
+            losse.length,
+            " leerling",
+            losse.length === 1 ? "" : "en",
+            " nog niet ingedeeld"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "admin-rij-pijl", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 16 }) })
+        ] })
+      ] });
+    };
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(Section, { eyebrow, titel: "Leerlingen", sub, children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(AdminTabs, { tabs: [["leerlingen", "Leerlingen", "users"], ["bibliotheek", "Didactische bibliotheek", "briefcase"]], actief: mentorView, onKies: setMentorView, label: "Mentoromgeving" }),
       mentorView === "leerlingen" && !N.leerlingId && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
@@ -71831,6 +71906,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
           },
           k
         )) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(AttentieRegels, {}),
         N.weergave === "leerlingen" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "admin-kop", children: [
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "admin-titel", style: { fontSize: "1.08rem" }, children: "Alle leerlingen" }),
@@ -71875,7 +71951,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
           const mijnLeerlingen = /* @__PURE__ */ new Set();
           klassen.forEach((k) => (k.leerlingen || []).forEach((l) => mijnLeerlingen.add(l.naam)));
           const alleP = (projecten || []).filter((p) => p.leerling && mijnLeerlingen.has(p.leerling.naam));
-          const teBeoordelen = alleP.filter((p) => ["ingeleverd", "in_beoordeling"].includes(p.status));
+          const teBeoordelen2 = alleP.filter((p) => ["ingeleverd", "in_beoordeling"].includes(p.status));
           const lopend = alleP.filter((p) => ["bezig", "niet_gestart", "terug"].includes(p.status));
           if (!alleP.length) return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { margin: 0 }, children: "Er zijn nog geen projecten van je leerlingen." });
           const bp = beoordeelId ? alleP.find((p) => p.id === beoordeelId) : null;
@@ -71898,14 +71974,14 @@ ${String(stapTekst).slice(0, 900)}` : ""
             /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }, children: [
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { width: 32, height: 32, borderRadius: 9, background: "#EEEDFA", color: "#5B57B0", display: "flex", alignItems: "center", justifyContent: "center" }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "layers", size: 17 }) }),
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { style: { margin: 0, fontSize: "1.1rem", fontWeight: 800 }, children: "Projecten" }),
-              teBeoordelen.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pill", style: { background: "#EAF1FA", color: "#3B6FB0" }, children: [
-                teBeoordelen.length,
+              teBeoordelen2.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pill", style: { background: "#EAF1FA", color: "#3B6FB0" }, children: [
+                teBeoordelen2.length,
                 " te beoordelen"
               ] })
             ] }),
             !bp && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "grid", gap: 8, marginTop: 10 }, children: [
-              teBeoordelen.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { margin: "4px 0", fontSize: ".9rem" }, children: "Geen projecten die nu op beoordeling wachten." }),
-              teBeoordelen.map((p) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 12, border: "1px solid #E6E8EA", background: "#fff" }, children: [
+              teBeoordelen2.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { margin: "4px 0", fontSize: ".9rem" }, children: "Geen projecten die nu op beoordeling wachten." }),
+              teBeoordelen2.map((p) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, padding: "12px 14px", borderRadius: 12, border: "1px solid #E6E8EA", background: "#fff" }, children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { style: { fontSize: ".95rem" }, children: p.leerling.naam }),
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("br", {}),
@@ -72007,18 +72083,6 @@ ${String(stapTekst).slice(0, 900)}` : ""
           });
           return { n: (k.leerlingen || []).length, xp, actief, af };
         };
-        const inKlas = (l) => klassen.some((k) => (k.leerlingen || []).some((x) => zelfdeLeerling(x, l)));
-        const losse = [];
-        (alle || []).forEach((r) => {
-          const l = r && r.leerling;
-          if (!l || !l.naam || r.type === "event" || inKlas(l)) return;
-          if (!losse.some((x) => zelfdeLeerling(x, l))) losse.push({ naam: l.naam, email: l.email || "", graphUserId: l.graphUserId || l.entraId || "" });
-        });
-        const teBeoordelen = [];
-        klassen.forEach((k) => (k.leerlingen || []).forEach((l) => statsVoor(l).recs.forEach((r) => {
-          const ist = inleverStatus(r);
-          if (ist && ist.kort && !teBeoordelen.some((x) => x.r.id === r.id)) teBeoordelen.push({ r, k, l });
-        })));
         const openKlas = klassen.find((k) => k.id === N.klasId) || null;
         const openLl = openKlas && N.leerlingId ? (openKlas.leerlingen || []).find((l) => l.id === N.leerlingId) : null;
         const sluit = () => {
@@ -72094,25 +72158,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "admin-rij-pijl", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 16 }) })
                     ] }, k.id);
                   }) }),
-                  klasLijst.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { margin: 0, padding: "0 20px 16px", fontSize: ".88rem" }, children: klasQ ? "Geen klas gevonden." : klassen.length ? "Je begeleidt nog geen klas. Kies \u2018Alle\u2019 of maak er zelf een aan." : "Nog geen klassen." }),
-                  !readOnly && losse.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { className: "admin-rij is-attentie", onClick: () => setKlasPopup("__los"), style: { borderTop: "1px solid rgba(28,27,25,.06)" }, children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { style: { fontWeight: 700, fontSize: ".88rem", color: "#8A6D3B" }, children: [
-                      losse.length,
-                      " leerling",
-                      losse.length === 1 ? "" : "en",
-                      " nog niet ingedeeld"
-                    ] }),
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "admin-rij-pijl", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 16 }) })
-                  ] }),
-                  teBeoordelen.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { className: "admin-rij", onClick: () => setKlasPopup("__inleveringen"), style: { borderTop: "1px solid rgba(28,27,25,.06)" }, children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { style: { fontWeight: 700, fontSize: ".88rem", color: "var(--accent-diep)" }, children: [
-                      teBeoordelen.length,
-                      " inlevering",
-                      teBeoordelen.length === 1 ? "" : "en",
-                      " te beoordelen"
-                    ] }),
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "admin-rij-pijl", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 16 }) })
-                  ] })
+                  klasLijst.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { margin: 0, padding: "0 20px 16px", fontSize: ".88rem" }, children: klasQ ? "Geen klas gevonden." : klassen.length ? "Je begeleidt nog geen klas. Kies \u2018Alle\u2019 of maak er zelf een aan." : "Nog geen klassen." })
                 ]
               }
             ),
@@ -72183,7 +72229,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
               sub: (openKlas.leerlingen || []).length + " leerling(en) \xB7 " + (klasMentorLijst(openKlas).length ? "mentor: " + klasMentorLijst(openKlas).join(", ") : "geen mentor"),
               children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", marginBottom: 14 }, children: [
-                  openKlas.code && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontFamily: "ui-monospace,Menlo,monospace", fontWeight: 800, background: "#F2F1ED", color: "var(--inkt)" }, children: openKlas.code }),
+                  openKlas.code && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontFamily: "ui-monospace,Menlo,monospace", fontWeight: 800, background: "var(--tegel)", color: "var(--inkt)" }, children: openKlas.code }),
                   openKlas.code && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "btn btn-licht", style: { padding: "6px 11px", fontSize: ".78rem" }, onClick: async () => {
                     try {
                       await navigator.clipboard.writeText(openKlas.code);
@@ -72284,7 +72330,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
             const leeg = !alleRecs.length && !oordeelAantal;
             const tab = N.llTab || "";
             const pijlerOpen = tab.indexOf("pijler:") === 0 ? tab.slice(7) : null;
-            const terugNaarOverzicht = () => zetNav({ llTab: "" });
+            const terugNaarOverzicht = () => zetNav({ llTab: "", llPaneel: "" }, { vervang: true });
             const pijlerStand = (naam) => {
               const rijen = standen.filter((x) => x.vaardigheid.pijler === naam);
               const metOordeel = rijen.filter((x) => x.aantal > 0);
@@ -72327,7 +72373,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
             };
             const werkRij = (r) => {
               const vb = voorbeeldVan(r);
-              return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-werk", onClick: () => zetNav({ llTab: "werk" }), children: [
+              return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-werk", onClick: () => zetNav({ llTab: "werk" }, { vervang: true }), children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-werk-beeld", "aria-hidden": "true", children: vb ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("img", { src: vb, alt: "", loading: "lazy" }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: bewijsIcoon(r), size: 18 }) }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lp-werk-tekst", children: [
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-werk-titel", children: r.data && r.data.titel || themaLabel(r.thema) }),
@@ -72401,14 +72447,24 @@ ${String(stapTekst).slice(0, 900)}` : ""
               ] }) }))
             ] }, r.id);
             return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { className: "lp-terug", onClick: () => {
-                setMfRec(null);
-                sluitNav();
-              }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "left", size: 15 }),
-                " Terug naar ",
-                openKlas.naam
-              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+                "button",
+                {
+                  className: "lp-terug",
+                  onClick: () => {
+                    if (tab) terugNaarOverzicht();
+                    else {
+                      setMfRec(null);
+                      sluitNav();
+                    }
+                  },
+                  children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "left", size: 15 }),
+                    " ",
+                    tab ? "Terug naar het overzicht" : "Terug naar " + openKlas.naam
+                  ]
+                }
+              ),
               /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-kop", children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Avatar, { foto: l.foto, naam: l.naam, size: 56 }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-wie", children: [
@@ -72453,7 +72509,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                     {
                       type: "button",
                       className: "lp-tegel",
-                      onClick: () => zetNav({ llTab: "pijler:" + pj.naam }),
+                      onClick: () => zetNav({ llTab: "pijler:" + pj.naam }, { vervang: true }),
                       children: [
                         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-tegel-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: pj.icoon, size: 22 }) }),
                         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-tegel-naam", children: pj.naam }),
@@ -72466,7 +72522,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                 }) }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-sectiekop", children: [
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", children: "Recent werk" }),
-                  alleRecs.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "lp-link", onClick: () => zetNav({ llTab: "werk" }), children: "Bekijk al het werk" })
+                  alleRecs.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "lp-link", onClick: () => zetNav({ llTab: "werk" }, { vervang: true }), children: "Bekijk al het werk" })
                 ] }),
                 recent.length ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lp-werklijst", children: recent.map(werkRij) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "lp-stil", children: "Er is nog geen werk ingeleverd." }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", children: "Volgende stap" }),
@@ -72478,15 +72534,11 @@ ${String(stapTekst).slice(0, 900)}` : ""
                     klas: openKlas.naam,
                     feedbackGegeven,
                     beoordeeld: beoordeeldeRecs.length,
-                    onBespreek: () => zetNav({ llTab: "verder" })
+                    onBespreek: () => zetNav({ llTab: "verder" }, { vervang: true })
                   }
                 )
               ] }),
               pijlerOpen && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-link lp-terugsub", onClick: terugNaarOverzicht, children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "left", size: 14 }),
-                  " Terug naar het overzicht"
-                ] }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", children: pijlerOpen }),
                 portfolioVan ? portfolioVan(l, {
                   pijler: pijlerOpen,
@@ -72504,10 +72556,6 @@ ${String(stapTekst).slice(0, 900)}` : ""
                 })()
               ] }),
               tab === "werk" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-link lp-terugsub", onClick: terugNaarOverzicht, children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "left", size: 14 }),
-                  " Terug naar het overzicht"
-                ] }),
                 lopendMetBewijs.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", children: "Nog bezig \xB7 al iets ingeleverd" }),
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 8, marginBottom: 22 }, children: lopendMetBewijs.map((r) => werkBlok(r, true)) })
@@ -72516,10 +72564,6 @@ ${String(stapTekst).slice(0, 900)}` : ""
                 st.recs.length ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 8 }, children: st.recs.map((r) => werkBlok(r, false)) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "lp-stil", children: "Nog geen afgeronde uitdagingen." })
               ] }),
               tab === "verder" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-link lp-terugsub", onClick: terugNaarOverzicht, children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "left", size: 14 }),
-                  " Terug naar het overzicht"
-                ] }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", children: "Bespreek de ontwikkeling" }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GesprekspuntenKaart, { records: alleRecs, gebruiker: { naam: l.naam, klas: openKlas.naam, leeftijd: l.leeftijd }, type: "mentor" }),
                 onPortfolio && st.recs.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { className: "btn btn-accent lp-hoofdactie", onClick: () => onPortfolio(l), children: [
@@ -74610,7 +74654,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
           e.msg,
           e.details && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("details", { style: { margin: "3px 0 6px 64px", color: "var(--inkt)" }, children: [
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("summary", { style: { cursor: "pointer", fontWeight: 700, color: "var(--grijs)" }, children: "Details" }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { padding: "8px 10px", marginTop: 4, borderRadius: 10, background: "#F7F6F2", border: "1px solid var(--lijn)", display: "grid", gap: 3 }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { padding: "8px 10px", marginTop: 4, borderRadius: 10, background: "var(--tegel-licht)", border: "1px solid var(--lijn)", display: "grid", gap: 3 }, children: [
               e.details.actie && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: "Actie:" }),
                 " ",
@@ -75313,7 +75357,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                       fontSize: ".72rem",
                       fontWeight: 700,
                       cursor: "pointer",
-                      background: aan ? "var(--accent-zacht)" : "#F2F1ED",
+                      background: aan ? "var(--accent-zacht)" : "var(--tegel)",
                       color: aan ? "var(--accent-diep)" : "var(--grijs)"
                     },
                     children: [
@@ -77041,11 +77085,11 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { value: q, onChange: (e) => setQ(e.target.value), placeholder: "Zoek werkvorm\u2026", style: { padding: "8px 12px", borderRadius: 10, border: "1.5px solid var(--lijn,#E4E1DB)", fontSize: ".85rem", minWidth: 180 } })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }, children: ["Alle", ...cats].map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { onClick: () => setCat(c), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".74rem", background: cat === c ? c === "Alle" ? "#1E1F22" : WERKVORM_CATEGORIE[c].kleur : "#F2F1ED", color: cat === c ? "#fff" : "var(--grijs)", border: "1px solid transparent" }, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }, children: ["Alle", ...cats].map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { onClick: () => setCat(c), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".74rem", background: cat === c ? c === "Alle" ? "#1E1F22" : WERKVORM_CATEGORIE[c].kleur : "var(--tegel)", color: cat === c ? "#fff" : "var(--grijs)", border: "1px solid transparent" }, children: [
         c === "Alle" ? "Alle" : WERKVORM_CATEGORIE[c].label,
         c !== "Alle" ? ` \xB7 ${alle.filter((w) => w.categorie === c).length}` : ""
       ] }, c)) }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16 }, children: ["Alle", ...niveaus].map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => setNiv(n), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".72rem", background: niv === n ? "var(--accent-zacht)" : "#F2F1ED", color: niv === n ? "var(--accent-diep)" : "var(--grijs)", border: niv === n ? "1px solid var(--accent)" : "1px solid transparent" }, children: n }, n)) }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16 }, children: ["Alle", ...niveaus].map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => setNiv(n), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".72rem", background: niv === n ? "var(--accent-zacht)" : "var(--tegel)", color: niv === n ? "var(--accent-diep)" : "var(--grijs)", border: niv === n ? "1px solid var(--accent)" : "1px solid transparent" }, children: n }, n)) }),
       Object.keys(groepen).length === 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { fontSize: ".86rem" }, children: "Geen werkvormen gevonden voor deze filters." }),
       cats.filter((c) => groepen[c]).map((c) => {
         const M = WERKVORM_CATEGORIE[c];
@@ -77079,12 +77123,12 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "muted", style: { fontSize: ".8rem", lineHeight: 1.45, marginTop: 2 }, children: w.beschrijving }),
               uit && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { marginTop: 8, display: "flex", gap: 6, flexWrap: "wrap" }, children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".7rem", background: M.kleur + "1A", color: M.kleur }, children: M.label }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pill", style: { fontSize: ".7rem", background: "#F2F1ED", color: "var(--grijs)" }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pill", style: { fontSize: ".7rem", background: "var(--tegel)", color: "var(--grijs)" }, children: [
                   "Bloom: ",
                   M.bloom
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".7rem", background: "#F2F1ED", color: "var(--grijs)" }, children: M.sociaal }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".7rem", background: "#F2F1ED", color: "var(--grijs)" }, children: M.leerstrategie })
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".7rem", background: "var(--tegel)", color: "var(--grijs)" }, children: M.sociaal }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".7rem", background: "var(--tegel)", color: "var(--grijs)" }, children: M.leerstrategie })
               ] })
             ] }, w.naam);
           }) })
@@ -77124,11 +77168,11 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { value: q, onChange: (e) => setQ(e.target.value), placeholder: "Zoek sjabloon\u2026", style: { padding: "8px 12px", borderRadius: 10, border: "1.5px solid var(--lijn,#E4E1DB)", fontSize: ".85rem", minWidth: 180 } })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { fontSize: ".78rem", lineHeight: 1.5, margin: "0 0 12px" }, children: "De Orchestrator combineert een archetype met een subthema, een passende werkvorm en het niveau tot \xE9\xE9n unieke, gepersonaliseerde uitdaging \u2014 nooit een herkenbaar sjabloon. Het gekozen sjabloon is per challenge zichtbaar in Challenge Intelligence." }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }, children: ["Alle", ...cats].map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { onClick: () => setCat(c), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".74rem", background: cat === c ? c === "Alle" ? "#1E1F22" : WERKVORM_CATEGORIE[c] ? WERKVORM_CATEGORIE[c].kleur : "#7E8C77" : "#F2F1ED", color: cat === c ? "#fff" : "var(--grijs)", border: "1px solid transparent" }, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }, children: ["Alle", ...cats].map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { onClick: () => setCat(c), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".74rem", background: cat === c ? c === "Alle" ? "#1E1F22" : WERKVORM_CATEGORIE[c] ? WERKVORM_CATEGORIE[c].kleur : "#7E8C77" : "var(--tegel)", color: cat === c ? "#fff" : "var(--grijs)", border: "1px solid transparent" }, children: [
         c === "Alle" ? "Alle" : WERKVORM_CATEGORIE[c] ? WERKVORM_CATEGORIE[c].label : c,
         c !== "Alle" ? ` \xB7 ${CHALLENGE_SJABLONEN.filter((s) => s.categorie === c).length}` : ""
       ] }, c)) }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16 }, children: ["Alle", ...niveaus].map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => setNiv(n), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".72rem", background: niv === n ? "var(--accent-zacht)" : "#F2F1ED", color: niv === n ? "var(--accent-diep)" : "var(--grijs)", border: niv === n ? "1px solid var(--accent)" : "1px solid transparent" }, children: n }, n)) }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16 }, children: ["Alle", ...niveaus].map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => setNiv(n), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".72rem", background: niv === n ? "var(--accent-zacht)" : "var(--tegel)", color: niv === n ? "var(--accent-diep)" : "var(--grijs)", border: niv === n ? "1px solid var(--accent)" : "1px solid transparent" }, children: n }, n)) }),
       Object.keys(groepen).length === 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { fontSize: ".86rem" }, children: "Geen sjablonen gevonden voor deze filters." }),
       cats.filter((c) => groepen[c]).map((c) => {
         const M = WERKVORM_CATEGORIE[c] || { label: c, kleur: "#7E8C77" };
@@ -78840,6 +78884,12 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
                 {
                   oordelen: mijnVaardigheden.oordelen,
                   tp: getLearnerLanguageProfile(gebruiker),
+                  records: eigenRecords,
+                  onOpen: (r) => {
+                    setActief(r);
+                    go("uitdaging");
+                  },
+                  onNieuw: () => go("builder"),
                   onTerug: () => go("profiel")
                 }
               );
