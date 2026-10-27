@@ -50083,7 +50083,7 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .ll-ingang:focus-visible{outline:3px solid var(--accent-diep);outline-offset:2px}
 
 .ll-vak{display:block}
-.ll-werk{padding:11px 13px;border-radius:12px;background:var(--kaart);border:1px solid var(--lijn)}
+.ll-werk{padding:11px 13px;border-radius:12px;background:var(--kaart);border:1px solid var(--lijn);scroll-margin-top:96px}
 .ll-werk-kop{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .ll-mini{width:auto;padding:6px 11px;font-size:.78rem}
 .ll-hoofdactie{width:auto;margin-top:16px}
@@ -67543,12 +67543,13 @@ ${kiesInstr}${variatieInstr}${praktijkInstr}${adviesInstr}${persoonlijkInstr}${p
   }
   function CompetentieKaarten({ rec, records, gebruiker }) {
     const comps = Array.isArray(rec.data && rec.data.competenties) ? rec.data.competenties : [];
+    const tp = getLearnerLanguageProfile(gebruiker);
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "eyebrow", style: { marginBottom: 4 }, children: "Competenties" }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { margin: "0 0 14px", fontSize: ".84rem" }, children: "Dit ontwikkel je met deze uitdaging." }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 10 }, children: comps.map((c, k) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", gap: 12, alignItems: "center", padding: "12px 14px", borderRadius: 12, background: "#F7F8FA" }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { flexShrink: 0, width: 26, height: 26, borderRadius: 8, background: "#4A5568", color: "#fff", fontWeight: 800, fontSize: ".82rem", display: "flex", alignItems: "center", justifyContent: "center" }, children: k + 1 }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { lineHeight: 1.5, fontSize: ".96rem", fontWeight: 600 }, children: c })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { lineHeight: 1.5, fontSize: ".96rem", fontWeight: 600 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LT, { tekst: c, tp }) })
       ] }, k)) })
     ] });
   }
@@ -67992,6 +67993,15 @@ Antwoord UITSLUITEND met geldige JSON: dezelfde sleutels, de herschreven tekst a
     routine: "Iets wat je steeds op dezelfde manier doet.",
     evalueren: "Bekijken hoe het ging en wat beter kan."
   };
+  function begripLokaal(woord) {
+    const w = String(woord || "").trim().toLowerCase().replace(/[^\p{L}\p{M}'’-]/gu, "");
+    if (!w) return null;
+    const kandidaten = [w, w.replace(/s$/, ""), w.replace(/ssen$/, "s"), w.replace(/en$/, ""), w.replace(/ies$/, "ie")];
+    for (const k of kandidaten) {
+      if (k && BEGRIPPEN[k]) return BEGRIPPEN[k];
+    }
+    return null;
+  }
   function BegripTekst({ tekst, tp }) {
     const profiel = tp || { schaal: 2 };
     const uitleggen = profiel.schaal <= 3 || !!profiel.eenvoudigGevraagd;
@@ -68221,12 +68231,16 @@ Antwoord UITSLUITEND met geldige JSON: dezelfde sleutels, de herschreven tekst a
       setStatus("bezig");
       if (timer.current) clearTimeout(timer.current);
       timer.current = setTimeout(async () => {
-        laatst.current = v;
         try {
-          await (werkRef.current && werkRef.current(zetWerkUitdaging(recRef.current, v)));
+          const uit = await (werkRef.current && werkRef.current(zetWerkUitdaging(recRef.current, v)));
+          if (uit && uit.ok === false) {
+            setStatus("mislukt");
+            return;
+          }
+          laatst.current = v;
           setStatus("bewaard");
         } catch {
-          setStatus("");
+          setStatus("mislukt");
         }
       }, 800);
     };
@@ -68249,7 +68263,7 @@ Antwoord UITSLUITEND met geldige JSON: dezelfde sleutels, de herschreven tekst a
           "aria-label": "Mijn notities bij deze stap"
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "werk-status", "aria-live": "polite", children: status === "bezig" ? "Opslaan\u2026" : status === "bewaard" ? "\u2713 Automatisch opgeslagen" : "" })
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "werk-status", "aria-live": "polite", children: status === "bezig" ? "Opslaan\u2026" : status === "bewaard" ? "\u2713 Automatisch opgeslagen" : status === "mislukt" ? "Niet opgeslagen \u2014 je tekst staat er nog, we proberen het opnieuw bij je volgende aanslag" : "" })
     ] });
   }
   function neoHulpContext({ gebruiker, rec, stap, tp }) {
@@ -68366,8 +68380,9 @@ ${String(stapTekst).slice(0, 900)}` : ""
     } catch {
     }
   }
-  function neoFoutSoort({ status, endpoint, uitzondering }) {
-    const eigen = endpoint && !/api\.anthropic\.com/.test(endpoint);
+  function neoFoutSoort({ status, endpoint, uitzondering, viaPlatform }) {
+    if (uitzondering && uitzondering.reden === "geen-eigen-endpoint") return { reden: "geen-eigen-endpoint", tekst: "Neo kan nu even niet antwoorden." };
+    const eigen = !!viaPlatform || endpoint && !/api\.anthropic\.com/.test(endpoint);
     if (!eigen) return { reden: "geen-eigen-endpoint", tekst: "Neo kan nu even niet antwoorden." };
     if (status === 404 || status === 405) return { reden: "endpoint-niet-gevonden", tekst: "Neo kan nu even niet antwoorden." };
     if (status === 401 || status === 403) return { reden: "geen-toegang", tekst: "Neo kan nu even niet antwoorden." };
@@ -68473,9 +68488,16 @@ ${String(stapTekst).slice(0, 900)}` : ""
         setGesprek((g) => [...g.slice(-6), { vraag: vraagLabel(soort, eigenVraag), antwoord: answer }]);
         setHerhaal(null);
       } catch (e) {
-        const soortFout = neoFoutSoort({ status: e && e.status, endpoint: aiEndpoint(), uitzondering: e });
-        setFout(soortFout.tekst);
-        setHerhaal({ soort, eigenVraag });
+        const soortFout = neoFoutSoort({ status: e && e.status, endpoint: aiEndpoint(), uitzondering: e, viaPlatform: !!platformNeo });
+        const lokaal = soort === "woord" ? begripLokaal(eigenVraag) : null;
+        if (lokaal) {
+          setAntwoord({ tekst: lokaal, bronnen: [] });
+          setGesprek((g) => [...g.slice(-6), { vraag: vraagLabel(soort, eigenVraag), antwoord: lokaal }]);
+          setHerhaal(null);
+        } else {
+          setFout(soortFout.tekst);
+          setHerhaal({ soort, eigenVraag });
+        }
       } finally {
         setBezig(false);
       }
@@ -68485,14 +68507,6 @@ ${String(stapTekst).slice(0, 900)}` : ""
       const t = (vraag || "").trim();
       if (!t || bezig) return;
       vraagNeo(soortVanInvoer(t), t);
-    };
-    const richtOpVraag = () => {
-      try {
-        const el2 = document.getElementById("neo-vraag");
-        el2 && el2.focus();
-        el2 && el2.scrollIntoView && el2.scrollIntoView({ block: "nearest" });
-      } catch {
-      }
     };
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "neo-knop" + (cue ? " is-cue" : ""), onClick: () => {
@@ -68514,8 +68528,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "neo-vraagtekst", children: "Waarmee kan ik helpen?" }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "neo-acties", children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "neo-actie", disabled: bezig, onClick: () => vraagNeo("makkelijker"), children: "Leg dit uit" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "neo-actie", disabled: bezig, onClick: () => vraagNeo("voorbeeld"), children: "Geef een voorbeeld" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "neo-actie", disabled: bezig, onClick: richtOpVraag, children: "Ik heb een vraag" })
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "neo-actie", disabled: bezig, onClick: () => vraagNeo("voorbeeld"), children: "Geef een voorbeeld" })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "neo-antwoord", "aria-live": "polite", children: [
           bezig && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "muted events-laden", children: [
@@ -68588,7 +68601,16 @@ ${String(stapTekst).slice(0, 900)}` : ""
       ] }) })
     ] });
   }
+  var bewijsLinkOk = (u) => {
+    try {
+      const x = new URL(String(u || ""));
+      return (x.protocol === "https:" || x.protocol === "http:") && !!x.hostname && x.hostname.includes(".");
+    } catch {
+      return false;
+    }
+  };
   var BEWIJS_MAX = { foto: 10 * 1024 * 1024, audio: 25 * 1024 * 1024, video: 100 * 1024 * 1024, bestand: 25 * 1024 * 1024 };
+  var AUDIO_TYPES = [".mp3", ".m4a", ".aac", ".wav", ".ogg", ".oga", ".opus", ".webm", ".flac"];
   var BESTAND_TYPES = [
     ".pdf",
     ".doc",
@@ -68610,7 +68632,8 @@ ${String(stapTekst).slice(0, 900)}` : ""
     ".heic",
     ".gif",
     ".svg",
-    ".zip"
+    ".zip",
+    ...AUDIO_TYPES
   ].join(",");
   function BewijsIcoon({ soort, size = 18 }) {
     const p = {
@@ -68653,6 +68676,16 @@ ${String(stapTekst).slice(0, 900)}` : ""
       meting: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M3.6 9.4h16.8v5.2H3.6z" }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M7 9.4v2.6M10.3 9.4v3.6M13.7 9.4v2.6M17 9.4v3.6" })
+      ] }),
+      /* v112 (D5): twee soorten die wél bestonden maar geen icoon hadden en dus
+         een lege svg tekenden */
+      link: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M10 13.5a3.5 3.5 0 0 0 5 0l3-3a3.5 3.5 0 0 0-5-5l-1 1" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M14 10.5a3.5 3.5 0 0 0-5 0l-3 3a3.5 3.5 0 0 0 5 5l1-1" })
+      ] }),
+      bevestiging: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("circle", { cx: "12", cy: "12", r: "8.2" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M8.5 12.3l2.4 2.4 4.8-5" })
       ] })
     }[soort] || null;
     const gevuld = soort === "speel" || soort === "stop";
@@ -68681,7 +68714,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
     { soort: "video", label: "Video toevoegen" },
     { soort: "bestand", label: "Bestand toevoegen" }
   ];
-  var BEWIJS_NAAM = { tekst: "Tekst", foto: "Foto", audio: "Geluidsopname", video: "Video", bestand: "Bestand" };
+  var BEWIJS_NAAM = { tekst: "Tekst", foto: "Foto", audio: "Geluidsopname", video: "Video", bestand: "Bestand", link: "Link", meting: "Meting", bevestiging: "Docentbevestiging" };
   var bewijsMb = (n) => Math.round((Number(n) || 0) / 104857.6) / 10;
   var bewijsTijd = (iso) => {
     try {
@@ -68758,9 +68791,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
       }
     }
   };
-  function GeluidOpnemen({ onKlaar, onAnnuleer }) {
+  function GeluidOpnemen({ onKlaar, onAnnuleer, onBestand }) {
     const [staat, setStaat] = (0, import_react2.useState)("klaar");
     const [seconden, setSeconden] = (0, import_react2.useState)(0);
+    const secondenRef = (0, import_react2.useRef)(0);
     const [fout, setFout] = (0, import_react2.useState)("");
     const [opname, setOpname] = (0, import_react2.useState)(null);
     const recRef = (0, import_react2.useRef)(null);
@@ -68797,12 +68831,13 @@ ${String(stapTekst).slice(0, 900)}` : ""
         rec.onstop = () => {
           const blob = new Blob(brokkenRef.current, { type: rec.mimeType || "audio/webm" });
           stopStream();
-          setOpname({ blob, url: URL.createObjectURL(blob), duur: seconden });
+          setOpname({ blob, url: URL.createObjectURL(blob), duur: secondenRef.current });
           setStaat("opgenomen");
         };
         recRef.current = rec;
         rec.start();
         setSeconden(0);
+        secondenRef.current = 0;
         setStaat("bezig");
         clearInterval(tikRef.current);
         tikRef.current = setInterval(() => setSeconden((s) => {
@@ -68813,6 +68848,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
             }
             clearInterval(tikRef.current);
           }
+          secondenRef.current = s + 1;
           return s + 1;
         }), 1e3);
       } catch (e) {
@@ -68832,12 +68868,20 @@ ${String(stapTekst).slice(0, 900)}` : ""
       setOpname(null);
       setStaat("klaar");
       setSeconden(0);
+      secondenRef.current = 0;
     };
     const klok = (s) => String(Math.floor(s / 60)) + ":" + String(s % 60).padStart(2, "0");
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "bewijs-opname", children: [
-      staat === "klaar" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent bewijs-rond", onClick: start, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: "audio", size: 17 }),
-        " Start opname"
+      staat === "klaar" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "bewijs-knoprij", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent bewijs-rond", onClick: start, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: "audio", size: 17 }),
+          " Start opname"
+        ] }),
+        onBestand && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "admin-btn-sec", onClick: onBestand, children: "Kies een geluidsbestand" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "admin-btn-sec", onClick: () => {
+          stop();
+          onAnnuleer();
+        }, children: "Annuleren" })
       ] }),
       staat === "bezig" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "bewijs-opname-rij", children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bewijs-rec", "aria-hidden": "true" }),
@@ -68859,7 +68903,8 @@ ${String(stapTekst).slice(0, 900)}` : ""
         ] })
       ] }),
       fout && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "bewijs-fout", role: "alert", children: fout }),
-      staat !== "opgenomen" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "bewijs-terug", onClick: () => {
+      staat === "geweigerd" && onBestand && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "btn btn-accent bewijs-rond", onClick: onBestand, children: "Kies een geluidsbestand" }),
+      staat !== "opgenomen" && staat !== "klaar" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "bewijs-terug", onClick: () => {
         stop();
         onAnnuleer();
       }, children: "Annuleren" })
@@ -68890,7 +68935,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
       };
     }, [open, bewijs.pad]);
     const vormNaam = bewijs.vorm && (bewijsvormVan(bewijs.vorm) || {}).label || BEWIJS_NAAM[bewijs.soort] || bewijs.soort;
-    const geenBestand = bewijs.soort === "tekst" || bewijs.soort === "meting" || bewijs.soort === "bevestiging";
+    const geenBestand = bewijs.soort === "tekst" || bewijs.soort === "meting" || bewijs.soort === "bevestiging" || bewijs.soort === "link";
     const titel = geenBestand ? vormNaam : bewijs.bestandsnaam || vormNaam || "Bewijs";
     const meta = [
       bewijsTijd(bewijs.tijdstip),
@@ -68909,6 +68954,13 @@ ${String(stapTekst).slice(0, 900)}` : ""
           bewijs.status === "bevestigd" ? " \xB7 bevestigd door de docent" : ""
         ] }),
         (bewijs.soort === "tekst" || bewijs.soort === "bevestiging") && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bewijs-regel-tekst", children: bewijs.tekst }),
+        bewijs.soort === "link" && bewijs.url && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "bewijs-regel-tekst", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("a", { href: bewijs.url, target: "_blank", rel: "noopener noreferrer", style: { color: "var(--accent-diep)", fontWeight: 700, wordBreak: "break-all" }, children: bewijs.url }),
+          bewijs.tekst && bewijs.tekst.replace(bewijs.url, "").trim() ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("br", {}),
+            bewijs.tekst.replace(bewijs.url, "").trim()
+          ] }) : null
+        ] }),
         bewijs.soort === "meting" && bewijs.meting && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "bewijs-regel-tekst", children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: bewijs.meting.wat }),
           bewijs.meting.eenheid ? " (" + bewijs.meting.eenheid + ")" : "",
@@ -69396,8 +69448,8 @@ ${String(stapTekst).slice(0, 900)}` : ""
             children: [
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { color: "var(--accent-diep)", display: "inline-flex", flexShrink: 0, marginTop: 2 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: cat.icoon, size: 18 }) }),
               /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { style: { minWidth: 0 }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LT, { tekst: w.naam, tp }) }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LT, { tekst: w.beschrijving, tp }) })
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LTplat, { tekst: w.naam, tp }) }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LTplat, { tekst: w.beschrijving, tp }) })
               ] })
             ]
           },
@@ -69406,21 +69458,55 @@ ${String(stapTekst).slice(0, 900)}` : ""
       }) })
     ] });
   }
-  function BewijsBlok({ rec, stapId, tp, api, onBewijzen, alleenLezen, vormen }) {
+  var BEWIJS_BESTAND_IN_WACHT = /* @__PURE__ */ new Map();
+  function BewijsBlok({ rec, stapId, tp, api, onBewijzen, alleenLezen, vormen, concept: bewaardConcept, onConcept }) {
     const bewijzen = Array.isArray(rec && rec.bewijzen) ? rec.bewijzen : [];
+    const sleutelWacht = String(rec && rec.id || "") + "|" + String(stapId || "");
+    const c0 = bewaardConcept && typeof bewaardConcept === "object" ? bewaardConcept : null;
     const [menuOpen, setMenuOpen] = (0, import_react2.useState)(false);
-    const [modus, setModus] = (0, import_react2.useState)(null);
-    const [vorm, setVorm] = (0, import_react2.useState)(null);
+    const [modus, setModus] = (0, import_react2.useState)(c0 && c0.modus ? c0.modus : null);
+    const [vorm, setVorm] = (0, import_react2.useState)(() => (c0 && c0.vorm ? bewijsvormVan(c0.vorm) : null) || null);
     const toegestaan = Array.isArray(vormen) && vormen.length ? vormen : null;
     const keuzes = toegestaan ? toegestaan.map(bewijsvormVan).filter(Boolean) : BEWIJSVORMEN;
     const dragerVan = (v) => {
       const d = v && v.dragers || [];
       return d.find((x) => x !== "tekst") || d[0] || "tekst";
     };
-    const [tekst, setTekst] = (0, import_react2.useState)("");
-    const [toelichting, setToelichting] = (0, import_react2.useState)("");
-    const [meting, setMeting] = (0, import_react2.useState)({ wat: "", eenheid: "", waarden: "" });
-    const [concept, setConcept] = (0, import_react2.useState)(null);
+    const [tekst, setTekst] = (0, import_react2.useState)(c0 && c0.tekst || "");
+    const [toelichting, setToelichting] = (0, import_react2.useState)(c0 && c0.toelichting || "");
+    const [meting, setMeting] = (0, import_react2.useState)(c0 && c0.meting || { wat: "", eenheid: "", waarden: "" });
+    const [concept, setConcept] = (0, import_react2.useState)(() => {
+      const w = BEWIJS_BESTAND_IN_WACHT.get(sleutelWacht);
+      if (!w) return null;
+      const metUrl = (w.soort === "foto" || w.soort === "video") && w.bestand;
+      try {
+        return metUrl ? { ...w, url: URL.createObjectURL(w.bestand) } : w;
+      } catch {
+        return w;
+      }
+    });
+    const conceptRef = (0, import_react2.useRef)(onConcept);
+    conceptRef.current = onConcept;
+    const eersteRender = (0, import_react2.useRef)(true);
+    (0, import_react2.useEffect)(() => {
+      if (eersteRender.current) {
+        eersteRender.current = false;
+        return;
+      }
+      if (!conceptRef.current || alleenLezen) return;
+      const leeg = !tekst && !toelichting && !meting.wat && !meting.waarden && !modus;
+      const t = setTimeout(() => {
+        try {
+          conceptRef.current(leeg ? null : { modus, vorm: vorm && vorm.id || null, tekst, toelichting, meting });
+        } catch {
+        }
+      }, 600);
+      return () => clearTimeout(t);
+    }, [tekst, toelichting, meting, modus, vorm, alleenLezen]);
+    (0, import_react2.useEffect)(() => {
+      if (concept) BEWIJS_BESTAND_IN_WACHT.set(sleutelWacht, concept);
+      else BEWIJS_BESTAND_IN_WACHT.delete(sleutelWacht);
+    }, [concept, sleutelWacht]);
     const [pct, setPct] = (0, import_react2.useState)(null);
     const [fout, setFout] = (0, import_react2.useState)("");
     const [gelukt, setGelukt] = (0, import_react2.useState)("");
@@ -69445,10 +69531,22 @@ ${String(stapTekst).slice(0, 900)}` : ""
       setPct(null);
       if (concept && concept.url) URL.revokeObjectURL(concept.url);
       setConcept(null);
+      BEWIJS_BESTAND_IN_WACHT.delete(sleutelWacht);
+      try {
+        conceptRef.current && conceptRef.current(null);
+      } catch {
+      }
     };
     const voegToe = async (nieuw) => {
       const lijst = [...bewijzen, nieuw];
-      if (onBewijzen) await onBewijzen(lijst);
+      if (!onBewijzen) return;
+      const uit = await onBewijzen(lijst);
+      if (uit && uit.ok === false) {
+        const e = new Error("niet-opgeslagen");
+        e.code = "niet-opgeslagen";
+        e.reden = uit.reden;
+        throw e;
+      }
     };
     const bewaarTekst = async () => {
       const t = (tekst || "").trim();
@@ -69456,17 +69554,36 @@ ${String(stapTekst).slice(0, 900)}` : ""
         setFout("Schrijf eerst iets op.");
         return;
       }
-      await voegToe({
-        id: "b" + Date.now().toString(36),
-        soort: "tekst",
-        vorm: vorm && vorm.id || "tekst",
-        stapId,
-        tijdstip: (/* @__PURE__ */ new Date()).toISOString(),
-        status: "bewaard",
-        tekst: t.slice(0, 4e3)
-      });
-      setGelukt("Je tekst is bewaard.");
-      sluit();
+      const isLink = !!(vorm && vorm.id === "link");
+      const adres = isLink ? (t.match(/https?:\/\/[^\s<>"']+/i) || [])[0] || "" : "";
+      if (isLink && !bewijsLinkOk(adres)) {
+        setFout("Plak een volledig adres dat begint met https:// \u2014 bijvoorbeeld een link naar OneDrive, Teams of YouTube.");
+        return;
+      }
+      try {
+        await voegToe(isLink ? {
+          id: "b" + Date.now().toString(36),
+          soort: "link",
+          vorm: "link",
+          stapId,
+          tijdstip: (/* @__PURE__ */ new Date()).toISOString(),
+          status: "bewaard",
+          url: adres,
+          tekst: t.slice(0, 4e3)
+        } : {
+          id: "b" + Date.now().toString(36),
+          soort: "tekst",
+          vorm: vorm && vorm.id || "tekst",
+          stapId,
+          tijdstip: (/* @__PURE__ */ new Date()).toISOString(),
+          status: "bewaard",
+          tekst: t.slice(0, 4e3)
+        });
+        setGelukt("Je tekst is bewaard.");
+        sluit();
+      } catch (e) {
+        setFout("Het opslaan is niet gelukt. Je tekst staat er nog \u2014 probeer het nog een keer.");
+      }
     };
     const kiesBestand = (e) => {
       setFout("");
@@ -69484,7 +69601,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
         bestand: b,
         naam: b.name || BEWIJS_NAAM[soort],
         soort,
-        url: soort === "foto" || soort === "video" ? URL.createObjectURL(b) : null
+        url: soort === "foto" || soort === "video" || soort === "audio" ? URL.createObjectURL(b) : null
       });
     };
     const bewaarBestand = async (bestand, extra) => {
@@ -69519,7 +69636,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
         sluit();
       } catch (e) {
         setPct(null);
-        setFout(e && e.code === "te-groot" ? "Dit bestand is te groot. Het mag maximaal " + bewijsMb(e.grens || BEWIJS_MAX.bestand) + " MB zijn." : "Het opslaan is niet gelukt. Controleer je internet en probeer het nog een keer \u2014 je bestand staat nog klaar.");
+        setFout(e && e.code === "te-groot" ? "Dit bestand is te groot. Het mag maximaal " + bewijsMb(e.grens || BEWIJS_MAX.bestand) + " MB zijn." : e && e.code === "niet-opgeslagen" ? "Je bestand is ge\xFCpload, maar de uitdaging kon niet worden bijgewerkt. Probeer het nog een keer \u2014 je bestand staat nog klaar." : "Het opslaan is niet gelukt. Controleer je internet en probeer het nog een keer \u2014 je bestand staat nog klaar.");
       }
     };
     const bewaarMeting = async () => {
@@ -69528,18 +69645,22 @@ ${String(stapTekst).slice(0, 900)}` : ""
         setFout("Vul in wat je hebt gemeten en welke waarden eruit kwamen.");
         return;
       }
-      await voegToe({
-        id: "b" + Date.now().toString(36),
-        soort: "meting",
-        vorm: "meting",
-        stapId,
-        tijdstip: (/* @__PURE__ */ new Date()).toISOString(),
-        status: "bewaard",
-        meting: { wat: wat.slice(0, 200), eenheid: (meting.eenheid || "").trim().slice(0, 40), waarden: waarden.slice(0, 800) },
-        ...toelichting.trim() ? { toelichting: toelichting.trim().slice(0, 1200) } : {}
-      });
-      setGelukt("Je metingen zijn bewaard.");
-      sluit();
+      try {
+        await voegToe({
+          id: "b" + Date.now().toString(36),
+          soort: "meting",
+          vorm: "meting",
+          stapId,
+          tijdstip: (/* @__PURE__ */ new Date()).toISOString(),
+          status: "bewaard",
+          meting: { wat: wat.slice(0, 200), eenheid: (meting.eenheid || "").trim().slice(0, 40), waarden: waarden.slice(0, 800) },
+          ...toelichting.trim() ? { toelichting: toelichting.trim().slice(0, 1200) } : {}
+        });
+        setGelukt("Je metingen zijn bewaard.");
+        sluit();
+      } catch (e) {
+        setFout("Het opslaan is niet gelukt. Je metingen staan er nog \u2014 probeer het nog een keer.");
+      }
     };
     const vraagBevestiging = async () => {
       const t = (tekst || "").trim();
@@ -69547,31 +69668,44 @@ ${String(stapTekst).slice(0, 900)}` : ""
         setFout("Beschrijf kort wat je hebt laten zien, zodat je docent weet waar het over gaat.");
         return;
       }
-      await voegToe({
-        id: "b" + Date.now().toString(36),
-        soort: "bevestiging",
-        vorm: "docentbevestiging",
-        stapId,
-        tijdstip: (/* @__PURE__ */ new Date()).toISOString(),
-        status: "gevraagd",
-        tekst: t.slice(0, 1e3)
-      });
-      setGelukt("Je docent krijgt dit te zien en kan het bevestigen.");
-      sluit();
+      try {
+        await voegToe({
+          id: "b" + Date.now().toString(36),
+          soort: "bevestiging",
+          vorm: "docentbevestiging",
+          stapId,
+          tijdstip: (/* @__PURE__ */ new Date()).toISOString(),
+          status: "gevraagd",
+          tekst: t.slice(0, 1e3)
+        });
+        setGelukt("Je docent krijgt dit te zien en kan het bevestigen.");
+        sluit();
+      } catch (e) {
+        setFout("Het opslaan is niet gelukt. Je tekst staat er nog \u2014 probeer het nog een keer.");
+      }
     };
     const verwijder = async (b) => {
-      try {
-        if (b.pad) await opslag.verwijder(b.pad);
-      } catch {
+      if (b.pad) {
+        let weg = false;
+        try {
+          const r = await opslag.verwijder(b.pad);
+          weg = r !== false;
+        } catch {
+          weg = false;
+        }
+        if (!weg) {
+          setFout("Verwijderen is niet gelukt. Probeer het nog een keer.");
+          return;
+        }
       }
       const lijst = bewijzen.filter((x) => x.id !== b.id);
       if (onBewijzen) await onBewijzen(lijst);
       setGelukt("Verwijderd.");
     };
-    const accept = { foto: "image/*", video: "video/*", bestand: BESTAND_TYPES }[modus] || void 0;
+    const accept = { foto: "image/*", video: "video/*", bestand: BESTAND_TYPES, audio: "audio/*," + AUDIO_TYPES.join(",") }[modus] || void 0;
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "bewijs-blok", children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "bewijs-kop", children: "Laat zien wat je hebt gedaan" }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "bewijs-sub", children: alleenLezen ? "Dit heb je ingeleverd." : "Kies hoe je jouw resultaat wilt laten zien." }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "bewijs-sub", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LT, { tekst: alleenLezen ? "Dit heb je ingeleverd." : "Kies hoe je jouw resultaat wilt laten zien.", tp }) }),
       bewijzen.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "bewijs-lijst", children: bewijzen.map((b) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsRegel, { bewijs: b, api: opslag, onVerwijder: alleenLezen ? null : verwijder }, b.id)) }),
       !modus && !alleenLezen && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "bewijs-toevoegen", children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
@@ -69613,8 +69747,8 @@ ${String(stapTekst).slice(0, 900)}` : ""
               children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: drager === "meting" ? "tekst" : drager === "bevestiging" ? "check" : drager, size: 17 }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "bewijs-keuze-tekst", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: v.label }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bewijs-keuze-uitleg", children: v.uitleg })
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LTplat, { tekst: v.label, tp }) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bewijs-keuze-uitleg", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LTplat, { tekst: v.uitleg, tp }) })
                 ] })
               ]
             },
@@ -69629,8 +69763,8 @@ ${String(stapTekst).slice(0, 900)}` : ""
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "werk-dicht", "aria-label": "Sluiten", onClick: sluit, children: "\xD7" })
         ] }),
         vorm && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "bewijs-vormuitleg", children: [
-          vorm.uitleg,
-          vorm.meervoud ? " Je kunt er meerdere achter elkaar toevoegen." : ""
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LT, { tekst: vorm.uitleg, tp }),
+          vorm.meervoud ? " Bewaar er \xE9\xE9n; daarna kun je de volgende toevoegen." : ""
         ] }),
         vorm && vorm.herkenbaar && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "bewijs-vormlet", children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: "info", size: 14 }),
@@ -69716,16 +69850,22 @@ ${String(stapTekst).slice(0, 900)}` : ""
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "admin-btn-sec", onClick: sluit, children: "Annuleren" })
           ] })
         ] }),
-        modus === "audio" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+        modus === "audio" && !concept && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
           GeluidOpnemen,
           {
             onAnnuleer: sluit,
+            onBestand: () => {
+              try {
+                kiesRef.current && kiesRef.current.click();
+              } catch {
+              }
+            },
             onKlaar: (blob, extra) => bewaarBestand(blob, { ...extra, soort: "audio" })
           }
         ),
-        (modus === "foto" || modus === "video" || modus === "bestand") && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "grid", gap: 10 }, children: [
+        (modus === "foto" || modus === "video" || modus === "bestand" || modus === "audio") && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "grid", gap: 10 }, children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { ref: kiesRef, type: "file", accept, onChange: kiesBestand, style: { display: "none" } }),
-          !concept && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "bewijs-knoprij", children: [
+          !concept && modus !== "audio" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "bewijs-knoprij", children: [
             modus === "foto" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("label", { className: "btn btn-accent bewijs-rond bewijs-label", children: [
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: "foto", size: 16 }),
               " Camera",
@@ -69755,6 +69895,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
           concept && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "grid", gap: 10 }, children: [
             concept.soort === "foto" && concept.url && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("img", { className: "bewijs-preview", src: concept.url, alt: "Gekozen foto" }),
             concept.soort === "video" && concept.url && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("video", { className: "bewijs-preview", src: concept.url, controls: true, preload: "metadata" }),
+            concept.soort === "audio" && concept.url && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("audio", { src: concept.url, controls: true, preload: "metadata", style: { width: "100%" } }),
             /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "bewijs-bestandsnaam", children: [
               concept.naam,
               " \xB7 ",
@@ -69841,10 +69982,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
         " ",
         gelukt
       ] }),
-      !alleenLezen && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "bewijs-privacy", children: "Alleen jij en je begeleider zien wat je hier toevoegt. Zet er niets op wat je niet wilt delen; verwijderen kan altijd." })
+      !alleenLezen && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "bewijs-privacy", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LT, { tekst: "Alleen jij en je begeleider zien wat je hier toevoegt. Zet er niets op wat je niet wilt delen; verwijderen kan altijd.", tp }) })
     ] });
   }
-  function Uitdaging({ rec, reedsAf, startStap, onAfgerond, onBewaar, onStap, onNieuw, records, gebruiker, onInleveren, onWerk, platformNeo, onSignaal, onBewijzen, bewijsApi, onWerkvormKeuze, neoVaardigheden }) {
+  function Uitdaging({ rec, reedsAf, startStap, onAfgerond, onBewaar, onStap, onNieuw, records, gebruiker, onInleveren, onWerk, platformNeo, onSignaal, onBewijzen, bewijsApi, onWerkvormKeuze, neoVaardigheden, onConcept }) {
     const [analysePopup, setAnalysePopup] = (0, import_react2.useState)(null);
     const d = rec.data;
     if (!d) {
@@ -69881,7 +70022,21 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const startScherm = reedsAf ? Math.max(0, schermen.findIndex((x) => x.type === "situatie")) : startStap || 0;
     const [i, setI] = (0, import_react2.useState)(() => Math.min(Math.max(startScherm, 0), totaal - 1));
     const [mail, setMail] = (0, import_react2.useState)(false);
-    const [antwoorden, setAntwoorden] = (0, import_react2.useState)(() => Array(vragen.length).fill(null));
+    const [antwoorden, setAntwoorden] = (0, import_react2.useState)(() => {
+      const c = rec && Array.isArray(rec.reflectieConcept) ? rec.reflectieConcept : null;
+      return c && c.length === vragen.length && !reedsAf ? c.slice() : Array(vragen.length).fill(null);
+    });
+    const conceptRef = (0, import_react2.useRef)(onConcept);
+    conceptRef.current = onConcept;
+    const kiesAntwoord = (qi, waarde) => setAntwoorden((prev) => {
+      const n = [...prev];
+      n[qi] = waarde;
+      try {
+        conceptRef.current && conceptRef.current({ reflectieConcept: n });
+      } catch {
+      }
+      return n;
+    });
     const ci = Math.min(Math.max(i, 0), totaal - 1);
     const huidig = schermen[ci] || schermen[totaal - 1];
     const ciRef = (0, import_react2.useRef)(ci);
@@ -70160,7 +70315,25 @@ ${String(stapTekst).slice(0, 900)}` : ""
                   }
                 }
               ),
-              !begeleiderWeergave && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsBlok, { rec, stapId: "afronden", tp: tprofUitd, api: bewijsApi, onBewijzen, alleenLezen: reedsAf, vormen: arr(d.bewijsvormen) }),
+              !begeleiderWeergave && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                BewijsBlok,
+                {
+                  rec,
+                  stapId: "afronden",
+                  tp: tprofUitd,
+                  api: bewijsApi,
+                  onBewijzen,
+                  alleenLezen: reedsAf,
+                  vormen: arr(d.bewijsvormen),
+                  concept: rec && rec.bewijsConcept,
+                  onConcept: (c) => {
+                    try {
+                      conceptRef.current && conceptRef.current({ bewijsConcept: c });
+                    } catch {
+                    }
+                  }
+                }
+              ),
               d.transfer && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { style: { padding: "12px 14px", borderRadius: 12, background: "#FBEFE6", fontWeight: 600, lineHeight: 1.5 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LT, { tekst: d.transfer, tp: tprofUitd }) }),
               reedsAf ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { marginTop: 12, padding: "14px 16px", borderRadius: 12, background: "#E3F1E6", color: "#2E7D43", fontWeight: 700 }, children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 15 }),
@@ -70194,11 +70367,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 8 }, children: huidig.vraag.a.map((opt, ai) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
                 "button",
                 {
-                  onClick: () => setAntwoorden((prev) => {
-                    const n = [...prev];
-                    n[huidig.qi] = ai + 1;
-                    return n;
-                  }),
+                  onClick: () => kiesAntwoord(huidig.qi, ai + 1),
                   className: `rubric-optie${antwoorden[huidig.qi] === ai + 1 ? " " + ["rv1", "rv2", "rv3", "rv4"][ai] : ""}`,
                   children: [
                     /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { style: { fontWeight: 700, marginRight: 8, opacity: 0.6 }, children: [
@@ -70234,11 +70403,11 @@ ${String(stapTekst).slice(0, 900)}` : ""
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 8, marginBottom: 16 }, children: vragen.map((vraag, vi) => {
                 const a = antwoorden[vi];
                 const kleur = ["#EF9A9A", "#FFCC80", "#A5D6A7", "#90CAF9"][a - 1] || "#ccc";
-                const label = ["Nog niet", "Begin", "Goed", "Uitstekend"][a - 1] || "";
+                const gekozen = vraag.a && vraag.a[a - 1] || ["Nog niet", "Een beetje", "Grotendeels", "Helemaal"][a - 1] || "";
                 return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: 10, padding: "10px 14px", borderRadius: 12, background: "#f9f9f9" }, children: [
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { width: 10, height: 10, borderRadius: "50%", background: kleur, flexShrink: 0 } }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { flex: 1, fontSize: ".84rem" }, children: vraag.v }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { fontWeight: 700, fontSize: ".82rem", color: "#555" }, children: label })
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { flex: 1, fontSize: ".84rem" }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LTplat, { tekst: vraag.v, tp: tprofUitd }) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { fontWeight: 700, fontSize: ".8rem", color: "#555", textAlign: "right", maxWidth: "42%", lineHeight: 1.3 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LTplat, { tekst: gekozen, tp: tprofUitd }) })
                 ] }, vi);
               }) }),
               behaaldNu ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { className: "btn btn-accent", onClick: () => onAfgerond({ rubricScore: score, reflectie: vragen.map((v, qi) => ({ vraag: v && v.v, waarde: antwoorden[qi] })), behaald: behaaldNu }), children: [
@@ -70249,6 +70418,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
               ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "grid", gap: 8 }, children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "btn btn-licht", onClick: () => {
                   setAntwoorden(Array(vragen.length).fill(null));
+                  try {
+                    conceptRef.current && conceptRef.current({ reflectieConcept: null });
+                  } catch {
+                  }
                   ga(-vragen.length);
                 }, children: "Opnieuw reflecteren" }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "btn btn-licht", onClick: () => onAfgerond({ rubricScore: score, reflectie: vragen.map((v, qi) => ({ vraag: v && v.v, waarde: antwoorden[qi] })), behaald: behaaldNu }), style: { opacity: 0.7, fontSize: ".88rem" }, children: "Toch afronden" })
@@ -70400,12 +70573,35 @@ ${String(stapTekst).slice(0, 900)}` : ""
     return { naam: file.name, url: item && item.webUrl || "", type: file.type || "", grootte: file.size, id: item && item.id || "" };
   }
   var inleverGrootte = (b) => b >= 1048576 ? (b / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(b / 1024)) + " KB";
+  var inzending = (rec) => {
+    const inl = rec && rec.inlevering || null;
+    const bw = (rec && Array.isArray(rec.bewijzen) ? rec.bewijzen : []).filter((b) => b && (b.status === "bewaard" || b.status === "bevestigd"));
+    if (!inl && !bw.length) return null;
+    const tInl = inl ? String(inl.ingeleverdOp || "") : "";
+    const tBw = bw.map((b) => String(b.tijdstip || "")).sort().slice(-1)[0] || "";
+    return {
+      inl,
+      bewijzen: bw,
+      laatste: (tInl > tBw ? tInl : tBw) || tInl || tBw,
+      bron: inl && bw.length ? "beide" : inl ? "inlevering" : "bewijs"
+    };
+  };
   var inleverStatus = (rec) => {
-    const inl = rec && rec.inlevering;
-    if (!inl) return null;
-    if (inl.status === "beoordeeld" || rec.alpe && rec.alpe.mentorfeedback && inl.ingeleverdOp && String(rec.alpe.mentorfeedback.datum || "") >= String(inl.ingeleverdOp))
-      return { label: "Beoordeeld", kleur: "#2E7D43", achtergrond: "#E3F1E6" };
-    return { label: "Ingeleverd \xB7 wacht op beoordeling", kort: "Te beoordelen", kleur: "var(--accent-diep)", achtergrond: "var(--accent-zacht)" };
+    const z = inzending(rec);
+    if (!z) return null;
+    if (!z.inl && !rec.afgerond) return null;
+    const mf = rec.alpe && rec.alpe.mentorfeedback;
+    const mfOp = mf ? String(mf.op || mf.datum || "") : "";
+    const beoordeeld = z.inl && z.inl.status === "beoordeeld" || mf && z.laatste && mfOp >= z.laatste || mf && !z.laatste;
+    if (beoordeeld) return { label: "Beoordeeld", kleur: "#2E7D43", achtergrond: "#E3F1E6", bron: z.bron };
+    return {
+      label: z.bron === "bewijs" ? "Bewijs toegevoegd \xB7 wacht op beoordeling" : "Ingeleverd \xB7 wacht op beoordeling",
+      kort: "Te beoordelen",
+      kleur: "var(--accent-diep)",
+      achtergrond: "var(--accent-zacht)",
+      bron: z.bron,
+      laatste: z.laatste
+    };
   };
   function InleveringWeergave({ inl }) {
     if (!inl) return null;
@@ -72276,6 +72472,18 @@ ${String(stapTekst).slice(0, 900)}` : ""
   function Mentor({ gebruiker, alle, klassen, onKlassen, onOpen, projecten, onBeoordeel, onBeoordeelUitdaging, onPortfolio, onSync, syncBezig, syncInfo, heeftSchool, bewijsApi, onBevestigBewijs, portfolioVan, vaardigStanden, nav, onNav, onTerugNav }) {
     const readOnly = gebruiker.rol === "coach";
     const [mfRec, setMfRec] = (0, import_react2.useState)(null);
+    (0, import_react2.useEffect)(() => {
+      if (!mfRec || typeof document === "undefined") return;
+      const t = setTimeout(() => {
+        try {
+          const el2 = document.getElementById("beoordeling-" + mfRec.id);
+          const blok = el2 && (el2.closest(".ll-werk") || el2);
+          blok && blok.scrollIntoView && blok.scrollIntoView({ block: "start", behavior: "smooth" });
+        } catch {
+        }
+      }, 120);
+      return () => clearTimeout(t);
+    }, [mfRec && mfRec.id]);
     const [mfForm, setMfForm] = (0, import_react2.useState)({ feedback: "", observatie: "", rubric: "", sterke: "", nog: "", rubricNiveaus: {} });
     const [mfBusy, setMfBusy] = (0, import_react2.useState)(false);
     const [sel, setSel] = (0, import_react2.useState)(null);
@@ -72499,8 +72707,8 @@ ${String(stapTekst).slice(0, 900)}` : ""
         teBeoordelen.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { className: "lv-attentie-rij", onClick: () => setKlasPopup("__inleveringen"), children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lv-attentie-tekst", children: [
             teBeoordelen.length,
-            " inlevering",
-            teBeoordelen.length === 1 ? "" : "en",
+            " ",
+            teBeoordelen.length === 1 ? "stuk werk" : "stuks werk",
             " te beoordelen"
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "admin-rij-pijl", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 16 }) })
@@ -72816,7 +73024,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
               klassen.map((k) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: k.id, children: k.naam }, k.id))
             ] })
           ] }, leerlingSleutel(l))) }) }),
-          klasPopup === "__inleveringen" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Popup, { titel: "Ingeleverd \xB7 te beoordelen", sub: teBeoordelen.length + " inlevering(en)", onSluit: sluitDialoog, breed: true, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 8 }, children: teBeoordelen.sort((a, b) => String(b.r.inlevering.ingeleverdOp).localeCompare(String(a.r.inlevering.ingeleverdOp))).map(({ r, k, l }) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 12, background: "#f9f9f9", flexWrap: "wrap" }, children: [
+          klasPopup === "__inleveringen" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Popup, { titel: "Te beoordelen", sub: teBeoordelen.length + (teBeoordelen.length === 1 ? " stuk werk" : " stuks werk"), onSluit: sluitDialoog, breed: true, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 8 }, children: teBeoordelen.map((x) => ({ ...x, z: inzending(x.r) })).sort((a, b) => String((b.z || {}).laatste || "").localeCompare(String((a.z || {}).laatste || ""))).map(({ r, k, l, z }) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderRadius: 12, background: "#f9f9f9", flexWrap: "wrap" }, children: [
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Avatar, { naam: l.naam, size: 32 }),
             /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { style: { flex: "1 1 180px", minWidth: 0 }, children: [
               /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("b", { style: { display: "block", fontSize: ".9rem" }, children: [
@@ -72826,8 +73034,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
               ] }),
               /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "muted", style: { fontSize: ".76rem" }, children: [
                 r.data && r.data.titel || themaLabel(r.thema),
-                " \xB7 ingeleverd ",
-                datumNL(r.inlevering.ingeleverdOp),
+                " \xB7 ",
+                z && z.bron === "bewijs" ? "bewijs toegevoegd" : "ingeleverd",
+                " ",
+                datumNL(z && z.laatste),
                 Array.isArray(r.bewijzen) && r.bewijzen.length > 0 ? ` \xB7 ${r.bewijzen.length} bewijs${r.bewijzen.length === 1 ? "" : "stuk" + (r.bewijzen.length === 1 ? "" : "ken")}` : ""
               ] })
             ] }),
@@ -72838,7 +73048,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                 style: { padding: "7px 13px", fontSize: ".8rem" },
                 onClick: () => {
                   setKlasPopup(null);
-                  zetNav({ klasId: k.id, leerlingId: l.id });
+                  zetNav({ klasId: k.id, leerlingId: l.id, llTab: "werk" });
                   openMentorForm(r);
                 },
                 children: "Beoordelen"
@@ -73031,8 +73241,21 @@ ${String(stapTekst).slice(0, 900)}` : ""
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "btn btn-licht ll-mini", onClick: () => onOpen(r), children: "Bekijk" })
               ] }),
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsOverzicht, { bewijzen: r.bewijzen, api: bewijsApi, onBevestig: onBevestigBewijs ? (b, ja) => onBevestigBewijs(r, b, ja) : null }),
-              !bezigOok && !readOnly && (mfRec && mfRec.id === r.id ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { marginTop: 10, paddingTop: 10, borderTop: "1px solid var(--lijn-fijn)", display: "grid", gap: 8 }, children: [
+              !bezigOok && !readOnly && (mfRec && mfRec.id === r.id ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { id: "beoordeling-" + r.id, style: { marginTop: 10, paddingTop: 10, borderTop: "1px solid var(--lijn-fijn)", display: "grid", gap: 8 }, children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { fontWeight: 800, fontSize: ".84rem" }, children: "Mentorbeoordeling" }),
+                (() => {
+                  const eerder = alleRecs.filter((x) => x && x.id !== r.id && x.alpe && x.alpe.mentorfeedback && String(x.alpe.mentorfeedback.feedback || "").trim()).sort((a, b) => String(b.alpe.mentorfeedback.op || "").localeCompare(String(a.alpe.mentorfeedback.op || "")))[0];
+                  if (!eerder) return null;
+                  const mf = eerder.alpe.mentorfeedback;
+                  return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "muted", style: { fontSize: ".8rem", lineHeight: 1.45, padding: "8px 12px", borderLeft: "3px solid var(--lijn)", background: "var(--tegel-licht,#FAF9F6)", borderRadius: "0 10px 10px 0" }, children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { fontWeight: 700 }, children: "Eerder" }),
+                    " \xB7 ",
+                    eerder.data && eerder.data.titel || "vorige uitdaging",
+                    mf.op ? " \xB7 " + datumNL(mf.op) : "",
+                    mf.door ? " \xB7 " + mf.door : "",
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { marginTop: 3, color: "var(--inkt)" }, children: String(mf.feedback).length > 220 ? String(mf.feedback).slice(0, 220).trim() + "\u2026" : mf.feedback })
+                  ] });
+                })(),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Veld, { label: "Kwalitatieve feedback", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("textarea", { className: "field", rows: 3, value: mfForm.feedback, onChange: (e) => setMfForm((f) => ({ ...f, feedback: e.target.value })), placeholder: "Wat viel op, wat ging goed, wat is de volgende stap?" }) }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Veld, { label: "Observaties (optioneel)", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("textarea", { className: "field", rows: 2, value: mfForm.observatie, onChange: (e) => setMfForm((f) => ({ ...f, observatie: e.target.value })), placeholder: "Gedrag, inzet, samenwerking, zelfstandigheid\u2026" }) }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }, children: [
@@ -78135,6 +78358,12 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
     const [uitdagingen, setUitdagingen] = (0, import_react2.useState)([]);
     const [klassen, setKlassen] = (0, import_react2.useState)([]);
     const [actief, setActief] = (0, import_react2.useState)(null);
+    const actiefRef = (0, import_react2.useRef)(null);
+    actiefRef.current = actief;
+    const zetActief = (r) => {
+      actiefRef.current = r;
+      setActief(r);
+    };
     const [proRol, setProRol] = (0, import_react2.useState)(null);
     const [intakeRoute, setIntakeRoute] = (0, import_react2.useState)(null);
     const [blokTekst, setBlokTekst] = (0, import_react2.useState)("");
@@ -79011,13 +79240,18 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
       const nieuw = [gestempeld, ...zonder];
       setUitdagingen(nieuw);
       const uit = await store.saveAll(nieuw);
-      if (!uit.ok) setOpslagProbleem(uit.reden || "fout");
-      else if (opslagProbleem) setOpslagProbleem(null);
+      if (!uit.ok) {
+        setOpslagProbleem(uit.reden || "fout");
+        setUitdagingen(basis);
+        return { ok: false, reden: uit.reden || "fout" };
+      }
+      if (opslagProbleem) setOpslagProbleem(null);
       if (!(platform && platform.userId)) {
         spSchrijfRecords([gestempeld]).then((res) => {
           if (!res.ok) spOutboxToevoegen([gestempeld.id]);
         }).catch(() => spOutboxToevoegen([gestempeld.id]));
       }
+      return { ok: true };
     };
     const veiligheidPoortOpen = step === "uitdaging" && !!actief && !actief.afgerond && !(actief.veiligheidAkkoord && actief.veiligheidAkkoord.op) && !!gebruiker && String(gebruiker.rol || "leerling").toLowerCase() === "leerling";
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "tc grow-root" + (["mentor", "school", "platformadmin", "developer", "portfolio"].includes(step) ? " is-werk" : ""), children: [
@@ -79194,7 +79428,7 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
                 records: eigenRecords,
                 gebruiker,
                 onInleveren: async (r) => {
-                  setActief(r);
+                  zetActief(r);
                   await bewaarUitdaging(r);
                 },
                 onAfgerond: async (res) => {
@@ -79202,7 +79436,7 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
                   const profielSnap = d ? { route: d.route, samenvatting: d.samenvatting, sterke: d.sterke, aandacht: d.aandacht, interesses: d.interesses, kernkwaliteiten: d.kernkwaliteiten, ontwikkelpunten: d.ontwikkelpunten, motivatie: d.motivatie, persoonlijkheid: d.persoonlijkheid, laatsteCheckin: d.laatsteCheckin } : null;
                   const rs = res && Number.isFinite(res.rubricScore) ? res.rubricScore : actief.rubricScore;
                   const refl = res && Array.isArray(res.reflectie) ? res.reflectie : actief.reflectie;
-                  let r = { ...actief, afgerond: true, voortgang: 0, afgerondOp: (/* @__PURE__ */ new Date()).toISOString(), ...rs != null ? { rubricScore: rs } : {}, ...refl ? { reflectie: refl } : {}, ...profielSnap ? { profielSnap } : {} };
+                  let r = { ...actief, reflectieConcept: void 0, bewijsConcept: void 0, afgerond: true, voortgang: 0, afgerondOp: (/* @__PURE__ */ new Date()).toISOString(), ...rs != null ? { rubricScore: rs } : {}, ...refl ? { reflectie: refl } : {}, ...profielSnap ? { profielSnap } : {} };
                   try {
                     r.alpe = bouwLeerMemory({ record: r, historie: eigenRecords, versie: APP_VERSIE });
                   } catch {
@@ -79271,49 +79505,66 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
                   go("profiel");
                 },
                 onStap: async (stap) => {
-                  if (!actief || actief.afgerond) return;
-                  if ((actief.voortgang || 0) === stap) return;
-                  const r = { ...actief, voortgang: stap };
-                  setActief(r);
+                  const a = actiefRef.current;
+                  if (!a || a.afgerond) return;
+                  if ((a.voortgang || 0) === stap) return;
+                  const r = { ...a, voortgang: stap };
+                  zetActief(r);
                   try {
                     await bewaarUitdaging(r);
                   } catch {
                   }
                 },
                 onWerk: async (werk) => {
-                  const r = { ...actief, werk };
-                  setActief(r);
-                  await bewaarUitdaging(r);
+                  const r = { ...actiefRef.current || actief, werk };
+                  zetActief(r);
+                  return await bewaarUitdaging(r);
+                },
+                onConcept: async (patch) => {
+                  const a = actiefRef.current;
+                  if (!a || a.afgerond) return;
+                  const r = { ...a, ...patch };
+                  Object.keys(patch || {}).forEach((k) => {
+                    if (patch[k] == null) delete r[k];
+                  });
+                  zetActief(r);
+                  try {
+                    await bewaarUitdaging(r);
+                  } catch {
+                  }
                 },
                 onSignaal: async (actie, niveauLabel) => {
-                  if (!actief) return;
-                  const t = { ...actief.taalsignalen || {} };
+                  const a = actiefRef.current || actief;
+                  if (!a) return;
+                  const t = { ...a.taalsignalen || {} };
                   t[actie] = (t[actie] || 0) + 1;
                   t.laatst = (/* @__PURE__ */ new Date()).toISOString();
                   if (niveauLabel) {
                     t.perNiveau = { ...t.perNiveau || {} };
                     t.perNiveau[niveauLabel] = (t.perNiveau[niveauLabel] || 0) + 1;
                   }
-                  const r = { ...actief, taalsignalen: t };
-                  setActief(r);
+                  const r = { ...a, taalsignalen: t };
+                  zetActief(r);
                   await bewaarUitdaging(r);
                 },
                 onBewijzen: async (lijst) => {
-                  if (!actief) return;
-                  const r = { ...actief, bewijzen: lijst };
-                  setActief(r);
-                  await bewaarUitdaging(r);
+                  if (!actief) return { ok: false, reden: "geen-uitdaging" };
+                  const r = { ...actiefRef.current || actief, bewijzen: lijst };
+                  const uit = await bewaarUitdaging(r);
+                  if (uit && uit.ok !== false) zetActief(r);
+                  return uit || { ok: true };
                 },
                 neoVaardigheden: mijnVaardigheden && mijnVaardigheden.zichtbaar ? { vrijgegeven: true, standen: standPerVaardigheid(alleenVrijgegeven(mijnVaardigheden.oordelen || [])).filter((x) => x.aantal > 0) } : { vrijgegeven: false, standen: [] },
                 onWerkvormKeuze: async (id) => {
-                  if (!actief) return;
+                  const a = actiefRef.current || actief;
+                  if (!a) return;
                   const w = werkvormVan(id);
                   const r = {
-                    ...actief,
+                    ...a,
                     gekozenWerkvorm: id,
-                    data: { ...actief.data || {}, ...w ? { bewijsvormen: [...w.bewijs] } : {} }
+                    data: { ...a.data || {}, ...w ? { bewijsvormen: [...w.bewijs] } : {} }
                   };
-                  setActief(r);
+                  zetActief(r);
                   await bewaarUitdaging(r);
                 },
                 bewijsApi: platform && platform.bewijs,
