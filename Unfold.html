@@ -48160,6 +48160,64 @@
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "nat-plas", "aria-hidden": "true" })
     ] });
   }
+  function HailLayer({ aantal = 10, zaadje = 1 }) {
+    const korrels = (0, import_react.useMemo)(() => {
+      const r = zaad(zaadje * 15299);
+      return Array.from({ length: aantal }, () => ({
+        x: tussen(r, 2, 98),
+        duur: tussen(r, 2.6, 4.4),
+        wacht: -tussen(r, 0, 9),
+        drift: tussen(r, 6, 22),
+        maat: tussen(r, 2, 3.4),
+        op: tussen(r, 0.5, 0.85)
+      }));
+    }, [aantal, zaadje]);
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "nat-hagel", "aria-hidden": "true", children: korrels.map((k, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      "span",
+      {
+        className: "v11-hagel",
+        style: {
+          left: `${k.x}%`,
+          width: k.maat,
+          height: k.maat,
+          opacity: k.op,
+          animationDuration: `${k.duur}s`,
+          animationDelay: `${k.wacht}s`,
+          ["--nat-drift"]: `${k.drift}px`
+        }
+      },
+      i
+    )) });
+  }
+  function SandLayer({ aantal = 14, zaadje = 1 }) {
+    const slierten = (0, import_react.useMemo)(() => {
+      const r = zaad(zaadje * 22109);
+      return Array.from({ length: aantal }, () => ({
+        y: tussen(r, 2, 19),
+        // procent vanaf de onderkant
+        duur: tussen(r, 4.5, 9.5),
+        wacht: -tussen(r, 0, 9),
+        breed: tussen(r, 18, 54),
+        op: tussen(r, 0.12, 0.3),
+        dik: tussen(r, 0.8, 1.8)
+      }));
+    }, [aantal, zaadje]);
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "nat-zand", "aria-hidden": "true", children: slierten.map((s, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      "span",
+      {
+        className: "v11-zandsliert",
+        style: {
+          bottom: `${s.y}%`,
+          width: s.breed,
+          height: s.dik,
+          opacity: s.op,
+          animationDuration: `${s.duur}s`,
+          animationDelay: `${s.wacht}s`
+        }
+      },
+      i
+    )) });
+  }
   function WindParticles({ aantal = 3, zaadje = 1 }) {
     const lijnen = (0, import_react.useMemo)(() => {
       const r = zaad(zaadje * 67867979);
@@ -48190,7 +48248,9 @@
     mos: "#55624E",
     steen: "#D9D6D0",
     zand: "#D6C7B2",
-    inkt: "#1C1B19"
+    inkt: "#1C1B19",
+    terra: "#C08A6B",
+    ijs: "#DCE6EA"
   };
   var L = {
     ver1: "#EAEBE7",
@@ -48209,25 +48269,61 @@
     water: "#D4DAD6",
     waterD: "#C2CAC5",
     sneeuw: "#F4F4F2",
-    inkt: "#1C1B19"
+    inkt: "#1C1B19",
+    /* v111 — zes tinten erbij, volgens dezelfde regel: hoe verder weg, hoe meer
+       papier erin. Geen enkele kleur hieronder staat los van de trap. */
+    terra: "#C08A6B",
+    terraL: "#DCC3B2",
+    terraD: "#A06F52",
+    ijs: "#DCE6EA",
+    ijsL: "#EDF2F4",
+    mist: "#CBD3D6",
+    /* v111 fase C — een groenere familie naast de salie. Salie (#7E8C77) is
+       grijsgroen; de referentiebeelden zijn duidelijk groener. Deze vijf vullen
+       dat gat voor bladgroen, en volgen dezelfde papiertrap. Salie blijft voor
+       de verte, voor droge streken en voor alles wat gedempt hoort te zijn. */
+    blad1: "#C6D4B8",
+    blad2: "#A9BD98",
+    blad: "#8CA67A",
+    bladD: "#6B8759",
+    bladDD: "#4F6B40",
+    /* herfst: dezelfde familie, warmer gedraaid */
+    herfst: "#C98F4E",
+    herfstD: "#A66A34",
+    herfstL: "#E0BC8C",
+    /* bloemen, bewust gedempt zodat ze geen confetti worden */
+    bloem1: "#E4CFA8",
+    bloem2: "#D8B9C0",
+    bloem3: "#EDE3C9"
   };
+  var NAT_DEKKING = 2.4;
   var LANDSCHAPPEN = [
-    "toendra",
-    "taiga",
-    "caatinga",
+    "loofbos",
+    "alpen",
+    "woestijn",
     "regenwoud",
-    "daisetsuzan",
-    "shiretoko",
-    "kamikochi"
+    "kust",
+    "herfstbos",
+    "toendra",
+    "bloemenweide",
+    "canyon",
+    "bergmeer",
+    "olijfgaard",
+    "savanne"
   ];
   var LANDSCHAP_INFO = {
-    toendra: { naam: "toendra", gras: true, weer: "sneeuw" },
-    taiga: { naam: "taiga", gras: true, weer: null },
-    caatinga: { naam: "caatinga", gras: false, weer: "regen" },
+    loofbos: { naam: "loofbos", gras: false, weer: null },
+    alpen: { naam: "alpen", gras: false, weer: "sneeuw" },
+    woestijn: { naam: "woestijn", gras: false, weer: "zand" },
     regenwoud: { naam: "regenwoud", gras: false, weer: "regen" },
-    daisetsuzan: { naam: "Daisetsuzan", gras: true, weer: null },
-    shiretoko: { naam: "Shiretoko", gras: false, weer: "sneeuw" },
-    kamikochi: { naam: "Kamikochi", gras: false, weer: null }
+    kust: { naam: "kust", gras: false, weer: null },
+    herfstbos: { naam: "herfstbos", gras: false, weer: null },
+    toendra: { naam: "toendra", gras: false, weer: "hagel" },
+    bloemenweide: { naam: "bloemenweide", gras: false, weer: null },
+    canyon: { naam: "canyon", gras: false, weer: "zand" },
+    bergmeer: { naam: "bergmeer", gras: false, weer: "regen" },
+    olijfgaard: { naam: "olijfgaard", gras: false, weer: null },
+    savanne: { naam: "savanne", gras: false, weer: "zand" }
   };
   function landschapVan(datum, verschuiving = 0) {
     const d = datum || /* @__PURE__ */ new Date();
@@ -48235,11 +48331,18 @@
     return LANDSCHAPPEN[(dag % LANDSCHAPPEN.length + LANDSCHAPPEN.length) % LANDSCHAPPEN.length];
   }
   var OUDE_NAMEN = {
-    heuvels: "daisetsuzan",
-    bergen: "kamikochi",
+    /* v107 */
+    taiga: "alpen",
+    caatinga: "canyon",
+    daisetsuzan: "bergmeer",
+    shiretoko: "toendra",
+    kamikochi: "bergmeer",
+    /* nog ouder, uit de tijd vóór de zeven */
+    heuvels: "loofbos",
+    bergen: "alpen",
     bamboe: "regenwoud",
-    meer: "kamikochi",
-    dennen: "taiga"
+    meer: "bergmeer",
+    dennen: "alpen"
   };
   function testLandschapUitUrl() {
     const geldig = (v) => LANDSCHAPPEN.includes(String(v));
@@ -48283,50 +48386,6 @@
       transformOrigin: `${x}px ${grond}px`
     }
   });
-  function Spar({ x, grond, h, b, kleur, i = 0 }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { ...wieg(x, grond, i, 1.5), children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", { x: x - 0.3, y: grond - h * 0.18, width: ".6", height: h * 0.18, fill: kleur }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: `M${x} ${grond - h} L${x + b} ${grond - h * 0.15} L${x - b} ${grond - h * 0.15} Z`, fill: kleur })
-    ] });
-  }
-  function Kruinboom({ x, grond, h, kleur, stam, breed = 0.32, i = 0 }) {
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { ...wieg(x, grond, i), children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-        "path",
-        {
-          d: `M${x} ${grond} L${x + 0.5} ${grond - h * 0.74}`,
-          stroke: stam,
-          strokeWidth: ".6",
-          strokeLinecap: "round",
-          fill: "none"
-        }
-      ),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: x + 0.7, cy: grond - h * 0.82, rx: h * breed, ry: h * breed * 0.78, fill: kleur })
-    ] });
-  }
-  function Wilg({ x, grond, h, kleur, i = 0 }) {
-    const top = grond - h;
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { ...wieg(x, grond, i), children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: `M${x} ${grond} L${x} ${top + h * 0.4}`, stroke: kleur, strokeWidth: ".6", fill: "none" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: x, cy: top + h * 0.3, rx: h * 0.4, ry: h * 0.14, fill: kleur }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { stroke: kleur, strokeWidth: ".35", fill: "none", strokeLinecap: "round", opacity: ".8", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: `M${x - h * 0.32} ${top + h * 0.34} Q ${x - h * 0.36} ${top + h * 0.46} ${x - h * 0.3} ${top + h * 0.56}` }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: `M${x - h * 0.1} ${top + h * 0.38} Q ${x - h * 0.14} ${top + h * 0.5} ${x - h * 0.08} ${top + h * 0.6}` }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: `M${x + h * 0.14} ${top + h * 0.38} Q ${x + h * 0.18} ${top + h * 0.5} ${x + h * 0.12} ${top + h * 0.58}` }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: `M${x + h * 0.32} ${top + h * 0.34} Q ${x + h * 0.36} ${top + h * 0.45} ${x + h * 0.3} ${top + h * 0.54}` })
-      ] })
-    ] });
-  }
-  function Cactus({ x, grond, h, kleur, arm = true, i = 0 }) {
-    const w = 1.9;
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { ...wieg(x, grond, i, 3), children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", { x: x - w / 2, y: grond - h, width: w, height: h, rx: w / 2, fill: kleur }),
-      arm && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", { x: x + w / 2 - 0.3, y: grond - h * 0.62, width: "2.6", height: w * 0.72, rx: w * 0.36, fill: kleur }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", { x: x + w / 2 + 1.7, y: grond - h * 0.78, width: w * 0.72, height: h * 0.34, rx: w * 0.36, fill: kleur })
-      ] })
-    ] });
-  }
   function KaalBoom({ x, grond, h, kleur, i = 0 }) {
     const t = grond - h;
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { ...wieg(x, grond, i), stroke: kleur, strokeWidth: ".4", fill: "none", strokeLinecap: "round", children: [
@@ -48347,8 +48406,8 @@
   function Parasol({ x, grond, h, kleur, stam, i = 0 }) {
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { ...wieg(x, grond, i, 2), children: [
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: `M${x} ${grond} L${x} ${grond - h * 0.88}`, stroke: stam, strokeWidth: ".7", fill: "none" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: x, cy: grond - h * 0.9, rx: h * 0.42, ry: h * 0.11, fill: kleur }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: x - h * 0.2, cy: grond - h * 0.82, rx: h * 0.22, ry: h * 0.08, fill: kleur })
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: x, cy: grond - h * 0.9, rx: h * 0.58, ry: h * 0.17, fill: kleur }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: x - h * 0.3, cy: grond - h * 0.8, rx: h * 0.34, ry: h * 0.12, fill: kleur })
     ] });
   }
   function Schots({ x, y, b, kleur, i = 0 }) {
@@ -48370,6 +48429,302 @@
       }
     );
   }
+  function Boom({ x, grond, h, kroon, stam, vorm = "rond", sneeuw = false, i = 0 }) {
+    const t = grond - h;
+    const vert = i % 7 * 0.34;
+    const g = (naam, duur, extra = 0) => ({
+      className: "v11-" + naam,
+      style: {
+        animationDuration: `${duur + i % 5 * 0.7}s`,
+        animationDelay: `${-(i * 1.9) + extra}s`,
+        transformOrigin: `${x}px ${grond}px`
+      }
+    });
+    if (vorm === "spar") {
+      const lagen = [0, 1, 2];
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { ...g("stam", 11), children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", { x: x - h * 0.035, y: grond - h * 0.17, width: h * 0.07, height: h * 0.18, fill: stam }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { ...g("tak", 7, vert), children: [
+          lagen.map((k) => {
+            const yk = t + h * 0.82 * (k / 3);
+            const yb = t + h * 0.82 * ((k + 1.15) / 3);
+            const b = h * (0.17 + k * 0.095);
+            return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: `M${x} ${yk} L${x + b} ${yb} L${x - b} ${yb} Z`, fill: kroon }),
+              sneeuw && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+                "path",
+                {
+                  d: `M${x - b * 0.82} ${yb - h * 0.012} Q ${x} ${yb - h * 0.085} ${x + b * 0.82} ${yb - h * 0.012}
+                            Q ${x} ${yb + h * 0.018} ${x - b * 0.82} ${yb - h * 0.012} Z`,
+                  fill: "#FFFFFF",
+                  opacity: ".92"
+                }
+              )
+            ] }, k);
+          }),
+          sneeuw && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            "path",
+            {
+              d: `M${x} ${t} L${x + h * 0.075} ${t + h * 0.1} L${x - h * 0.075} ${t + h * 0.1} Z`,
+              fill: "#FFFFFF",
+              opacity: ".95"
+            }
+          )
+        ] })
+      ] });
+    }
+    if (vorm === "acacia") {
+      const kb = h * 0.54;
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { ...g("stam", 12), children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          "path",
+          {
+            d: `M${x} ${grond} Q ${x - h * 0.07} ${grond - h * 0.4} ${x - h * 0.11} ${t + h * 0.22}`,
+            stroke: stam,
+            strokeWidth: h * 0.055,
+            strokeLinecap: "round",
+            fill: "none"
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          "path",
+          {
+            d: `M${x} ${grond - h * 0.3} Q ${x + h * 0.08} ${grond - h * 0.5} ${x + h * 0.13} ${t + h * 0.25}`,
+            stroke: stam,
+            strokeWidth: h * 0.042,
+            strokeLinecap: "round",
+            fill: "none"
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { ...g("kroon", 6, vert), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: x, cy: t + h * 0.17, rx: kb, ry: h * 0.14, fill: kroon }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: x - kb * 0.28, cy: t + h * 0.09, rx: kb * 0.56, ry: h * 0.1, fill: kroon })
+        ] })
+      ] });
+    }
+    if (vorm === "palm") {
+      const bladen = [-1, -0.55, 0, 0.55, 1];
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { ...g("stam", 10), children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          "path",
+          {
+            d: `M${x} ${grond} Q ${x + h * 0.06} ${grond - h * 0.5} ${x + h * 0.04} ${t + h * 0.1}`,
+            stroke: stam,
+            strokeWidth: h * 0.05,
+            strokeLinecap: "round",
+            fill: "none"
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { ...g("kroon", 5, vert), children: bladen.map((k, j) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          "path",
+          {
+            d: `M${x + h * 0.04} ${t + h * 0.1} Q ${x + h * 0.04 + k * h * 0.2} ${t - h * 0.06}
+                  ${x + h * 0.04 + k * h * 0.36} ${t + h * 0.07 + Math.abs(k) * h * 0.05}`,
+            stroke: kroon,
+            strokeWidth: h * 0.055,
+            strokeLinecap: "round",
+            fill: "none"
+          },
+          j
+        )) })
+      ] });
+    }
+    if (vorm === "cipres") {
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { ...g("stam", 13), children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { ...g("tak", 8, vert), children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: x, cy: t + h * 0.5, rx: h * 0.13, ry: h * 0.5, fill: kroon }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: `M${x} ${t} L${x + h * 0.1} ${t + h * 0.2} L${x - h * 0.1} ${t + h * 0.2} Z`, fill: kroon })
+      ] }) });
+    }
+    if (vorm === "olijf") {
+      return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { ...g("stam", 12), children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          "path",
+          {
+            d: `M${x} ${grond} L${x - h * 0.04} ${grond - h * 0.34}`,
+            stroke: stam,
+            strokeWidth: h * 0.09,
+            strokeLinecap: "round",
+            fill: "none"
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+          "path",
+          {
+            d: `M${x - h * 0.04} ${grond - h * 0.3} L${x - h * 0.19} ${grond - h * 0.5}
+                  M${x - h * 0.04} ${grond - h * 0.3} L${x + h * 0.14} ${grond - h * 0.52}`,
+            stroke: stam,
+            strokeWidth: h * 0.05,
+            strokeLinecap: "round",
+            fill: "none"
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { ...g("kroon", 6, vert), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: x - h * 0.17, cy: t + h * 0.42, rx: h * 0.2, ry: h * 0.17, fill: kroon, opacity: ".9" }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: x + h * 0.14, cy: t + h * 0.38, rx: h * 0.22, ry: h * 0.19, fill: kroon }),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: x, cy: t + h * 0.26, rx: h * 0.18, ry: h * 0.16, fill: kroon, opacity: ".95" })
+        ] })
+      ] });
+    }
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { ...g("stam", 11), children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        "path",
+        {
+          d: `M${x} ${grond} L${x + h * 0.02} ${grond - h * 0.26}`,
+          stroke: stam,
+          strokeWidth: h * 0.12,
+          strokeLinecap: "round",
+          fill: "none"
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { ...g("tak", 7, vert), children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { ...g("kroon", 5.5, vert + 0.2), children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", { cx: x - h * 0.26, cy: t + h * 0.47, r: h * 0.31, fill: kroon, opacity: ".88" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", { cx: x + h * 0.27, cy: t + h * 0.43, r: h * 0.34, fill: kroon, opacity: ".94" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", { cx: x + h * 0.01, cy: t + h * 0.27, r: h * 0.32, fill: kroon }),
+        sneeuw && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: x, cy: t + h * 0.04, rx: h * 0.24, ry: h * 0.06, fill: "#FFFFFF", opacity: ".8" })
+      ] }) })
+    ] });
+  }
+  function Grondtextuur({ van, tot, y, kleur, aantal = 26, soort = "gras", zaadje = 3 }) {
+    const r = zaad(zaadje * 7757);
+    const items = Array.from({ length: aantal }, (_, i) => ({
+      x: tussen(r, van, tot),
+      yy: y + tussen(r, -1.1, 2.6),
+      h: tussen(r, 0.9, 2.1),
+      /* de krul blijft klein: in de referentie staan de sprieten vrijwel
+         rechtop met een lichte buiging, niet schuin alle kanten op */
+      krul: tussen(r, -0.3, 0.3),
+      i
+    }));
+    if (soort === "stip") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { fill: kleur, opacity: ".5", "aria-hidden": "true", children: items.map((s) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", { cx: s.x, cy: s.yy, r: 0.17 + s.h * 0.06 }, s.i)) });
+    if (soort === "zand") return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { stroke: kleur, strokeWidth: ".16", fill: "none", strokeLinecap: "round", opacity: ".55", "aria-hidden": "true", children: items.map((s) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: `M${s.x} ${s.yy} Q ${s.x + s.h * 1.6} ${s.yy - 0.35} ${s.x + s.h * 3.4} ${s.yy}` }, s.i)) });
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { stroke: kleur, strokeWidth: ".24", fill: "none", strokeLinecap: "round", opacity: ".78", "aria-hidden": "true", children: items.map((s) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      "path",
+      {
+        className: "v11-spriet",
+        style: {
+          animationDuration: `${5 + s.i % 6 * 0.8}s`,
+          animationDelay: `${-s.i * 0.5}s`,
+          transformOrigin: `${s.x}px ${s.yy}px`
+        },
+        d: `M${s.x} ${s.yy} Q ${s.x + s.krul} ${s.yy - s.h * 0.6} ${s.x + s.krul * 2.1} ${s.yy - s.h}`
+      },
+      s.i
+    )) });
+  }
+  function Riet({ van, tot, grond, kleur, aantal = 9, zaadje = 9 }) {
+    const r = zaad(zaadje * 6911);
+    const halmen = Array.from({ length: aantal }, (_, i) => ({
+      x: tussen(r, van, tot),
+      h: tussen(r, 2.4, 5.2),
+      i
+    }));
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { "aria-hidden": "true", children: halmen.map((s) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+      "g",
+      {
+        className: "v11-spriet",
+        style: {
+          animationDuration: `${5.5 + s.i % 5}s`,
+          animationDelay: `${-s.i * 0.9}s`,
+          transformOrigin: `${s.x}px ${grond}px`
+        },
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            "path",
+            {
+              d: `M${s.x} ${grond} L${s.x + 0.25} ${grond - s.h}`,
+              stroke: kleur,
+              strokeWidth: ".26",
+              strokeLinecap: "round",
+              fill: "none",
+              opacity: ".8"
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: s.x + 0.3, cy: grond - s.h - 0.25, rx: ".3", ry: ".62", fill: kleur, opacity: ".72" })
+        ]
+      },
+      s.i
+    )) });
+  }
+  function Bloemveld({ van, tot, grond, kleuren, steel, aantal = 14, zaadje = 21 }) {
+    const r = zaad(zaadje * 5471);
+    const bl = Array.from({ length: aantal }, (_, i) => ({
+      x: tussen(r, van, tot),
+      yy: grond + tussen(r, -0.9, 1.4),
+      h: tussen(r, 1.1, 2.4),
+      k: kleuren[Math.floor(r() * kleuren.length)],
+      i
+    }));
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { "aria-hidden": "true", children: bl.map((b) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
+      "g",
+      {
+        className: "v11-spriet",
+        style: {
+          animationDuration: `${4.8 + b.i % 6 * 0.7}s`,
+          animationDelay: `${-b.i * 0.7}s`,
+          transformOrigin: `${b.x}px ${b.yy}px`
+        },
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+            "path",
+            {
+              d: `M${b.x} ${b.yy} L${b.x + 0.2} ${b.yy - b.h}`,
+              stroke: steel,
+              strokeWidth: ".2",
+              strokeLinecap: "round",
+              fill: "none",
+              opacity: ".7"
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime.jsx)("circle", { cx: b.x + 0.22, cy: b.yy - b.h - 0.18, r: ".46", fill: b.k })
+        ]
+      },
+      b.i
+    )) });
+  }
+  function Golven({ van, tot, y, hoog, kleur, aantal = 7, zaadje = 23 }) {
+    const r = zaad(zaadje * 4253);
+    const lijnen = Array.from({ length: aantal }, (_, i) => ({
+      x: tussen(r, van, tot),
+      yy: y + tussen(r, 0.3, hoog),
+      b: tussen(r, 9, 30),
+      i
+    }));
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { className: "v11-golf", "aria-hidden": "true", children: lijnen.map((l) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      "path",
+      {
+        d: `M${l.x} ${l.yy} q ${l.b * 0.25} -.5 ${l.b * 0.5} 0 q ${l.b * 0.25} .5 ${l.b * 0.5} 0`,
+        stroke: kleur,
+        strokeWidth: ".32",
+        strokeLinecap: "round",
+        fill: "none",
+        opacity: 0.45 + l.i % 3 * 0.16,
+        style: { animationDuration: `${9 + l.i % 4 * 3}s`, animationDelay: `${-l.i * 2.1}s` }
+      },
+      l.i
+    )) });
+  }
+  function Weerspiegeling({ van, tot, y, hoog, aantal = 16, zaadje = 5 }) {
+    const r = zaad(zaadje * 3301);
+    const strepen = Array.from({ length: aantal }, (_, i) => ({
+      x: tussen(r, van, tot),
+      yy: y + tussen(r, 0.4, hoog),
+      b: tussen(r, 2.5, 13),
+      i
+    }));
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { className: "v11-spiegel", fill: "#FFFFFF", "aria-hidden": "true", children: strepen.map((s) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+      "rect",
+      {
+        x: s.x,
+        y: s.yy,
+        width: s.b,
+        height: ".3",
+        rx: ".15",
+        opacity: 0.5 + s.i % 3 * 0.14,
+        style: { animationDuration: `${12 + s.i % 5 * 4}s`, animationDelay: `${-s.i * 1.7}s` }
+      },
+      s.i
+    )) });
+  }
   function LandschapLaag({ palet, soort }) {
     const gem = {
       className: "nat-landschap",
@@ -48377,133 +48732,262 @@
       preserveAspectRatio: "xMidYMax slice",
       "aria-hidden": true
     };
-    if (soort === "toendra") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "toendra", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Schijf, { x: 158, y: 12, r: 6 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 26 C 38 24, 70 26.4, 104 24.6 C 140 22.8, 170 25.4, 200 23.8 L200 48 L0 48Z", fill: L.ver1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[25.4, 14, 82], [27.6, 112, 74]] }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 31 C 44 29.2, 78 31.6, 116 29.8 C 152 28.2, 178 30.6, 200 29.4 L200 48 L0 48Z", fill: L.mid }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { fill: L.sneeuw, opacity: ".75", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "40", cy: "33.2", rx: "13", ry: "1.1" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "126", cy: "32.2", rx: "9", ry: ".9" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "180", cy: "33.8", rx: "11", ry: "1" })
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { fill: L.hoofd, opacity: ".9", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "24", cy: "37.4", rx: "10", ry: "1.5" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "70", cy: "38", rx: "13", ry: "1.7" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "150", cy: "37.6", rx: "11", ry: "1.5" })
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { fill: L.hoofdD, opacity: ".8", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "100", cy: "38.4", rx: "5", ry: "1.1" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "112", cy: "38.8", rx: "3.2", ry: ".9" }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "188", cy: "38.2", rx: "6", ry: "1.2" })
-      ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 42.6 C 60 41.6, 128 43.4, 200 42 L200 48 L0 48Z", fill: L.voor, opacity: ".3" })
+    if (soort === "loofbos") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "loofbos", className: "nat-landschap v11", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 32.4 C 36 30.8, 72 33, 108 31.2 C 144 29.6, 174 32.2, 200 30.8 L200 48 L0 48Z", fill: L.blad1 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[32, 16, 78], [33.6, 116, 68]] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 35 C 42 33.4, 80 36.2, 122 34.4 C 156 33, 180 35.2, 200 34.2 L200 48 L0 48Z", fill: L.blad2 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 22, grond: 43.6, h: 11, kroon: L.bladD, stam: L.terraD, vorm: "rond", i: 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 37, grond: 43.8, h: 8, kroon: L.bladDD, stam: L.terraD, vorm: "spar", i: 1 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 52, grond: 43.6, h: 9, kroon: L.blad, stam: L.terraD, vorm: "rond", i: 2 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 86, grond: 43.7, h: 8.5, kroon: L.bladDD, stam: L.terraD, vorm: "spar", i: 3 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 118, grond: 43.6, h: 12, kroon: L.bladD, stam: L.terraD, vorm: "rond", i: 4 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 133, grond: 43.8, h: 8.5, kroon: L.blad, stam: L.terraD, vorm: "rond", i: 5 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 186, grond: 43.6, h: 9.5, kroon: L.bladD, stam: L.terraD, vorm: "rond", i: 6 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 44.4 C 56 43.8, 128 45, 200 44 L200 48 L0 48Z", fill: L.blad, opacity: ".62" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Grondtextuur, { van: 2, tot: 198, y: 46.2, kleur: L.bladDD, aantal: 28, soort: "gras", zaadje: 11 })
     ] });
-    if (soort === "taiga") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "taiga", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 26 L22 13 L36 19 L54 9 L78 26 Z", fill: L.ver1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M100 26 L124 15 L136 21 L154 11 L180 26 Z", fill: L.ver1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[24.6, 10, 84], [27, 108, 80]] }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 31 " + Array.from({ length: 50 }, (_, i) => `L${i * 4 + 2} ${30.3 - (i % 4 === 0 ? 0.5 : 0)} L${i * 4 + 4} 31`).join(" ") + " L200 31 L200 48 L0 48Z", fill: L.mid, opacity: ".8" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 33.4 C 48 32, 104 34.2, 152 32.8 C 176 32, 190 33.2, 200 32.8 L200 48 L0 48Z", fill: L.mid2 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spar, { x: 30, grond: 38, h: 7.5, b: 1.8, kleur: L.hoofd, i: 0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spar, { x: 38, grond: 38.2, h: 5.5, b: 1.4, kleur: L.hoofdD, i: 1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spar, { x: 172, grond: 38, h: 7, b: 1.7, kleur: L.hoofd, i: 2 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kruinboom, { x: 76, grond: 38.2, h: 5.5, kleur: L.hoofd, stam: L.steenD, i: 3 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Wilg, { x: 126, grond: 38.2, h: 6, kleur: L.hoofdD, i: 4 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 39.6 C 54 38.8, 126 40.4, 200 39.2 L200 48 L0 48Z", fill: L.voor, opacity: ".42" })
-    ] });
-    if (soort === "caatinga") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "caatinga", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Schijf, { x: 46, y: 13, r: 7 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M10 26 L19 18 L50 18 L58 26 Z", fill: L.ver1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M120 26 L127 20 L156 20 L164 26 Z", fill: L.ver1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[25, 20, 90]] }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 30.4 C 40 28.4, 76 31.2, 112 29.2 C 150 27.2, 176 30, 200 28.6 L200 48 L0 48Z", fill: L.zandL }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 34 C 48 32.4, 102 35.2, 152 33.6 C 176 32.8, 190 34.2, 200 33.6 L200 48 L0 48Z", fill: L.zand }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Cactus, { x: 72, grond: 38, h: 6.5, kleur: L.hoofdD, i: 0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Cactus, { x: 81, grond: 38.2, h: 4.5, kleur: L.hoofd, arm: false, i: 1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Cactus, { x: 178, grond: 38, h: 5.5, kleur: L.hoofdD, i: 2 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(KaalBoom, { x: 32, grond: 38.2, h: 6, kleur: L.voor, i: 3 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(KaalBoom, { x: 128, grond: 38, h: 7, kleur: L.voor, i: 4 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(KaalBoom, { x: 140, grond: 38.4, h: 4.8, kleur: L.hoofdD, i: 5 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 40 C 58 39.2, 132 40.8, 200 39.6 L200 48 L0 48Z", fill: L.zandD, opacity: ".5" }),
-      [[16, 2.4], [194, 2.4]].map(([x, h], i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Doornstruik, { x, grond: 45.4, h, kleur: L.voorD, i: i + 6 }, i))
-    ] });
-    if (soort === "regenwoud") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "regenwoud", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Parasol, { x: 36, grond: 31, h: 15, kleur: L.ver2, stam: L.ver2, i: 0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Parasol, { x: 120, grond: 31, h: 19, kleur: L.ver2, stam: L.ver2, i: 1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Parasol, { x: 176, grond: 31, h: 13, kleur: L.ver2, stam: L.ver2, i: 2 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[24, 40, 92], [26.6, 118, 70]] }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 31 " + [12, 28, 46, 62, 80, 98, 116, 134, 152, 170, 188, 200].map((x, i) => `Q ${x - 6} ${i % 2 ? 28.4 : 30.2} ${x} ${29.6}`).join(" ") + " L200 48 L0 48Z", fill: L.mid }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 34.4 C 52 33, 110 35.4, 160 34 C 180 33.4, 192 34.6, 200 34.2 L200 48 L0 48Z", fill: L.mid2 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { fill: L.hoofd, opacity: ".9", children: [[22, 38], [58, 38.4], [96, 38], [150, 38.4], [190, 38]].map(([x, g], i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { ...wieg(x, g, i, 2), children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: `M${x} ${g} Q ${x - 4.6} ${g - 3} ${x - 0.6} ${g - 5.6} Q ${x + 4} ${g - 3} ${x} ${g}Z` }) }, i)) }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 39.6 C 56 38.8, 124 40.6, 200 39.4 L200 48 L0 48Z", fill: L.voor, opacity: ".5" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 43.6 C 62 43, 136 44.6, 200 43.4 L200 48 L0 48Z", fill: L.voorD, opacity: ".32" })
-    ] });
-    if (soort === "daisetsuzan") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "daisetsuzan", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Schijf, { x: 164, y: 11, r: 6 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 26 L18 8 L32 16 L50 4 L74 26 Z", fill: L.ver1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M84 26 L106 13 L118 19 L136 9 L160 26 Z", fill: L.ver1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M38 27 L64 15 L80 22 L98 12 L124 27 Z", fill: L.ver2 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[24.6, 12, 80], [27, 104, 86]] }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 30 C 46 28.4, 96 30.8, 144 29.2 C 170 28.2, 188 29.8, 200 29.2 L200 48 L0 48Z", fill: L.mid }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 33 C 52 31.6, 110 34, 160 32.6 C 180 32, 192 33.2, 200 32.8 L200 48 L0 48Z", fill: L.mid2 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 36.4 C 48 35.4, 104 37.4, 156 36.2 C 178 35.8, 190 36.8, 200 36.4 L200 48 L0 48Z", fill: L.zand, opacity: ".85" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spar, { x: 26, grond: 38, h: 6, b: 1.6, kleur: L.hoofdD, i: 0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spar, { x: 34, grond: 38.2, h: 4.4, b: 1.2, kleur: L.hoofd, i: 1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spar, { x: 184, grond: 38, h: 5.4, b: 1.5, kleur: L.hoofdD, i: 2 }),
+    if (soort === "alpen") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "alpen", className: "nat-landschap v11", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 33 L18 23 L30 27 L46 20 L62 28 L74 24 L92 33 Z", fill: L.mist }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M96 33 L112 25 L124 28.5 L142 21 L158 28.5 L172 24 L190 33 L200 33 Z", fill: L.mist }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[32.4, 12, 80], [33.4, 110, 76]] }),
       /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
         "path",
         {
-          d: "M98 37.2 C 94 40, 106 41.8, 100 43.8 C 96 45.4, 106 46.4, 102 48",
-          stroke: L.water,
-          strokeWidth: "1.8",
+          d: "M0 35 L26 29 L44 33 L68 27 L92 34 L120 29.5 L148 34 L176 30 L200 35 L200 48 L0 48Z",
+          fill: L.ijsL
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        "path",
+        {
+          d: "M0 38 C 46 37.6, 104 38.6, 158 37.8 C 178 37.6, 192 38.1, 200 37.9 L200 42.4 L0 42.4Z",
+          fill: L.ijs
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Weerspiegeling, { van: 6, tot: 190, y: 38.5, hoog: 2.9, aantal: 14, zaadje: 7 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Schots, { x: 24, y: 40.4, b: 13, kleur: L.sneeuw, i: 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Schots, { x: 96, y: 39.6, b: 9, kleur: L.sneeuw, i: 1 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Schots, { x: 148, y: 41, b: 11, kleur: L.sneeuw, i: 2 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 14, grond: 44.4, h: 11, kroon: L.hoofdD, stam: L.voorD, vorm: "spar", sneeuw: true, i: 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 30, grond: 44.8, h: 8, kroon: L.voorD, stam: L.voorD, vorm: "spar", sneeuw: true, i: 1 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 46, grond: 44.4, h: 12.5, kroon: L.hoofdD, stam: L.voorD, vorm: "spar", sneeuw: true, i: 2 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 122, grond: 44.6, h: 9, kroon: L.voorD, stam: L.voorD, vorm: "spar", sneeuw: true, i: 3 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 138, grond: 44.4, h: 12, kroon: L.hoofdD, stam: L.voorD, vorm: "spar", sneeuw: true, i: 4 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 190, grond: 44.6, h: 10, kroon: L.hoofdD, stam: L.voorD, vorm: "spar", sneeuw: true, i: 5 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 45.2 C 58 44.6, 132 45.8, 200 45 L200 48 L0 48Z", fill: "#FFFFFF", opacity: ".8" })
+    ] });
+    if (soort === "savanne") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "savanne", className: "nat-landschap v11", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Schijf, { x: 34, y: 22, r: 7 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 32.6 C 50 32, 110 33.2, 162 32.4 C 180 32, 192 32.7, 200 32.4 L200 48 L0 48Z", fill: L.zandL }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[32.2, 20, 92]] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 35.6 C 56 34.6, 118 36.4, 170 35.2 C 186 34.9, 194 35.7, 200 35.4 L200 48 L0 48Z", fill: L.zand }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 39.4 C 48 38.4, 112 40.2, 164 39 C 182 38.7, 194 39.5, 200 39.2 L200 48 L0 48Z", fill: L.zandD, opacity: ".75" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 26, grond: 43.6, h: 11, kroon: L.hoofd, stam: L.terraD, vorm: "acacia", i: 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 88, grond: 43.8, h: 8.5, kroon: L.hoofdD, stam: L.terraD, vorm: "acacia", i: 1 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 118, grond: 43.6, h: 12, kroon: L.hoofd, stam: L.terraD, vorm: "acacia", i: 2 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 176, grond: 43.8, h: 12.5, kroon: L.hoofdD, stam: L.terraD, vorm: "palm", i: 3 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 188, grond: 44, h: 9.5, kroon: L.hoofd, stam: L.terraD, vorm: "palm", i: 4 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Grondtextuur, { van: 4, tot: 196, y: 45.2, kleur: L.terraD, aantal: 24, soort: "stip", zaadje: 13 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Grondtextuur, { van: 2, tot: 190, y: 46.4, kleur: L.terraD, aantal: 18, soort: "zand", zaadje: 17 })
+    ] });
+    if (soort === "woestijn") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "woestijn", className: "nat-landschap v11", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Schijf, { x: 150, y: 20, r: 8 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 33.6 L44 30.2 L78 33 L122 29.4 L160 32.6 L200 30.4 L200 48 L0 48Z", fill: L.zandL }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M44 30.2 L78 33 L78 48 L44 48Z", fill: L.zand, opacity: ".45" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M122 29.4 L160 32.6 L160 48 L122 48Z", fill: L.zand, opacity: ".45" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[33.2, 24, 86]] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 37.4 L38 34.6 L86 37.8 L132 34.2 L176 37.2 L200 35.8 L200 48 L0 48Z", fill: L.zand }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M38 34.6 L86 37.8 L86 48 L38 48Z", fill: L.zandD, opacity: ".4" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M132 34.2 L176 37.2 L176 48 L132 48Z", fill: L.zandD, opacity: ".4" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 41.8 L52 39.4 L104 42 L158 39.2 L200 41 L200 48 L0 48Z", fill: L.zandD, opacity: ".72" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { stroke: L.terraD, strokeWidth: ".18", fill: "none", strokeLinecap: "round", opacity: ".32", children: [[6, 43.2, 30], [46, 44.4, 38], [96, 43.6, 34], [140, 44.8, 42], [176, 43.4, 22]].map(([x, y, b], i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: `M${x} ${y} q ${b * 0.3} -.7 ${b * 0.6} -.1 q ${b * 0.25} .6 ${b * 0.4} -.2` }, i)) }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { fill: L.terraD, opacity: ".4", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "68", cy: "45.8", rx: "3.4", ry: ".9" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "152", cy: "46.4", rx: "2.6", ry: ".7" })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Doornstruik, { x: 28, grond: 44.6, h: 2.6, kleur: L.terraD, i: 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Doornstruik, { x: 118, grond: 44.2, h: 2.1, kleur: L.terraD, i: 1 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Grondtextuur, { van: 2, tot: 198, y: 45.4, kleur: L.terraD, aantal: 20, soort: "zand", zaadje: 31 })
+    ] });
+    if (soort === "regenwoud") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "regenwoud", className: "nat-landschap v11", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        "path",
+        {
+          d: "M0 33.6 C 30 32.4, 62 34, 96 32.8 C 132 31.6, 166 33.6, 200 32.4 L200 48 L0 48Z",
+          fill: L.blad1,
+          opacity: ".8"
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[33.2, 18, 84], [34.4, 112, 72]] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { fill: L.blad2, opacity: ".85", children: [
+        [8, 36, 7],
+        [30, 35.2, 8.5],
+        [56, 36.4, 6.5],
+        [82, 35, 9],
+        [110, 36.2, 7.5],
+        [140, 35.4, 8],
+        [168, 36.4, 6.8],
+        [196, 35.6, 8.5]
+      ].map(([x, y, r2], i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: x, cy: y, rx: r2, ry: r2 * 0.46 }, i)) }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { fill: L.blad, opacity: ".9", children: [[20, 39, 8], [52, 38.2, 9.5], [88, 39.2, 7.5], [122, 38.4, 9], [158, 39, 8.5], [190, 38.6, 8]].map(([x, y, r2], i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: x, cy: y, rx: r2, ry: r2 * 0.42 }, i)) }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Parasol, { x: 30, grond: 43.6, h: 12, kleur: L.bladD, stam: L.terraD, i: 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Parasol, { x: 74, grond: 43.8, h: 9.5, kleur: L.bladDD, stam: L.terraD, i: 1 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Parasol, { x: 126, grond: 43.6, h: 12.5, kleur: L.bladD, stam: L.terraD, i: 2 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Parasol, { x: 182, grond: 43.8, h: 10.5, kleur: L.bladDD, stam: L.terraD, i: 3 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 44.8 C 60 44.2, 134 45.4, 200 44.6 L200 48 L0 48Z", fill: L.bladDD, opacity: ".4" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { fill: L.bladDD, opacity: ".38", children: [[18, 46.4, 4.2], [58, 46.8, 3.4], [104, 46.2, 4.6], [150, 46.9, 3.2], [192, 46.4, 3.8]].map(([x, y, r2], i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: x, cy: y, rx: r2, ry: r2 * 0.32 }, i)) })
+    ] });
+    if (soort === "kust") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "kust", className: "nat-landschap v11", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 31.6 C 40 30.8, 90 31.8, 140 31.2 C 168 30.9, 186 31.4, 200 31.2 L200 48 L0 48Z", fill: L.mist }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[31.2, 20, 92]] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 34.4 C 48 33.8, 110 34.8, 164 34.2 C 182 34, 194 34.4, 200 34.2 L200 48 L0 48Z", fill: L.water }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Golven, { van: 30, tot: 196, y: 35.6, hoog: 5.4, kleur: "#FFFFFF", aantal: 8, zaadje: 23 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Weerspiegeling, { van: 40, tot: 196, y: 35.2, hoog: 4.2, aantal: 11, zaadje: 27 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 36.8 L104 42.2 L200 46.8 L200 48 L0 48Z", fill: L.zandL }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 39.6 L98 44.4 L200 47.6 L200 48 L0 48Z", fill: L.zand, opacity: ".8" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        "path",
+        {
+          d: "M0 36.8 L104 42.2 L200 46.8",
+          stroke: "#FFFFFF",
+          strokeWidth: ".45",
           fill: "none",
+          opacity: ".75",
           strokeLinecap: "round"
         }
       ),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { className: "nat-rimpels", stroke: LANDPALET.papier, strokeWidth: ".35", opacity: ".7", fill: "none", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M97 40.6 h4.5", style: { animationDuration: "9s" } }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M99 44.6 h4.5", style: { animationDuration: "11s", animationDelay: "-4s" } })
-      ] })
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 33 C 16 28.8, 40 29.6, 58 34.4 C 70 37.6, 78 40.4, 86 43.6 L0 43.6Z", fill: L.zandL }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        "path",
+        {
+          d: "M0 35.4 C 14 32, 34 32.8, 50 36.8 C 60 39.4, 68 41.6, 76 43.6 L0 43.6Z",
+          fill: L.zand,
+          opacity: ".55"
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Grondtextuur, { van: 4, tot: 64, y: 36.6, kleur: L.bladD, aantal: 20, soort: "gras", zaadje: 33 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Grondtextuur, { van: 110, tot: 190, y: 46.4, kleur: L.zandD, aantal: 12, soort: "zand", zaadje: 37 })
     ] });
-    if (soort === "shiretoko") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "shiretoko", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 26 L22 12 L38 19 L56 8 L82 26 Z", fill: L.ver1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M152 26 L170 17 L182 22 L196 14 L200 26 Z", fill: L.ver1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[25, 22, 92]] }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", { x: "0", y: "28", width: "200", height: "20", fill: L.water, opacity: ".85" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { className: "nat-rimpels", stroke: LANDPALET.papier, strokeWidth: ".4", opacity: ".55", fill: "none", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M20 31 h22", style: { animationDuration: "10s" } }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M114 32.4 h28", style: { animationDuration: "13s", animationDelay: "-5s" } })
+    if (soort === "herfstbos") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "herfstbos", className: "nat-landschap v11", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 32.6 C 36 31, 72 33.2, 108 31.4 C 144 29.8, 174 32.4, 200 31 L200 48 L0 48Z", fill: L.herfstL }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[32.2, 16, 78], [33.8, 116, 68]] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 35.2 C 42 33.6, 80 36.4, 122 34.6 C 156 33.2, 180 35.4, 200 34.4 L200 48 L0 48Z", fill: L.zandL }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 20, grond: 43.6, h: 11, kroon: L.herfst, stam: L.terraD, vorm: "rond", i: 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(KaalBoom, { x: 38, grond: 43.8, h: 9, kleur: L.terraD, i: 1 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 56, grond: 43.6, h: 9.5, kroon: L.herfstD, stam: L.terraD, vorm: "rond", i: 2 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 92, grond: 43.7, h: 8.5, kroon: L.bladD, stam: L.terraD, vorm: "spar", i: 3 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 120, grond: 43.6, h: 12, kroon: L.herfst, stam: L.terraD, vorm: "rond", i: 4 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(KaalBoom, { x: 140, grond: 43.8, h: 10, kleur: L.terraD, i: 5 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 188, grond: 43.6, h: 10, kroon: L.herfstD, stam: L.terraD, vorm: "rond", i: 6 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 44.6 C 56 44, 128 45.2, 200 44.4 L200 48 L0 48Z", fill: L.herfstD, opacity: ".3" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Grondtextuur, { van: 3, tot: 197, y: 46.2, kleur: L.herfstD, aantal: 26, soort: "stip", zaadje: 41 })
+    ] });
+    if (soort === "toendra") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "toendra", className: "nat-landschap v11", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 32.8 C 44 32.2, 94 33.2, 142 32.4 C 170 32, 188 32.6, 200 32.2 L200 48 L0 48Z", fill: L.mist }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[32.4, 14, 82], [33.4, 112, 74]] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 36 C 48 35.4, 104 36.4, 156 35.6 C 178 35.3, 192 35.8, 200 35.6 L200 48 L0 48Z", fill: L.ijsL }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M12 39.6 C 30 38.8, 58 39, 74 39.8 C 58 40.8, 30 40.8, 12 39.6Z", fill: L.ijs }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M112 41 C 134 40.2, 166 40.4, 184 41.2 C 166 42.2, 134 42.2, 112 41Z", fill: L.ijs }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Schots, { x: 26, y: 39.7, b: 8, kleur: L.sneeuw, i: 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Schots, { x: 128, y: 41.1, b: 10, kleur: L.sneeuw, i: 1 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { fill: L.blad2, opacity: ".85", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "34", cy: "43.6", rx: "11", ry: "1.4" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "94", cy: "44", rx: "14", ry: "1.6" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "168", cy: "43.7", rx: "12", ry: "1.4" })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Schots, { x: 30, y: 31.4, b: 10, kleur: L.ver2, i: 0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Schots, { x: 100, y: 32.4, b: 13, kleur: L.sneeuw, i: 1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Schots, { x: 156, y: 31.8, b: 9, kleur: L.ver2, i: 2 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Schots, { x: 62, y: 35.4, b: 17, kleur: L.sneeuw, i: 3 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Schots, { x: 136, y: 36.2, b: 15, kleur: L.sneeuw, i: 4 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 40.6 C 46 39.2, 112 41.6, 200 40 L200 48 L0 48Z", fill: L.sneeuw }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 44.4 C 58 43.6, 132 45.4, 200 44 L200 48 L0 48Z", fill: L.steen, opacity: ".6" })
+      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { fill: L.bladD, opacity: ".75", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "60", cy: "44.6", rx: "5", ry: "1" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "140", cy: "44.8", rx: "3.6", ry: ".9" }),
+        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "196", cy: "44.4", rx: "6", ry: "1.1" })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 45.6 C 60 45, 132 46, 200 45.2 L200 48 L0 48Z", fill: L.ijsL, opacity: ".7" })
     ] });
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "kamikochi", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Schijf, { x: 152, y: 12, r: 6.5 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 26 L22 7 L36 15 L56 3 L82 26 Z", fill: L.ver1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M92 26 L116 11 L130 18 L148 6 L174 26 Z", fill: L.ver1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M46 27 L72 14 L88 22 L108 10 L134 27 Z", fill: L.ver2 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[24.4, 10, 82], [26.8, 102, 88]] }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 30 C 50 28.4, 102 30.8, 152 29.2 C 176 28.4, 190 29.8, 200 29.2 L200 38 L0 38Z", fill: L.mid }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 33.6 C 52 32.4, 112 34.6, 162 33.2 C 182 32.6, 193 33.6, 200 33.2 L200 38 L0 38Z", fill: L.mid2, opacity: ".8" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kruinboom, { x: 28, grond: 38, h: 6.5, kleur: L.hoofd, stam: L.steenD, i: 0 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kruinboom, { x: 36, grond: 38, h: 4.8, kleur: L.hoofdD, stam: L.steenD, breed: 0.28, i: 1 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Spar, { x: 172, grond: 38, h: 6, b: 1.6, kleur: L.hoofdD, i: 2 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Kruinboom, { x: 181, grond: 38, h: 4.6, kleur: L.hoofd, stam: L.steenD, i: 3 }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("rect", { x: "0", y: "38", width: "200", height: "10", fill: L.water, opacity: ".9" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M92 38 L116 43 L130 40.4 L148 44.8 L174 38 Z", fill: L.waterD, opacity: ".4" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("ellipse", { cx: "152", cy: "40.2", rx: "5.5", ry: "1.2", fill: L.zandL, opacity: ".35" }),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("g", { className: "nat-rimpels", stroke: LANDPALET.papier, strokeWidth: ".4", opacity: ".7", fill: "none", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M22 40.4 h20", style: { animationDuration: "9s" } }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M72 42.8 h26", style: { animationDuration: "12s", animationDelay: "-4s" } }),
-        /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M142 45.4 h22", style: { animationDuration: "10.5s", animationDelay: "-7s" } })
-      ] })
+    if (soort === "bloemenweide") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "bloemenweide", className: "nat-landschap v11", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 33.6 C 22 29.4, 54 29.2, 74 33.4 C 92 29.8, 124 29.6, 144 33.2\n               C 162 30.2, 188 30.4, 200 33.4 L200 48 L0 48Z", fill: L.blad1 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[33, 20, 80]] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 37.2 C 26 33.8, 62 34, 86 37.4 C 108 34.4, 144 34.6, 166 37.6\n               C 180 35.8, 194 36.2, 200 37.4 L200 48 L0 48Z", fill: L.blad2 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 44, grond: 43.4, h: 9.5, kroon: L.bladD, stam: L.terraD, vorm: "rond", i: 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 162, grond: 43.6, h: 8, kroon: L.blad, stam: L.terraD, vorm: "rond", i: 1 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 43.8 C 56 43.2, 128 44.4, 200 43.6 L200 48 L0 48Z", fill: L.blad, opacity: ".7" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Grondtextuur, { van: 2, tot: 198, y: 45.8, kleur: L.bladDD, aantal: 26, soort: "gras", zaadje: 43 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        Bloemveld,
+        {
+          van: 6,
+          tot: 194,
+          grond: 45.6,
+          aantal: 13,
+          steel: L.bladDD,
+          kleuren: [L.bloem1, L.bloem2, L.bloem3],
+          zaadje: 47
+        }
+      )
     ] });
+    if (soort === "canyon") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "canyon", className: "nat-landschap v11", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        "path",
+        {
+          d: "M0 30.6 L30 30.6 L30 34.4 L62 34.4 L62 31.2 L96 31.2 L96 35 L200 35 L200 48 L0 48Z",
+          fill: L.terraL,
+          opacity: ".8"
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[33.6, 100, 86]] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 35.4 L34 35.4 L34 38.6 L74 38.6 L74 36 L118 36 L118 39.4 L200 39.4 L200 48 L0 48Z", fill: L.terra, opacity: ".72" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 39 L28 39 L28 41.8 L82 41.8 L82 39.8 L130 39.8 L130 42.4 L200 42.4 L200 48 L0 48Z", fill: L.terraD, opacity: ".55" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Doornstruik, { x: 46, grond: 38.4, h: 2.2, kleur: L.bladDD, i: 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Doornstruik, { x: 100, grond: 35.8, h: 1.9, kleur: L.bladDD, i: 1 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Doornstruik, { x: 158, grond: 42.2, h: 2.6, kleur: L.bladDD, i: 2 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 44 L200 44 L200 48 L0 48Z", fill: L.zandD, opacity: ".6" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Grondtextuur, { van: 3, tot: 197, y: 46, kleur: L.terraD, aantal: 18, soort: "zand", zaadje: 53 })
+    ] });
+    if (soort === "bergmeer") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "bergmeer", className: "nat-landschap v11", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 33 L22 24 L36 28 L54 20 L72 28.4 L88 23 L106 33 Z", fill: L.mist }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M100 33 L118 26 L132 29.6 L150 22 L168 29.4 L184 25 L200 33 Z", fill: L.mist }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[31.8, 12, 84], [32.8, 110, 78]] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        "path",
+        {
+          d: "M0 34.2 C 48 33.6, 108 34.6, 160 33.8 C 180 33.5, 192 34, 200 33.8 L200 36.4 L0 36.4Z",
+          fill: L.ver2
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 36.4 L200 36.4 L200 48 L0 48Z", fill: L.water }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Weerspiegeling, { van: 6, tot: 194, y: 37, hoog: 6.4, aantal: 18, zaadje: 59 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("g", { className: "nat-rimpels", stroke: L.waterD, strokeWidth: ".22", fill: "none", opacity: ".6", children: [[38.6, 20, 54], [41, 96, 68], [43.4, 44, 90], [45.6, 120, 62]].map(([y, x, b], i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        "path",
+        {
+          d: `M${x} ${y} q ${b * 0.25} -.4 ${b * 0.5} 0 q ${b * 0.25} .4 ${b * 0.5} 0`,
+          style: { animationDuration: `${7 + i * 2.5}s`, animationDelay: `${-i * 1.9}s` }
+        },
+        i
+      )) }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
+        "path",
+        {
+          d: "M0 45.4 C 44 44.8, 96 45.6, 148 45 C 172 44.7, 190 45.2, 200 45 L200 48 L0 48Z",
+          fill: L.bladDD,
+          opacity: ".45"
+        }
+      ),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Riet, { van: 6, tot: 70, grond: 45.6, kleur: L.bladDD, aantal: 8, zaadje: 61 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Riet, { van: 150, tot: 196, grond: 45.4, kleur: L.bladDD, aantal: 6, zaadje: 67 })
+    ] });
+    if (soort === "olijfgaard") return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("svg", { ...gem, "data-prent": "olijfgaard", className: "nat-landschap v11", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 32.6 L70 32.6 L70 34.8 L140 34.8 L140 33.2 L200 33.2 L200 48 L0 48Z", fill: L.zandL }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Nevel, { banden: [[32.4, 22, 88]] }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 36.4 L54 36.4 L54 38.4 L126 38.4 L126 37 L200 37 L200 48 L0 48Z", fill: L.blad1, opacity: ".75" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 40 L92 40 L92 41.8 L200 41.8 L200 48 L0 48Z", fill: L.blad2, opacity: ".6" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 18, grond: 43.6, h: 12, kroon: L.bladDD, stam: L.terraD, vorm: "cipres", i: 0 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 44, grond: 43.8, h: 9, kroon: L.blad, stam: L.terraD, vorm: "olijf", i: 1 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 72, grond: 43.6, h: 8.5, kroon: L.blad2, stam: L.terraD, vorm: "olijf", i: 2 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 104, grond: 43.8, h: 11.5, kroon: L.bladDD, stam: L.terraD, vorm: "cipres", i: 3 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 132, grond: 43.6, h: 9.5, kroon: L.blad, stam: L.terraD, vorm: "olijf", i: 4 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Boom, { x: 186, grond: 43.8, h: 8.5, kroon: L.blad2, stam: L.terraD, vorm: "olijf", i: 5 }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("path", { d: "M0 44.6 L200 44.6 L200 48 L0 48Z", fill: L.zandD, opacity: ".4" }),
+      /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Grondtextuur, { van: 3, tot: 197, y: 46.2, kleur: L.bladDD, aantal: 20, soort: "gras", zaadje: 71 })
+    ] });
+    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("svg", { ...gem, "data-prent": "loofbos", className: "nat-landschap v11" });
   }
   var RECEPTEN = {
     /* v107.4: de prenten zijn terug, nu in de Toetsbaas-stijl. Ze blijven laag
@@ -48573,7 +49057,11 @@
           className: "nat-laag nat-" + scene + " nat-" + s + " nat-land-" + land + (r.heuvels || landschap ? " heeft-landschap" : "") + (beweging ? "" : " is-stil") + (zichtbaar ? "" : " is-pauze"),
           "data-seizoen": s,
           "data-landschap": land,
-          style: { height: r.hoogte, opacity: r.dekking, ["--nat-val"]: r.val },
+          style: {
+            height: r.hoogte,
+            opacity: Math.min(1, r.dekking * NAT_DEKKING),
+            ["--nat-val"]: r.val
+          },
           children: [
             /* @__PURE__ */ (0, import_jsx_runtime.jsx)(NatuurStijl, {}),
             r.wolken > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CloudLayer, { palet, aantal: r.wolken, zaadje }),
@@ -48583,7 +49071,12 @@
             r.wind > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(WindParticles, { aantal: r.wind, zaadje }),
             r.bladeren > 0 && s !== "winter" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SeasonalLeaves, { palet, aantal: r.bladeren, zaadje }),
             weerSoort === "sneeuw" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SnowLayer, { zaadje }),
-            weerSoort === "regen" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RainLayer, { zaadje })
+            weerSoort === "regen" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RainLayer, { zaadje }),
+            weerSoort === "hagel" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SnowLayer, { aantal: 5, zaadje }),
+              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(HailLayer, { zaadje })
+            ] }),
+            weerSoort === "zand" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SandLayer, { zaadje })
           ]
         }
       )
@@ -48711,9 +49204,86 @@
   animation-name:natWuif;animation-timing-function:ease-in-out;animation-iteration-count:infinite;
   animation-direction:alternate}
 
+/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 v111 \u2014 \xE9\xE9n wind, waar alles op reageert \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+   @property maakt een custom property animeerbaar. Zonder registratie springt
+   zo'n waarde van stap naar stap; m\xE9t registratie verloopt hij vloeiend.
+   Daardoor kan de hele laag \xE9\xE9n trage vlaagcyclus draaien waar elke
+   onderliggende animatie zijn eigen uitslag mee vermenigvuldigt.
+
+   Kent een browser @property niet, dan blijft --wind op .5 staan: alles
+   beweegt dan als voorheen, op halve kracht, zonder vlagen. Er breekt niets. */
+@property --wind{syntax:"<number>";inherits:true;initial-value:.5}
+.nat-laag{--wind:.5;--wind-kant:1}
+.nat-laag:has(.v11){animation:v11Vlaag 54s ease-in-out infinite}
+@keyframes v11Vlaag{
+  0%{--wind:.32} 22%{--wind:.78} 38%{--wind:.5} 61%{--wind:1} 80%{--wind:.44} 100%{--wind:.32}}
+
+/* de boom in vier delen: stam nauwelijks, takken meer, kroon het meest, elk
+   met zijn eigen duur en naloop */
+.v11-stam,.v11-tak,.v11-kroon,.v11-spriet{animation-timing-function:ease-in-out;
+  animation-iteration-count:infinite;animation-direction:alternate;will-change:transform}
+.v11-stam{animation-name:v11Stam}
+.v11-tak{animation-name:v11Tak}
+.v11-kroon{animation-name:v11Kroon}
+.v11-spriet{animation-name:v11Spriet}
+@keyframes v11Stam{from{transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) * -.25deg))}
+                   to  {transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) *  .3deg))}}
+@keyframes v11Tak{from{transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) * -.9deg))}
+                  to  {transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) * 1.1deg))}}
+@keyframes v11Kroon{from{transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) * -1.8deg))}
+                    to  {transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) *  2.2deg))}}
+@keyframes v11Spriet{from{transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) * -4deg))}
+                     to  {transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) *  5deg))}}
+
+/* weerspiegeling op het water: korte streepjes die heel traag verschuiven */
+.v11-spiegel rect{animation-name:v11Spiegel;animation-timing-function:ease-in-out;
+  animation-iteration-count:infinite;animation-direction:alternate;will-change:transform,opacity}
+/* golven schuiven langzaam naar de kust; schuimlijnen komen en gaan */
+.v11-golf path{animation-name:v11Golf;animation-timing-function:ease-in-out;
+  animation-iteration-count:infinite;will-change:transform,opacity}
+@keyframes v11Golf{0%{transform:translateX(-2px);opacity:0}
+  20%{opacity:.9}70%{opacity:.7}100%{transform:translateX(3px);opacity:0}}
+@keyframes v11Spiegel{from{transform:translateX(-1.2px);opacity:.35}to{transform:translateX(1.4px);opacity:.8}}
+
+/* hagel: sneller dan sneeuw, en een korte stuiter bij de grond */
+.v11-hagel{position:absolute;top:-10px;border-radius:50%;background:#EDF2F4;
+  box-shadow:0 0 0 .4px rgba(120,140,155,.35);
+  animation-name:v11Hagel;animation-timing-function:linear;
+  animation-iteration-count:infinite;will-change:transform}
+@keyframes v11Hagel{
+  0%{transform:translate3d(0,-12px,0)}
+  78%{transform:translate3d(calc(var(--nat-drift,14px) * var(--wind,.5) * 2),var(--nat-val,32vh),0)}
+  86%{transform:translate3d(calc(var(--nat-drift,14px) * var(--wind,.5) * 2 + 2px),calc(var(--nat-val,32vh) - 5px),0)}
+  93%{transform:translate3d(calc(var(--nat-drift,14px) * var(--wind,.5) * 2 + 4px),var(--nat-val,32vh),0)}
+  97%{transform:translate3d(calc(var(--nat-drift,14px) * var(--wind,.5) * 2 + 5px),calc(var(--nat-val,32vh) - 2px),0)}
+  100%{transform:translate3d(calc(var(--nat-drift,14px) * var(--wind,.5) * 2 + 6px),var(--nat-val,32vh),0)}}
+
+/* zand: bijna horizontaal en laag bij de grond \u2014 niet sneeuw in een andere
+   kleur, maar iets dat over de bodem schuift */
+.v11-zandsliert{position:absolute;left:-60px;border-radius:2px;
+  background:linear-gradient(to right,rgba(192,138,107,0),rgba(192,138,107,.75),rgba(192,138,107,0));
+  animation-name:v11Zand;animation-timing-function:ease-in-out;
+  animation-iteration-count:infinite;will-change:transform,opacity}
+@keyframes v11Zand{0%{transform:translateX(0) translateY(0);opacity:0}
+  14%{opacity:1}
+  70%{transform:translateX(calc((100vw + 160px) * .7)) translateY(calc(var(--wind,.5) * -3px));opacity:.9}
+  100%{transform:translateX(calc(100vw + 160px)) translateY(0);opacity:0}}
+
 /* op een telefoon blijft de laag lager en rustiger */
 @media(max-width:640px){
   .nat-wolk{display:none}
+  /* v111: minder deeltjes op een klein scherm \u2014 de laatste vier van elke
+     soort verdwijnen, de rest houdt zijn plek */
+  .nat-hagel .v11-hagel:nth-child(n+7){display:none}
+  .nat-zand .v11-zandsliert:nth-child(n+10){display:none}
+  /* de helft van de grassprieten verdwijnt; de rest houdt zijn plek, dus het
+     beeld verandert niet van karakter \u2014 er beweegt alleen minder */
+  .nat-landschap .v11-spriet:nth-child(2n){display:none}
+  /* v111 fase C: hetzelfde voor de weerspiegeling op het water. Die telde op
+     een telefoon even zwaar als op desktop, en dat was de reden dat alpen en
+     bergmeer daar geen besparing haalden. */
+  .nat-landschap .v11-spiegel rect:nth-child(2n){display:none}
+  .nat-landschap .v11-golf path:nth-child(3n){display:none}
 }
 @media (prefers-reduced-motion:reduce){
   .nat-laag *{animation:none!important;transform:none!important}
