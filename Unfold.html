@@ -49497,7 +49497,9 @@
   /* v106a: salie uit het bestaande palet (#7E8C77, dezelfde familie als de
      tegel Persoonlijke groei). De diepe variant is voor tekst \u2014 die haalt AA
      op wit (5,5:1), op de beige achtergrond en op het zachte salievlak. */
-  --salie:#7E8C77;--salie-diep:#55704F;--salie-zacht:#EFF2EC;
+  --salie:#7E8C77;--salie-diep:#55704F;--salie-zacht:#EFF2EC;--salie-licht:#E4EAE0;
+  /* v112.6.1: \xE9\xE9n groenfamilie \u2014 salie (basis), salie-diep (tekst/iconen, AA op wit en op salie-zacht),
+     salie-zacht (vlakken), salie-licht (balken, randen, zachte nadruk); --st-sterk is het nadruk-groen. */
 }
 *{box-sizing:border-box}
 .tc{font-family:'Inter',system-ui,sans-serif;color:var(--inkt);background:var(--bg);min-height:100%;-webkit-font-smoothing:antialiased;letter-spacing:-.005em}
@@ -49853,21 +49855,12 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .tc.is-werk{background:var(--werk-bg)}
 .tc.is-werk .kop-balk{background:var(--werk-bg);border-bottom:1px solid var(--lijn-fijn)}
 .werkomgeving{position:relative}
-/* v112.5.1: de mentor-/vakdocentomgeving vult het scherm en schaalt mee \u2014
-   lettertype, iconen, kaarten en zijpaneel in dezelfde verhouding. Ontwerp-
-   basis is 1440px (schaal 1); daarboven groeit alles in stappen mee, zodat op
-   een breed beeldscherm niet een smal strookje in het midden overblijft. De
-   leerlingomgeving is ongewijzigd. */
-body.grow-werk{--werk-schaal:1}
-@media(min-width:1500px){ body.grow-werk{--werk-schaal:1.1} }
-@media(min-width:1700px){ body.grow-werk{--werk-schaal:1.2} }
-@media(min-width:1900px){ body.grow-werk{--werk-schaal:1.3} }
-@media(min-width:2300px){ body.grow-werk{--werk-schaal:1.5} }
-/* De schaal staat op de inhoud en op de vaste lagen apart (geen zoom op een
-   voorouder van een fixed element: dan dekt de waas het scherm niet). */
-body.grow-werk .tc.is-werk main.werkomgeving, body.grow-werk .tc.is-werk .kop-balk, body.grow-werk .tc.is-werk footer{zoom:var(--werk-schaal)}
-body.grow-werk .zp, body.grow-werk .tc-portaal.popup-laag>*{zoom:var(--werk-schaal)}
-body.grow-werk .zp-waas{zoom:1}
+/* v112.6.1: de mentor-/vakdocentomgeving vult het scherm (tot 1400px) met
+   gewone responsive CSS. Er is g\xE9\xE9n zoom, g\xE9\xE9n transform-schaal en niets dat
+   browserzoom compenseert: de maten hieronder zijn de ontwerpmaten op 100%
+   en de browser vergroot ze zelf bij 125/150/200%. De breedte groeit mee via
+   de rasters en de max-breedte van main; de tekst niet. */
+/* body.grow-werk blijft als marker voor de werkomgeving; er hangt geen schaal meer aan. */
 .grow-zp{position:static}
 
 /* geen kaarten met randen en schaduwen, maar blokken met een fijne lijn */
@@ -49932,8 +49925,8 @@ body.grow-werk .zp-waas{zoom:1}
 .lp-terug:focus-visible{outline:3px solid var(--accent-diep);outline-offset:2px}
 .lp-kop{display:flex;align-items:flex-start;gap:14px;margin-bottom:26px}
 .lp-wie{flex:1 1 auto;min-width:0}
-.lp-naam{margin:0;font-size:1.9rem;font-weight:700;letter-spacing:-.025em;line-height:1.1}
-.lp-klas{font-size:.9rem;color:var(--grijs);margin-top:4px}
+.lp-naam{margin:0;font-size:1.65rem;font-weight:700;letter-spacing:-.022em;line-height:1.12} /* 26,4px \u2014 richtmaat 24\u201328 */
+.lp-klas{font-size:.88rem;color:var(--grijs);margin-top:3px}
 .lp-medailles{display:flex;gap:12px;flex-wrap:wrap;margin-top:9px}
 .lp-medaille{display:inline-flex;align-items:center;gap:4px;font-size:.82rem;font-weight:700;color:var(--inkt)}
 .lp-medaille.is-leeg{opacity:.38;font-weight:600}
@@ -49956,7 +49949,7 @@ body.grow-werk .zp-waas{zoom:1}
   font:inherit;font-size:.92rem;font-weight:600;padding:12px 14px;border-radius:10px;cursor:pointer}
 .lp-keuzerij:hover{background:var(--accent-zacht)}
 
-.lp-sectie{margin:0 0 12px;font-size:1.1rem;font-weight:700;letter-spacing:-.01em}
+.lp-sectie{margin:0 0 10px;font-size:1.15rem;font-weight:700;letter-spacing:-.01em} /* 18,4px \u2014 richtmaat 18\u201320 */
 .lp-sectiekop{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:34px}
 .lp-sectiekop .lp-sectie{margin-bottom:12px}
 .lp-sectie+*{margin-top:0}
@@ -49969,35 +49962,35 @@ body.grow-werk .zp-waas{zoom:1}
 
 /* v112.4: kerncijfers in de kop, de pijlers als navigatie, twee kolommen */
 .lp-kpis{display:flex;gap:8px;flex-wrap:wrap;align-self:center}
-.lp-kpi{display:inline-flex;align-items:center;gap:10px;padding:10px 14px 10px 10px;border-radius:12px;border:1px solid var(--lijn-fijn);background:var(--kaart);min-width:150px}
-.lp-kpi-icoon{width:40px;height:40px;border-radius:11px;background:var(--tegel);color:var(--inkt);display:grid;place-items:center;flex-shrink:0}
-.lp-kpi-icoon.is-salie{background:#EAF3E7;color:#3C8136}
+.lp-kpi{display:inline-flex;align-items:center;gap:10px;padding:12px 14px 12px 12px;border-radius:12px;border:1px solid var(--lijn-fijn);background:var(--kaart);min-width:150px;min-height:68px;box-sizing:border-box} /* 64\u201376px hoog */
+.lp-kpi-icoon{width:38px;height:38px;border-radius:11px;background:var(--tegel);color:var(--inkt);display:grid;place-items:center;flex-shrink:0}
+.lp-kpi-icoon.is-salie{background:var(--salie-zacht);color:var(--salie-diep)}
 .lp-kpi-icoon.is-steen{background:var(--tegel);color:#3A3A36}
 .lp-kpi-icoon.is-goud{background:#FBF1DC;color:#B07D1C}
-.lp-werk-beeld.is-foto{width:88px;height:64px;border-radius:10px}
+.lp-werk-beeld.is-foto{width:80px;height:58px;border-radius:10px}
 .lp-kpi-label{display:block;font-size:.72rem;color:var(--grijs);line-height:1.2}
-.lp-kpi-waarde{display:block;font-size:1.05rem;font-weight:650;letter-spacing:-.01em;color:var(--inkt);line-height:1.25}
+.lp-kpi-waarde{display:block;font-size:1.06rem;font-weight:650;letter-spacing:-.01em;color:var(--inkt);line-height:1.25}
 .lp-kpi-waarde small{font-size:.76rem;font-weight:500;color:var(--grijs)}
 .lp-kolommen{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:24px;align-items:start;margin-top:18px}
 .lp-kolom-links,.lp-kolom-rechts{display:grid;gap:18px;min-width:0}
-.lp-blok{padding:20px 20px 18px;border-radius:16px;border:1px solid var(--lijn-fijn);background:var(--kaart)}
+.lp-blok{padding:18px 18px 16px;border-radius:16px;border:1px solid var(--lijn-fijn);background:var(--kaart)}
 .lp-blok .lp-sectiekop{margin-top:0}
 .lp-blok .lp-werklijst,.lp-blok .lp-gesprek{border:none;padding:0;background:transparent}
 .lp-blok .lp-werk{padding:11px 4px;border-radius:10px}
-.lp-werk-status{flex:0 0 auto;font-size:.74rem;font-weight:600;padding:4px 9px;border-radius:999px;background:var(--tegel);color:var(--grijs)}
+.lp-werk-status{flex:0 0 auto;font-size:.72rem;font-weight:600;padding:4px 9px;border-radius:999px;background:var(--tegel);color:var(--grijs)}
 .lp-werk-status.is-wacht{background:var(--accent-zacht);color:var(--accent-diep)}
-.lp-werk-status.is-beoordeeld{background:#E0F5E3;color:#3F6E46}
+.lp-werk-status.is-beoordeeld{background:var(--salie-zacht);color:var(--salie-diep)}
 .lp-pijlerlijst{display:grid;gap:4px}
 .lp-pijlerrij{appearance:none;border:1px solid var(--lijn-fijn);background:var(--tegel-licht);font:inherit;text-align:left;cursor:pointer;display:grid;grid-template-columns:auto minmax(80px,110px) minmax(0,1fr) auto auto;align-items:center;gap:12px;padding:10px 10px 10px 12px;border-radius:12px;min-height:48px;color:var(--inkt)}
 .lp-pijlerrij:hover{background:var(--tegel)}
 .lp-pijlerrij:focus-visible{outline:3px solid var(--accent-diep);outline-offset:-3px}
-.lp-pijlerrij-icoon{display:inline-flex;color:#3C8136}
+.lp-pijlerrij-icoon{display:inline-flex;color:var(--salie-diep)}
 .lp-pijlerrij-naam{font-size:.9rem;font-weight:560}
 .lp-pijlerrij-balk{height:8px;border-radius:999px;background:#E8E6E0;overflow:hidden}
-.lp-pijlerrij-balk>span{display:block;height:100%;border-radius:999px;background:#58875F}
+.lp-pijlerrij-balk>span{display:block;height:100%;border-radius:999px;background:var(--salie-diep)}
 .lp-pijlerrij-balk.is-leeg{background:repeating-linear-gradient(90deg,#E8E6E0 0 6px,transparent 6px 10px)}
 .lp-pijlerrij-status{font-size:.8rem;color:var(--grijs);white-space:nowrap}
-.lp-pijlerrij-status.is-sterk{color:#3F6E46}
+.lp-pijlerrij-status.is-sterk{color:var(--salie-diep)}
 .lp-pijlerrij-status.is-groei{color:var(--accent-diep)}
 .lp-actie{display:flex;align-items:center;gap:10px;font-weight:560;color:var(--inkt)}
 .lp-actie-icoon{width:34px;height:34px;border-radius:10px;background:var(--tegel);display:grid;place-items:center;flex-shrink:0;color:var(--inkt)}
@@ -50005,7 +49998,7 @@ body.grow-werk .zp-waas{zoom:1}
 .lp-tweede{margin-top:8px}
 .lp-eerderlijst{display:grid;gap:8px;margin-top:10px}
 .lp-eerderrij{display:grid;gap:3px;padding:10px 12px;border-radius:10px;background:var(--tegel-licht);border-left:3px solid var(--lijn)}
-.lp-eerderrij-meta{font-size:.74rem;color:var(--grijs)}
+.lp-eerderrij-meta{font-size:.76rem;color:var(--grijs)}
 .lp-eerderrij-tekst{font-size:.86rem;line-height:1.45;color:var(--inkt)}
 @media (max-width:900px){
   /* mobiel: \xE9\xE9n kolom in de volgorde profiel \u2192 volgende stap \u2192 recent werk \u2192 ontwikkeling \u2192 feedback */
@@ -50023,13 +50016,13 @@ body.grow-werk .zp-waas{zoom:1}
 /* vier ontwikkeltegels \u2014 rustig, zonder gevulde iconenblokken */
 .lp-tegels{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
 .lp-tegel{appearance:none;border:1px solid var(--lijn-fijn);background:var(--kaart);border-radius:14px;font:inherit;text-align:left;cursor:pointer;
-  padding:16px 18px;display:flex;align-items:center;gap:14px;min-height:80px}
-.lp-tegel:hover{background:#F3F9F1;border-color:#CFE3C9}
-.lp-tegel:hover .lp-tegel-icoon{color:#1F661E}
+  padding:14px 16px;display:flex;align-items:center;gap:12px;min-height:72px}
+.lp-tegel:hover{background:var(--salie-zacht);border-color:var(--salie-licht)}
+.lp-tegel:hover .lp-tegel-icoon{color:var(--salie-diep)}
 .lp-tegel:focus-visible{outline:3px solid var(--accent-diep);outline-offset:-3px}
 .lp-tegel-icoon{color:var(--inkt);line-height:0}
-.lp-tegel-naam{display:block;font-weight:560;font-size:1.02rem;letter-spacing:-.01em}
-.lp-tegel-obs{display:block;font-size:.86rem;color:var(--grijs);line-height:1.4}
+.lp-tegel-naam{display:block;font-weight:560;font-size:1rem;letter-spacing:-.01em}
+.lp-tegel-obs{display:block;font-size:.84rem;color:var(--grijs);line-height:1.4}
 .lp-tegel-status{align-self:flex-start;margin-top:auto;font-size:.76rem;font-weight:600}
 .lp-tegel-status.is-sterk{color:var(--salie-diep)}
 .lp-tegel-status.is-groei{color:var(--accent-diep)}
@@ -50047,29 +50040,47 @@ body.grow-werk .zp-waas{zoom:1}
 .lp-werk:hover .lp-pijl{color:var(--accent-diep)}
 .lp-werk:hover .lp-werk-titel{color:var(--accent-diep)}
 .lp-werk:focus-visible{outline:3px solid var(--accent-diep);outline-offset:-3px}
-.lp-werk-beeld{flex:0 0 auto;width:56px;height:56px;border-radius:10px;overflow:hidden;
+.lp-werk-beeld{flex:0 0 auto;width:52px;height:52px;border-radius:10px;overflow:hidden;
   background:var(--kaart);border:1px solid var(--lijn-fijn);display:grid;place-items:center;color:var(--grijs)}
 .lp-werk-beeld img{width:100%;height:100%;object-fit:cover;display:block}
 .lp-werk-tekst{flex:1 1 auto;min-width:0}
-.lp-werk-titel{display:block;font-weight:600;font-size:1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lp-werk-titel{display:block;font-weight:600;font-size:1rem;/* 16px \u2014 kaarttitel 15\u201317 */overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lp-werk-meta{display:block;font-size:.8rem;color:var(--grijs);margin-top:2px}
 .lp-pijl{flex:0 0 auto;color:var(--grijs);line-height:0}
 
 /* het gespreksblok */
 .lp-gesprek{background:var(--kaart);border:1px solid var(--lijn-fijn);border-radius:12px;padding:18px 18px 16px}
-.lp-gesprek-obs{margin:0 0 10px;font-size:.95rem;line-height:1.55}
-.lp-gesprek-regel{margin:0 0 8px;font-size:.92rem;line-height:1.55;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.lp-gesprek-obs{margin:0 0 10px;font-size:.92rem;line-height:1.55} /* 14,7px \u2014 tekst 14\u201315 */
+.lp-gesprek-regel{margin:0 0 8px;font-size:.9rem;line-height:1.55;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
 .lp-label{flex:0 0 auto;font-size:.72rem;font-weight:700;color:var(--grijs);
   border:1px solid var(--lijn-fijn);border-radius:6px;padding:1px 7px}
 .lp-label.is-suggestie{color:var(--accent-diep);border-color:var(--accent-rand)}
-.lp-hoofdactie{width:auto;margin-top:14px}
+.lp-hoofdactie{width:auto;margin-top:12px;padding:.6rem 1.1rem;min-height:38px;font-size:.9rem;border-radius:11px} /* knoppen 34\u201340px */
 .lp-hoofdactie-sub{font-weight:600;opacity:.92;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;display:inline-block;vertical-align:bottom}
+/* v112.6.1: Bespreek de ontwikkeling \u2014 drie rustige kaarten, \xE9\xE9n kleur per betekenis */
+.bo{display:grid;gap:8px;max-width:720px}
+.bo-intro{margin:0 0 6px;font-size:.92rem;line-height:1.55;color:var(--inkt-zacht)}
+.bo-kaart{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:12px;border:1px solid var(--lijn-fijn);background:var(--kaart)}
+.bo-icoon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex-shrink:0}
+.bo-kaart.is-sterk{background:var(--salie-zacht);border-color:var(--salie-licht)}
+.bo-kaart.is-sterk .bo-icoon{background:#FFFFFF;color:var(--salie-diep)}
+.bo-kaart.is-ontwikkel{background:var(--accent-zacht);border-color:var(--accent-rand)}
+.bo-kaart.is-ontwikkel .bo-icoon{background:#FFFFFF;color:var(--accent-diep)}
+.bo-kaart.is-stap{background:#EEF3F8;border-color:#DCE6F0}
+.bo-kaart.is-stap .bo-icoon{background:#FFFFFF;color:#3B6FB0}
+.bo-tekst{display:grid;gap:2px;min-width:0}
+.bo-label{font-size:.76rem;font-weight:700;letter-spacing:.02em;color:var(--inkt-zacht)}
+.bo-zin{font-size:.92rem;line-height:1.5;color:var(--inkt)}
+.bo-onderbouwing{justify-self:start;margin-top:4px}
+.bo-onderbouwing-paneel{padding:12px 14px;border-radius:12px;border:1px solid var(--lijn-fijn);background:var(--tegel-licht)}
+.bo-onderbouwing-kop{margin:0 0 6px;font-size:.78rem;font-weight:700;color:var(--grijs)}
+.bo-onderbouwing-lijst{margin:0 0 10px;padding-left:18px;font-size:.86rem;line-height:1.5;color:var(--inkt);display:grid;gap:4px}
 
 /* \u2500\u2500 v109: het beoordeelpaneel \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
    Op een breed scherm een rustig zijpaneel; op een telefoon een volledig
    scherm met een terugactie bovenin. */
 .zp-waas{position:fixed;inset:0;background:rgba(28,27,25,.22);z-index:60}
-.zp{position:fixed;top:0;right:0;bottom:0;width:min(560px,100vw);background:#fff;z-index:61;
+.zp{position:fixed;top:0;right:0;bottom:0;width:min(520px,100vw);background:#fff;z-index:61;
   display:flex;flex-direction:column;border-left:1px solid var(--lijn-fijn);
   box-shadow:-18px 0 44px -28px rgba(28,27,25,.5)}
 .zp-kop{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--lijn-fijn)}
@@ -50080,7 +50091,7 @@ body.grow-werk .zp-waas{zoom:1}
 .zp-titel{min-width:0}
 .zp-titel-naam{display:block;font-weight:700;font-size:1.12rem;letter-spacing:-.01em}
 .zp-titel-sub{display:block;font-size:.84rem;color:var(--grijs)}
-.zp-body{flex:1 1 auto;overflow-y:auto;padding:22px 26px 32px;font-size:1.02rem}
+.zp-body{flex:1 1 auto;overflow-y:auto;padding:20px 24px 30px;font-size:.95rem}
 .zp-uitleg{margin:0 0 14px;font-size:.88rem;line-height:1.55;color:var(--inkt-zacht)}
 .zp-veldkop{font-size:.78rem;font-weight:700;color:var(--grijs);margin:0 0 7px}
 .zp-vouw{appearance:none;border:0;background:transparent;font:inherit;font-size:.85rem;font-weight:600;
@@ -50396,7 +50407,7 @@ body.grow-werk .zp-waas{zoom:1}
 .bewijs-cat:focus-visible,.bewijs-vorm:focus-visible,.bewijs-kiezer-terug:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;border-radius:10px}
 @media (max-width:560px){ .bewijs-cats{grid-template-columns:repeat(2,minmax(0,1fr))} .bewijs-cat{min-height:78px;padding:11px 10px} }
 /* v112.3: de werkvormenbibliotheek */
-.wvb{display:grid;gap:14px}
+.wvb{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;min-width:0}
 .wvb-kop{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .wvb-titel{margin:0;font-size:1.2rem;font-weight:650;letter-spacing:-.012em;color:var(--inkt)}
 .wvb-sub{margin:2px 0 0;font-size:.86rem;color:var(--grijs)}
@@ -50436,52 +50447,62 @@ body.grow-werk .zp-waas{zoom:1}
 .wvb-detail-noot{margin:12px 0 0;font-size:.74rem;line-height:1.4}
 .wvb-leeg{margin:0;font-size:.88rem}
 @media (max-width:700px){ .wvb-raster{grid-template-columns:1fr} .wvb-detail-secties{grid-template-columns:1fr} .wvb-telling{margin-left:0;width:100%} }
+/* v112.6.1: drie kolommen op een breed scherm (zelfde raster voor werkvormen en sjablonen) */
+@media (min-width:1100px){ .wvb-raster{grid-template-columns:repeat(3,minmax(0,1fr))} }
+.sjb-cats{flex:1 1 100%;min-width:0;flex-wrap:nowrap;overflow-x:auto;max-width:100%;padding-bottom:2px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.sjb-cats .wvb-chip{flex-shrink:0;white-space:nowrap}
+.sjb-niveaus{display:inline-flex;align-items:center;gap:3px;margin-top:2px;opacity:1}
+.sjb-cat{margin-left:6px;color:var(--inkt-zacht);opacity:1}
+.sjb-uitleg{margin:-2px 0 0}
+.sjb-uitleg .rubric-meer{font-size:.8rem}
+.sjb-uitleg-tekst{margin:6px 0 0;font-size:.8rem;line-height:1.5;max-width:76ch}
+.sjb-opening{font-style:italic}
 /* v112.2: de rubricmatrix \u2014 naar het ontwerp van JB: kolomtegels met een
    groei-icoon, \xE9\xE9n rij per criterium op een lichte ondergrond, ring-met-kern
    als keuze, \xE9\xE9n opmerking, Annuleren links en Opslaan rechts. */
 .rubric-formulier{margin-top:12px;padding:16px 16px 14px;border-radius:16px;background:#FCFBF8;border:1px solid var(--lijn);display:grid;gap:12px}
 .rubric-formulier-kop{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.rubric-formulier-icoon{width:44px;height:44px;border-radius:50%;background:#EAF3E7;color:#3C8136;display:grid;place-items:center;flex-shrink:0}
-.rubric-formulier-titel{margin:0;font-size:1.2rem;font-weight:650;letter-spacing:-.012em;color:var(--inkt)}
+.rubric-formulier-icoon{width:38px;height:38px;border-radius:50%;background:var(--salie-zacht);color:var(--salie-diep);display:grid;place-items:center;flex-shrink:0}
+.rubric-formulier-titel{margin:0;font-size:1.15rem;font-weight:650;letter-spacing:-.012em;color:var(--inkt)}
 .rubric-formulier-sub{margin:2px 0 0;font-size:.84rem;color:var(--grijs)}
 .rubric-voorbeeld{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;min-height:0;font-size:.84rem}
 .afgerond-status{display:inline-block;margin-top:3px;font-size:.7rem;font-weight:800;letter-spacing:.02em;padding:2px 8px;border-radius:999px}
 .afgerond-status.is-wacht{background:var(--accent-zacht);color:var(--accent-diep)}
-.afgerond-status.is-beoordeeld{background:#E0F5E3;color:#3F6E46}
+.afgerond-status.is-beoordeeld{background:var(--salie-zacht);color:var(--salie-diep)}
 .profiel-feedback{display:flex;align-items:center;gap:10px;width:100%;margin:14px 0 14px;padding:11px 14px;border-radius:14px;
-  background:#E0F5E3;color:#2E5A35;border:1px solid #CFE3C9;font:inherit;font-size:.88rem;text-align:left;cursor:pointer;min-height:44px}
+  background:var(--salie-zacht);color:var(--salie-diep);border:1px solid var(--salie-licht);font:inherit;font-size:.88rem;text-align:left;cursor:pointer;min-height:44px}
 .profiel-feedback b{font-weight:800}
 .profiel-feedback span{flex:1;min-width:0}
-.profiel-feedback:hover{background:#D6EFDA}
-.profiel-feedback:focus-visible{outline:2px solid #3F6E46;outline-offset:2px}
+.profiel-feedback:hover{background:var(--salie-licht)}
+.profiel-feedback:focus-visible{outline:2px solid var(--salie-diep);outline-offset:2px}
 .rubric-volgende{background:none;border:none;font:inherit;font-weight:700;color:var(--accent-diep);cursor:pointer;
   text-decoration:underline;text-underline-offset:3px;padding:6px 8px;min-height:32px;border-radius:8px;margin-left:6px}
 .rubric-volgende:focus-visible{outline:2px solid var(--accent-diep);outline-offset:2px}
 .rubric-matrix{display:grid;gap:6px}
-.rubric-rij{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(4,minmax(0,1fr));align-items:center;gap:6px;min-height:52px;padding:4px 8px;border-radius:12px;background:#F7F7F5;border:1px solid var(--lijn-fijn)}
+.rubric-rij{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(4,minmax(0,1fr));align-items:center;gap:6px;min-height:44px;padding:2px 8px;border-radius:12px;background:#F7F7F5;border:1px solid var(--lijn-fijn)} /* v112.6.1: lagere rijen */
 .rubric-kopregel{min-height:0;padding:0;background:transparent;border:none;gap:6px}
-.rubric-crit-kop{display:flex;align-items:center;min-height:72px;padding:10px 14px;border-radius:12px;background:var(--tegel-licht);font-size:.9rem;font-weight:560;color:var(--inkt)}
-.rubric-kol{display:grid;justify-items:center;align-content:center;gap:4px;min-height:72px;padding:10px 6px;border-radius:12px;font-size:.82rem;font-weight:560;background:var(--tegel-licht)}
-.rubric-kol-0{background:#F8F5F2}.rubric-kol-1{background:#F2F4FA}.rubric-kol-2{background:#F1F6F0}.rubric-kol-3{background:#E1EAE0}
+.rubric-crit-kop{display:flex;align-items:center;min-height:56px;padding:8px 14px;border-radius:12px;background:var(--tegel-licht);font-size:.9rem;font-weight:560;color:var(--inkt)}
+.rubric-kol{display:grid;justify-items:center;align-content:center;gap:3px;min-height:56px;padding:8px 6px;border-radius:12px;font-size:.8rem;font-weight:560;background:var(--tegel-licht)}
+.rubric-kol-0{background:#F8F5F2}.rubric-kol-1{background:#F2F4FA}.rubric-kol-2{background:var(--salie-zacht)}.rubric-kol-3{background:#E9EEE5}
 .rubric-kol .rubric-kol-naam{color:#3A3A36}
-.rubric-kol-1 .rubric-kol-naam{color:#3B6FB0}.rubric-kol-2 .rubric-kol-naam{color:#3B6D44}.rubric-kol-3 .rubric-kol-naam{color:#2C643D}.rubric-kol-0 .rubric-kol-naam{color:#6B6A66}
+.rubric-kol-1 .rubric-kol-naam{color:#3B6FB0}.rubric-kol-2 .rubric-kol-naam{color:var(--salie-diep)}.rubric-kol-3 .rubric-kol-naam{color:var(--salie-diep)}.rubric-kol-0 .rubric-kol-naam{color:#6B6A66}
 .rubric-kol.is-doel{box-shadow:inset 0 0 0 1.5px currentColor}
 .rubric-kol-doel{font-size:.66rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--inkt-zacht)}
 .rubric-crit{display:grid;gap:0}
 .rubric-crit.is-open .rubric-rij{border-radius:12px 12px 0 0}
 .rubric-crit-naam{display:flex;align-items:center;gap:10px;min-width:0;padding:4px 0 4px 6px}
 .rubric-crit-icoon{display:inline-flex;flex-shrink:0;color:#1C1B19}
-.rubric-crit-tekst{font-size:.9rem;font-weight:560;color:var(--inkt);line-height:1.3;min-width:0}
+.rubric-crit-tekst{font-size:.88rem;font-weight:560;color:var(--inkt);line-height:1.3;min-width:0}
 .rubric-info{display:inline-grid;place-items:center;flex-shrink:0;width:26px;height:26px;border-radius:50%;border:none;background:none;color:var(--grijs);cursor:pointer;padding:0}
 .rubric-info:hover,.rubric-info[aria-expanded="true"]{background:var(--tegel);color:var(--inkt)}
 .rubric-keuzes{display:contents}
-.rubric-bol-wrap{position:relative;display:grid;place-items:center;min-height:44px;cursor:pointer;border-radius:10px}
-.rubric-bol-wrap.is-doelkolom{background:#F8F9FC}
+.rubric-bol-wrap{position:relative;display:grid;place-items:center;min-height:40px;cursor:pointer;border-radius:10px} /* klikgebied \u226540px, de cirkel zelf kleiner */
+.rubric-bol-wrap.is-doelkolom{background:#FAFBFD}
 .rubric-bol-wrap:hover{background:var(--tegel-licht)}
 .rubric-bol-wrap input{position:absolute;inset:0;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
-.rubric-bol{width:26px;height:26px;border-radius:50%;border:1.5px solid #C4C0B8;background:#fff;display:grid;place-items:center;transition:border-color var(--grow-ui-duur) var(--grow-ui-ease)}
+.rubric-bol{width:20px;height:20px;border-radius:50%;border:1.5px solid #C4C0B8;background:#fff;display:grid;place-items:center;transition:border-color var(--grow-ui-duur) var(--grow-ui-ease)}
 .rubric-bol-wrap.is-gekozen .rubric-bol{border-width:2px;box-shadow:0 0 0 3px rgba(255,255,255,.9)}
-.rubric-bol-kern{width:14px;height:14px;border-radius:50%}
+.rubric-bol-kern{width:10px;height:10px;border-radius:50%}
 .rubric-bol-wrap input:focus-visible + .rubric-bol{outline:2.5px solid var(--accent);outline-offset:3px}
 .rubric-bol-label{display:none;font-size:.84rem;color:var(--inkt)}
 .rubric-uitleg{display:grid;gap:6px;padding:10px 14px 12px;margin:0;border:1px solid var(--lijn-fijn);border-top:none;border-radius:0 0 12px 12px;background:var(--tegel-licht)}
@@ -50497,7 +50518,7 @@ body.grow-werk .zp-waas{zoom:1}
 .rubric-acties{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding-top:4px}
 .rubric-acties .admin-btn-sec{display:inline-flex;align-items:center;gap:6px}
 .rubric-opslaan{width:auto;display:inline-flex;align-items:center;gap:8px;padding:.8rem 1.6rem}
-.rubric-gelukt{display:inline-flex;align-items:center;gap:5px;margin-left:10px;font-size:.8rem;font-weight:560;color:#2E7D43}
+.rubric-gelukt{display:inline-flex;align-items:center;gap:5px;margin-left:10px;font-size:.8rem;font-weight:560;color:var(--salie-diep)}
 @media (max-width:640px){
   .rubric-kopregel{display:none}
   .rubric-rij{grid-template-columns:1fr;gap:4px;padding:8px 6px}
@@ -50531,10 +50552,13 @@ body.grow-werk .zp-waas{zoom:1}
 .afrond-hint{font-size:.82rem;color:var(--grijs)}
 .afrond-klaar-kop{display:flex;align-items:center;gap:14px;padding:4px 0 12px}
 .afrond-klaar-medaille{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;color:#fff;flex-shrink:0;animation:medaillePop .6s cubic-bezier(.2,1.3,.5,1)}
-.inlever-compact{margin-top:12px;padding:12px 12px 10px;border:1px solid var(--lijn);border-radius:14px;background:#FFFFFF}
-.inlever-compact-kop{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.inlever-compact-icoon{width:30px;height:30px;border-radius:9px;background:var(--tegel);color:#3A3A36;display:grid;place-items:center;flex-shrink:0}
-.inlever-compact-titel{font-size:.9rem;font-weight:560;color:var(--inkt)}
+/* v112.6.1: de inlevering is een compacte regel (icoon \xB7 titel + \xE9\xE9n zin \xB7 knop); het
+   bestaande formulier opent pas na een klik en sluit na succes weer tot deze regel. */
+.inlever-compact{margin-top:0;padding:0;border:none;border-radius:0;background:transparent}
+.inlever-compact-kop{display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-height:36px}
+.inlever-compact-icoon{width:28px;height:28px;border-radius:8px;background:var(--tegel);color:var(--inkt-zacht);display:grid;place-items:center;flex-shrink:0}
+.inlever-compact-titel{font-size:.92rem;font-weight:560;color:var(--inkt)}
+.inlever-compact-kop .admin-btn-sec{margin-left:auto}
 @media (prefers-reduced-motion:reduce){ .afrond-klaar-medaille{animation:none} }
 /* v112.6: Calm Completion \u2014 minder kaarten, \xE9\xE9n primaire actie, details op aanvraag */
 .afrond-kaart.is-rustig{gap:0}
@@ -50570,7 +50594,9 @@ body.grow-werk .zp-waas{zoom:1}
 .bewijs-sv-status{display:inline-flex;align-items:center;gap:8px;font-size:.92rem;color:var(--inkt)}
 .bewijs-samenvatting.heeft-werk .bewijs-sv-status svg{color:var(--salie-diep)}
 .bewijs-sv-iconen{display:inline-flex;gap:4px}
-.bewijs-sv-icoon{width:28px;height:28px;border-radius:8px;background:var(--tegel);display:grid;place-items:center;color:var(--inkt-zacht)}
+.bewijs-sv-icoon{width:36px;height:36px;border-radius:8px;background:var(--tegel);display:grid;place-items:center;color:var(--inkt-zacht);overflow:hidden;font-size:.78rem;font-weight:600}
+.bewijs-sv-icoon.is-foto img{width:100%;height:100%;object-fit:cover;display:block}
+.bewijs-sv-meer{background:var(--tegel-licht);border:1px solid var(--lijn-fijn)}
 .bewijs-sv-knop{margin-left:auto;display:inline-flex;align-items:center;gap:6px;background:none;border:none;padding:6px 2px;min-height:36px;font:inherit;font-size:.88rem;font-weight:600;color:var(--accent-diep);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .bewijs-sv-knop:focus-visible{outline:2.5px solid var(--accent-diep);outline-offset:2px;border-radius:6px}
 .bewijs-sv-inklap{margin:0 0 6px;float:right}
@@ -50582,7 +50608,7 @@ body.grow-werk .zp-waas{zoom:1}
 .bewijs-regel-toelichting{display:block;margin-top:4px;font-size:.84rem;line-height:1.45;color:#3A4048}
 .bewijs-bevestig{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;border:none;
   background:var(--accent-knop);color:var(--accent-opdruk);font-weight:700;font-size:.82rem;cursor:pointer}
-.bewijs-bevestigd{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;color:#2E7D43}
+.bewijs-bevestigd{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;color:var(--salie-diep)}
 /* v106.1: veiligheidspoort v\xF3\xF3r de uitdaging */
 .vp-poort{width:100%;max-width:560px;max-height:86vh;overflow:auto;padding:24px 24px 20px}
 .vp-poort-kop{display:flex;gap:13px;align-items:flex-start;margin-bottom:14px}
@@ -50718,7 +50744,7 @@ body.grow-werk .zp-waas{zoom:1}
 .bewijs-klok{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.05rem}
 @keyframes bewijsPuls{0%,100%{opacity:1}50%{opacity:.25}}
 .bewijs-fout{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:#FBEAE6;color:#8E2C17;font-size:.88rem;line-height:1.5}
-.bewijs-gelukt{display:flex;align-items:center;gap:7px;margin:10px 0 0;font-size:.88rem;font-weight:700;color:#2E7D43}
+.bewijs-gelukt{display:flex;align-items:center;gap:7px;margin:10px 0 0;font-size:.88rem;font-weight:700;color:var(--salie-diep)}
 .bewijs-privacy{margin:12px 0 0;font-size:.78rem;color:var(--grijs);line-height:1.5}
 .bewijs-mentor{margin-top:10px;padding:10px 12px;border-radius:12px;background:#FFFFFF;border:1px solid var(--lijn)}
 .bewijs-mentor-kop{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:8px;font-size:.82rem;color:var(--accent-diep)}
@@ -52186,12 +52212,15 @@ ${t.vermijdJargon ? `- VERMIJD onderwijs- en vakjargon. Verboden woorden (gebrui
     const subCount = Object.values(SUBTHEMAS || {}).reduce((s, v) => s + (Array.isArray(v) ? v.length : 0), 0) || 300;
     const niveaus = 4;
     const cats = [...new Set(CHALLENGE_SJABLONEN.map((s) => s.categorie))];
+    const archetypeNiveaus = CHALLENGE_SJABLONEN.reduce((n, s) => n + (s.niveaus || []).length, 0);
     return {
       archetypes: CHALLENGE_SJABLONEN.length,
       subthemas: subCount,
       niveaus,
       categorieen: cats,
-      combinaties: CHALLENGE_SJABLONEN.length * subCount * niveaus
+      archetypeNiveaus,
+      combinaties: subCount * archetypeNiveaus,
+      maximaal: CHALLENGE_SJABLONEN.length * subCount * niveaus
     };
   }
   function kiesSjabloon({ niveau, werkvormCat, vermijd }) {
@@ -57161,9 +57190,10 @@ ${xref}
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { display: "inline-grid", placeItems: "center", width: size, height: size, borderRadius: "50%", overflow: "hidden", background: "var(--accent-knop)", color: "var(--accent-opdruk)", fontWeight: 800, fontSize: size * 0.4, flexShrink: 0, boxShadow: ring ? "0 0 0 3px var(--accent-zacht)" : void 0 }, children: foto ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("img", { src: foto, alt: "", style: { width: "100%", height: "100%", objectFit: "cover" } }) : naam ? naam[0].toUpperCase() : "?" });
   }
   var GROEINIVEAUS = [
-    { naam: "Seed", min: 0, kleur: "#6E9E76" },
-    { naam: "Explorer", min: 200, kleur: "#7FA95F" },
-    { naam: "Builder", min: 600, kleur: "#97AC4C" },
+    { naam: "Seed", min: 0, kleur: "#7E8C77" },
+    // v112.6.1: = --salie (groenfamilie)
+    { naam: "Explorer", min: 200, kleur: "#6E9E76" },
+    { naam: "Builder", min: 600, kleur: "#7FA95F" },
     { naam: "Creator", min: 1400, kleur: "#BBA83F" },
     { naam: "Challenger", min: 2600, kleur: "#D69A36" },
     { naam: "Performer", min: 4200, kleur: "#E4852B" },
@@ -67948,8 +67978,8 @@ ${kiesInstr}${variatieInstr}${praktijkInstr}${adviesInstr}${persoonlijkInstr}${p
     if (/handel|doen|toepas|praktijk/.test(n)) return "pijler_handelen";
     return "spark";
   }
-  var RUBRIC_KLEUR = ["#A89F92", "#4884D5", "#3B6D44", "#2C643D"];
-  var RUBRIC_ICOON_KLEUR = ["#BDB4AA", "#4884D5", "#508559", "#387048"];
+  var RUBRIC_KLEUR = ["#A89F92", "#4884D5", "#55704F", "#4C7A3F"];
+  var RUBRIC_ICOON_KLEUR = ["#BDB4AA", "#4884D5", "#7E8C77", "#55704F"];
   function RubricScorer({ rec, waarden, onKies }) {
     const rubric = (0, import_react2.useMemo)(() => bouwRubric(rec), [rec]);
     const [uitleg, setUitleg] = (0, import_react2.useState)(null);
@@ -67959,7 +67989,7 @@ ${kiesInstr}${variatieInstr}${praktijkInstr}${adviesInstr}${persoonlijkInstr}${p
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "rubric-rij rubric-kopregel", "aria-hidden": "true", children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rubric-crit-kop", children: "Criterium" }),
         GROEINIVEAU_LABELS.map((l, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "rubric-kol rubric-kol-" + i + (i === doel ? " is-doel" : ""), style: { color: RUBRIC_ICOON_KLEUR[i] }, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GroeiFaseIcoon, { index: i, size: 26 }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GroeiFaseIcoon, { index: i, size: 20 }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rubric-kol-naam", children: l }),
           i === doel && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rubric-kol-doel", children: "doel" })
         ] }, l))
@@ -70183,7 +70213,16 @@ ${String(stapTekst).slice(0, 900)}` : ""
             n > 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 16 }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: "info", size: 16 }),
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: n > 0 ? `${n} bewijsstuk${n === 1 ? "" : "ken"} toegevoegd` : "Nog geen bewijs toegevoegd." })
           ] }),
-          n > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bewijs-sv-iconen", "aria-hidden": "true", children: bewijzen.slice(0, 6).map((b) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bewijs-sv-icoon", title: b.bestandsnaam || b.soort, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: b.soort === "meting" ? "tekst" : b.soort === "bevestiging" ? "check" : b.soort, size: 15 }) }, b.id)) }),
+          n > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "bewijs-sv-iconen", "aria-hidden": "true", children: [
+            bewijzen.slice(0, 2).map((b) => {
+              const foto = b.soort === "foto" && (b.url || b.dataUrl);
+              return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bewijs-sv-icoon" + (foto ? " is-foto" : ""), title: b.bestandsnaam || b.soort, children: foto ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("img", { src: b.url || b.dataUrl, alt: "" }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: b.soort === "meting" ? "tekst" : b.soort === "bevestiging" ? "check" : b.soort, size: 15 }) }, b.id);
+            }),
+            n > 2 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "bewijs-sv-icoon bewijs-sv-meer", children: [
+              "+",
+              n - 2
+            ] })
+          ] }),
           !alleenLezen && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
             "button",
             {
@@ -70715,7 +70754,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
           " ",
           d.werkvorm.naam
         ] }),
-        reedsAf && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pill", style: { background: "#E3F1E6", color: "#2E7D43" }, children: [
+        reedsAf && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pill", style: { background: "var(--salie-zacht)", color: "var(--salie-diep)" }, children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 13 }),
           " Afgerond"
         ] })
@@ -70917,7 +70956,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
               ),
               d.transfer && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { style: { padding: "12px 14px", borderRadius: 12, background: "#FBEFE6", fontWeight: 600, lineHeight: 1.5 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LT, { tekst: d.transfer, tp: tprofUitd }) }),
               reedsAf && !begeleiderWeergave && onInleveren && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { marginTop: 10 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(InleverKaart, { rec, gebruiker, onInleveren, compact: true }) }),
-              reedsAf ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { marginTop: 12, padding: "14px 16px", borderRadius: 12, background: "#E3F1E6", color: "#2E7D43", fontWeight: 700 }, children: [
+              reedsAf ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { marginTop: 12, padding: "14px 16px", borderRadius: 12, background: "var(--salie-zacht)", color: "var(--salie-diep)", fontWeight: 700 }, children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 15 }),
                 " Deze uitdaging heb je al afgerond",
                 rec.rubricScore != null ? ` met ${rec.rubricScore}%` : "",
@@ -71278,7 +71317,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const mf = rec.alpe && rec.alpe.mentorfeedback;
     const mfOp = mf ? String(mf.op || mf.datum || "") : "";
     const beoordeeld = z.inl && z.inl.status === "beoordeeld" || mf && z.laatste && mfOp >= z.laatste || mf && !z.laatste;
-    if (beoordeeld) return { label: "Beoordeeld", kleur: "#2E7D43", achtergrond: "#E3F1E6", bron: z.bron };
+    if (beoordeeld) return { label: "Beoordeeld", kleur: "#55704F", achtergrond: "#EFF2EC", bron: z.bron };
     return {
       label: z.bron === "bewijs" ? "Bewijs toegevoegd \xB7 wacht op beoordeling" : "Ingeleverd \xB7 wacht op beoordeling",
       kort: "Te beoordelen",
@@ -71378,7 +71417,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "inlever-compact-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "download", size: 16 }) }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { flex: 1, minWidth: 140 }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "inlever-compact-titel", children: inl ? "Ingeleverd bij je docent" : "Inleveren bij je docent" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "muted", style: { fontSize: ".78rem", lineHeight: 1.4 }, children: inl ? "Ingeleverd op " + datumNL(inl.ingeleverdOp) + "; je mentor of vakdocent beoordeelt het." : inleverBestandKan() ? "Tekst, link of bestand \u2014 als je docent daarom vraagt." : "Tekst of link toevoegen. Bestanden voeg je toe als bewijs." })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "muted", style: { fontSize: ".78rem", lineHeight: 1.4 }, children: inl ? "Ingeleverd op " + datumNL(inl.ingeleverdOp) + ". Je docent beoordeelt het." : "Deel je resultaat als je docent daarom vraagt." })
       ] }),
       st && inl && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { background: st.achtergrond, color: st.kleur, fontWeight: 800, fontSize: ".72rem" }, children: st.kort || st.label }),
       !open && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "admin-btn-sec", style: { padding: "6px 12px", minHeight: 0, fontSize: ".8rem" }, onClick: () => setOpen(true), children: inl ? "Bekijk of pas aan" : "Inleveren" })
@@ -73002,6 +73041,99 @@ ${String(stapTekst).slice(0, 900)}` : ""
       )) }) })
     ] });
   }
+  function bouwOntwikkelgesprek(records) {
+    const rs = (records || []).filter((r) => r && r.type !== "event" && r.type !== "bonus");
+    const af = rs.filter((r) => r.afgerond);
+    const titelVan = (r) => r.data && r.data.titel || themaLabel(r.thema);
+    const fbOp = (r) => String(r.alpe && r.alpe.mentorfeedback && r.alpe.mentorfeedback.op || r.afgerondOp || "");
+    const metFb = af.filter((r) => r.alpe && r.alpe.mentorfeedback).sort((a, b) => fbOp(b).localeCompare(fbOp(a)));
+    const wachtend = af.filter((r) => !(r.alpe && r.alpe.mentorfeedback)).sort((a, b) => String(b.afgerondOp || b.datum || "").localeCompare(String(a.afgerondOp || a.datum || "")));
+    const metBewijs = af.filter((r) => Array.isArray(r.bewijzen) && r.bewijzen.length > 0).length;
+    const rubric = {};
+    metFb.slice().reverse().forEach((r) => {
+      (r.alpe.mentorfeedback.rubricNiveaus || []).forEach((x) => {
+        if (x && x.criterium && typeof x.index === "number") rubric[x.criterium] = { index: x.index, niveau: x.niveau || GROEINIVEAU_LABELS[x.index] || "", titel: titelVan(r), op: fbOp(r) };
+      });
+    });
+    const rubricLijst = Object.keys(rubric).map((c) => ({ criterium: c, ...rubric[c] }));
+    const sterk = [];
+    rubricLijst.filter((x) => x.index >= 2).sort((a, b) => b.index - a.index).slice(0, 2).forEach((x) => sterk.push({ tekst: `${x.criterium}: ${String(x.niveau).toLowerCase()} volgens de rubric bij '${x.titel}'.` }));
+    metFb.forEach((r) => {
+      (r.alpe.mentorfeedback.sterkePunten || []).forEach((p) => {
+        if (sterk.length < 2 && p) sterk.push({ tekst: `${String(p).trim().replace(/\.$/, "")} \u2014 uit de feedback bij '${titelVan(r)}'.` });
+      });
+    });
+    if (sterk.length < 2 && af.length >= 3) sterk.push({ tekst: `${af.length} uitdagingen afgerond${metBewijs ? `, ${metBewijs} met bewijs` : ""}.` });
+    let ontwikkel = null;
+    for (const r of metFb) {
+      const n = (r.alpe.mentorfeedback.nogOntwikkelen || []).find(Boolean);
+      if (n) {
+        ontwikkel = `${String(n).trim().replace(/\.$/, "")} \u2014 uit de feedback bij '${titelVan(r)}'.`;
+        break;
+      }
+    }
+    if (!ontwikkel) {
+      const laag = rubricLijst.filter((x) => x.index <= 1).sort((a, b) => a.index - b.index)[0];
+      if (laag) ontwikkel = `${laag.criterium}: nog ${String(laag.niveau).toLowerCase()} volgens de rubric bij '${laag.titel}'.`;
+    }
+    let stap = null;
+    if (wachtend.length) stap = `Beoordeel '${titelVan(wachtend[0])}'${wachtend.length > 1 ? ` en ${wachtend.length - 1} andere` : ""} \u2014 dan wordt het beeld vollediger.`;
+    else if (ontwikkel) {
+      const crit = rubricLijst.filter((x) => x.index <= 1).sort((a, b) => a.index - b.index)[0];
+      stap = crit ? `Kies samen een volgende uitdaging waarin ${crit.criterium.toLowerCase()} centraal staat.` : `Kies samen een volgende uitdaging waarin het ontwikkelpunt terugkomt.`;
+    } else if (af.length) {
+      const laatste = af.slice().sort((a, b) => String(b.afgerondOp || b.datum || "").localeCompare(String(a.afgerondOp || a.datum || "")))[0];
+      stap = `Kies een nieuwe uitdaging in ${themaLabel(laatste.thema)}.`;
+    }
+    const onderbouwing = [];
+    onderbouwing.push(`${af.length} uitdaging${af.length === 1 ? "" : "en"} afgerond, ${metFb.length} beoordeeld, ${wachtend.length} wacht${wachtend.length === 1 ? "" : "en"} op feedback, ${metBewijs} met bewijs.`);
+    metFb.slice(0, 4).forEach((r) => {
+      const mf = r.alpe.mentorfeedback;
+      const niv = (mf.rubricNiveaus || []).map((x) => `${x.criterium} ${String(x.niveau || "").toLowerCase()}`).join(", ");
+      onderbouwing.push(`${datumNL(mf.op || r.afgerondOp)} \xB7 ${titelVan(r)}${mf.door ? " \xB7 " + mf.door : ""}${niv ? " \xB7 rubric: " + niv : ""}${mf.feedback ? ` \xB7 "${String(mf.feedback).length > 140 ? String(mf.feedback).slice(0, 140).trim() + "\u2026" : mf.feedback}"` : ""}`);
+    });
+    wachtend.slice(0, 3).forEach((r) => onderbouwing.push(`${datumNL(r.afgerondOp || r.datum)} \xB7 ${titelVan(r)} \xB7 nog niet beoordeeld${Array.isArray(r.bewijzen) && r.bewijzen.length ? ` \xB7 ${r.bewijzen.length} bewijs` : ""}`));
+    return { sterk: sterk.slice(0, 2), ontwikkel, stap, onderbouwing, genoeg: af.length > 0 };
+  }
+  function BespreekOntwikkeling({ records, leerling, klas }) {
+    const g = (0, import_react2.useMemo)(() => bouwOntwikkelgesprek(records), [records]);
+    const [onderbouwing, setOnderbouwing] = (0, import_react2.useState)(false);
+    const voornaam = voornaamVan(leerling.naam) || leerling.naam;
+    const Kaart = ({ soort, icoon, label, tekst }) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "bo-kaart is-" + soort, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bo-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: icoon, size: 18 }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "bo-tekst", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bo-label", children: label }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bo-zin", children: tekst })
+      ] })
+    ] });
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "bo", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "bo-intro", children: [
+        "Bespreek met ",
+        voornaam,
+        " wat goed gaat, \xE9\xE9n ontwikkelpunt en een concrete volgende stap."
+      ] }),
+      g.sterk.length ? g.sterk.map((s, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Kaart, { soort: "sterk", icoon: "pijler_karakter", label: g.sterk.length > 1 ? "Sterk punt " + (i + 1) : "Sterk punt", tekst: s.tekst }, i)) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Kaart, { soort: "sterk", icoon: "pijler_karakter", label: "Sterke punten", tekst: "Nog onvoldoende gegevens om een sterk punt vast te stellen." }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Kaart, { soort: "ontwikkel", icoon: "target", label: "Ontwikkelpunt", tekst: g.ontwikkel || "Nog onvoldoende gegevens om een ontwikkelpunt vast te stellen." }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Kaart, { soort: "stap", icoon: "chevron", label: "Volgende stap", tekst: g.stap || "Nog onvoldoende gegevens om een volgende stap vast te stellen." }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-link bo-onderbouwing", "aria-expanded": onderbouwing ? "true" : "false", "aria-controls": "bo-onderbouwing", onClick: () => setOnderbouwing((o) => !o), children: [
+        onderbouwing ? "Verberg onderbouwing" : "Bekijk onderbouwing",
+        " ",
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 13 })
+      ] }),
+      onderbouwing && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "bo-onderbouwing-paneel", id: "bo-onderbouwing", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "bo-onderbouwing-kop", children: "Waarop dit berust" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("ul", { className: "bo-onderbouwing-lijst", children: g.onderbouwing.map((t, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("li", { children: t }, i)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+          Vouw,
+          {
+            titel: "Volledige gesprekspunten uit de Growth Journey",
+            id: "bo-gesprekspunten",
+            kind: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GesprekspuntenKaart, { records, gebruiker: { naam: leerling.naam, klas, leeftijd: leerling.leeftijd }, type: "mentor" })
+          }
+        )
+      ] })
+    ] });
+  }
   function VolgendeStap({ records, leerling, klas, feedbackGegeven, beoordeeld, onBespreek }) {
     const gp = (0, import_react2.useMemo)(() => {
       try {
@@ -73182,7 +73314,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                   r.afgerondOp || r.datum ? datumNL(r.afgerondOp || r.datum) : ""
                 ] })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".7rem", background: r.afgerond ? "#E3F1E6" : "var(--accent-zacht)", color: r.afgerond ? "#2E7D43" : "var(--accent-diep)" }, children: r.afgerond ? "afgerond" : "bezig" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".7rem", background: r.afgerond ? "var(--salie-zacht)" : "var(--accent-zacht)", color: r.afgerond ? "var(--salie-diep)" : "var(--accent-diep)" }, children: r.afgerond ? "afgerond" : "bezig" }),
               r.reflectie && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".7rem", background: "#EEF1F4", color: "#4A5568" }, children: "reflectie" }),
               (() => {
                 const ist = inleverStatus(r);
@@ -74025,14 +74157,14 @@ ${String(stapTekst).slice(0, 900)}` : ""
                 !bezigOok && (() => {
                   const ist = inleverStatus(r);
                   if (ist) return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".68rem", fontWeight: 800, background: ist.achtergrond, color: ist.kleur }, children: ist.kort || ist.label });
-                  return r.alpe && r.alpe.mentorfeedback ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".68rem", fontWeight: 800, background: "#E0F5E3", color: "#3F6E46" }, children: "beoordeeld" }) : null;
+                  return r.alpe && r.alpe.mentorfeedback ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".68rem", fontWeight: 800, background: "var(--salie-zacht)", color: "var(--salie-diep)" }, children: "beoordeeld" }) : null;
                 })(),
                 !(mfRec && mfRec.id === r.id) && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "btn btn-licht ll-mini", onClick: () => onOpen(r), children: "Bekijk" })
               ] }),
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { id: "bewijs-" + r.id, children: !bewijsDicht[r.id] && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsOverzicht, { bewijzen: r.bewijzen, api: bewijsApi, onBevestig: onBevestigBewijs ? (b, ja) => onBevestigBewijs(r, b, ja) : null }) }),
               !bezigOok && !readOnly && (mfRec && mfRec.id === r.id ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { id: "beoordeling-" + r.id, className: "rubric-formulier", children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "rubric-formulier-kop", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rubric-formulier-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GroeiFaseIcoon, { index: 1, size: 26 }) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rubric-formulier-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GroeiFaseIcoon, { index: 1, size: 22 }) }),
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { flex: 1, minWidth: 160 }, children: [
                     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "rubric-formulier-titel", children: "Rubric beoordelen" }),
                     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "rubric-formulier-sub", children: "Kies per criterium \xE9\xE9n groeiniveau." })
@@ -74385,7 +74517,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
               ] }),
               tab === "verder" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", children: "Bespreek de ontwikkeling" }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GesprekspuntenKaart, { records: alleRecs, gebruiker: { naam: l.naam, klas: openKlas.naam, leeftijd: l.leeftijd }, type: "mentor" }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BespreekOntwikkeling, { records: alleRecs, leerling: l, klas: openKlas.naam }),
                 onPortfolio && st.recs.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { className: "btn btn-accent lp-hoofdactie", onClick: () => onPortfolio(l), children: [
                   "Open het volledige groeiportfolio ",
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 15 })
@@ -77791,7 +77923,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { fontWeight: 700, fontSize: ".86rem", flex: 1, minWidth: 140 }, children: r.data && r.data.titel || themaLabel(r.thema) || "Uitdaging" }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "muted", style: { fontSize: ".76rem" }, children: themaLabel(r.thema) }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".68rem", background: "#f1f1f1", color: "var(--inkt)" }, children: niveauNL(r.niveau) }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".68rem", background: r.afgerond ? "#E3F1E6" : "var(--accent-zacht)", color: r.afgerond ? "#2E7D43" : "var(--accent-diep)" }, children: r.afgerond ? "afgerond" : "bezig" }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".68rem", background: r.afgerond ? "var(--salie-zacht)" : "var(--accent-zacht)", color: r.afgerond ? "var(--salie-diep)" : "var(--accent-diep)" }, children: r.afgerond ? "afgerond" : "bezig" }),
                 r.rubricScore != null && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "muted", style: { fontSize: ".74rem" }, children: [
                   "score ",
                   r.rubricScore,
@@ -78999,83 +79131,140 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
     const [cat, setCat] = (0, import_react2.useState)("Alle");
     const [niv, setNiv] = (0, import_react2.useState)("Alle");
     const [q, setQ] = (0, import_react2.useState)("");
-    const niveaus = ["Bronze", "Silver", "Gold", "Platinum"];
-    const filt = CHALLENGE_SJABLONEN.filter((s) => (cat === "Alle" || s.categorie === cat) && (niv === "Alle" || s.niveaus.includes(niv)) && (!q || (s.naam + " " + s.doel).toLowerCase().includes(q.toLowerCase())));
-    const groepen = {};
-    filt.forEach((s) => {
-      (groepen[s.categorie] = groepen[s.categorie] || []).push(s);
-    });
     const [openS, setOpenS] = (0, import_react2.useState)(null);
+    const [uitleg, setUitleg] = (0, import_react2.useState)(false);
+    const niveaus = ["Bronze", "Silver", "Gold", "Platinum"];
+    const zoek = q.trim().toLowerCase();
+    const filt = CHALLENGE_SJABLONEN.filter((s) => (cat === "Alle" || s.categorie === cat) && (niv === "Alle" || s.niveaus.includes(niv)) && (!zoek || (s.naam + " " + s.doel + " " + (WERKVORM_CATEGORIE[s.categorie] ? WERKVORM_CATEGORIE[s.categorie].label : s.categorie)).toLowerCase().includes(zoek)));
     const cats = stats.categorieen;
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline", marginBottom: 12 }, children: [
+    const open = openS ? CHALLENGE_SJABLONEN.find((s) => s.key === openS) : null;
+    const detailRef = (0, import_react2.useRef)(null);
+    (0, import_react2.useEffect)(() => {
+      if (open && detailRef.current) {
+        try {
+          detailRef.current.focus({ preventScroll: true });
+          detailRef.current.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        } catch {
+        }
+      }
+    }, [openS]);
+    const catLabel = (c) => WERKVORM_CATEGORIE[c] ? WERKVORM_CATEGORIE[c].label : c;
+    const doelZin = (s) => s.doel.charAt(0).toUpperCase() + s.doel.slice(1) + ".";
+    const telling = filt.length === CHALLENGE_SJABLONEN.length ? `${CHALLENGE_SJABLONEN.length} sjablonen` : `${filt.length} van ${CHALLENGE_SJABLONEN.length} sjablonen`;
+    const nf = (n) => Number(n).toLocaleString("nl-NL");
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "wvb sjb", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "wvb-kop", children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { style: { fontSize: "1rem" }, children: "Challenge-sjablonen" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "muted", style: { fontSize: ".8rem" }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "wvb-titel", children: "Challenge-sjablonen" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "wvb-sub", children: [
             stats.archetypes,
-            " opdracht-archetypes \xD7 ",
-            stats.subthemas,
-            " subthema's \xD7 ",
-            stats.niveaus,
-            " niveaus = ",
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { style: { color: "var(--accent-diep)" }, children: stats.combinaties.toLocaleString("nl-NL") }),
-            " combineerbare varianten"
+            " sjablonen voor afwisselende uitdagingen."
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { value: q, onChange: (e) => setQ(e.target.value), placeholder: "Zoek sjabloon\u2026", style: { padding: "8px 12px", borderRadius: 10, border: "1.5px solid var(--lijn,#E4E1DB)", fontSize: ".85rem", minWidth: 180 } })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("label", { className: "wvb-zoek", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "search", size: 16 }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { value: q, onChange: (e) => setQ(e.target.value), placeholder: "Zoek een sjabloon\u2026", "aria-label": "Zoek een sjabloon" }),
+          q && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "wvb-zoek-wis", "aria-label": "Zoekterm wissen", onClick: () => setQ(""), children: "\xD7" })
+        ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { fontSize: ".78rem", lineHeight: 1.5, margin: "0 0 12px" }, children: "De Orchestrator combineert een archetype met een subthema, een passende werkvorm en het niveau tot \xE9\xE9n unieke, gepersonaliseerde uitdaging \u2014 nooit een herkenbaar sjabloon. Het gekozen sjabloon is per challenge zichtbaar in Challenge Intelligence." }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }, children: ["Alle", ...cats].map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { onClick: () => setCat(c), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".74rem", background: cat === c ? c === "Alle" ? "#1E1F22" : WERKVORM_CATEGORIE[c] ? WERKVORM_CATEGORIE[c].kleur : "#7E8C77" : "var(--tegel)", color: cat === c ? "#fff" : "var(--grijs)", border: "1px solid transparent" }, children: [
-        c === "Alle" ? "Alle" : WERKVORM_CATEGORIE[c] ? WERKVORM_CATEGORIE[c].label : c,
-        c !== "Alle" ? ` \xB7 ${CHALLENGE_SJABLONEN.filter((s) => s.categorie === c).length}` : ""
-      ] }, c)) }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16 }, children: ["Alle", ...niveaus].map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => setNiv(n), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".72rem", background: niv === n ? "var(--accent-zacht)" : "var(--tegel)", color: niv === n ? "var(--accent-diep)" : "var(--grijs)", border: niv === n ? "1px solid var(--accent)" : "1px solid transparent" }, children: n }, n)) }),
-      Object.keys(groepen).length === 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { fontSize: ".86rem" }, children: "Geen sjablonen gevonden voor deze filters." }),
-      cats.filter((c) => groepen[c]).map((c) => {
-        const M = WERKVORM_CATEGORIE[c] || { label: c, kleur: "#7E8C77" };
-        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { marginBottom: 16 }, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { width: 10, height: 10, borderRadius: 3, background: M.kleur, flexShrink: 0 } }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { style: { fontSize: ".9rem" }, children: M.label }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "muted", style: { fontSize: ".74rem" }, children: [
-              groepen[c].length,
-              " archetype(s)"
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "wvb-filters", role: "group", "aria-label": "Filters", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "wvb-niveaus sjb-cats", role: "group", "aria-label": "Categorie", children: ["Alle", ...cats].map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "wvb-chip" + (cat === c ? " is-aan" : ""), "aria-pressed": cat === c ? "true" : "false", onClick: () => setCat(c), children: [
+          c !== "Alle" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: WERKVORM_CAT_ICOON[c] || "spark", size: 14 }),
+          c === "Alle" ? "Alle categorie\xEBn" : catLabel(c)
+        ] }, c)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "wvb-niveaus", role: "group", "aria-label": "Niveau", children: ["Alle", ...niveaus].map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "wvb-chip" + (niv === n ? " is-aan" : ""), "aria-pressed": niv === n ? "true" : "false", onClick: () => setNiv(n), children: [
+          n !== "Alle" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: n, size: 13 }),
+          n === "Alle" ? "Alle niveaus" : n
+        ] }, n)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-telling muted", "aria-live": "polite", children: telling })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "sjb-uitleg", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "rubric-meer", "aria-expanded": uitleg ? "true" : "false", "aria-controls": "sjb-uitleg", onClick: () => setUitleg((u) => !u), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 14 }),
+          " Hoe de Orchestrator combineert"
+        ] }),
+        uitleg && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "muted sjb-uitleg-tekst", id: "sjb-uitleg", children: [
+          "Een sjabloon is een opdrachtvorm, geen kant-en-klare uitdaging. De Orchestrator combineert een sjabloon met een subthema, een passende werkvorm en het niveau van de leerling tot \xE9\xE9n eigen uitdaging; welk sjabloon is gekozen staat per uitdaging in Challenge Intelligence. Geteld op de werkelijke gegevens: ",
+          stats.archetypes,
+          " sjablonen ondersteunen samen ",
+          stats.archetypeNiveaus,
+          " niveau-combinaties (niet elk sjabloon kent alle vier de niveaus); met ",
+          nf(stats.subthemas),
+          " subthema's zijn dat ",
+          nf(stats.combinaties),
+          " combinaties van sjabloon \xD7 subthema \xD7 niveau \u2014 v\xF3\xF3r de werkvorm en de persoonlijke context erbij komen. Het eerdere getal ",
+          nf(stats.maximaal),
+          " ging uit van vier niveaus per sjabloon en was te hoog."
+        ] })
+      ] }),
+      open && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "wvb-detail sjb-detail", ref: detailRef, tabIndex: -1, role: "region", "aria-label": "Sjabloon " + open.naam, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "wvb-detail-kop", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: WERKVORM_CAT_ICOON[open.categorie] || "spark", size: 20 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { flex: 1, minWidth: 0 }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "wvb-detail-titel", children: open.naam }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-detail-meta", children: catLabel(open.categorie) })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "werk-dicht", "aria-label": "Detail sluiten", onClick: () => setOpenS(null), children: "\xD7" })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "wvb-detail-secties", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h5", { children: "Omschrijving" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "sjb-opening", children: [
+              '"',
+              open.opening({ o: "dit onderwerp", ctxEnSchool: "thuis en op school", voorbeeldBron: "iemand die je inspireert", daarbuiten: "in de praktijk" }),
+              '"'
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 6 }, children: groepen[c].map((s) => {
-            const uit = openS === s.key;
-            return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { onClick: () => setOpenS(uit ? null : s.key), style: { textAlign: "left", cursor: "pointer", background: uit ? "#fff" : "#FAFAF8", border: "1px solid #ECEAE4", borderRadius: 12, padding: "9px 12px" }, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", justifyContent: "space-between", gap: 8, alignItems: "center" }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { fontWeight: 700, fontSize: ".86rem" }, children: s.naam }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { display: "flex", gap: 3, flexShrink: 0 }, children: s.niveaus.map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: n, size: 13 }, n)) })
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "muted", style: { fontSize: ".8rem", lineHeight: 1.45, marginTop: 2 }, children: [
-                "Doel: ",
-                s.doel,
-                ". Bloom: ",
-                s.bloom,
-                "."
-              ] }),
-              uit && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { marginTop: 8, display: "grid", gap: 8 }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { fontSize: ".82rem", lineHeight: 1.5, fontStyle: "italic", color: "#3A3B36" }, children: [
-                  '"',
-                  s.opening({ o: "dit onderwerp", ctxEnSchool: "thuis en op school", voorbeeldBron: "iemand die je inspireert", daarbuiten: "in de praktijk" }),
-                  '"'
-                ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 5, flexWrap: "wrap" }, children: s.werkvormCats.map((w) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".7rem", background: (WERKVORM_CATEGORIE[w] ? WERKVORM_CATEGORIE[w].kleur : "#7E8C77") + "1A", color: WERKVORM_CATEGORIE[w] ? WERKVORM_CATEGORIE[w].kleur : "#7E8C77" }, children: WERKVORM_CATEGORIE[w] ? WERKVORM_CATEGORIE[w].label : w }, w)) }),
-                s.combineerMet && s.combineerMet.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "muted", style: { fontSize: ".74rem" }, children: [
-                  "Combineert goed met: ",
-                  s.combineerMet.map((k) => {
-                    const t = CHALLENGE_SJABLONEN.find((x) => x.key === k);
-                    return t ? t.naam : k;
-                  }).join(", "),
-                  "."
-                ] })
-              ] })
-            ] }, s.key);
-          }) })
-        ] }, c);
-      })
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h5", { children: "Leerdoel" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { children: doelZin(open) })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h5", { children: "Bloom" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { children: open.bloom })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h5", { children: "Werkvormen" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "wvb-detail-niveaus", children: open.werkvormCats.map((w) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: WERKVORM_CAT_ICOON[w] || "spark", size: 14 }),
+              catLabel(w)
+            ] }, w)) })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h5", { children: "Niveaus" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "wvb-detail-niveaus", children: open.niveaus.map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: n, size: 14 }),
+              n
+            ] }, n)) })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h5", { children: "Challenge Intelligence" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { children: [
+              open.combineerMet && open.combineerMet.length ? "Combineert goed met: " + open.combineerMet.map((k) => {
+                const t = CHALLENGE_SJABLONEN.find((x) => x.key === k);
+                return t ? t.naam : k;
+              }).join(", ") + ". " : "",
+              "Bij elke uitdaging die hieruit is opgebouwd staat dit sjabloon als bron in Challenge Intelligence."
+            ] })
+          ] })
+        ] })
+      ] }),
+      filt.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted wvb-leeg", children: "Geen sjablonen gevonden. Probeer een andere zoekterm of zet een filter uit." }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "wvb-raster sjb-raster", children: filt.map((s) => {
+        const aan = openS === s.key;
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "wvb-kaart sjb-kaart" + (aan ? " is-aan" : ""), "aria-expanded": aan ? "true" : "false", onClick: () => setOpenS(aan ? null : s.key), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: WERKVORM_CAT_ICOON[s.categorie] || "spark", size: 18 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "wvb-kaart-tekst", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-kaart-naam", children: s.naam }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-kaart-uitleg", children: doelZin(s) }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "wvb-kaart-meta sjb-niveaus", "aria-label": "Niveaus: " + s.niveaus.join(", "), children: [
+              s.niveaus.map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: n, size: 12 }, n)),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "sjb-cat", children: catLabel(s.categorie) })
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-kaart-pijl", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 15 }) })
+        ] }, s.key);
+      }) })
     ] });
   }
   function DeveloperDashboard({ onTerug }) {
