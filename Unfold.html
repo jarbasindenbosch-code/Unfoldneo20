@@ -49853,6 +49853,22 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .tc.is-werk{background:var(--werk-bg)}
 .tc.is-werk .kop-balk{background:var(--werk-bg);border-bottom:1px solid var(--lijn-fijn)}
 .werkomgeving{position:relative}
+/* v112.5.1: de mentor-/vakdocentomgeving vult het scherm en schaalt mee \u2014
+   lettertype, iconen, kaarten en zijpaneel in dezelfde verhouding. Ontwerp-
+   basis is 1440px (schaal 1); daarboven groeit alles in stappen mee, zodat op
+   een breed beeldscherm niet een smal strookje in het midden overblijft. De
+   leerlingomgeving is ongewijzigd. */
+body.grow-werk{--werk-schaal:1}
+@media(min-width:1500px){ body.grow-werk{--werk-schaal:1.1} }
+@media(min-width:1700px){ body.grow-werk{--werk-schaal:1.2} }
+@media(min-width:1900px){ body.grow-werk{--werk-schaal:1.3} }
+@media(min-width:2300px){ body.grow-werk{--werk-schaal:1.5} }
+/* De schaal staat op de inhoud en op de vaste lagen apart (geen zoom op een
+   voorouder van een fixed element: dan dekt de waas het scherm niet). */
+body.grow-werk .tc.is-werk main.werkomgeving, body.grow-werk .tc.is-werk .kop-balk, body.grow-werk .tc.is-werk footer{zoom:var(--werk-schaal)}
+body.grow-werk .zp, body.grow-werk .tc-portaal.popup-laag>*{zoom:var(--werk-schaal)}
+body.grow-werk .zp-waas{zoom:1}
+.grow-zp{position:static}
 
 /* geen kaarten met randen en schaduwen, maar blokken met een fijne lijn */
 .werkomgeving .admin-sectie{background:transparent;border:0;border-radius:0;
@@ -49916,7 +49932,7 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .lp-terug:focus-visible{outline:3px solid var(--accent-diep);outline-offset:2px}
 .lp-kop{display:flex;align-items:flex-start;gap:14px;margin-bottom:26px}
 .lp-wie{flex:1 1 auto;min-width:0}
-.lp-naam{margin:0;font-size:1.72rem;font-weight:700;letter-spacing:-.025em;line-height:1.1}
+.lp-naam{margin:0;font-size:1.9rem;font-weight:700;letter-spacing:-.025em;line-height:1.1}
 .lp-klas{font-size:.9rem;color:var(--grijs);margin-top:4px}
 .lp-medailles{display:flex;gap:12px;flex-wrap:wrap;margin-top:9px}
 .lp-medaille{display:inline-flex;align-items:center;gap:4px;font-size:.82rem;font-weight:700;color:var(--inkt)}
@@ -49940,7 +49956,7 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
   font:inherit;font-size:.92rem;font-weight:600;padding:12px 14px;border-radius:10px;cursor:pointer}
 .lp-keuzerij:hover{background:var(--accent-zacht)}
 
-.lp-sectie{margin:0 0 12px;font-size:1.02rem;font-weight:700;letter-spacing:-.01em}
+.lp-sectie{margin:0 0 12px;font-size:1.1rem;font-weight:700;letter-spacing:-.01em}
 .lp-sectiekop{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:34px}
 .lp-sectiekop .lp-sectie{margin-bottom:12px}
 .lp-sectie+*{margin-top:0}
@@ -49954,17 +49970,17 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 /* v112.4: kerncijfers in de kop, de pijlers als navigatie, twee kolommen */
 .lp-kpis{display:flex;gap:8px;flex-wrap:wrap;align-self:center}
 .lp-kpi{display:inline-flex;align-items:center;gap:10px;padding:10px 14px 10px 10px;border-radius:12px;border:1px solid var(--lijn-fijn);background:var(--kaart);min-width:150px}
-.lp-kpi-icoon{width:34px;height:34px;border-radius:10px;background:var(--tegel);color:var(--inkt);display:grid;place-items:center;flex-shrink:0}
+.lp-kpi-icoon{width:40px;height:40px;border-radius:11px;background:var(--tegel);color:var(--inkt);display:grid;place-items:center;flex-shrink:0}
 .lp-kpi-icoon.is-salie{background:#EAF3E7;color:#3C8136}
 .lp-kpi-icoon.is-steen{background:var(--tegel);color:#3A3A36}
 .lp-kpi-icoon.is-goud{background:#FBF1DC;color:#B07D1C}
-.lp-werk-beeld.is-foto{width:72px;height:56px;border-radius:10px}
+.lp-werk-beeld.is-foto{width:88px;height:64px;border-radius:10px}
 .lp-kpi-label{display:block;font-size:.72rem;color:var(--grijs);line-height:1.2}
 .lp-kpi-waarde{display:block;font-size:1.05rem;font-weight:650;letter-spacing:-.01em;color:var(--inkt);line-height:1.25}
 .lp-kpi-waarde small{font-size:.76rem;font-weight:500;color:var(--grijs)}
-.lp-kolommen{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:18px;align-items:start;margin-top:18px}
+.lp-kolommen{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:24px;align-items:start;margin-top:18px}
 .lp-kolom-links,.lp-kolom-rechts{display:grid;gap:18px;min-width:0}
-.lp-blok{padding:16px 16px 14px;border-radius:16px;border:1px solid var(--lijn-fijn);background:var(--kaart)}
+.lp-blok{padding:20px 20px 18px;border-radius:16px;border:1px solid var(--lijn-fijn);background:var(--kaart)}
 .lp-blok .lp-sectiekop{margin-top:0}
 .lp-blok .lp-werklijst,.lp-blok .lp-gesprek{border:none;padding:0;background:transparent}
 .lp-blok .lp-werk{padding:11px 4px;border-radius:10px}
@@ -50007,13 +50023,13 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 /* vier ontwikkeltegels \u2014 rustig, zonder gevulde iconenblokken */
 .lp-tegels{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
 .lp-tegel{appearance:none;border:1px solid var(--lijn-fijn);background:var(--kaart);border-radius:14px;font:inherit;text-align:left;cursor:pointer;
-  padding:14px 16px;display:flex;align-items:center;gap:12px;min-height:72px}
+  padding:16px 18px;display:flex;align-items:center;gap:14px;min-height:80px}
 .lp-tegel:hover{background:#F3F9F1;border-color:#CFE3C9}
 .lp-tegel:hover .lp-tegel-icoon{color:#1F661E}
 .lp-tegel:focus-visible{outline:3px solid var(--accent-diep);outline-offset:-3px}
 .lp-tegel-icoon{color:var(--inkt);line-height:0}
-.lp-tegel-naam{display:block;font-weight:560;font-size:.96rem;letter-spacing:-.01em}
-.lp-tegel-obs{display:block;font-size:.8rem;color:var(--grijs);line-height:1.4}
+.lp-tegel-naam{display:block;font-weight:560;font-size:1.02rem;letter-spacing:-.01em}
+.lp-tegel-obs{display:block;font-size:.86rem;color:var(--grijs);line-height:1.4}
 .lp-tegel-status{align-self:flex-start;margin-top:auto;font-size:.76rem;font-weight:600}
 .lp-tegel-status.is-sterk{color:var(--salie-diep)}
 .lp-tegel-status.is-groei{color:var(--accent-diep)}
@@ -50031,11 +50047,11 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .lp-werk:hover .lp-pijl{color:var(--accent-diep)}
 .lp-werk:hover .lp-werk-titel{color:var(--accent-diep)}
 .lp-werk:focus-visible{outline:3px solid var(--accent-diep);outline-offset:-3px}
-.lp-werk-beeld{flex:0 0 auto;width:44px;height:44px;border-radius:9px;overflow:hidden;
+.lp-werk-beeld{flex:0 0 auto;width:56px;height:56px;border-radius:10px;overflow:hidden;
   background:var(--kaart);border:1px solid var(--lijn-fijn);display:grid;place-items:center;color:var(--grijs)}
 .lp-werk-beeld img{width:100%;height:100%;object-fit:cover;display:block}
 .lp-werk-tekst{flex:1 1 auto;min-width:0}
-.lp-werk-titel{display:block;font-weight:600;font-size:.93rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lp-werk-titel{display:block;font-weight:600;font-size:1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lp-werk-meta{display:block;font-size:.8rem;color:var(--grijs);margin-top:2px}
 .lp-pijl{flex:0 0 auto;color:var(--grijs);line-height:0}
 
@@ -50053,7 +50069,7 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
    Op een breed scherm een rustig zijpaneel; op een telefoon een volledig
    scherm met een terugactie bovenin. */
 .zp-waas{position:fixed;inset:0;background:rgba(28,27,25,.22);z-index:60}
-.zp{position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);background:#fff;z-index:61;
+.zp{position:fixed;top:0;right:0;bottom:0;width:min(560px,100vw);background:#fff;z-index:61;
   display:flex;flex-direction:column;border-left:1px solid var(--lijn-fijn);
   box-shadow:-18px 0 44px -28px rgba(28,27,25,.5)}
 .zp-kop{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--lijn-fijn)}
@@ -50062,9 +50078,9 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .zp-terug:hover{color:var(--accent-diep);background:var(--accent-zacht)}
 .zp-terug:focus-visible{outline:3px solid var(--accent-diep);outline-offset:2px}
 .zp-titel{min-width:0}
-.zp-titel-naam{display:block;font-weight:700;font-size:1rem;letter-spacing:-.01em}
-.zp-titel-sub{display:block;font-size:.78rem;color:var(--grijs)}
-.zp-body{flex:1 1 auto;overflow-y:auto;padding:18px 20px 28px}
+.zp-titel-naam{display:block;font-weight:700;font-size:1.12rem;letter-spacing:-.01em}
+.zp-titel-sub{display:block;font-size:.84rem;color:var(--grijs)}
+.zp-body{flex:1 1 auto;overflow-y:auto;padding:22px 26px 32px;font-size:1.02rem}
 .zp-uitleg{margin:0 0 14px;font-size:.88rem;line-height:1.55;color:var(--inkt-zacht)}
 .zp-veldkop{font-size:.78rem;font-weight:700;color:var(--grijs);margin:0 0 7px}
 .zp-vouw{appearance:none;border:0;background:transparent;font:inherit;font-size:.85rem;font-weight:600;
@@ -69752,23 +69768,25 @@ ${String(stapTekst).slice(0, 900)}` : ""
           n.notitie
         ] }, n.id))
       ] }),
-      extern && gekozen && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "zp-waas", onClick: sluit, "aria-hidden": "true" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("aside", { className: "zp", role: "dialog", "aria-modal": "true", "aria-label": "Beoordelen \xB7 " + gekozen.vaardigheid.label, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "zp-kop", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "zp-terug", onClick: sluit, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "left", size: 15 }),
-              " ",
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "zp-terug-tekst", children: "Terug" })
+      extern && gekozen && zpPortaal(
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "tc-portaal grow-zp", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "zp-waas", onClick: sluit, "aria-hidden": "true" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("aside", { className: "zp", role: "dialog", "aria-modal": "true", "aria-label": "Beoordelen \xB7 " + gekozen.vaardigheid.label, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "zp-kop", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "zp-terug", onClick: sluit, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "left", size: 15 }),
+                " ",
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "zp-terug-tekst", children: "Terug" })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "zp-titel", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "zp-titel-naam", children: gekozen.vaardigheid.label }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "zp-titel-sub", children: gekozen.vaardigheid.pijler })
+              ] })
             ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "zp-titel", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "zp-titel-naam", children: gekozen.vaardigheid.label }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "zp-titel-sub", children: gekozen.vaardigheid.pijler })
-            ] })
-          ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "zp-body", children: formulier(gekozen) })
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "zp-body", children: formulier(gekozen) })
+          ] })
         ] })
-      ] })
+      )
     ] });
   }
   function MijnVaardigheden({ oordelen, tp, onTerug, records, onOpen, onNieuw }) {
@@ -72509,6 +72527,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
       };
     }, []);
   }
+  var zpPortaal = (inhoud) => typeof document !== "undefined" && document.body ? (0, import_react_dom.createPortal)(inhoud, document.body) : inhoud;
   function ModalLaag({ onSluit, label, pad = 16, children }) {
     const vak = (0, import_react2.useRef)(null);
     useModalGedrag(onSluit, vak);
@@ -80197,7 +80216,20 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
       return { ok: true, online: viaPlatform ? uit.online === true : true, stand: viaPlatform ? uit.stand || "wacht" : "apparaat" };
     };
     const veiligheidPoortOpen = step === "uitdaging" && !!actief && !actief.afgerond && !(actief.veiligheidAkkoord && actief.veiligheidAkkoord.op) && !!gebruiker && String(gebruiker.rol || "leerling").toLowerCase() === "leerling";
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "tc grow-root" + (["mentor", "school", "platformadmin", "developer", "portfolio"].includes(step) ? " is-werk" : ""), children: [
+    const isWerkStap = ["mentor", "school", "platformadmin", "developer", "portfolio"].includes(step);
+    (0, import_react2.useEffect)(() => {
+      try {
+        document.body.classList.toggle("grow-werk", !!isWerkStap);
+      } catch {
+      }
+      return () => {
+        try {
+          document.body.classList.remove("grow-werk");
+        } catch {
+        }
+      };
+    }, [isWerkStap]);
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "tc grow-root" + (isWerkStap ? " is-werk" : ""), children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("style", { children: STYLES }),
       step !== "hero" && step !== "auth" && step !== "rolkeuze" && step !== "discovery" && step !== "route" && step !== "intake" && step !== "avatar" && step !== "promo" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Header, { step, naarProfiel: () => {
         setProfielTab(null);
@@ -80284,7 +80316,7 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
         "main",
         {
           className: ["mentor", "school", "platformadmin", "developer", "portfolio"].includes(step) ? "werkomgeving" : void 0,
-          style: step === "hero" || step === "route" || step === "intake" || step === "thuis" || step === "promo" ? {} : step === "abonnementen" || step === "school" || step === "platformadmin" || step === "developer" ? { maxWidth: 1060, margin: "0 auto", padding: "0 18px 96px" } : step === "profiel" || step === "uitdaging" || step === "mentor" || step === "portfolio" ? { maxWidth: 960, margin: "0 auto", padding: "0 18px 96px" } : { maxWidth: 760, margin: "0 auto", padding: "0 18px 96px" },
+          style: step === "hero" || step === "route" || step === "intake" || step === "thuis" || step === "promo" ? {} : step === "abonnementen" || step === "school" || step === "platformadmin" || step === "developer" ? { maxWidth: 1060, margin: "0 auto", padding: "0 18px 96px" } : step === "mentor" || step === "portfolio" ? { maxWidth: 1400, margin: "0 auto", padding: "0 clamp(18px,2.5vw,40px) 96px" } : step === "profiel" || step === "uitdaging" ? { maxWidth: 960, margin: "0 auto", padding: "0 18px 96px" } : { maxWidth: 760, margin: "0 auto", padding: "0 18px 96px" },
           children: [
             step === "hero" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Hero, { onStart: () => go(gebruiker ? "builder" : "auth"), onAbonnementen: () => go("abonnementen") }),
             step === "auth" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Auth, { onIn: (u) => {
