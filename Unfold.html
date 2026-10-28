@@ -49951,16 +49951,69 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .lp-link:focus-visible{outline:3px solid var(--accent-diep);outline-offset:2px}
 .lp-stil{margin:0;font-size:.9rem;color:var(--grijs);line-height:1.55}
 
+/* v112.4: kerncijfers in de kop, de pijlers als navigatie, twee kolommen */
+.lp-kpis{display:flex;gap:8px;flex-wrap:wrap;align-self:center}
+.lp-kpi{display:inline-flex;align-items:center;gap:10px;padding:10px 14px 10px 10px;border-radius:12px;border:1px solid var(--lijn-fijn);background:var(--kaart);min-width:150px}
+.lp-kpi-icoon{width:34px;height:34px;border-radius:10px;background:var(--tegel);color:var(--inkt);display:grid;place-items:center;flex-shrink:0}
+.lp-kpi-icoon.is-salie{background:#EAF3E7;color:#3C8136}
+.lp-kpi-icoon.is-steen{background:var(--tegel);color:#3A3A36}
+.lp-kpi-icoon.is-goud{background:#FBF1DC;color:#B07D1C}
+.lp-werk-beeld.is-foto{width:72px;height:56px;border-radius:10px}
+.lp-kpi-label{display:block;font-size:.72rem;color:var(--grijs);line-height:1.2}
+.lp-kpi-waarde{display:block;font-size:1.05rem;font-weight:650;letter-spacing:-.01em;color:var(--inkt);line-height:1.25}
+.lp-kpi-waarde small{font-size:.76rem;font-weight:500;color:var(--grijs)}
+.lp-kolommen{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:18px;align-items:start;margin-top:18px}
+.lp-kolom-links,.lp-kolom-rechts{display:grid;gap:18px;min-width:0}
+.lp-blok{padding:16px 16px 14px;border-radius:16px;border:1px solid var(--lijn-fijn);background:var(--kaart)}
+.lp-blok .lp-sectiekop{margin-top:0}
+.lp-blok .lp-werklijst,.lp-blok .lp-gesprek{border:none;padding:0;background:transparent}
+.lp-blok .lp-werk{padding:11px 4px;border-radius:10px}
+.lp-werk-status{flex:0 0 auto;font-size:.74rem;font-weight:600;padding:4px 9px;border-radius:999px;background:var(--tegel);color:var(--grijs)}
+.lp-werk-status.is-wacht{background:var(--accent-zacht);color:var(--accent-diep)}
+.lp-werk-status.is-beoordeeld{background:#E0F5E3;color:#3F6E46}
+.lp-pijlerlijst{display:grid;gap:4px}
+.lp-pijlerrij{appearance:none;border:1px solid var(--lijn-fijn);background:var(--tegel-licht);font:inherit;text-align:left;cursor:pointer;display:grid;grid-template-columns:auto minmax(80px,110px) minmax(0,1fr) auto auto;align-items:center;gap:12px;padding:10px 10px 10px 12px;border-radius:12px;min-height:48px;color:var(--inkt)}
+.lp-pijlerrij:hover{background:var(--tegel)}
+.lp-pijlerrij:focus-visible{outline:3px solid var(--accent-diep);outline-offset:-3px}
+.lp-pijlerrij-icoon{display:inline-flex;color:#3C8136}
+.lp-pijlerrij-naam{font-size:.9rem;font-weight:560}
+.lp-pijlerrij-balk{height:8px;border-radius:999px;background:#E8E6E0;overflow:hidden}
+.lp-pijlerrij-balk>span{display:block;height:100%;border-radius:999px;background:#58875F}
+.lp-pijlerrij-balk.is-leeg{background:repeating-linear-gradient(90deg,#E8E6E0 0 6px,transparent 6px 10px)}
+.lp-pijlerrij-status{font-size:.8rem;color:var(--grijs);white-space:nowrap}
+.lp-pijlerrij-status.is-sterk{color:#3F6E46}
+.lp-pijlerrij-status.is-groei{color:var(--accent-diep)}
+.lp-actie{display:flex;align-items:center;gap:10px;font-weight:560;color:var(--inkt)}
+.lp-actie-icoon{width:34px;height:34px;border-radius:10px;background:var(--tegel);display:grid;place-items:center;flex-shrink:0;color:var(--inkt)}
+.lp-eerder{margin-top:10px}
+.lp-tweede{margin-top:8px}
+.lp-eerderlijst{display:grid;gap:8px;margin-top:10px}
+.lp-eerderrij{display:grid;gap:3px;padding:10px 12px;border-radius:10px;background:var(--tegel-licht);border-left:3px solid var(--lijn)}
+.lp-eerderrij-meta{font-size:.74rem;color:var(--grijs)}
+.lp-eerderrij-tekst{font-size:.86rem;line-height:1.45;color:var(--inkt)}
+@media (max-width:900px){
+  /* mobiel: \xE9\xE9n kolom in de volgorde profiel \u2192 volgende stap \u2192 recent werk \u2192 ontwikkeling \u2192 feedback */
+  .lp-kolommen{grid-template-columns:minmax(0,1fr)}
+  .lp-kolom-links,.lp-kolom-rechts{display:contents}
+  .lp-blok{min-width:0}
+  .lp-volgende{order:1}.lp-recent{order:2}.lp-ontwikkeling{order:3}.lp-feedbackkaart{order:4}
+  .lp-kop{flex-wrap:wrap}
+  .lp-wie{flex:1 1 160px}
+  .lp-kpis{order:3;width:100%;flex-basis:100%}
+  .lp-kpi{flex:1 1 140px;min-width:0}
+  .lp-pijlerrij{grid-template-columns:auto minmax(0,1fr) auto auto}
+  .lp-pijlerrij-balk{display:none}
+}
 /* vier ontwikkeltegels \u2014 rustig, zonder gevulde iconenblokken */
-.lp-tegels{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--lijn-fijn);
-  border:1px solid var(--lijn-fijn);border-radius:12px;overflow:hidden;margin-bottom:8px}
-.lp-tegel{appearance:none;border:0;background:#fff;font:inherit;text-align:left;cursor:pointer;
-  padding:15px 16px 16px;display:flex;flex-direction:column;gap:7px;min-height:96px}
-.lp-tegel:hover{background:#F7F6F3}
+.lp-tegels{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+.lp-tegel{appearance:none;border:1px solid var(--lijn-fijn);background:var(--kaart);border-radius:14px;font:inherit;text-align:left;cursor:pointer;
+  padding:14px 16px;display:flex;align-items:center;gap:12px;min-height:72px}
+.lp-tegel:hover{background:#F3F9F1;border-color:#CFE3C9}
+.lp-tegel:hover .lp-tegel-icoon{color:#1F661E}
 .lp-tegel:focus-visible{outline:3px solid var(--accent-diep);outline-offset:-3px}
 .lp-tegel-icoon{color:var(--inkt);line-height:0}
-.lp-tegel-naam{font-weight:700;font-size:.96rem;letter-spacing:-.01em}
-.lp-tegel-obs{font-size:.82rem;color:var(--grijs);line-height:1.45}
+.lp-tegel-naam{display:block;font-weight:560;font-size:.96rem;letter-spacing:-.01em}
+.lp-tegel-obs{display:block;font-size:.8rem;color:var(--grijs);line-height:1.4}
 .lp-tegel-status{align-self:flex-start;margin-top:auto;font-size:.76rem;font-weight:600}
 .lp-tegel-status.is-sterk{color:var(--salie-diep)}
 .lp-tegel-status.is-groei{color:var(--accent-diep)}
@@ -49994,6 +50047,7 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
   border:1px solid var(--lijn-fijn);border-radius:6px;padding:1px 7px}
 .lp-label.is-suggestie{color:var(--accent-diep);border-color:var(--accent-rand)}
 .lp-hoofdactie{width:auto;margin-top:14px}
+.lp-hoofdactie-sub{font-weight:600;opacity:.92;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;display:inline-block;vertical-align:bottom}
 
 /* \u2500\u2500 v109: het beoordeelpaneel \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
    Op een breed scherm een rustig zijpaneel; op een telefoon een volledig
@@ -50325,6 +50379,119 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .bewijs-vorm-pijl{display:inline-flex;flex-shrink:0;color:var(--grijs)}
 .bewijs-cat:focus-visible,.bewijs-vorm:focus-visible,.bewijs-kiezer-terug:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;border-radius:10px}
 @media (max-width:560px){ .bewijs-cats{grid-template-columns:repeat(2,minmax(0,1fr))} .bewijs-cat{min-height:78px;padding:11px 10px} }
+/* v112.3: de werkvormenbibliotheek */
+.wvb{display:grid;gap:14px}
+.wvb-kop{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.wvb-titel{margin:0;font-size:1.2rem;font-weight:650;letter-spacing:-.012em;color:var(--inkt)}
+.wvb-sub{margin:2px 0 0;font-size:.86rem;color:var(--grijs)}
+.wvb-zoek{display:flex;align-items:center;gap:8px;flex:1 1 260px;max-width:380px;padding:0 10px 0 12px;min-height:42px;border:1px solid var(--lijn);border-radius:12px;background:#FFFFFF;color:var(--grijs)}
+.wvb-zoek:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-rand)}
+.wvb-zoek input{flex:1;min-width:0;border:none;background:none;font:inherit;font-size:.9rem;color:var(--inkt);outline:none}
+.wvb-zoek-wis{border:none;background:none;font:inherit;font-size:1.1rem;color:var(--grijs);cursor:pointer;padding:0 2px}
+.wvb-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.wvb-select select{appearance:none;-webkit-appearance:none;min-height:36px;padding:6px 32px 6px 12px;border-radius:999px;border:1px solid var(--lijn);background:#FFFFFF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B6A66' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;font:inherit;font-size:.84rem;font-weight:560;color:var(--inkt);cursor:pointer}
+.wvb-select select:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
+.wvb-niveaus{display:flex;gap:6px;flex-wrap:wrap}
+.wvb-chip{display:inline-flex;align-items:center;gap:5px;min-height:36px;padding:6px 12px;border-radius:999px;border:1px solid var(--lijn);background:#FFFFFF;font:inherit;font-size:.82rem;font-weight:560;color:var(--inkt-zacht);cursor:pointer}
+.wvb-chip.is-aan{background:var(--salie-zacht);border-color:var(--salie);color:var(--salie-diep)}
+.wvb-chip:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
+.wvb-telling{margin-left:auto;font-size:.78rem}
+.wvb-raster{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.wvb-kaart{display:flex;align-items:flex-start;gap:12px;text-align:left;padding:12px 12px 12px 14px;min-height:72px;border-radius:14px;border:1px solid var(--lijn-fijn);background:var(--tegel-licht);font:inherit;color:var(--inkt);cursor:pointer;transition:background var(--grow-ui-duur) var(--grow-ui-ease),border-color var(--grow-ui-duur) var(--grow-ui-ease)}
+.wvb-kaart:hover{background:var(--tegel)}
+.wvb-kaart.is-aan{background:var(--salie-zacht);border-color:var(--salie)}
+.wvb-kaart:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
+.wvb-icoon{display:inline-grid;place-items:center;flex-shrink:0;width:34px;height:34px;border-radius:10px;background:#FFFFFF;border:1px solid var(--lijn-fijn);color:#3A3A36}
+.wvb-kaart-tekst{display:grid;gap:2px;min-width:0;flex:1}
+.wvb-kaart-naam{font-size:.92rem;font-weight:560;line-height:1.3}
+.wvb-kaart-uitleg{font-size:.8rem;color:var(--grijs);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.wvb-kaart-meta{font-size:.72rem;color:var(--grijs);opacity:.85}
+.wvb-kaart-pijl{display:inline-flex;align-self:center;flex-shrink:0;color:var(--grijs)}
+.wvb-detail{padding:16px 16px 12px;border-radius:16px;border:1px solid var(--salie);background:#FFFFFF;outline:none}
+.wvb-detail:focus-visible{box-shadow:0 0 0 3px var(--accent-rand)}
+.wvb-detail-kop{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.wvb-detail-titel{margin:0;font-size:1.05rem;font-weight:650;letter-spacing:-.01em}
+.wvb-detail-meta{font-size:.78rem;color:var(--grijs)}
+.wvb-detail-secties{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 20px}
+.wvb-detail-secties h5{margin:0 0 3px;font-size:.74rem;font-weight:560;letter-spacing:.04em;text-transform:uppercase;color:var(--grijs)}
+.wvb-detail-secties p{margin:0;font-size:.88rem;line-height:1.5;color:var(--inkt)}
+.wvb-detail-niveaus{display:flex;gap:10px;flex-wrap:wrap}
+.wvb-detail-niveaus span{display:inline-flex;align-items:center;gap:4px}
+.wvb-detail-noot{margin:12px 0 0;font-size:.74rem;line-height:1.4}
+.wvb-leeg{margin:0;font-size:.88rem}
+@media (max-width:700px){ .wvb-raster{grid-template-columns:1fr} .wvb-detail-secties{grid-template-columns:1fr} .wvb-telling{margin-left:0;width:100%} }
+/* v112.2: de rubricmatrix \u2014 naar het ontwerp van JB: kolomtegels met een
+   groei-icoon, \xE9\xE9n rij per criterium op een lichte ondergrond, ring-met-kern
+   als keuze, \xE9\xE9n opmerking, Annuleren links en Opslaan rechts. */
+.rubric-formulier{margin-top:12px;padding:16px 16px 14px;border-radius:16px;background:#FCFBF8;border:1px solid var(--lijn);display:grid;gap:12px}
+.rubric-formulier-kop{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.rubric-formulier-icoon{width:44px;height:44px;border-radius:50%;background:#EAF3E7;color:#3C8136;display:grid;place-items:center;flex-shrink:0}
+.rubric-formulier-titel{margin:0;font-size:1.2rem;font-weight:650;letter-spacing:-.012em;color:var(--inkt)}
+.rubric-formulier-sub{margin:2px 0 0;font-size:.84rem;color:var(--grijs)}
+.rubric-voorbeeld{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;min-height:0;font-size:.84rem}
+.afgerond-status{display:inline-block;margin-top:3px;font-size:.7rem;font-weight:800;letter-spacing:.02em;padding:2px 8px;border-radius:999px}
+.afgerond-status.is-wacht{background:var(--accent-zacht);color:var(--accent-diep)}
+.afgerond-status.is-beoordeeld{background:#E0F5E3;color:#3F6E46}
+.profiel-feedback{display:flex;align-items:center;gap:10px;width:100%;margin:14px 0 14px;padding:11px 14px;border-radius:14px;
+  background:#E0F5E3;color:#2E5A35;border:1px solid #CFE3C9;font:inherit;font-size:.88rem;text-align:left;cursor:pointer;min-height:44px}
+.profiel-feedback b{font-weight:800}
+.profiel-feedback span{flex:1;min-width:0}
+.profiel-feedback:hover{background:#D6EFDA}
+.profiel-feedback:focus-visible{outline:2px solid #3F6E46;outline-offset:2px}
+.rubric-volgende{background:none;border:none;font:inherit;font-weight:700;color:var(--accent-diep);cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;padding:6px 8px;min-height:32px;border-radius:8px;margin-left:6px}
+.rubric-volgende:focus-visible{outline:2px solid var(--accent-diep);outline-offset:2px}
+.rubric-matrix{display:grid;gap:6px}
+.rubric-rij{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(4,minmax(0,1fr));align-items:center;gap:6px;min-height:52px;padding:4px 8px;border-radius:12px;background:#F7F7F5;border:1px solid var(--lijn-fijn)}
+.rubric-kopregel{min-height:0;padding:0;background:transparent;border:none;gap:6px}
+.rubric-crit-kop{display:flex;align-items:center;min-height:72px;padding:10px 14px;border-radius:12px;background:var(--tegel-licht);font-size:.9rem;font-weight:560;color:var(--inkt)}
+.rubric-kol{display:grid;justify-items:center;align-content:center;gap:4px;min-height:72px;padding:10px 6px;border-radius:12px;font-size:.82rem;font-weight:560;background:var(--tegel-licht)}
+.rubric-kol-0{background:#F8F5F2}.rubric-kol-1{background:#F2F4FA}.rubric-kol-2{background:#F1F6F0}.rubric-kol-3{background:#E1EAE0}
+.rubric-kol .rubric-kol-naam{color:#3A3A36}
+.rubric-kol-1 .rubric-kol-naam{color:#3B6FB0}.rubric-kol-2 .rubric-kol-naam{color:#3B6D44}.rubric-kol-3 .rubric-kol-naam{color:#2C643D}.rubric-kol-0 .rubric-kol-naam{color:#6B6A66}
+.rubric-kol.is-doel{box-shadow:inset 0 0 0 1.5px currentColor}
+.rubric-kol-doel{font-size:.66rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--inkt-zacht)}
+.rubric-crit{display:grid;gap:0}
+.rubric-crit.is-open .rubric-rij{border-radius:12px 12px 0 0}
+.rubric-crit-naam{display:flex;align-items:center;gap:10px;min-width:0;padding:4px 0 4px 6px}
+.rubric-crit-icoon{display:inline-flex;flex-shrink:0;color:#1C1B19}
+.rubric-crit-tekst{font-size:.9rem;font-weight:560;color:var(--inkt);line-height:1.3;min-width:0}
+.rubric-info{display:inline-grid;place-items:center;flex-shrink:0;width:26px;height:26px;border-radius:50%;border:none;background:none;color:var(--grijs);cursor:pointer;padding:0}
+.rubric-info:hover,.rubric-info[aria-expanded="true"]{background:var(--tegel);color:var(--inkt)}
+.rubric-keuzes{display:contents}
+.rubric-bol-wrap{position:relative;display:grid;place-items:center;min-height:44px;cursor:pointer;border-radius:10px}
+.rubric-bol-wrap.is-doelkolom{background:#F8F9FC}
+.rubric-bol-wrap:hover{background:var(--tegel-licht)}
+.rubric-bol-wrap input{position:absolute;inset:0;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.rubric-bol{width:26px;height:26px;border-radius:50%;border:1.5px solid #C4C0B8;background:#fff;display:grid;place-items:center;transition:border-color var(--grow-ui-duur) var(--grow-ui-ease)}
+.rubric-bol-wrap.is-gekozen .rubric-bol{border-width:2px;box-shadow:0 0 0 3px rgba(255,255,255,.9)}
+.rubric-bol-kern{width:14px;height:14px;border-radius:50%}
+.rubric-bol-wrap input:focus-visible + .rubric-bol{outline:2.5px solid var(--accent);outline-offset:3px}
+.rubric-bol-label{display:none;font-size:.84rem;color:var(--inkt)}
+.rubric-uitleg{display:grid;gap:6px;padding:10px 14px 12px;margin:0;border:1px solid var(--lijn-fijn);border-top:none;border-radius:0 0 12px 12px;background:var(--tegel-licht)}
+.rubric-uitleg-rij{display:grid;grid-template-columns:118px minmax(0,1fr);gap:10px;font-size:.8rem;line-height:1.45;color:#3A4048}
+.rubric-uitleg-niveau{display:inline-flex;align-items:center;gap:5px;font-weight:600}
+.rubric-uitleg-sluit{justify-self:start;margin-top:2px;background:none;border:none;padding:4px 0;font:inherit;font-size:.78rem;font-weight:560;color:var(--accent-diep);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.rubric-opmerking{position:relative;padding:12px 14px 14px;border-radius:12px;background:#FFFFFF;border:1px solid var(--lijn-fijn)}
+.rubric-opmerking .field{resize:vertical}
+.rubric-teller{position:absolute;right:24px;bottom:22px;font-size:.74rem;color:var(--grijs);pointer-events:none}
+.rubric-meer{display:inline-flex;align-items:center;gap:6px;justify-self:start;background:none;border:none;padding:4px 0;font:inherit;font-size:.82rem;font-weight:560;color:var(--inkt-zacht);cursor:pointer}
+.rubric-meer svg{transition:transform var(--grow-ui-duur) var(--grow-ui-ease)}
+.rubric-meer[aria-expanded="true"] svg{transform:rotate(90deg)}
+.rubric-acties{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding-top:4px}
+.rubric-acties .admin-btn-sec{display:inline-flex;align-items:center;gap:6px}
+.rubric-opslaan{width:auto;display:inline-flex;align-items:center;gap:8px;padding:.8rem 1.6rem}
+.rubric-gelukt{display:inline-flex;align-items:center;gap:5px;margin-left:10px;font-size:.8rem;font-weight:560;color:#2E7D43}
+@media (max-width:640px){
+  .rubric-kopregel{display:none}
+  .rubric-rij{grid-template-columns:1fr;gap:4px;padding:8px 6px}
+  .rubric-keuzes{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+  .rubric-bol-wrap{grid-template-columns:auto 1fr;justify-items:start;gap:8px;padding:0 8px;min-height:44px}
+  .rubric-bol-wrap.is-doelkolom{background:transparent}
+  .rubric-bol-label{display:inline}
+  .rubric-uitleg-rij{grid-template-columns:1fr}
+  .rubric-acties .rubric-opslaan{width:100%;justify-content:center}
+}
 /* v112.1: de afrondkaart */
 .afrond-kaart{display:grid;gap:4px}
 .afrond-kaart-kop{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:6px}
@@ -51046,6 +51213,22 @@ button.admin-status-tekst:hover{background:rgba(28,27,25,.04)}
 .opslagstrook b{font-weight:800}
 .opslagstrook button{background:none;border:none;font:inherit;font-weight:700;color:#8E2C17;cursor:pointer;
   text-decoration:underline;text-underline-offset:3px;padding:2px 4px}
+/* v112.5: synchronisatiestrook \u2014 rustig geel voor "nog niet gedeeld", rood
+   alleen als het echt mis is; \xE9\xE9n herhaalactie, geen dashboard. */
+.syncstrook{display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap;
+  padding:8px 18px;font-size:.84rem;line-height:1.45;border-bottom:1px solid var(--lijn)}
+.syncstrook.is-wacht,.syncstrook.is-bezig{background:#FBF5E6;border-color:#EFE3C4;color:#6B5313}
+.syncstrook.is-mislukt,.syncstrook.is-conflict{background:#FBEAE6;border-color:#F0CFC6;color:#8E2C17}
+.syncstrook .syncstrook-knop{background:none;border:none;font:inherit;font-weight:700;color:inherit;cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;padding:6px 8px;min-height:32px;border-radius:8px}
+.syncstrook .syncstrook-knop:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.syncstrook-conflict{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+.syncstrook-conflict b{font-weight:800}
+.afrond-sync{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0 0;padding:9px 12px;border-radius:12px;font-size:.86rem;line-height:1.45;
+  background:#FBF5E6;border:1px solid #EFE3C4;color:#6B5313}
+.afrond-sync.is-mislukt,.afrond-sync.is-conflict{background:#FBEAE6;border-color:#F0CFC6;color:#8E2C17}
+.afrond-sync-knop{background:none;border:none;font:inherit;font-weight:700;color:inherit;cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;padding:4px 6px;min-height:32px;border-radius:8px}
 /* v104: vangnetscherm \u2014 rustig, in de sfeer van de app, \xE9\xE9n duidelijke uitweg */
 .vangnet{min-height:70vh;display:flex;align-items:center;justify-content:center;padding:clamp(18px,4vw,42px)}
 .vangnet-kaart{max-width:460px;width:100%;background:#FFFFFF;border:1px solid var(--lijn);border-radius:20px;
@@ -54037,7 +54220,7 @@ VEILIGHEID: geef nooit medische diagnoses, geen gewichts- of calorie-adviezen, g
       const schrijf2 = async (l) => {
         try {
           const r = await window.storage.set(STORE_KEY, JSON.stringify(l), false, { volledig });
-          return r && r.ok === false ? { ok: false, reden: r.reden || "fout" } : { ok: true };
+          return r && r.ok === false ? { ok: false, reden: r.reden || "fout" } : { ok: true, online: !!(r && r.online === true), stand: r && r.stand || null };
         } catch (e) {
           const vol = e && (e.name === "QuotaExceededError" || e.code === 22);
           return { ok: false, reden: vol ? "vol" : "fout", fout: e && e.message || String(e) };
@@ -54054,6 +54237,39 @@ VEILIGHEID: geef nooit medische diagnoses, geen gewichts- of calorie-adviezen, g
       }
       if (!uit.ok) console.error("[GROW] opslaan mislukt", { reden: uit.reden });
       return uit;
+    }
+  };
+  var OPSLAG_TEKST = {
+    online: "Opgeslagen",
+    wacht: "Bewaard op dit apparaat \u2014 nog niet gedeeld.",
+    bezig: "Bezig met synchroniseren\u2026",
+    mislukt: "Synchroniseren is niet gelukt. Je werk staat nog op dit apparaat.",
+    conflict: "Er staat een nieuwere versie op de server. Kies welke versie je wilt bewaren.",
+    lokaal: "Bewaard op dit apparaat.",
+    apparaat: "Opgeslagen"
+  };
+  function syncStatusNu() {
+    try {
+      return typeof window !== "undefined" && window.storage && typeof window.storage.syncStatus === "function" ? window.storage.syncStatus() : null;
+    } catch {
+      return null;
+    }
+  }
+  function useSyncStand() {
+    const [s, setS] = (0, import_react2.useState)(syncStatusNu);
+    (0, import_react2.useEffect)(() => {
+      if (typeof window === "undefined") return;
+      const f = (e) => setS(e && e.detail || syncStatusNu());
+      window.addEventListener("grow-sync", f);
+      return () => window.removeEventListener("grow-sync", f);
+    }, []);
+    return s;
+  }
+  var platformOpslagActief = () => {
+    try {
+      return !!(typeof window !== "undefined" && window.storage && window.storage.__grow && window.storage.__viaSupabase);
+    } catch {
+      return false;
     }
   };
   var MENTOR_NAV_LEEG = {
@@ -58585,7 +58801,7 @@ Antwoord met ALLEEN de JSON.`;
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { flex: 1, minWidth: 0 }, children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }, children: [
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { fontWeight: 800, fontSize: "1.15rem" }, children: g.huidig.naam }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { style: { fontWeight: 800, fontSize: "1rem", color: kleurNu }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { style: { fontWeight: 800, fontSize: "1rem", color: "var(--inkt-zacht)" }, children: [
               xp,
               " XP"
             ] })
@@ -64782,6 +64998,52 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
       ] }) })
     ] });
   }
+  function SyncStrook({ onRecord }) {
+    const st = useSyncStand();
+    const [conflicten, setConflicten] = (0, import_react2.useState)([]);
+    (0, import_react2.useEffect)(() => {
+      if (!st || st.stand !== "conflict") {
+        setConflicten([]);
+        return;
+      }
+      try {
+        setConflicten(window.storage.conflicten() || []);
+      } catch {
+        setConflicten([]);
+      }
+    }, [st && st.stand, st && st.conflicten]);
+    if (!st || st.stand === "online" || st.stand === "lokaal") return null;
+    const kies2 = async (id, keuze) => {
+      try {
+        await window.storage.losConflictOp(id, keuze);
+      } catch {
+      }
+    };
+    const titel = (c) => {
+      const r = c && c.server;
+      return r && r.data && r.data.titel || r && r.titel || "uitdaging " + (c && c.sleutel);
+    };
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "syncstrook is-" + st.stand, role: st.stand === "mislukt" || st.stand === "conflict" ? "alert" : "status", "data-sync": st.stand, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: st.stand === "bezig" ? "refresh" : st.stand === "wacht" ? "clock" : "waarschuwing", size: 15 }),
+      st.stand === "conflict" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "syncstrook-conflict", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: OPSLAG_TEKST.conflict }),
+        conflicten.map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "syncstrook-conflict", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: titel(c) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "syncstrook-knop", onClick: () => kies2(c.id, "server"), children: "Serverversie gebruiken" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "syncstrook-knop", onClick: () => kies2(c.id, "mijn"), children: "Mijn versie bewaren" })
+        ] }, c.id))
+      ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+        OPSLAG_TEKST[st.stand] || OPSLAG_TEKST.wacht,
+        st.wachtend > 1 && st.stand !== "bezig" ? " (" + st.wachtend + " onderdelen)" : ""
+      ] }),
+      st.stand === "mislukt" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "syncstrook-knop", onClick: () => {
+        try {
+          window.storage.sync();
+        } catch {
+        }
+      }, children: "Opnieuw proberen" })
+    ] });
+  }
   function Header({ gebruiker, go, uitloggen, wachtrij, step, naarProfiel }) {
     const meerdereRollen = Array.isArray(gebruiker && gebruiker.rollenBeschikbaar) && gebruiker.rollenBeschikbaar.length > 1;
     const breed = gebruiker && gebruiker.rol === "beheerder";
@@ -67556,7 +67818,6 @@ ${kiesInstr}${variatieInstr}${praktijkInstr}${adviesInstr}${persoonlijkInstr}${p
     );
   }
   var GROEINIVEAU_LABELS = ["Beginnend", "Ontwikkelend", "Bekwaam", "Sterk"];
-  var GROEINIVEAU_KLEUR = ["#7E8C77", "#5D87C5", "#4C7A3F", "#3E6633"];
   var _NIVEAU_DOEL = { Bronze: 1, Silver: 1, Gold: 2, Platinum: 3 };
   function competentieGroei(naam) {
     const l = String(naam || "deze competentie").toLowerCase();
@@ -67600,24 +67861,118 @@ ${kiesInstr}${variatieInstr}${praktijkInstr}${adviesInstr}${persoonlijkInstr}${p
     ] });
   }
   var RUBRIC_NIVEAU_PCT = [40, 60, 78, 92];
+  function GroeiFaseIcoon({ index, size = 20 }) {
+    const p = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true", style: { display: "block" } };
+    switch (index) {
+      /* Beginnend: één zaadlob */
+      case 0:
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("svg", { ...p, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M12 21v-8" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M12 13c-.6-4.2-3.4-6-7.2-6 .3 4.3 3.3 6.4 7.2 6z" })
+        ] });
+      /* Ontwikkelend: twee blaadjes */
+      case 1:
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("svg", { ...p, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M12 21v-8.5" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M12 13c-.4-3.6-2.9-5.2-6.2-5.2.2 3.7 2.8 5.5 6.2 5.2z" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M12 11.2c.4-3.9 3.1-5.8 6.6-5.8-.2 4-2.9 6.1-6.6 5.8z" })
+        ] });
+      /* Bekwaam: een plant met drie blaadjes */
+      case 2:
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("svg", { ...p, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M12 21V7" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M12 15c-.4-3-2.6-4.4-5.4-4.4.2 3.1 2.5 4.7 5.4 4.4z" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M12 11.5c.4-3 2.6-4.4 5.4-4.4-.2 3.1-2.5 4.7-5.4 4.4z" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M12 7.2c-.3-2.2-1.8-3.3-3.9-3.3.1 2.3 1.7 3.5 3.9 3.3z" })
+        ] });
+      /* Sterk: een boom */
+      default:
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("svg", { ...p, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M12 21v-5.5" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M8.2 15.5h7.6c2.1 0 3.4-1.4 3.4-3.1 0-1.4-.9-2.6-2.3-2.9A4 4 0 0012 4.8 4 4 0 007.1 9.5a3 3 0 00-2.3 2.9c0 1.7 1.3 3.1 3.4 3.1z" })
+        ] });
+    }
+  }
+  function rubricCriteriumIcoon(cr) {
+    const n = String(cr && cr.naam || "").toLowerCase();
+    if (cr && cr.type === "product") return "doc";
+    if (cr && cr.type === "reflectie") return "users";
+    if (/reflect|denk|inzicht|begrip|analy/.test(n)) return "pijler_denken";
+    if (/disciplin|doel|plan|focus|doorzet|volhoud/.test(n)) return "target";
+    if (/zelf|emot|gevoel|vertrouw|bewust/.test(n)) return "smile";
+    if (/samen|communic|verbind|team/.test(n)) return "users";
+    if (/handel|doen|toepas|praktijk/.test(n)) return "pijler_handelen";
+    return "spark";
+  }
+  var RUBRIC_KLEUR = ["#A89F92", "#4884D5", "#3B6D44", "#2C643D"];
+  var RUBRIC_ICOON_KLEUR = ["#BDB4AA", "#4884D5", "#508559", "#387048"];
   function RubricScorer({ rec, waarden, onKies }) {
     const rubric = (0, import_react2.useMemo)(() => bouwRubric(rec), [rec]);
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 10 }, children: rubric.criteria.map((cr, k) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { fontSize: ".82rem", fontWeight: 700, marginBottom: 4 }, children: [
-        cr.naam,
-        cr.doelIndex != null && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "muted", style: { fontWeight: 600 }, children: [
-          " \xB7 doel: ",
-          GROEINIVEAU_LABELS[cr.doelIndex]
-        ] })
+    const [uitleg, setUitleg] = (0, import_react2.useState)(null);
+    const idBasis = (0, import_react2.useMemo)(() => "rub" + Math.random().toString(36).slice(2, 7), []);
+    const doel = rubric.doelIndex;
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "rubric-matrix", role: "group", "aria-label": "Rubric: kies per criterium \xE9\xE9n groeiniveau", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "rubric-rij rubric-kopregel", "aria-hidden": "true", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rubric-crit-kop", children: "Criterium" }),
+        GROEINIVEAU_LABELS.map((l, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "rubric-kol rubric-kol-" + i + (i === doel ? " is-doel" : ""), style: { color: RUBRIC_ICOON_KLEUR[i] }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GroeiFaseIcoon, { index: i, size: 26 }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rubric-kol-naam", children: l }),
+          i === doel && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rubric-kol-doel", children: "doel" })
+        ] }, l))
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 4 }, children: cr.niveaus.map((t, i) => {
-        const sel = waarden && waarden[k] === i;
-        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", onClick: () => onKies(k, i), style: { textAlign: "left", cursor: "pointer", display: "flex", gap: 8, alignItems: "flex-start", padding: "6px 9px", borderRadius: 8, border: sel ? `1.5px solid ${GROEINIVEAU_KLEUR[i]}` : "1px solid #E7E2D6", background: sel ? GROEINIVEAU_KLEUR[i] + "1A" : "#fff" }, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { flexShrink: 0, fontWeight: 800, fontSize: ".72rem", color: GROEINIVEAU_KLEUR[i], minWidth: 74 }, children: GROEINIVEAU_LABELS[i] }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { fontSize: ".78rem", lineHeight: 1.4, color: "#3A4048" }, children: t })
-        ] }, i);
-      }) })
-    ] }, k)) });
+      rubric.criteria.map((cr, k) => {
+        const gekozen = waarden && waarden[k] != null ? waarden[k] : null;
+        const critId = idBasis + "-c" + k, uitlegId = idBasis + "-u" + k, open = uitleg === k;
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "rubric-crit" + (open ? " is-open" : ""), role: "group", "aria-labelledby": critId, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "rubric-rij", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "rubric-crit-naam", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rubric-crit-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: rubricCriteriumIcoon(cr), size: 20 }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { id: critId, className: "rubric-crit-tekst", children: cr.naam }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                "button",
+                {
+                  type: "button",
+                  className: "rubric-info",
+                  "aria-expanded": open ? "true" : "false",
+                  "aria-controls": uitlegId,
+                  "aria-label": "Uitleg bij " + cr.naam + (open ? " sluiten" : ""),
+                  onClick: () => setUitleg((o) => o === k ? null : k),
+                  children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: "info", size: 15 })
+                }
+              )
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rubric-keuzes", role: "radiogroup", "aria-labelledby": critId, children: cr.niveaus.map((t, i) => {
+              const sel = gekozen === i;
+              return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("label", { className: "rubric-bol-wrap rubric-kol-" + i + (sel ? " is-gekozen" : "") + (i === doel ? " is-doelkolom" : ""), title: GROEINIVEAU_LABELS[i], children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                  "input",
+                  {
+                    type: "radio",
+                    name: idBasis + "-r" + k,
+                    value: i,
+                    checked: sel,
+                    onChange: () => onKies(k, i),
+                    "aria-label": cr.naam + ": " + GROEINIVEAU_LABELS[i]
+                  }
+                ),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rubric-bol", "aria-hidden": "true", style: sel ? { borderColor: RUBRIC_KLEUR[i] } : void 0, children: sel && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rubric-bol-kern", style: { background: RUBRIC_KLEUR[i] } }) }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rubric-bol-label", children: GROEINIVEAU_LABELS[i] })
+              ] }, i);
+            }) })
+          ] }),
+          open && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { id: uitlegId, className: "rubric-uitleg", role: "region", "aria-label": "Uitleg bij " + cr.naam, children: [
+            cr.niveaus.map((t, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "rubric-uitleg-rij", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "rubric-uitleg-niveau", style: { color: RUBRIC_KLEUR[i] }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GroeiFaseIcoon, { index: i, size: 15 }),
+                GROEINIVEAU_LABELS[i]
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rubric-uitleg-tekst", children: t })
+            ] }, i)),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "rubric-uitleg-sluit", onClick: () => setUitleg(null), children: "Sluiten" })
+          ] })
+        ] }, k);
+      })
+    ] });
   }
   function rubricIndicatieScore(rec, waarden) {
     const rubric = bouwRubric(rec);
@@ -69615,7 +69970,9 @@ ${String(stapTekst).slice(0, 900)}` : ""
         e.reden = uit.reden;
         throw e;
       }
+      return uit;
     };
+    const bewaardTekst = (uit, anders) => uit && uit.online === false ? OPSLAG_TEKST[uit.stand] || OPSLAG_TEKST.wacht : anders;
     const bewaarTekst = async () => {
       const t = (tekst || "").trim();
       if (!t) {
@@ -69629,7 +69986,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
         return;
       }
       try {
-        await voegToe(isLink ? {
+        const uitT = await voegToe(isLink ? {
           id: "b" + Date.now().toString(36),
           soort: "link",
           vorm: "link",
@@ -69647,7 +70004,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
           status: "bewaard",
           tekst: t.slice(0, 4e3)
         });
-        setGelukt("Je tekst is bewaard.");
+        setGelukt(bewaardTekst(uitT, "Je tekst is bewaard."));
         sluit();
       } catch (e) {
         setFout("Het opslaan is niet gelukt. Je tekst staat er nog \u2014 probeer het nog een keer.");
@@ -69684,7 +70041,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
           bestandsnaam: extra && extra.bestandsnaam || bestand.name || BEWIJS_NAAM[soort],
           duurSec: extra && extra.duurSec
         }, (p) => setPct(p));
-        await voegToe({
+        const uitB = await voegToe({
           id: "b" + Date.now().toString(36),
           soort,
           vorm: vorm && vorm.id || soort,
@@ -69699,12 +70056,12 @@ ${String(stapTekst).slice(0, 900)}` : ""
           opslag: uit.opslag,
           pad: uit.pad
         });
-        setGelukt("Bewaard. Je mentor kan dit nu zien.");
+        setGelukt(bewaardTekst(uitB, "Bewaard. Je mentor kan dit nu zien."));
         setPct(null);
         sluit();
       } catch (e) {
         setPct(null);
-        setFout(e && e.code === "te-groot" ? "Dit bestand is te groot. Het mag maximaal " + bewijsMb(e.grens || BEWIJS_MAX.bestand) + " MB zijn." : e && e.code === "niet-opgeslagen" ? "Je bestand is ge\xFCpload, maar de uitdaging kon niet worden bijgewerkt. Probeer het nog een keer \u2014 je bestand staat nog klaar." : "Het opslaan is niet gelukt. Controleer je internet en probeer het nog een keer \u2014 je bestand staat nog klaar.");
+        setFout(e && e.code === "te-groot" ? "Dit bestand is te groot. Het mag maximaal " + bewijsMb(e.grens || BEWIJS_MAX.bestand) + " MB zijn." : e && e.code === "niet-opgeslagen" ? "Je bestand is ge\xFCpload, maar de uitdaging kon niet worden bijgewerkt. Probeer het nog een keer \u2014 je bestand staat nog klaar." : e && e.code === "niet-geregistreerd" ? "Je bestand kon niet worden geregistreerd en is niet bewaard. Probeer het nog een keer \u2014 je bestand staat nog klaar." : "Het opslaan is niet gelukt. Controleer je internet en probeer het nog een keer \u2014 je bestand staat nog klaar.");
       }
     };
     const bewaarMeting = async () => {
@@ -69714,7 +70071,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
         return;
       }
       try {
-        await voegToe({
+        const uitM = await voegToe({
           id: "b" + Date.now().toString(36),
           soort: "meting",
           vorm: "meting",
@@ -69724,7 +70081,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
           meting: { wat: wat.slice(0, 200), eenheid: (meting.eenheid || "").trim().slice(0, 40), waarden: waarden.slice(0, 800) },
           ...toelichting.trim() ? { toelichting: toelichting.trim().slice(0, 1200) } : {}
         });
-        setGelukt("Je metingen zijn bewaard.");
+        setGelukt(bewaardTekst(uitM, "Je metingen zijn bewaard."));
         sluit();
       } catch (e) {
         setFout("Het opslaan is niet gelukt. Je metingen staan er nog \u2014 probeer het nog een keer.");
@@ -69737,7 +70094,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
         return;
       }
       try {
-        await voegToe({
+        const uitV = await voegToe({
           id: "b" + Date.now().toString(36),
           soort: "bevestiging",
           vorm: "docentbevestiging",
@@ -69746,7 +70103,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
           status: "gevraagd",
           tekst: t.slice(0, 1e3)
         });
-        setGelukt("Je docent krijgt dit te zien en kan het bevestigen.");
+        setGelukt(bewaardTekst(uitV, "Je docent krijgt dit te zien en kan het bevestigen."));
         sluit();
       } catch (e) {
         setFout("Het opslaan is niet gelukt. Je tekst staat er nog \u2014 probeer het nog een keer.");
@@ -70129,7 +70486,18 @@ ${String(stapTekst).slice(0, 900)}` : ""
     }
     const stappen = Array.isArray(d.stappen) ? d.stappen : [];
     const arr = (v) => Array.isArray(v) ? v : v ? [v] : [];
-    const [afrond, setAfrond] = (0, import_react2.useState)({ stand: "open", fout: "" });
+    const [afrond, setAfrond] = (0, import_react2.useState)({ stand: "open", fout: "", bevestigd: true, opslag: "apparaat" });
+    (0, import_react2.useEffect)(() => {
+      if (typeof window === "undefined" || afrond.stand !== "klaar" || afrond.bevestigd) return;
+      const f = (e) => {
+        const st = e && e.detail || syncStatusNu();
+        if (!st) return;
+        if (st.stand === "online") setAfrond((a) => a.stand === "klaar" ? { ...a, bevestigd: true, opslag: "online" } : a);
+        else setAfrond((a) => a.stand === "klaar" ? { ...a, opslag: st.stand } : a);
+      };
+      window.addEventListener("grow-sync", f);
+      return () => window.removeEventListener("grow-sync", f);
+    }, [afrond.stand, afrond.bevestigd]);
     const [werkMelding, setWerkMelding] = (0, import_react2.useState)(false);
     const werkRef = (0, import_react2.useRef)(null);
     const praktijkW = d && d.werkvormId ? werkvormVan(d.werkvormId) : null;
@@ -70531,10 +70899,11 @@ ${String(stapTekst).slice(0, 900)}` : ""
                   uit = { ok: false };
                 }
                 if (uit && uit.ok === false) {
-                  setAfrond({ stand: "open", fout: "Opslaan is niet gelukt. Je antwoorden en je werk staan er nog \u2014 probeer het nog een keer." });
+                  setAfrond((a) => ({ ...a, stand: "open", fout: "Opslaan is niet gelukt. Je antwoorden en je werk staan er nog \u2014 probeer het nog een keer." }));
                   return;
                 }
-                setAfrond({ stand: "klaar", fout: "" });
+                const bevestigd = !(uit && uit.online === false);
+                setAfrond({ stand: "klaar", fout: "", bevestigd, opslag: bevestigd ? "online" : uit && uit.stand || "wacht" });
                 try {
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 } catch {
@@ -70551,7 +70920,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                 ] }, vi);
               }) });
               if (klaar) return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-kaart is-klaar", children: [
-                behaaldNu && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(FeestConfetti, {}),
+                behaaldNu && afrond.bevestigd && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(FeestConfetti, {}),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-klaar-kop", children: [
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "afrond-klaar-medaille", style: { background: behaaldNu ? NIVEAU_KLEUR[rec.niveau] || "#66BB6A" : "#CBD0D6" }, "aria-hidden": "true", children: behaaldNu ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: rec.niveau, size: 30 }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 22 }) }),
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
@@ -70559,8 +70928,18 @@ ${String(stapTekst).slice(0, 900)}` : ""
                       "Afgerond",
                       behaaldNu ? " \xB7 +" + rec.xp + " XP verdiend" : ""
                     ] }),
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "afrond-sub", children: behaaldNu ? "Je reflectie en je werk zijn opgeslagen." : "Opgeslagen. Je kunt deze uitdaging later opnieuw doen voor het niveau." })
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "afrond-sub", children: afrond.bevestigd ? behaaldNu ? "Je reflectie en je werk zijn opgeslagen." : "Opgeslagen. Je kunt deze uitdaging later opnieuw doen voor het niveau." : behaaldNu ? "Je reflectie en je werk staan op dit apparaat." : "Je kunt deze uitdaging later opnieuw doen voor het niveau." })
                   ] })
+                ] }),
+                !afrond.bevestigd && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-sync is-" + afrond.opslag, role: "status", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: afrond.opslag === "bezig" ? "refresh" : "waarschuwing", size: 14 }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: OPSLAG_TEKST[afrond.opslag] || OPSLAG_TEKST.wacht }),
+                  afrond.opslag === "mislukt" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "afrond-sync-knop", onClick: () => {
+                    try {
+                      window.storage && window.storage.sync && window.storage.sync();
+                    } catch {
+                    }
+                  }, children: "Opnieuw proberen" })
                 ] }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "afrond-sectie", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GroeiReis, { xp: xpNu + (rec.xp || 0) }) }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-sectie", children: [
@@ -70861,6 +71240,14 @@ ${String(stapTekst).slice(0, 900)}` : ""
       ))
     ] });
   }
+  function inleverBestandKan() {
+    if (platformOpslagActief()) return false;
+    try {
+      return spCfgCompleet(spCfgLaad());
+    } catch {
+      return false;
+    }
+  }
   function InleverKaart({ rec, gebruiker, onInleveren, compact = false }) {
     const inl = rec.inlevering || null, st = inleverStatus(rec);
     const [open, setOpen] = (0, import_react2.useState)(compact ? false : !inl);
@@ -70908,7 +71295,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "inlever-compact-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "download", size: 16 }) }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { flex: 1, minWidth: 140 }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "inlever-compact-titel", children: inl ? "Ingeleverd bij je docent" : "Inleveren bij je docent" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "muted", style: { fontSize: ".78rem", lineHeight: 1.4 }, children: inl ? "Ingeleverd op " + datumNL(inl.ingeleverdOp) + "; je mentor of vakdocent beoordeelt het." : "Tekst, link of bestand \u2014 als je docent daarom vraagt." })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "muted", style: { fontSize: ".78rem", lineHeight: 1.4 }, children: inl ? "Ingeleverd op " + datumNL(inl.ingeleverdOp) + "; je mentor of vakdocent beoordeelt het." : inleverBestandKan() ? "Tekst, link of bestand \u2014 als je docent daarom vraagt." : "Tekst of link toevoegen. Bestanden voeg je toe als bewijs." })
       ] }),
       st && inl && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { background: st.achtergrond, color: st.kleur, fontWeight: 800, fontSize: ".72rem" }, children: st.kort || st.label }),
       !open && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "admin-btn-sec", style: { padding: "6px 12px", minHeight: 0, fontSize: ".8rem" }, onClick: () => setOpen(true), children: inl ? "Bekijk of pas aan" : "Inleveren" })
@@ -70945,7 +71332,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field", value: link, onChange: (e) => setLink(e.target.value), placeholder: "https://\u2026 (bijv. OneDrive, Teams, YouTube)" }),
           !linkOk && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { color: "#B3261E", fontSize: ".78rem" }, children: "Een link begint met https://" })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+        inleverBestandKan() ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("label", { className: "btn btn-licht", style: { cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8, padding: "8px 14px" }, children: [
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "camera", size: 16 }),
             " Foto of bestand toevoegen",
@@ -70956,6 +71343,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
             INLEVER_MAX_MB,
             " MB per bestand \xB7 foto's worden verkleind"
           ] })
+        ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "muted inlever-geen-bestand", style: { fontSize: ".78rem", margin: 0, lineHeight: 1.45 }, children: [
+          "Een bestand voeg je toe als bewijs bij ",
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: "Jouw werk" }),
+          "."
         ] }),
         bestanden.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 6 }, children: bestanden.map((f, k) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: 8, padding: "7px 10px", borderRadius: 10, background: "var(--tegel-licht)", fontSize: ".84rem" }, children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: /^image\//.test(f.type) ? "camera" : "download", size: 15 }),
@@ -71540,6 +71931,22 @@ ${String(stapTekst).slice(0, 900)}` : ""
                     ] })
                   ] })
                 ] }),
+                (() => {
+                  const metFb = (records || []).filter((r3) => r3 && r3.type !== "event" && r3.type !== "bonus" && r3.alpe && r3.alpe.mentorfeedback && String(r3.alpe.mentorfeedback.feedback || "").trim()).sort((a, b) => String(b.alpe.mentorfeedback.op || b.afgerondOp || "").localeCompare(String(a.alpe.mentorfeedback.op || a.afgerondOp || "")));
+                  if (!metFb.length || !onOpen) return null;
+                  const r2 = metFb[0];
+                  const titel = r2.data && r2.data.titel || themaLabel(r2.thema);
+                  return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "profiel-feedback", onClick: () => onOpen(r2), "aria-label": "Feedback beschikbaar bij " + titel + " \u2014 open de feedback", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "bewaar", size: 15 }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: "Feedback beschikbaar" }),
+                      " \xB7 ",
+                      titel,
+                      metFb.length > 1 ? " \xB7 en " + (metFb.length - 1) + " eerdere" : ""
+                    ] }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 15 })
+                  ] });
+                })(),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(AfgerondTegels, { variant: "rij", klaar, onOpen: (r2) => onOpen && onOpen(r2), onNieuw }),
                 detail === "groei" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(Popup, { titel: "Mijn groei", onSluit: () => setDetail(null), breed: true, children: [
                   dsc && dsc.samenvatting && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { style: { margin: 0, lineHeight: 1.6 }, children: dsc.samenvatting }),
@@ -72006,7 +72413,14 @@ ${String(stapTekst).slice(0, 900)}` : ""
                       " \xB7 ",
                       datumNL(r.afgerondOp || r.datum),
                       r.rubricScore != null ? " \xB7 " + r.rubricScore + "%" : ""
-                    ] })
+                    ] }),
+                    (() => {
+                      const ist = inleverStatus(r);
+                      const mf = r.alpe && r.alpe.mentorfeedback;
+                      if (!ist && !mf) return null;
+                      const wacht = !!(ist && ist.kort);
+                      return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "afgerond-status" + (wacht ? " is-wacht" : " is-beoordeeld"), children: wacht ? "Wacht op beoordeling" : "Beoordeeld" });
+                    })()
                   ] }),
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { style: { fontWeight: 800, color: "var(--accent-diep)", fontSize: ".86rem" }, children: [
                     "+",
@@ -72719,6 +73133,19 @@ ${String(stapTekst).slice(0, 900)}` : ""
     }, [mfRec && mfRec.id]);
     const [mfForm, setMfForm] = (0, import_react2.useState)({ feedback: "", observatie: "", rubric: "", sterke: "", nog: "", rubricNiveaus: {} });
     const [mfBusy, setMfBusy] = (0, import_react2.useState)(false);
+    const [mfMeer, setMfMeer] = (0, import_react2.useState)(false);
+    const [mfFout, setMfFout] = (0, import_react2.useState)("");
+    const [mfGelukt, setMfGelukt] = (0, import_react2.useState)(null);
+    const [mfVolgende, setMfVolgende] = (0, import_react2.useState)(null);
+    (0, import_react2.useEffect)(() => {
+      if (!mfGelukt) return;
+      const t = setTimeout(() => {
+        setMfGelukt(null);
+        setMfVolgende(null);
+      }, mfVolgende ? 15e3 : 3500);
+      return () => clearTimeout(t);
+    }, [mfGelukt, mfVolgende]);
+    const [bewijsDicht, setBewijsDicht] = (0, import_react2.useState)({});
     const [sel, setSel] = (0, import_react2.useState)(null);
     const [nieuweKlas, setNieuweKlas] = (0, import_react2.useState)("");
     const [leerlingForm, setLeerlingForm] = (0, import_react2.useState)(null);
@@ -72883,6 +73310,8 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const openMentorForm = (r) => {
       const mf = r.alpe && r.alpe.mentorfeedback || null;
       setMfForm({ feedback: mf && mf.feedback || "", observatie: mf && mf.observatie || "", rubric: mf && mf.rubricScore != null ? String(mf.rubricScore) : r.rubricScore != null ? String(r.rubricScore) : "", sterke: mf && (mf.sterkePunten || []).join("\n") || "", nog: mf && (mf.nogOntwikkelen || []).join("\n") || "", rubricNiveaus: mf && mf.rubricKeuzes || {} });
+      setMfFout("");
+      setMfMeer(!!(mf && (mf.observatie || (mf.sterkePunten || []).length || (mf.nogOntwikkelen || []).length)));
       setMfRec(r);
     };
     const bewaarMentorFeedback = async () => {
@@ -72897,12 +73326,38 @@ ${String(stapTekst).slice(0, 900)}` : ""
         if (_rk[k] != null) rubricNiveaus.push({ criterium: cr.naam, niveau: GROEINIVEAU_LABELS[_rk[k]], index: _rk[k] });
       });
       const mf = { door: gebruiker.naam, op: (/* @__PURE__ */ new Date()).toISOString(), feedback: mfForm.feedback.trim(), observatie: mfForm.observatie.trim(), rubricScore: Number.isFinite(rubricNum) ? rubricNum : null, sterkePunten: lijnen(mfForm.sterke), nogOntwikkelen: lijnen(mfForm.nog), rubricNiveaus, rubricKeuzes: _rk };
+      let uit = null;
       try {
-        await onBeoordeelUitdaging(mfRec, mf);
-      } catch {
+        uit = await onBeoordeelUitdaging(mfRec, mf);
+      } catch (e) {
+        uit = { ok: false };
       }
       setMfBusy(false);
+      if (uit && uit.ok === false) {
+        setMfFout("Opslaan is niet gelukt. Je keuzes en je opmerking staan er nog \u2014 probeer het nog een keer.");
+        return;
+      }
+      setMfFout("");
+      let vlg = null;
+      try {
+        const klasVan = (klassen || []).find((k) => (k.leerlingen || []).some((l) => (statsVoor(l).recs || []).some((x) => x.id === mfRec.id)));
+        const kandidaten = teBeoordelen.filter((x) => x.r.id !== mfRec.id);
+        vlg = kandidaten.find((x) => klasVan && x.k.id === klasVan.id) || kandidaten[0] || null;
+      } catch {
+        vlg = null;
+      }
+      setMfVolgende(vlg);
+      setMfGelukt(mfRec.id);
       setMfRec(null);
+    };
+    const naarVolgende = () => {
+      const v = mfVolgende;
+      if (!v) return;
+      setMfGelukt(null);
+      setMfVolgende(null);
+      setKlasPopup(null);
+      zetNav({ klasId: v.k.id, leerlingId: v.l.id, llTab: "werk" });
+      openMentorForm(v.r);
     };
     const eyebrow = readOnly ? "Coach \xB7 alleen-lezen" : "Mentor";
     const sub = readOnly ? "Bekijk de voortgang en XP van de leerlingen." : "Zoek een leerling, bekijk zijn ontwikkeling en geef feedback.";
@@ -73417,11 +73872,21 @@ ${String(stapTekst).slice(0, 900)}` : ""
               };
             };
             const PIJLERS = [
-              { naam: "Denken", icoon: "pijler_denken" },
-              { naam: "Karakter", icoon: "pijler_karakter" },
-              { naam: "Verbinden", icoon: "pijler_verbinden" },
-              { naam: "Handelen", icoon: "pijler_handelen" }
+              { naam: "Denken", icoon: "pijler_denken", uitleg: "Zoekt en begrijpt informatie" },
+              { naam: "Karakter", icoon: "pijler_karakter", uitleg: "Toont doorzettingsvermogen" },
+              { naam: "Verbinden", icoon: "pijler_verbinden", uitleg: "Werkt samen en communiceert" },
+              { naam: "Handelen", icoon: "pijler_handelen", uitleg: "Past kennis toe in de praktijk" }
             ];
+            const wachtend = alleRecs.filter((r) => {
+              const ist = inleverStatus(r);
+              return !!(ist && ist.kort);
+            }).sort((a, b) => String((inzending(b) || {}).laatste || "").localeCompare(String((inzending(a) || {}).laatste || "")));
+            const feedbackLijst = alleRecs.filter((r) => r && r.alpe && r.alpe.mentorfeedback && String(r.alpe.mentorfeedback.feedback || "").trim()).sort((a, b) => String(b.alpe.mentorfeedback.op || "").localeCompare(String(a.alpe.mentorfeedback.op || "")));
+            const naarBeoordeling = (r) => {
+              zetNav({ llTab: "werk" }, { vervang: true });
+              if (!readOnly) openMentorForm(r);
+            };
+            const laatsteAfgerond = [...st.recs].sort((a, b) => String(b.afgerondOp || b.datum || "").localeCompare(String(a.afgerondOp || a.datum || "")))[0] || null;
             const recent = [...alleRecs].sort((a, b) => String(b.afgerondOp || b.datum || "").localeCompare(String(a.afgerondOp || a.datum || ""))).slice(0, 3);
             const voorbeeldVan = (r) => {
               const b = (Array.isArray(r.bewijzen) ? r.bewijzen : []).find((x) => x && x.soort === "foto" && (x.url || x.dataUrl));
@@ -73440,17 +73905,24 @@ ${String(stapTekst).slice(0, 900)}` : ""
               return "nog bezig";
             };
             const werkRij = (r) => {
-              const vb = voorbeeldVan(r);
-              return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-werk", onClick: () => zetNav({ llTab: "werk" }, { vervang: true }), children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-werk-beeld", "aria-hidden": "true", children: vb ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("img", { src: vb, alt: "", loading: "lazy" }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: bewijsIcoon(r), size: 18 }) }),
+              const vb = voorbeeldVan(r) || THEMA_ACHTERGROND[r.thema] || null;
+              const ist = inleverStatus(r);
+              const wacht = !!(ist && ist.kort);
+              const nB = (Array.isArray(r.bewijzen) ? r.bewijzen : []).filter((b) => b && b.status !== "geweigerd").length;
+              const mf = r.alpe && r.alpe.mentorfeedback;
+              return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-werk", onClick: () => wacht ? naarBeoordeling(r) : zetNav({ llTab: "werk" }, { vervang: true }), children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-werk-beeld is-foto", "aria-hidden": "true", children: vb ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("img", { src: vb, alt: "", loading: "lazy", style: { objectPosition: THEMA_FOTO_POSITIE[r.thema] || "center 42%" } }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: bewijsIcoon(r), size: 18 }) }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lp-werk-tekst", children: [
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-werk-titel", children: r.data && r.data.titel || themaLabel(r.thema) }),
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lp-werk-meta", children: [
                     datumNL(r.afgerondOp || r.datum),
                     " \xB7 ",
-                    werkStatus(r)
+                    r.afgerond ? "Uitdaging afgerond" : "nog bezig",
+                    nB ? " \xB7 " + nB + " bewijs" + (nB === 1 ? "" : "stukken") : "",
+                    mf && mf.rubricScore != null ? " \xB7 " + mf.rubricScore + "%" : ""
                   ] })
                 ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-werk-status" + (wacht ? " is-wacht" : mf ? " is-beoordeeld" : ""), children: wacht ? "Te beoordelen" : mf ? "Beoordeeld" : r.afgerond ? r.inlevering ? "Ingeleverd" : "Afgerond" : "Concept" }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijl", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 16 }) })
               ] }, r.id);
             };
@@ -73469,13 +73941,34 @@ ${String(stapTekst).slice(0, 900)}` : ""
                 !bezigOok && (() => {
                   const ist = inleverStatus(r);
                   if (ist) return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".68rem", fontWeight: 800, background: ist.achtergrond, color: ist.kleur }, children: ist.kort || ist.label });
-                  return r.alpe && r.alpe.mentorfeedback ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".68rem", background: "#E3F1E6", color: "#2E7D43" }, children: "beoordeeld" }) : null;
+                  return r.alpe && r.alpe.mentorfeedback ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".68rem", fontWeight: 800, background: "#E0F5E3", color: "#3F6E46" }, children: "beoordeeld" }) : null;
                 })(),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "btn btn-licht ll-mini", onClick: () => onOpen(r), children: "Bekijk" })
+                !(mfRec && mfRec.id === r.id) && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "btn btn-licht ll-mini", onClick: () => onOpen(r), children: "Bekijk" })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsOverzicht, { bewijzen: r.bewijzen, api: bewijsApi, onBevestig: onBevestigBewijs ? (b, ja) => onBevestigBewijs(r, b, ja) : null }),
-              !bezigOok && !readOnly && (mfRec && mfRec.id === r.id ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { id: "beoordeling-" + r.id, style: { marginTop: 10, paddingTop: 10, borderTop: "1px solid var(--lijn-fijn)", display: "grid", gap: 8 }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { fontWeight: 800, fontSize: ".84rem" }, children: "Mentorbeoordeling" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { id: "bewijs-" + r.id, children: !bewijsDicht[r.id] && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsOverzicht, { bewijzen: r.bewijzen, api: bewijsApi, onBevestig: onBevestigBewijs ? (b, ja) => onBevestigBewijs(r, b, ja) : null }) }),
+              !bezigOok && !readOnly && (mfRec && mfRec.id === r.id ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { id: "beoordeling-" + r.id, className: "rubric-formulier", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "rubric-formulier-kop", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rubric-formulier-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GroeiFaseIcoon, { index: 1, size: 26 }) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { flex: 1, minWidth: 160 }, children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "rubric-formulier-titel", children: "Rubric beoordelen" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "rubric-formulier-sub", children: "Kies per criterium \xE9\xE9n groeiniveau." })
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+                    "button",
+                    {
+                      type: "button",
+                      className: "admin-btn-sec rubric-voorbeeld",
+                      "aria-expanded": !bewijsDicht[r.id],
+                      "aria-controls": "bewijs-" + r.id,
+                      onClick: () => setBewijsDicht((d) => ({ ...d, [r.id]: !d[r.id] })),
+                      children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "eye", size: 15 }),
+                        " ",
+                        bewijsDicht[r.id] ? "Bewijs tonen" : "Bewijs verbergen"
+                      ]
+                    }
+                  )
+                ] }),
                 (() => {
                   const eerder = alleRecs.filter((x) => x && x.id !== r.id && x.alpe && x.alpe.mentorfeedback && String(x.alpe.mentorfeedback.feedback || "").trim()).sort((a, b) => String(b.alpe.mentorfeedback.op || "").localeCompare(String(a.alpe.mentorfeedback.op || "")))[0];
                   if (!eerder) return null;
@@ -73489,17 +73982,29 @@ ${String(stapTekst).slice(0, 900)}` : ""
                     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { marginTop: 3, color: "var(--inkt)" }, children: String(mf.feedback).length > 220 ? String(mf.feedback).slice(0, 220).trim() + "\u2026" : mf.feedback })
                   ] });
                 })(),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Veld, { label: "Kwalitatieve feedback", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("textarea", { className: "field", rows: 3, value: mfForm.feedback, onChange: (e) => setMfForm((f) => ({ ...f, feedback: e.target.value })), placeholder: "Wat viel op, wat ging goed, wat is de volgende stap?" }) }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Veld, { label: "Observaties (optioneel)", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("textarea", { className: "field", rows: 2, value: mfForm.observatie, onChange: (e) => setMfForm((f) => ({ ...f, observatie: e.target.value })), placeholder: "Gedrag, inzet, samenwerking, zelfstandigheid\u2026" }) }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }, children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Veld, { label: "Sterke punten (\xE9\xE9n per regel)", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("textarea", { className: "field", rows: 2, value: mfForm.sterke, onChange: (e) => setMfForm((f) => ({ ...f, sterke: e.target.value })) }) }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Veld, { label: "Nog ontwikkelen (\xE9\xE9n per regel)", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("textarea", { className: "field", rows: 2, value: mfForm.nog, onChange: (e) => setMfForm((f) => ({ ...f, nog: e.target.value })) }) })
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(RubricScorer, { rec: r, waarden: mfForm.rubricNiveaus, onKies: (k, i) => setMfForm((f) => ({ ...f, rubricNiveaus: { ...f.rubricNiveaus, [k]: i } })) }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "rubric-opmerking", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Veld, { label: "Opmerking (optioneel)", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("textarea", { className: "field", rows: 3, value: mfForm.feedback, onChange: (e) => setMfForm((f) => ({ ...f, feedback: e.target.value })), placeholder: "Schrijf hier kort je feedback voor de leerling\u2026" }) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "rubric-teller", "aria-live": "polite", children: [
+                    mfForm.feedback.length,
+                    " / 500"
+                  ] })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(Veld, { label: "Rubric \u2014 kies per criterium een groeiniveau", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(RubricScorer, { rec: r, waarden: mfForm.rubricNiveaus, onKies: (k, i) => setMfForm((f) => ({ ...f, rubricNiveaus: { ...f.rubricNiveaus, [k]: i } })) }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "rubric-meer", "aria-expanded": mfMeer ? "true" : "false", onClick: () => setMfMeer((m) => !m), children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 13 }),
+                  " ",
+                  mfMeer ? "Minder velden" : "Meer velden",
+                  !mfMeer && (mfForm.observatie || mfForm.sterke || mfForm.nog || mfForm.rubric) && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "muted", children: " \xB7 ingevuld" })
+                ] }),
+                mfMeer && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Veld, { label: "Observaties (optioneel)", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("textarea", { className: "field", rows: 2, value: mfForm.observatie, onChange: (e) => setMfForm((f) => ({ ...f, observatie: e.target.value })), placeholder: "Gedrag, inzet, samenwerking, zelfstandigheid\u2026" }) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }, children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Veld, { label: "Sterke punten (\xE9\xE9n per regel)", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("textarea", { className: "field", rows: 2, value: mfForm.sterke, onChange: (e) => setMfForm((f) => ({ ...f, sterke: e.target.value })) }) }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Veld, { label: "Nog ontwikkelen (\xE9\xE9n per regel)", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("textarea", { className: "field", rows: 2, value: mfForm.nog, onChange: (e) => setMfForm((f) => ({ ...f, nog: e.target.value })) }) })
+                  ] }),
                   (() => {
                     const ind = rubricIndicatieScore(r, mfForm.rubricNiveaus);
-                    return ind ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: 10, marginTop: 8, flexWrap: "wrap" }, children: [
+                    return ind ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }, children: [
                       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "muted", style: { fontSize: ".8rem" }, children: [
                         "Indicatieve score: ",
                         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("b", { style: { color: "var(--accent-diep)" }, children: [
@@ -73514,18 +74019,39 @@ ${String(stapTekst).slice(0, 900)}` : ""
                       ] }),
                       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "btn btn-licht", style: { fontSize: ".76rem", padding: "4px 10px" }, onClick: () => setMfForm((f) => ({ ...f, rubric: String(ind.pct) })), children: "Gebruik als score" })
                     ] }) : null;
-                  })()
+                  })(),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Veld, { label: "Rubric-score (0\u2013100, optioneel \u2014 overschrijft de Mastery Score)", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field", type: "number", min: 0, max: 100, value: mfForm.rubric, onChange: (e) => setMfForm((f) => ({ ...f, rubric: e.target.value })), placeholder: "bv. 75" }) })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Veld, { label: "Rubric-score (0\u2013100, optioneel \u2014 overschrijft de Mastery Score)", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field", type: "number", min: 0, max: 100, value: mfForm.rubric, onChange: (e) => setMfForm((f) => ({ ...f, rubric: e.target.value })), placeholder: "bv. 75" }) }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", gap: 8 }, children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "btn btn-accent", disabled: mfBusy, onClick: bewaarMentorFeedback, style: { opacity: mfBusy ? 0.6 : 1 }, children: mfBusy ? "Opslaan\u2026" : "Beoordeling opslaan" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "btn btn-licht", onClick: () => setMfRec(null), children: "Annuleren" })
+                mfFout && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "afrond-melding", role: "alert", children: mfFout }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "rubric-acties", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "admin-btn-sec", onClick: () => setMfRec(null), children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "x", size: 14 }),
+                    " Annuleren"
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent rubric-opslaan", disabled: mfBusy, onClick: bewaarMentorFeedback, style: { opacity: mfBusy ? 0.6 : 1 }, children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 15 }),
+                    " ",
+                    mfBusy ? "Opslaan\u2026" : "Beoordeling opslaan"
+                  ] })
                 ] })
-              ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { marginTop: 8, paddingTop: 8, borderTop: "1px solid var(--lijn-fijn)" }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { className: "btn btn-licht ll-mini", onClick: () => openMentorForm(r), children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "spark", size: 13 }),
-                " ",
-                r.alpe && r.alpe.mentorfeedback ? "Beoordeling bijwerken" : "Feedback geven"
-              ] }) }))
+              ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { marginTop: 8, paddingTop: 8, borderTop: "1px solid var(--lijn-fijn)" }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { className: "btn btn-licht ll-mini", onClick: () => openMentorForm(r), children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "spark", size: 13 }),
+                  " ",
+                  r.alpe && r.alpe.mentorfeedback ? "Beoordeling bijwerken" : "Feedback geven"
+                ] }),
+                mfGelukt === r.id && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "rubric-gelukt", role: "status", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 13 }),
+                  " Beoordeling opgeslagen",
+                  mfVolgende && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "rubric-volgende", onClick: naarVolgende, children: [
+                    "Volgende: ",
+                    mfVolgende.l.naam,
+                    " \xB7 ",
+                    mfVolgende.r.data && mfVolgende.r.data.titel || themaLabel(mfVolgende.r.thema),
+                    " \u2192"
+                  ] })
+                ] })
+              ] }))
             ] }, r.id);
             return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp", children: [
               /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
@@ -73560,6 +74086,48 @@ ${String(stapTekst).slice(0, 900)}` : ""
                     st.counts[n] || 0
                   ] }, n)) })
                 ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-kpis", "aria-label": "Kerncijfers", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lp-kpi", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-kpi-icoon is-salie", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 18 }) }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-kpi-label", children: "Vaardigheden" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lp-kpi-waarde", children: [
+                        standen.filter((x) => x.niveau === "voldoende" || x.niveau === "zelfstandig").length,
+                        " ",
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("small", { children: [
+                          "van ",
+                          standen.length,
+                          " aangetoond"
+                        ] })
+                      ] })
+                    ] })
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lp-kpi", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-kpi-icoon is-steen", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chart", size: 18 }) }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-kpi-label", children: "Afgeronde uitdagingen" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lp-kpi-waarde", children: [
+                        st.recs.length,
+                        lopendMetBewijs.length ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("small", { children: [
+                          " \xB7 ",
+                          lopendMetBewijs.length,
+                          " bezig"
+                        ] }) : null
+                      ] })
+                    ] })
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lp-kpi", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-kpi-icoon is-goud", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "star", size: 18 }) }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-kpi-label", children: "XP totaal" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lp-kpi-waarde", children: [
+                        st.xp,
+                        " ",
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("small", { children: st.lvl })
+                      ] })
+                    ] })
+                  ] })
+                ] }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
                   LeerlingMenu,
                   {
@@ -73582,42 +74150,129 @@ ${String(stapTekst).slice(0, 900)}` : ""
               ] }),
               leeg && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "lp-leeg", children: "Hier wordt de ontwikkeling zichtbaar zodra er werk en feedback zijn toegevoegd." }),
               !tab && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", children: "Ontwikkeling" }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lp-tegels", children: PIJLERS.map((pj) => {
-                  const ps = pijlerStand(pj.naam);
-                  return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
-                    "button",
-                    {
-                      type: "button",
-                      className: "lp-tegel",
-                      onClick: () => zetNav({ llTab: "pijler:" + pj.naam }, { vervang: true }),
-                      children: [
-                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-tegel-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: pj.icoon, size: 22 }) }),
-                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-tegel-naam", children: pj.naam }),
-                        ps.observatie && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-tegel-obs", children: ps.observatie }),
-                        ps.status && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-tegel-status is-" + (ps.status === "aangetoond" ? "sterk" : "groei"), children: ps.status })
-                      ]
-                    },
-                    pj.naam
-                  );
-                }) }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-sectiekop", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", children: "Recent werk" }),
-                  alleRecs.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "lp-link", onClick: () => zetNav({ llTab: "werk" }, { vervang: true }), children: "Bekijk al het werk" })
-                ] }),
-                recent.length ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lp-werklijst", children: recent.map(werkRij) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "lp-stil", children: "Er is nog geen werk ingeleverd." }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", children: "Volgende stap" }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-                  VolgendeStap,
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lp-tegels", role: "navigation", "aria-label": "Ontwikkelpijlers", children: PIJLERS.map((pj) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
+                  "button",
                   {
-                    records: alleRecs,
-                    leerling: l,
-                    klas: openKlas.naam,
-                    feedbackGegeven,
-                    beoordeeld: beoordeeldeRecs.length,
-                    onBespreek: () => zetNav({ llTab: "verder" }, { vervang: true })
-                  }
-                )
+                    type: "button",
+                    className: "lp-tegel",
+                    onClick: () => zetNav({ llTab: "pijler:" + pj.naam }, { vervang: true }),
+                    children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-tegel-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: pj.icoon, size: 22 }) }),
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-tegel-naam", children: pj.naam }),
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-tegel-obs", children: pj.uitleg })
+                      ] })
+                    ]
+                  },
+                  pj.naam
+                )) }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-kolommen", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-kolom-links", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("section", { className: "lp-blok lp-recent", "aria-labelledby": "lp-recent", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-sectiekop", children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", id: "lp-recent", children: "Recent werk" }),
+                        alleRecs.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-link", onClick: () => zetNav({ llTab: "werk" }, { vervang: true }), children: [
+                          "Bekijk al het werk ",
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 13 })
+                        ] })
+                      ] }),
+                      recent.length ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lp-werklijst", children: recent.map(werkRij) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "lp-stil", children: "Er is nog geen werk ingeleverd." })
+                    ] }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("section", { className: "lp-blok lp-ontwikkeling", "aria-labelledby": "lp-ontw", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-sectiekop", children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", id: "lp-ontw", children: "Ontwikkeling" }),
+                        onPortfolio && st.recs.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-link", onClick: () => onPortfolio(l), children: [
+                          "Bekijk voortgang ",
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 13 })
+                        ] })
+                      ] }),
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lp-pijlerlijst", children: PIJLERS.map((pj) => {
+                        const ps = pijlerStand(pj.naam);
+                        const totaal = ps.rijen.length;
+                        const sterk = ps.rijen.filter((x) => x.niveau === "voldoende" || x.niveau === "zelfstandig").length;
+                        const metOordeel = ps.rijen.filter((x) => x.aantal > 0).length;
+                        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-pijlerrij", onClick: () => zetNav({ llTab: "pijler:" + pj.naam }, { vervang: true }), children: [
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijlerrij-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: pj.icoon, size: 18 }) }),
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijlerrij-naam", children: pj.naam }),
+                          metOordeel > 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijlerrij-balk", role: "img", "aria-label": sterk + " van " + totaal + " vaardigheden aangetoond", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { width: Math.round(100 * sterk / Math.max(1, totaal)) + "%" } }) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijlerrij-balk is-leeg", "aria-hidden": "true" }),
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijlerrij-status" + (ps.status === "aangetoond" ? " is-sterk" : ps.status ? " is-groei" : ""), children: metOordeel > 0 ? ps.status === "aangetoond" ? sterk + " van " + totaal + " aangetoond" : "In ontwikkeling" : "Nog geen beoordeling" }),
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijl", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 16 }) })
+                        ] }, pj.naam);
+                      }) })
+                    ] })
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-kolom-rechts", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("section", { className: "lp-blok lp-volgende", "aria-labelledby": "lp-vs", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", id: "lp-vs", children: "Volgende stap" }),
+                      wachtend.length > 0 ? (
+                        /* actie nodig: werk wacht op beoordeling — één primaire knop */
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-gesprek", children: [
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "lp-gesprek-obs lp-actie", children: [
+                            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-actie-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "target", size: 18 }) }),
+                            wachtend.length === 1 ? "1 opdracht wacht op feedback." : wachtend.length + " opdrachten wachten op feedback."
+                          ] }),
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "lp-gesprek-regel", children: [
+                            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-label", children: "Actie" }),
+                            wachtend[0].data && wachtend[0].data.titel || themaLabel(wachtend[0].thema),
+                            wachtend.length > 1 ? " en " + (wachtend.length - 1) + " meer" : ""
+                          ] }),
+                          !readOnly ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent lp-hoofdactie", onClick: () => naarBeoordeling(wachtend[0]), children: [
+                            "Bekijk opdrachten ",
+                            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 15 })
+                          ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "btn btn-licht lp-hoofdactie", onClick: () => zetNav({ llTab: "werk" }, { vervang: true }), children: "Bekijk opdrachten" }),
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-link lp-tweede", onClick: () => zetNav({ llTab: "verder" }, { vervang: true }), children: [
+                            "Bespreek ontwikkeling ",
+                            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 13 })
+                          ] })
+                        ] })
+                      ) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                        VolgendeStap,
+                        {
+                          records: alleRecs,
+                          leerling: l,
+                          klas: openKlas.naam,
+                          feedbackGegeven,
+                          beoordeeld: beoordeeldeRecs.length,
+                          onBespreek: () => zetNav({ llTab: "verder" }, { vervang: true })
+                        }
+                      )
+                    ] }),
+                    !readOnly && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("section", { className: "lp-blok lp-feedbackkaart", "aria-labelledby": "lp-fb", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", id: "lp-fb", children: "Feedback" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-gesprek", children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "lp-gesprek-obs", children: "Feedback wordt gekoppeld aan het werk van deze leerling." }),
+                        laatsteAfgerond ? (() => {
+                          const doel = wachtend[0] || laatsteAfgerond;
+                          const titel = doel.data && doel.data.titel || themaLabel(doel.thema);
+                          return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent lp-hoofdactie", onClick: () => naarBeoordeling(doel), title: "Beoordeel uitdaging: " + titel, children: [
+                            "Beoordeel uitdaging",
+                            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lp-hoofdactie-sub", children: [
+                              " \xB7 ",
+                              titel
+                            ] })
+                          ] });
+                        })() : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "lp-stil", children: "Zodra er afgerond werk is, kun je hier een uitdaging beoordelen." }),
+                        feedbackLijst.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-link lp-eerder", "aria-expanded": N.llPaneel === "feedback" ? "true" : "false", onClick: () => zetNav({ llPaneel: N.llPaneel === "feedback" ? "" : "feedback" }, { vervang: true }), children: [
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "bewaar", size: 14 }),
+                          " Eerdere feedback (",
+                          feedbackLijst.length,
+                          ")"
+                        ] }),
+                        N.llPaneel === "feedback" && feedbackLijst.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lp-eerderlijst", children: feedbackLijst.slice(0, 5).map((r) => {
+                          const mf = r.alpe.mentorfeedback;
+                          return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-eerderrij", children: [
+                            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lp-eerderrij-meta", children: [
+                              r.data && r.data.titel || themaLabel(r.thema),
+                              mf.op ? " \xB7 " + datumNL(mf.op) : "",
+                              mf.door ? " \xB7 " + mf.door : ""
+                            ] }),
+                            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-eerderrij-tekst", children: String(mf.feedback).length > 200 ? String(mf.feedback).slice(0, 200).trim() + "\u2026" : mf.feedback })
+                          ] }, r.id);
+                        }) })
+                      ] })
+                    ] })
+                  ] })
+                ] })
               ] }),
               pijlerOpen && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", children: pijlerOpen }),
@@ -78140,82 +78795,119 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
       }
     );
   }
+  var WERKVORM_CAT_ICOON = { denken: "pijler_denken", creatief: "brush", spelgericht: "puzzel", actief: "run", reflecteren: "compass", coachen: "users", gedrag: "refresh", prestatie: "flame", welzijn: "balance", visueel: "layers" };
   function Werkvormenbibliotheek() {
     const [cat, setCat] = (0, import_react2.useState)("Alle");
     const [niv, setNiv] = (0, import_react2.useState)("Alle");
     const [q, setQ] = (0, import_react2.useState)("");
+    const [openW, setOpenW] = (0, import_react2.useState)(null);
     const alle = (0, import_react2.useMemo)(() => WERKVORMEN.map((w) => ({ ...w, categorie: w.type, meta: werkvormMeta(w) })), []);
     const cats = Object.keys(WERKVORM_CATEGORIE).filter((c) => alle.some((w) => w.categorie === c));
     const niveaus = ["Bronze", "Silver", "Gold", "Platinum"];
-    const filt = alle.filter((w) => (cat === "Alle" || w.categorie === cat) && (niv === "Alle" || w.niveaus.includes(niv)) && (!q || (w.naam + " " + w.beschrijving).toLowerCase().includes(q.toLowerCase())));
-    const groepen = {};
-    filt.forEach((w) => {
-      (groepen[w.categorie] = groepen[w.categorie] || []).push(w);
-    });
-    const [openW, setOpenW] = (0, import_react2.useState)(null);
-    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "space-between", alignItems: "baseline", marginBottom: 12 }, children: [
+    const zoek = q.trim().toLowerCase();
+    const filt = alle.filter((w) => (cat === "Alle" || w.categorie === cat) && (niv === "Alle" || w.niveaus.includes(niv)) && (!zoek || (w.naam + " " + w.beschrijving + " " + w.meta.label).toLowerCase().includes(zoek)));
+    const open = openW ? alle.find((w) => w.naam === openW) : null;
+    const detailRef = (0, import_react2.useRef)(null);
+    (0, import_react2.useEffect)(() => {
+      if (open && detailRef.current) {
+        try {
+          detailRef.current.focus({ preventScroll: true });
+          detailRef.current.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        } catch {
+        }
+      }
+    }, [openW]);
+    const telling = filt.length === alle.length ? `${alle.length} werkvormen` : `${filt.length} van ${alle.length} werkvormen`;
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "wvb", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "wvb-kop", children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { style: { fontSize: "1rem" }, children: "Didactische werkvormenbibliotheek" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "muted", style: { fontSize: ".8rem" }, children: [
-            WERKVORMEN.length,
-            " activerende werkvormen \xB7 ",
-            cats.length,
-            " didactische categorie\xEBn"
-          ] })
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "wvb-titel", children: "Werkvormen" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "wvb-sub", children: "Vind een passende werkvorm voor je leerlingen." })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { value: q, onChange: (e) => setQ(e.target.value), placeholder: "Zoek werkvorm\u2026", style: { padding: "8px 12px", borderRadius: 10, border: "1.5px solid var(--lijn,#E4E1DB)", fontSize: ".85rem", minWidth: 180 } })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("label", { className: "wvb-zoek", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "search", size: 16 }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { value: q, onChange: (e) => setQ(e.target.value), placeholder: "Zoek een werkvorm\u2026", "aria-label": "Zoek een werkvorm" }),
+          q && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "wvb-zoek-wis", "aria-label": "Zoekterm wissen", onClick: () => setQ(""), children: "\xD7" })
+        ] })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }, children: ["Alle", ...cats].map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { onClick: () => setCat(c), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".74rem", background: cat === c ? c === "Alle" ? "#1E1F22" : WERKVORM_CATEGORIE[c].kleur : "var(--tegel)", color: cat === c ? "#fff" : "var(--grijs)", border: "1px solid transparent" }, children: [
-        c === "Alle" ? "Alle" : WERKVORM_CATEGORIE[c].label,
-        c !== "Alle" ? ` \xB7 ${alle.filter((w) => w.categorie === c).length}` : ""
-      ] }, c)) }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16 }, children: ["Alle", ...niveaus].map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => setNiv(n), className: "pill", style: { cursor: "pointer", fontWeight: 700, fontSize: ".72rem", background: niv === n ? "var(--accent-zacht)" : "var(--tegel)", color: niv === n ? "var(--accent-diep)" : "var(--grijs)", border: niv === n ? "1px solid var(--accent)" : "1px solid transparent" }, children: n }, n)) }),
-      Object.keys(groepen).length === 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { fontSize: ".86rem" }, children: "Geen werkvormen gevonden voor deze filters." }),
-      cats.filter((c) => groepen[c]).map((c) => {
-        const M = WERKVORM_CATEGORIE[c];
-        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { marginBottom: 18 }, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { width: 10, height: 10, borderRadius: 3, background: M.kleur, flexShrink: 0 } }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { style: { fontSize: ".92rem" }, children: M.label }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "muted", style: { fontSize: ".74rem" }, children: [
-              groepen[c].length,
-              " \xB7 ",
-              M.bloom,
-              " \xB7 ",
-              M.sociaal
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "wvb-filters", role: "group", "aria-label": "Filters", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("label", { className: "wvb-select", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("select", { value: cat, onChange: (e) => setCat(e.target.value), "aria-label": "Categorie", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "Alle", children: "Alle categorie\xEBn" }),
+          cats.map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: c, children: WERKVORM_CATEGORIE[c].label }, c))
+        ] }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "wvb-niveaus", role: "group", "aria-label": "Niveau", children: ["Alle", ...niveaus].map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "wvb-chip" + (niv === n ? " is-aan" : ""), "aria-pressed": niv === n ? "true" : "false", onClick: () => setNiv(n), children: [
+          n !== "Alle" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: n, size: 13 }),
+          n === "Alle" ? "Alle niveaus" : n
+        ] }, n)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-telling muted", "aria-live": "polite", children: telling })
+      ] }),
+      open && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "wvb-detail", ref: detailRef, tabIndex: -1, role: "region", "aria-label": "Werkvorm " + open.naam, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "wvb-detail-kop", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: WERKVORM_CAT_ICOON[open.categorie] || "spark", size: 20 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { flex: 1, minWidth: 0 }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "wvb-detail-titel", children: open.naam }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-detail-meta", children: open.meta.label })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "werk-dicht", "aria-label": "Detail sluiten", onClick: () => setOpenW(null), children: "\xD7" })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "wvb-detail-secties", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h5", { children: "Werkwijze" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { children: open.beschrijving })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h5", { children: "Doel" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { children: [
+              open.meta.activering.charAt(0).toUpperCase() + open.meta.activering.slice(1),
+              "."
             ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "muted", style: { fontSize: ".78rem", lineHeight: 1.45, margin: "0 0 8px" }, children: [
-            M.activering.charAt(0).toUpperCase() + M.activering.slice(1),
-            ". Leerstrategie: ",
-            M.leerstrategie,
-            ". Inzetten ",
-            M.wanneer,
-            "."
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h5", { children: "Wanneer inzetten" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { children: [
+              open.meta.wanneer.charAt(0).toUpperCase() + open.meta.wanneer.slice(1),
+              "."
+            ] })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 6 }, children: groepen[c].map((w) => {
-            const uit = openW === w.naam;
-            return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { onClick: () => setOpenW(uit ? null : w.naam), style: { textAlign: "left", cursor: "pointer", background: uit ? "#fff" : "#FAFAF8", border: "1px solid #ECEAE4", borderRadius: 12, padding: "9px 12px" }, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", justifyContent: "space-between", gap: 8, alignItems: "center" }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { fontWeight: 700, fontSize: ".86rem" }, children: w.naam }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { display: "flex", gap: 3, flexShrink: 0 }, children: w.niveaus.map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: n, size: 13 }, n)) })
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "muted", style: { fontSize: ".8rem", lineHeight: 1.45, marginTop: 2 }, children: w.beschrijving }),
-              uit && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { marginTop: 8, display: "flex", gap: 6, flexWrap: "wrap" }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".7rem", background: M.kleur + "1A", color: M.kleur }, children: M.label }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pill", style: { fontSize: ".7rem", background: "var(--tegel)", color: "var(--grijs)" }, children: [
-                  "Bloom: ",
-                  M.bloom
-                ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".7rem", background: "var(--tegel)", color: "var(--grijs)" }, children: M.sociaal }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { fontSize: ".7rem", background: "var(--tegel)", color: "var(--grijs)" }, children: M.leerstrategie })
-              ] })
-            ] }, w.naam);
-          }) })
-        ] }, c);
-      }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { fontSize: ".7rem", lineHeight: 1.4, marginTop: 6 }, children: "De variatie-engine wisselt automatisch tussen deze categorie\xEBn, zodat opeenvolgende uitdagingen didactisch afwisselen. De gekozen werkvorm en het waarom zijn per challenge zichtbaar in Challenge Intelligence." })
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h5", { children: "Werkvorm" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { children: [
+              open.meta.sociaal.charAt(0).toUpperCase() + open.meta.sociaal.slice(1),
+              " \xB7 Bloom: ",
+              open.meta.bloom
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h5", { children: "Leerstrategie" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { children: open.meta.leerstrategie })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h5", { children: "Niveaus" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "wvb-detail-niveaus", children: open.niveaus.map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: n, size: 14 }),
+              n
+            ] }, n)) })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted wvb-detail-noot", children: "De variatie-engine kiest per uitdaging automatisch een passende werkvorm uit deze bibliotheek; het waarom staat bij elke uitdaging." })
+      ] }),
+      filt.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted wvb-leeg", children: "Geen werkvormen gevonden. Probeer een andere zoekterm of zet een filter uit." }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "wvb-raster", children: filt.map((w) => {
+        const aan = openW === w.naam;
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "wvb-kaart" + (aan ? " is-aan" : ""), "aria-expanded": aan ? "true" : "false", onClick: () => setOpenW(aan ? null : w.naam), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: WERKVORM_CAT_ICOON[w.categorie] || "spark", size: 18 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "wvb-kaart-tekst", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-kaart-naam", children: w.naam }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-kaart-uitleg", children: w.beschrijving }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "wvb-kaart-meta", children: [
+              w.meta.label,
+              " \xB7 ",
+              w.niveaus.join(" \xB7 ")
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-kaart-pijl", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 15 }) })
+        ] }, w.naam);
+      }) })
     ] });
   }
   function ChallengeSjabloonBibliotheek() {
@@ -79441,8 +80133,25 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
       go(promoNa || "builder");
       setPromoNa(null);
     };
+    const [uitlogVraag, setUitlogVraag] = (0, import_react2.useState)(false);
+    (0, import_react2.useEffect)(() => {
+      if (typeof window === "undefined") return;
+      const f = (e) => {
+        const rec = e && e.detail && e.detail.record;
+        if (!rec || rec.id == null) return;
+        setUitdagingen((l) => (l || []).map((r) => r && r.id === rec.id && (!r.__sync || !rec.__sync || r.__sync.sid === rec.__sync.sid) ? rec : r));
+        setActief((a) => a && a.id === rec.id ? rec : a);
+      };
+      window.addEventListener("grow-record", f);
+      return () => window.removeEventListener("grow-record", f);
+    }, []);
     const uitloggen = () => {
       if (platform && platform.uitloggen) {
+        const st = syncStatusNu();
+        if (st && st.wachtend > 0) {
+          setUitlogVraag(true);
+          return;
+        }
         platform.uitloggen();
         return;
       }
@@ -79484,7 +80193,8 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
           if (!res.ok) spOutboxToevoegen([gestempeld.id]);
         }).catch(() => spOutboxToevoegen([gestempeld.id]));
       }
-      return { ok: true };
+      const viaPlatform = platformOpslagActief();
+      return { ok: true, online: viaPlatform ? uit.online === true : true, stand: viaPlatform ? uit.stand || "wacht" : "apparaat" };
     };
     const veiligheidPoortOpen = step === "uitdaging" && !!actief && !actief.afgerond && !(actief.veiligheidAkkoord && actief.veiligheidAkkoord.op) && !!gebruiker && String(gebruiker.rol || "leerling").toLowerCase() === "leerling";
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "tc grow-root" + (["mentor", "school", "platformadmin", "developer", "portfolio"].includes(step) ? " is-werk" : ""), children: [
@@ -79493,6 +80203,27 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
         setProfielTab(null);
         go("profiel");
       }, wachtrij, gebruiker, go, uitloggen }),
+      gebruiker && platform && platform.userId && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SyncStrook, {}),
+      uitlogVraag && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-sync is-mislukt", role: "alertdialog", "aria-labelledby": "uitlog-vraag", style: { margin: "10px auto", maxWidth: 720 }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "waarschuwing", size: 14 }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { id: "uitlog-vraag", children: "Er staat nog werk op dit apparaat dat nog niet is gedeeld. Het blijft hier bewaard voor jouw account; een andere gebruiker kan het niet openen of versturen." }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "afrond-sync-knop", onClick: async () => {
+          try {
+            const st = await window.storage.sync();
+            if (st && st.wachtend === 0) {
+              setUitlogVraag(false);
+              platform.uitloggen();
+              return;
+            }
+          } catch {
+          }
+        }, children: "Eerst synchroniseren" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "afrond-sync-knop", onClick: () => {
+          setUitlogVraag(false);
+          platform.uitloggen();
+        }, children: "Toch uitloggen" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "afrond-sync-knop", onClick: () => setUitlogVraag(false), children: "Annuleren" })
+      ] }),
       opslagProbleem && gebruiker && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "opslagstrook", role: "alert", children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "waarschuwing", size: 16 }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: opslagProbleem === "vol" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
@@ -80163,7 +80894,8 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
                   if (r.alpe) r.alpe = pasMentorFeedbackToe(r.alpe, mf);
                   if (typeof mf.rubricScore === "number" && isFinite(mf.rubricScore)) r.rubricScore = Math.max(0, Math.min(100, Math.round(mf.rubricScore)));
                   if (r.inlevering) r.inlevering = { ...r.inlevering, status: "beoordeeld", beoordeeldOp: (/* @__PURE__ */ new Date()).toISOString() };
-                  await bewaarUitdaging(r);
+                  const uitB = await bewaarUitdaging(r);
+                  return uitB || { ok: true };
                 }
               }
             ),
@@ -80271,9 +81003,9 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("img", { src: "data:image/png;base64,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rFkf16lTZ/X06dNbAMDgxYsXP5+WlkZCQkIWsyyb4cWjMsyZM6eVxWKR1qxZ018fgiWEOJctW/ad2WzO/Omnn+5T4+53XBrHcRZJkmRCiEt/vYQQllLKMQzDFrLrKs2aNat9VlaW4/nnn38nMjLytCzLIEkSxMXF/d21a9ep9erVS/Q1xlJSUjqeOHHC3L1791/r168/yeVytZs/f35nhmHyCnkKPM87P/7443WnT59u+OWXXw5T8yg2WZZtaly+UNfDMAxDKQWLxWLIysoyEELg0qVLlyIjIyWj0Zju7TpUz4UBAIiKiuL048LXdcfHx1fbsWNHn+zs7IQPP/zwgzfffPOo1m6EkPQWLVqc85w3CCFw8ODBZnv27HnG6XTufOGFF9ZroVS32w2vvPLKtmHDhk2klErJycnNFEXxFm1hZVmmcXFxSv369cPHjx//vqIoMZIkVR05cuSjMTExQvv27anNZpNcLtcdnSCKIgEAjlIqBwUFcXa7PZJSGqYoSrlbX5HQgBQQQohACGE4jrvtC3Icl2K1Wm0Gg4H6CpuJoqh1pE91/Oqrr/6uV6/e2M2bN1t+/PHHCa+//vqy5557btrixYv7UUrDvMboOA6OHz9uUietw5or6K81f/jwYUPDhg2l2rVr35HMmj17tqtOnToZDofDaLPZInzkQU4RQhZJktR+7969D3AcBzt37my6f//+Vu3atVsZHBy8xdfnN2zY0MVxHCxbtqzZ119/nWuNjxkzhvFlRaii7bhx4wZZvnx5v8mTJ48fP378VytXruzFcdy5ypUrr1eTwAUmIiLiTExMzJFz585VAIDWM2fOrCLLMturV68ptWvXXhofH18NAMpfvHixqslkglq1aqVpk7sngiBkK4qi/PDDD3379es3r0ePHt/17t37uzfeeGPCoUOHKomiKFerVs1rn6SlpVVhWdb2xBNP7PYMUbEsqyQmJp4AALh+/brV7XaTQo7l9O+++254SEhI6ssvv/z+xYsXezRt2vS7mTNnbvMxhqxHjx4116pVK+vMmTN3LFYoX778kZo1a9pOnDghqElcr2EfSqkUFBQkekzGkvq7UNeSkpJSQRTFCo0aNTpat27dpAIaheaff/65m9PphMGDB3+fmZl5IikpCf744492siyH5PFSXpZlqXr16r/HxcUd/+abb54YN25cSwAIEwSB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", alt: "Unfold", style: { height: 48, width: "auto", objectFit: "contain" } })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { style: { color: "var(--grijs)", fontSize: ".82rem", marginTop: 14, fontWeight: 600 }, children: "2scool GROW is onderdeel van Unfold Education" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { style: { color: "#B0B0B0", fontSize: ".72rem", marginTop: 8 }, children: "2scool GROW \xB7 DISCOVER \u2022 LEARN \u2022 PERFORM" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => vraagWachtwoord("school"), style: { color: "var(--accent-diep)", fontSize: ".8rem", marginTop: 14, fontWeight: 700, background: "none", display: "block", marginLeft: "auto", marginRight: "auto" }, children: "Schoolbeheerder" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => vraagWachtwoord("platformadmin"), style: { color: "#8A8A86", fontSize: ".74rem", marginTop: 8, fontWeight: 600, background: "none", display: "block", marginLeft: "auto", marginRight: "auto" }, children: "Platformbeheer" })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { style: { color: "var(--grijs)", fontSize: ".72rem", marginTop: 8 }, children: "2scool GROW \xB7 DISCOVER \u2022 LEARN \u2022 PERFORM" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => vraagWachtwoord("school"), style: { color: "var(--accent-diep)", fontSize: ".8rem", marginTop: 10, fontWeight: 700, background: "none", display: "block", marginLeft: "auto", marginRight: "auto", minHeight: 36, padding: "6px 12px", borderRadius: 8 }, children: "Schoolbeheerder" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: () => vraagWachtwoord("platformadmin"), style: { color: "var(--grijs)", fontSize: ".74rem", marginTop: 4, fontWeight: 600, background: "none", display: "block", marginLeft: "auto", marginRight: "auto", minHeight: 36, padding: "6px 12px", borderRadius: 8 }, children: "Platformbeheer" })
       ] }),
       pwVoor && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ModalLaag, { onSluit: () => {
         setPwVoor(null);
