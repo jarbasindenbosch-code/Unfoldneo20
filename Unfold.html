@@ -50847,6 +50847,162 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
   .afrond-hero.is-klaar .afrond-hero-tekst{max-width:64%}
 }
 @media (max-width:720px){ .afrond-duo{grid-template-columns:minmax(0,1fr)} }
+/* v112.7 \u2014 GROW Studio */
+.kop-studio{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:6px 14px;border-radius:10px;border:none;background:var(--accent-zacht);color:var(--accent-diep);font:inherit;font-size:.85rem;font-weight:650;cursor:pointer;white-space:nowrap}
+.kop-studio:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
+.kop-studio:focus-visible{outline:2.5px solid var(--accent-diep);outline-offset:2px}
+@media (max-width:640px){ .kop-studio span{display:none} .kop-studio{padding:6px 9px} }
+.kop-rol{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:5px 14px;border-radius:999px;background:var(--tegel-licht);color:var(--inkt-zacht);font-size:.84rem;font-weight:600}
+.kop-initiaal{width:36px;height:36px;border-radius:50%;background:var(--accent-knop);color:var(--accent-opdruk);display:grid;place-items:center;font-size:.9rem;font-weight:700;margin-left:4px}
+@media (max-width:640px){ .kop-rol{display:none} }
+/* Studio-werkruimte met zijbalk */
+main.werkomgeving:has(.studio-shell){max-width:none!important;padding:0!important}
+.studio-shell{display:grid;grid-template-columns:226px minmax(0,1fr);min-height:calc(100vh - 100px)}
+.studio-zijbalk{position:relative;display:flex;flex-direction:column;border-right:1px solid var(--lijn-fijn);background:var(--bg);padding:26px 14px 18px;overflow:hidden}
+.studio-zijnav{display:grid;gap:4px;position:relative;z-index:1}
+.studio-zijknop{display:flex;align-items:center;gap:12px;width:100%;min-height:42px;padding:9px 14px;border-radius:12px;border:none;background:transparent;color:var(--inkt-zacht);font:inherit;font-size:.92rem;font-weight:560;text-align:left;cursor:pointer}
+.studio-zijknop:hover{background:var(--kaart)}
+.studio-zijknop.is-actief{background:var(--accent-zacht);color:var(--accent-diep);font-weight:650}
+.studio-zijknop:focus-visible{outline:2.5px solid var(--accent-diep);outline-offset:2px}
+.studio-zijbalk-natuur{position:absolute;left:0;right:0;bottom:0;height:260px;pointer-events:none}
+.studio-zijbalk-natuur .afrond-landschap{width:100%;-webkit-mask-image:linear-gradient(to top,#000 55%,transparent 100%);mask-image:linear-gradient(to top,#000 55%,transparent 100%)}
+.studio-zijbalk-voet{margin-top:auto;position:relative;z-index:1;display:grid;gap:2px;padding:0 14px;font-size:.8rem;color:var(--inkt-zacht)}
+.studio-zijbalk-voet b{font-weight:650;color:var(--inkt)}
+.studio-inhoud{padding:28px clamp(18px,3vw,48px) 96px;min-width:0}
+.studio-paginatitel{margin:0;font-size:clamp(1.6rem,2.6vw,2.1rem);font-weight:700;letter-spacing:-.02em;color:var(--inkt);line-height:1.15}
+.studio-status-regel{margin:-6px 0 0;font-size:.8rem;color:var(--grijs)}
+.studio-keuze-beeld{position:absolute;right:10px;top:10px;pointer-events:none}
+.studio-keuze-beeld.is-grow{right:14px;top:14px}
+.studio-keuze-stralen{position:absolute;left:-26px;top:-4px}
+.studio-zijkaart-wijzig{position:absolute;right:10px;top:10px}
+@media (max-width:980px){ .studio-shell{grid-template-columns:1fr} .studio-zijbalk{flex-direction:row;align-items:center;gap:6px;padding:10px 12px;border-right:none;border-bottom:1px solid var(--lijn-fijn);overflow-x:auto} .studio-zijnav{display:flex;gap:4px} .studio-zijknop{min-height:38px;padding:6px 10px;white-space:nowrap} .studio-zijbalk-natuur,.studio-zijbalk-voet{display:none} .studio-inhoud{padding:18px 16px 96px} }
+.studio{display:grid;gap:16px}
+.studio-kop{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.studio-kop-acties{display:flex;gap:8px;flex-wrap:wrap}
+.studio-titel{margin:0;font-size:1.5rem;font-weight:700;letter-spacing:-.02em;color:var(--inkt)}
+.studio-sub{margin:4px 0 0;font-size:.92rem;color:var(--inkt-zacht)}
+.studio-keuzes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.studio-keuze{position:relative;display:grid;gap:8px;align-content:start;text-align:left;min-height:144px;padding:16px;border:1px solid var(--lijn-fijn);border-radius:16px;background:var(--kaart);font:inherit;color:inherit;cursor:pointer;box-shadow:0 1px 2px rgba(60,70,55,.04);overflow:hidden}
+.studio-keuze:hover:not(:disabled){border-color:var(--accent-rand)}
+.studio-keuze:focus-visible,.studio-chip:focus-visible,.studio-tegel:focus-visible,.studio-pil:focus-visible,.studio-icoonknop:focus-visible,.studio-voortgang-knop:focus-visible,.studio-kaart.is-knop:focus-visible{outline:2.5px solid var(--accent-diep);outline-offset:2px}
+.studio-keuze.is-uit{opacity:.6;cursor:default}
+.studio-keuze-titel{font-size:1rem;font-weight:650;color:var(--inkt);margin-top:6px}
+.studio-keuze-sub{font-size:.82rem;color:var(--grijs);line-height:1.45;max-width:22ch}
+.studio-keuze:has(.studio-keuze-neo) .studio-keuze-titel,.studio-keuze:has(.studio-keuze-neo) .studio-keuze-sub,.studio-keuze:has(.studio-keuze-beeld) .studio-keuze-titel,.studio-keuze:has(.studio-keuze-beeld) .studio-keuze-sub{max-width:58%}
+.studio-keuze-neo{position:absolute;right:14px;top:4px;pointer-events:none}
+.studio-pil{display:inline-flex;align-items:center;gap:6px;min-height:38px;padding:7px 14px;border-radius:12px;border:1px solid var(--accent-rand);background:var(--kaart);color:var(--accent-diep);font:inherit;font-size:.84rem;font-weight:600;cursor:pointer;white-space:nowrap}
+.studio-pil:hover:not(:disabled){background:var(--accent-zacht)}
+.studio-pil:disabled{opacity:.5;cursor:default}
+.studio-pil.is-klein{min-height:32px;padding:4px 10px;font-size:.78rem}
+.studio-knop{width:auto;border-radius:12px;padding:.7rem 1.2rem;font-size:.92rem}
+.studio-voortgang{list-style:none;margin:0;padding:12px 16px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;border:1px solid var(--lijn-fijn);border-radius:16px;background:var(--kaart)}
+.studio-voortgang-knop{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;background:none;border:none;padding:4px 2px;font:inherit;color:var(--grijs);cursor:pointer;border-radius:10px}
+.studio-voortgang-nr{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--tegel-licht);color:var(--inkt-zacht);font-size:.84rem;font-weight:650}
+.studio-voortgang-stap.is-actief .studio-voortgang-nr{background:var(--accent-knop);color:var(--accent-opdruk)}
+.studio-voortgang-stap.is-actief .studio-voortgang-naam{color:var(--accent-diep);font-weight:650}
+.studio-voortgang-stap.is-klaar .studio-voortgang-nr{background:var(--salie-zacht);color:var(--salie-diep)}
+.studio-voortgang-naam{font-size:.8rem;text-align:center;line-height:1.2}
+.studio-werk{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}
+.studio-werk.met-neo{grid-template-columns:minmax(0,1.7fr) minmax(280px,.8fr)}
+.studio-werk-hoofd{border:1px solid var(--lijn-fijn);border-radius:16px;background:var(--kaart);padding:20px 22px}
+.studio-stap{display:grid;gap:16px}
+.studio-stap-titel{margin:0;font-size:1.2rem;font-weight:650;color:var(--inkt)}
+.studio-stap-sub{margin:-10px 0 0;font-size:.88rem;color:var(--grijs)}
+.studio-veld{display:grid;gap:6px;min-width:0}
+.studio-label{font-size:.86rem;font-weight:620;color:var(--inkt)}
+.studio-verplicht{color:var(--accent-diep)}
+.studio-hint{display:block;font-size:.78rem;color:var(--grijs);line-height:1.45}
+.studio-teller{float:right;color:var(--grijs)}
+.studio-input{padding:.7rem .9rem;border-radius:12px;font-size:.94rem;min-height:44px}
+.studio-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-rand)}
+textarea.studio-input{resize:vertical;min-height:0}
+.studio-select{padding:.6rem .9rem;border-radius:12px;font-size:.92rem;min-height:44px;background:var(--kaart)}
+.studio-select.is-smal{flex:0 0 190px}
+.studio-twee{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.studio-tegels{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.studio-tegel{position:relative;display:grid;justify-items:center;gap:4px;padding:12px 4px 10px;min-width:0;border:1.5px solid var(--lijn-fijn);border-radius:14px;background:var(--kaart);font:inherit;color:var(--inkt);cursor:pointer;min-height:92px}
+.studio-tegel:hover{border-color:var(--accent-rand)}
+.studio-tegel.is-aan{border-color:var(--accent);background:var(--accent-zacht)}
+.studio-tegel-titel{font-size:.86rem;font-weight:650}
+.studio-tegel-sub{font-size:.7rem;color:var(--grijs);text-align:center;line-height:1.25}
+.studio-tegel-vink{position:absolute;top:6px;right:6px;width:18px;height:18px;border-radius:50%;background:var(--accent-knop);color:var(--accent-opdruk);display:grid;place-items:center}
+.studio-chips{display:flex;gap:8px;flex-wrap:wrap}
+.studio-chip{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:6px 12px;border-radius:10px;border:1.5px solid var(--lijn-fijn);background:var(--kaart);color:var(--inkt);font:inherit;font-size:.84rem;font-weight:560;cursor:pointer}
+.studio-chip:hover{border-color:var(--accent-rand)}
+.studio-chip.is-aan{border-color:var(--accent);background:var(--accent-zacht);color:var(--accent-diep)}
+.studio-chip.is-klein{min-height:32px;padding:4px 10px;font-size:.78rem}
+.studio-lijst{display:grid;gap:8px}
+.studio-lijst-rij{display:flex;gap:8px;align-items:center}
+.studio-lijst-rij .studio-input{flex:1;min-width:0}
+.studio-icoonknop{width:40px;height:40px;border-radius:10px;border:1px solid var(--lijn-fijn);background:var(--kaart);color:var(--inkt-zacht);display:grid;place-items:center;cursor:pointer;flex-shrink:0}
+.studio-icoonknop:hover:not(:disabled){border-color:var(--accent-rand);color:var(--accent-diep)}
+.studio-icoonknop:disabled{opacity:.35;cursor:default}
+.studio-icoonknop svg{transform:rotate(-90deg)}
+.studio-icoonknop.is-omlaag svg{transform:rotate(90deg)}
+.studio-icoonknop[aria-label^="Verwijder"] svg{transform:none}
+.studio-hulp{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.studio-bewijs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+.studio-bewijs-rij{display:flex;align-items:center;gap:10px}
+.studio-vereist{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;color:var(--inkt-zacht)}
+.studio-stappen{display:grid;gap:10px}
+.studio-stapkaart{display:grid;gap:8px;padding:12px;border:1px solid var(--lijn-fijn);border-radius:14px;background:var(--tegel-licht)}
+.studio-stapkaart-kop{display:flex;align-items:center;gap:8px}
+.studio-stapkaart-kop .studio-input{flex:1;min-width:0}
+.studio-stapkaart-knoppen{display:flex;gap:4px}
+.studio-nr{width:30px;height:30px;border-radius:9px;background:var(--accent-knop);color:var(--accent-opdruk);display:grid;place-items:center;font-size:.84rem;font-weight:700;flex-shrink:0}
+.studio-ontbreekt{margin:0;padding:10px 12px;border-radius:12px;background:var(--accent-zacht);color:#8A4A14;font-size:.86rem;line-height:1.45}
+.studio-controle{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 20px;border:1px solid var(--lijn-fijn);border-radius:14px;padding:12px 16px;background:var(--tegel-licht)}
+.studio-controle-rij{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;font-size:.86rem;padding:4px 0;border-bottom:1px solid rgba(0,0,0,.04)}
+.studio-controle-k{color:var(--grijs)}
+.studio-controle-v{color:var(--inkt)}
+.studio-acties{display:flex;gap:10px;flex-wrap:wrap}
+.studio-voet{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 16px;border:1px solid var(--lijn-fijn);border-radius:16px;background:var(--kaart)}
+.studio-werk.met-zijkaart{grid-template-columns:minmax(0,1.9fr) minmax(260px,.8fr)}
+.studio-zijkaart{display:grid;gap:10px;align-content:start;padding:14px;border:1px solid var(--lijn-fijn);border-radius:16px;background:var(--kaart);position:sticky;top:12px}
+.studio-zijkaart-beeld{position:relative;height:150px;border-radius:12px;overflow:hidden;background:var(--salie-zacht)}
+.studio-zijkaart-beeld img{width:100%;height:100%;object-fit:cover;display:block}
+.studio-zijkaart-beeld .afrond-landschap{width:100%;-webkit-mask-image:none;mask-image:none}
+.studio-zijkaart-titel{margin:4px 0 0;font-size:1.05rem;font-weight:650;color:var(--inkt);line-height:1.3}
+.studio-zijkaart-thema{display:flex;align-items:center;gap:8px;margin:0;font-size:.82rem;color:var(--inkt-zacht)}
+.studio-zijkaart-thema .pf2-icoon{width:30px;height:30px;border-radius:9px}
+.studio-zijkaart-tekst{margin:0;font-size:.86rem;line-height:1.5;color:var(--inkt-zacht)}
+@media (max-width:1100px){ .studio-werk.met-zijkaart{grid-template-columns:1fr} .studio-zijkaart{display:none} }
+.studio-neo{display:none}
+.studio-neo.is-open{display:grid;gap:10px;align-content:start;padding:16px;border:1px solid var(--lijn-fijn);border-radius:16px;background:var(--kaart);position:sticky;top:12px}
+.studio-neo-kop{display:flex;align-items:center;gap:12px}
+.studio-neo-kop b{display:block;font-size:.92rem}
+.studio-voorstel{display:grid;gap:10px;padding:12px;border-radius:12px;background:var(--salie-zacht)}
+.studio-voorstel-kop{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.studio-voorstel-deel{display:grid;gap:4px;font-size:.84rem}
+.studio-voorstel-deel p{margin:0;color:var(--inkt)}
+.studio-voorstel-lijst{margin:0;padding-left:18px;color:var(--inkt);line-height:1.45}
+.studio-filters{display:flex;gap:8px;flex-wrap:wrap}
+.studio-filters .studio-select{flex:1 1 150px;min-width:0}
+.studio-filters .studio-input{flex:2 1 220px}
+.studio-raster{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.studio-kaart{display:grid;gap:8px;align-content:start;padding:14px 16px;border:1px solid var(--lijn-fijn);border-radius:16px;background:var(--kaart);box-shadow:0 1px 2px rgba(60,70,55,.04);text-align:left;font:inherit;color:inherit}
+.studio-kaart.is-knop{cursor:pointer}
+.studio-kaart.is-knop:hover{border-color:var(--accent-rand)}
+.studio-kaart-kop{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.studio-kaart-thema{font-size:.74rem;font-weight:650;letter-spacing:.04em;text-transform:uppercase;color:var(--accent-diep)}
+.studio-kaart-titel{margin:0;font-size:1rem;font-weight:650;color:var(--inkt);line-height:1.3}
+.studio-kaart-sub{font-size:.82rem;color:var(--grijs);line-height:1.4}
+.studio-kaart-meta{display:flex;gap:10px;flex-wrap:wrap}
+.studio-meta{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;color:var(--inkt-zacht)}
+.studio-kaart-voet{font-size:.74rem}
+.studio-kaart-acties{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+.studio-status{font-size:.72rem;font-weight:650;padding:2px 8px;border-radius:8px;background:var(--tegel-licht);color:var(--inkt-zacht)}
+.studio-status.is-gepubliceerd{background:var(--salie-zacht);color:var(--salie-diep)}
+.studio-status.is-gearchiveerd{background:#EEF1F4;color:#4A5568}
+.studio-leeg{padding:24px;border:1px dashed var(--lijn);border-radius:16px;text-align:center;color:var(--grijs);font-size:.9rem}
+.studio-leeg p{margin:0}
+.studio-wvb{max-height:50vh;overflow:auto;padding:2px}
+.studio-preview{width:min(1040px,100vw);max-height:100vh;display:grid;grid-template-rows:auto minmax(0,1fr);background:var(--bg);border-radius:16px;overflow:hidden}
+.studio-preview-balk{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;background:var(--kaart);border-bottom:1px solid var(--lijn-fijn);font-size:.86rem;color:var(--inkt-zacht)}
+.studio-preview-balk>span{display:inline-flex;align-items:center;gap:8px}
+.studio-preview-inhoud{overflow:auto;max-height:calc(100vh - 56px);padding:0 8px 16px}
+@media (max-width:1100px){ .studio-keuzes{grid-template-columns:repeat(2,minmax(0,1fr))} .studio-werk.met-neo{grid-template-columns:1fr} .studio-neo.is-open{position:static} }
+@media (max-width:720px){ .studio-keuzes,.studio-twee,.studio-controle{grid-template-columns:1fr} .studio-tegels{grid-template-columns:repeat(2,minmax(0,1fr))} .studio-voortgang{grid-template-columns:repeat(5,minmax(0,1fr));padding:8px 6px} .studio-voortgang-naam{display:none} .studio-werk-hoofd{padding:14px} .studio-controle-rij{grid-template-columns:1fr} .studio-select.is-smal{flex:1 1 100%} .studio-lijst-rij{flex-wrap:wrap} }
 @media (max-width:820px){ .afrond-neo-beeld{width:76px} }
 @media (max-width:640px){
   .afrond-hero{margin:-16px -14px 0;padding:20px 14px 16px}
@@ -57407,6 +57563,10 @@ ${xref}
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("circle", { cx: "12", cy: "12", r: "9" }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M9.6 9.4a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.7" }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M12 17.2v.1" })
+      ] }),
+      home: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M4 11.5L12 4.5l8 7" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M6.5 10v9.5h4.5v-5h2v5h4.5V10" })
       ] }),
       rubric: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("rect", { x: "3.5", y: "4", width: "17", height: "16", rx: "2" }),
@@ -66102,7 +66262,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
       }, children: "Opnieuw proberen" })
     ] });
   }
-  function Header({ gebruiker, go, uitloggen, wachtrij, step, naarProfiel }) {
+  function Header({ gebruiker, go, uitloggen, wachtrij, step, naarProfiel, onStudio }) {
     const meerdereRollen = Array.isArray(gebruiker && gebruiker.rollenBeschikbaar) && gebruiker.rollenBeschikbaar.length > 1;
     const breed = gebruiker && gebruiker.rol === "beheerder";
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("header", { style: { position: "sticky", top: 0, zIndex: 30, background: "rgba(244,243,239,.82)", backdropFilter: "blur(12px)", borderBottom: "1px solid var(--lijn)" }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "kop-balk", children: [
@@ -66136,8 +66296,16 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
           gebruiker.rol === "leerling" ? null : gebruiker.rol === "beheerder" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(NavLink, { onClick: () => go("school"), children: "Schooldashboard" }),
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(NavLink, { onClick: () => go("developer"), children: "Sandbox" })
-          ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(NavLink, { onClick: () => go("mentor"), children: gebruiker.rol === "coach" ? "Leerlingen volgen" : "Mijn klassen" }),
+          ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+            onStudio && ["mentor", "coach", "vakdocent", "docent"].includes(gebruiker.rol) && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "kop-studio", onClick: () => onStudio("nieuw"), "aria-label": "Maak een uitdaging in GROW Studio", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: "plus", size: 15 }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: "Maak uitdaging" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(NavLink, { onClick: () => go("mentor"), children: gebruiker.rol === "coach" ? "Leerlingen volgen" : "Mijn klassen" }),
+            !meerdereRollen && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "kop-rol", title: "Je rol", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: rolLabel(gebruiker.rol) }) })
+          ] }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { onClick: uitloggen, className: "muted", style: { fontSize: ".85rem", fontWeight: 600, padding: "6px 10px" }, children: "Uitloggen" }),
+          gebruiker.rol !== "leerling" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "kop-initiaal", "aria-label": gebruiker.naam || "", title: gebruiker.naam || "", children: String(gebruiker.naam || "?").trim().charAt(0).toUpperCase() }),
           gebruiker.rol === "leerling" && naarProfiel && /* v102: leerlingen vonden de weg terug naar hun profiel niet. De avatar
              deed dit al, maar zonder label las niemand hem als knop. Nu staat er
              "Mijn profiel" naast; op smalle schermen alleen de avatar. */
@@ -74391,7 +74559,1156 @@ ${String(stapTekst).slice(0, 900)}` : ""
       }) })
     ] });
   }
-  function Mentor({ gebruiker, alle, klassen, onKlassen, onOpen, projecten, onBeoordeel, onBeoordeelUitdaging, onPortfolio, onSync, syncBezig, syncInfo, heeftSchool, bewijsApi, onBevestigBewijs, portfolioVan, vaardigStanden, nav, onNav, onTerugNav }) {
+  var STUDIO_KEY = "tc:studio:v1";
+  var STUDIO_SCHEMA = 1;
+  var studioStore = {
+    async list() {
+      try {
+        if (typeof window !== "undefined" && window.storage) {
+          const r = await window.storage.get(STUDIO_KEY, false);
+          const l = r && r.value ? JSON.parse(r.value) : [];
+          return Array.isArray(l) ? l : [];
+        }
+      } catch {
+      }
+      return [];
+    },
+    async saveAll(lijst) {
+      try {
+        if (typeof window !== "undefined" && window.storage) {
+          const r = await window.storage.set(STUDIO_KEY, JSON.stringify(lijst), false);
+          return r && r.ok !== false;
+        }
+      } catch {
+      }
+      return false;
+    }
+  };
+  var STUDIO_TYPES = [["auto", "Neo kiest", "past bij de inhoud"], ["micro", "Micro", "Klein en snel"], ["core", "Core", "Meer diepgang"], ["deep", "Deep", "Grote uitdaging"]];
+  var STUDIO_TYPE_NAAM = { auto: "auto", micro: "Micro Challenge", core: "Core Challenge", deep: "Deep Challenge" };
+  var STUDIO_BENODIGD = ["Laptop", "Telefoon", "Pen en papier", "Sportmateriaal", "Internet", "Buitenruimte", "Geen materialen"];
+  var STUDIO_SAMEN = ["Alleen", "Met een klasgenoot", "In een groep", "Met de klas", "Met iemand buiten school"];
+  var STUDIO_TIJD = ["5\u201310 minuten", "10\u201320 minuten", "20\u201345 minuten", "Meerdere lessen"];
+  var STUDIO_BEWIJS = [["foto", "Foto"], ["video", "Video"], ["audio", "Geluidsopname"], ["tekst", "Tekst"], ["document", "Document"], ["link", "Link"], ["docentbevestiging", "Praktische uitvoering"], ["reflectie", "Reflectie"]];
+  var STUDIO_CRITERIUM_SOORT = [["uitvoering", "Uitvoering"], ["kwaliteit", "Kwaliteit van het werk"], ["reflectie", "Reflectie"], ["ontwikkeling", "Aantoonbare ontwikkeling"]];
+  var studioLeeg = (maker) => ({
+    id: "st-" + nieuwId(),
+    schema: STUDIO_SCHEMA,
+    status: "concept",
+    zichtbaarheid: "prive",
+    maker: { naam: maker && maker.naam || "" },
+    aangemaakt: (/* @__PURE__ */ new Date()).toISOString(),
+    gewijzigd: (/* @__PURE__ */ new Date()).toISOString(),
+    versie: 1,
+    bron: "zelf",
+    data: {
+      titel: "",
+      beschrijving: "",
+      thema: "",
+      themaEigen: "",
+      subthema: "",
+      subthemaEigen: "",
+      niveau: "Silver",
+      challengeType: "core",
+      benodigdheden: [],
+      benodigdEigen: "",
+      samenwerking: "Alleen",
+      samenwerkingEigen: "",
+      tijd: "",
+      tijdEigen: "",
+      werkvormen: [],
+      leerdoelen: [],
+      competenties: [],
+      bewijsvormen: [],
+      bewijsVereist: [],
+      bewijsOpdracht: "",
+      verdieping: "",
+      stappen: [],
+      succescriteria: []
+    }
+  });
+  var studioTekst = (v, max = 600) => String(v == null ? "" : v).replace(/<[^>]*>/g, "").replace(/javascript:/gi, "").replace(/\s+/g, " ").trim().slice(0, max);
+  var studioLijst = (v, max = 12, len = 200) => (Array.isArray(v) ? v : []).map((x) => typeof x === "string" ? studioTekst(x, len) : x).filter((x) => x && (typeof x !== "string" || x.length)).slice(0, max);
+  function studioThemaLabel(d) {
+    return d.thema === "eigen" ? studioTekst(d.themaEigen, 60) || "Eigen thema" : themaLabel(d.thema);
+  }
+  function studioSubLabel(d) {
+    return d.subthema === "eigen" ? studioTekst(d.subthemaEigen, 60) : d.subthema || "";
+  }
+  function studioTijd(d) {
+    if (d.tijd === "eigen") return studioTekst(d.tijdEigen, 40);
+    if (d.tijd) return d.tijd;
+    const t = CHALLENGE_TYPES[d.challengeType];
+    return t ? t.tijd : "";
+  }
+  function studioSamen(d) {
+    return d.samenwerking === "eigen" ? studioTekst(d.samenwerkingEigen, 60) : d.samenwerking || "Alleen";
+  }
+  function studioValidatie(d) {
+    const m = [];
+    if (!studioTekst(d.titel)) m.push("Titel");
+    if (!studioTekst(d.beschrijving)) m.push("Korte beschrijving");
+    if (!d.thema || d.thema === "eigen" && !studioTekst(d.themaEigen)) m.push("Thema");
+    if (!d.niveau) m.push("Niveau");
+    if (!d.werkvormen.length) m.push("Werkvorm (wat ga je maken of doen?)");
+    if (!d.leerdoelen.length) m.push("Minstens \xE9\xE9n leerdoel");
+    if (!d.bewijsvormen.length) m.push("Minstens \xE9\xE9n bewijsvorm");
+    if (!d.stappen.length) m.push("Minstens \xE9\xE9n stap");
+    if (!d.succescriteria.length) m.push("Minstens \xE9\xE9n succescriterium");
+    return m;
+  }
+  function studioNaarChallenge(st) {
+    const d = st.data || {};
+    const typeKey = d.challengeType === "auto" ? "core" : d.challengeType || "core";
+    const wv = (d.werkvormen || []).map((n) => WERKVORMEN.find((w) => w.naam === n)).filter(Boolean);
+    const bewijsLabels = (d.bewijsvormen || []).map((id) => {
+      const b = STUDIO_BEWIJS.find((x) => x[0] === id);
+      return b ? b[1] : id;
+    });
+    const ch = {
+      titel: studioTekst(d.titel, 100),
+      thema: studioThemaLabel(d),
+      subthema: studioSubLabel(d),
+      niveau: d.niveau || "Silver",
+      situatie: studioTekst(d.beschrijving, 300),
+      leerdoelen: studioLijst(d.leerdoelen, 5),
+      competenties: studioLijst(d.competenties, 8),
+      benodigdheden: studioLijst([...d.benodigdheden || [], ...studioTekst(d.benodigdEigen, 80) ? [studioTekst(d.benodigdEigen, 80)] : []], 8),
+      samenwerking: studioSamen(d),
+      tijd: studioTijd(d),
+      challengeType: STUDIO_TYPE_NAAM[typeKey] || "Core Challenge",
+      werkvorm: wv[0] ? { naam: wv[0].naam, beschrijving: wv[0].beschrijving, categorie: wv[0].type } : { naam: "Eigen opdracht", beschrijving: "", categorie: "praktisch" },
+      werkvormen: wv.map((w) => w.naam),
+      eindproduct: wv.map((w) => w.naam).join(", "),
+      bewijs: studioTekst(d.bewijsOpdracht, 300) || (bewijsLabels.length ? "Laat zien wat je hebt gedaan met: " + bewijsLabels.join(", ").toLowerCase() + "." : ""),
+      bewijsvormen: (d.bewijsvormen || []).map((id) => id === "reflectie" ? "tekst" : id),
+      bewijsVereist: d.bewijsVereist || [],
+      stappen: studioLijst(d.stappen, 12).map((s) => ({ titel: studioTekst(s.titel, 80), uitleg: studioTekst(s.uitleg, 400) + (studioTekst(s.tip) ? " Tip: " + studioTekst(s.tip, 200) : ""), bewijs: studioTekst(s.bewijs, 200) || void 0 })),
+      succescriteria: studioLijst(d.succescriteria, 8).map((c) => typeof c === "string" ? c : studioTekst(c.tekst, 200)),
+      verdieping: studioTekst(d.verdieping, 600) || void 0,
+      bron: "studio",
+      studioId: st.id,
+      studioVersie: st.versie || 1
+    };
+    if (ch.verdieping) ch.transfer = ch.verdieping;
+    return ch;
+  }
+  function studioNaarRecord(st, naam) {
+    const ch = studioNaarChallenge(st);
+    return {
+      id: "preview-" + st.id,
+      datum: (/* @__PURE__ */ new Date()).toISOString(),
+      leerling: { naam: naam || "Voorbeeldleerling", klas: "" },
+      thema: st.data.thema === "eigen" ? "eigen" : st.data.thema || "ef",
+      subs: [ch.subthema].filter(Boolean),
+      niveau: ch.niveau,
+      xp: niveauInfo(ch.niveau).xp,
+      route: "groei",
+      context: { studio: true },
+      data: ch,
+      markdown: challengeNaarMarkdown(ch),
+      afgerond: false,
+      rubricScore: null,
+      voortgang: 0
+    };
+  }
+  function studioJsonUit(tekst) {
+    const t = String(tekst || "");
+    const a = t.indexOf("{"), b = t.lastIndexOf("}");
+    if (a < 0 || b <= a) return null;
+    try {
+      return JSON.parse(t.slice(a, b + 1));
+    } catch {
+      return null;
+    }
+  }
+  function studioVoorstelNormaliseer(v, basis) {
+    const d = basis || studioLeeg().data;
+    const thema = (THEMAS.find((t) => t.key === v.thema || t.label === v.thema) || {}).key || d.thema || "";
+    const typeKey = Object.keys(STUDIO_TYPE_NAAM).find((k) => k !== "auto" && (STUDIO_TYPE_NAAM[k] === v.challengeType || k === String(v.challengeType || "").toLowerCase())) || (d.challengeType !== "auto" ? d.challengeType : "core");
+    const niveau = ["Bronze", "Silver", "Gold", "Platinum"].includes(v.niveau) ? v.niveau : d.niveau || "Silver";
+    const werkvormen = studioLijst((Array.isArray(v.werkvormen) ? v.werkvormen : [v.werkvorm && (v.werkvorm.naam || v.werkvorm)]).filter(Boolean), 3, 80).filter((n) => WERKVORMEN.some((w) => w.naam === n));
+    const bewijs = studioLijst(v.bewijsvormen, 4, 30).map((x) => String(x).toLowerCase()).filter((x) => STUDIO_BEWIJS.some((b) => b[0] === x));
+    const stappen = studioLijst(v.stappen, 8).map((s) => typeof s === "string" ? { titel: studioTekst(s, 80), uitleg: "", tip: "", bewijs: "" } : { titel: studioTekst(s.titel, 80), uitleg: studioTekst(s.uitleg || s.instructie, 400), tip: studioTekst(s.tip, 200), bewijs: studioTekst(s.bewijs, 200) });
+    const crit = studioLijst(v.succescriteria, 6).map((c) => typeof c === "string" ? { tekst: studioTekst(c, 200), soort: "uitvoering" } : { tekst: studioTekst(c.tekst, 200), soort: STUDIO_CRITERIUM_SOORT.some((x) => x[0] === c.soort) ? c.soort : "uitvoering" });
+    return {
+      titel: studioTekst(v.titel, 100),
+      beschrijving: studioTekst(v.beschrijving || v.situatie, 300),
+      thema,
+      subthema: studioTekst(v.subthema, 60),
+      niveau,
+      challengeType: typeKey,
+      benodigdheden: studioLijst(v.benodigdheden, 6, 40).filter((x) => STUDIO_BENODIGD.includes(x)),
+      benodigdEigen: studioLijst(v.benodigdheden, 6, 40).filter((x) => !STUDIO_BENODIGD.includes(x)).join(", "),
+      samenwerking: STUDIO_SAMEN.includes(v.samenwerking) ? v.samenwerking : v.samenwerking ? "eigen" : d.samenwerking,
+      samenwerkingEigen: STUDIO_SAMEN.includes(v.samenwerking) ? "" : studioTekst(v.samenwerking, 60),
+      tijd: STUDIO_TIJD.includes(v.tijd) ? v.tijd : "",
+      werkvormen,
+      leerdoelen: studioLijst(v.leerdoelen, 5, 160),
+      competenties: studioLijst(v.competenties, 8, 60),
+      bewijsvormen: bewijs,
+      bewijsOpdracht: studioTekst(v.bewijs || v.bewijsOpdracht, 300),
+      stappen,
+      succescriteria: crit
+    };
+  }
+  async function studioNeoVoorstel({ prompt, basis, platformNeo, gebruiker }) {
+    const vraag = studioTekst(prompt, 900);
+    const contextTekst = {
+      rol: "docent",
+      studio: true,
+      thema: basis.thema ? studioThemaLabel(basis) : "",
+      niveau: basis.niveau,
+      challengeType: basis.challengeType,
+      werkvormen: WERKVORMEN.map((w) => w.naam).slice(0, 80),
+      bewijsvormen: STUDIO_BEWIJS.map((b) => b[0]),
+      competenties: Object.values(THEMA_COMPETENTIES).flat().slice(0, 60)
+    };
+    let via = null, fout = null;
+    try {
+      const r = await askNeo({ action: "studio_design", question: vraag || "Ontwerp een " + (STUDIO_TYPE_NAAM[basis.challengeType] || "Core Challenge") + " over " + (studioThemaLabel(basis) || "een thema naar keuze"), context: contextTekst, viaPlatform: platformNeo });
+      const json = studioJsonUit(r && r.answer);
+      if (json && json.titel) {
+        via = "neo";
+        return { bron: "neo", voorstel: studioVoorstelNormaliseer(json, basis) };
+      }
+      fout = "geen bruikbaar antwoord";
+    } catch (e) {
+      fout = e && e.reden || e && e.message || "fout";
+    }
+    try {
+      const thema = basis.thema && basis.thema !== "eigen" ? basis.thema : "ef";
+      const subs = [basis.subthema && basis.subthema !== "eigen" ? basis.subthema : (SUBTHEMAS[thema] || [])[0]].filter(Boolean);
+      const ch = genereerLokaal({ thema, themaLabel: themaLabel(thema), subs, niveau: basis.niveau || "Silver", leeftijd: 14, klas: "", situatie: vraag, vermijdWerkvormen: [], vermijdOnderwerpen: [], recenteTypes: [] });
+      if (ch && ch.titel) {
+        const v = {
+          ...ch,
+          thema,
+          beschrijving: ch.situatie,
+          challengeType: basis.challengeType === "auto" ? ch.challengeType || "Core Challenge" : STUDIO_TYPE_NAAM[basis.challengeType],
+          werkvormen: [ch.werkvorm && ch.werkvorm.naam].filter(Boolean),
+          bewijsvormen: ["foto", "tekst"],
+          bewijsOpdracht: ch.bewijs,
+          stappen: ch.stappen,
+          succescriteria: ch.succescriteria
+        };
+        return { bron: "lokaal", voorstel: studioVoorstelNormaliseer(v, basis), reden: fout };
+      }
+    } catch (e) {
+    }
+    throw Object.assign(new Error("Neo kon geen voorstel maken"), { reden: fout });
+  }
+  var STUDIO_STAPPEN = ["De basis", "Invulling", "Leren en aantonen", "Stappen en beoordeling", "Bekijken en delen"];
+  function StudioChip({ aan, onClick, children, icoon, klein }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-chip" + (aan ? " is-aan" : "") + (klein ? " is-klein" : ""), "aria-pressed": aan ? "true" : "false", onClick, children: [
+      icoon && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: icoon, size: 14 }),
+      children,
+      aan && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 13 })
+    ] });
+  }
+  function StudioVeld({ label, verplicht, hint, teller, children }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("label", { className: "studio-veld", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-label", children: [
+        label,
+        verplicht && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-verplicht", "aria-hidden": "true", children: " *" })
+      ] }),
+      children,
+      (hint || teller) && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-hint", children: [
+        hint,
+        teller && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-teller", children: teller })
+      ] })
+    ] });
+  }
+  function StudioLijstVeld({ items, onChange, placeholder, max = 5, label }) {
+    const [nieuw, setNieuw] = (0, import_react2.useState)("");
+    const voeg = () => {
+      const t = studioTekst(nieuw, 200);
+      if (!t || items.length >= max) return;
+      onChange([...items, t]);
+      setNieuw("");
+    };
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-lijst", children: [
+      items.map((x, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-lijst-rij", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field studio-input", value: x, onChange: (e) => onChange(items.map((y, j) => j === i ? e.target.value : y)), "aria-label": label + " " + (i + 1) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "studio-icoonknop", "aria-label": "Verwijder " + label.toLowerCase() + " " + (i + 1), onClick: () => onChange(items.filter((_, j) => j !== i)), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "trash", size: 15 }) })
+      ] }, i)),
+      items.length < max && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-lijst-rij", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field studio-input", value: nieuw, placeholder, onChange: (e) => setNieuw(e.target.value), onKeyDown: (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            voeg();
+          }
+        }, "aria-label": "Nieuw " + label.toLowerCase() }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil", onClick: voeg, disabled: !nieuw.trim(), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: "plus", size: 14 }),
+          " Toevoegen"
+        ] })
+      ] })
+    ] });
+  }
+  function GrowStudio({ gebruiker, platformNeo, start, onOpenRecord }) {
+    const [lijst, setLijst] = (0, import_react2.useState)([]);
+    const [geladen, setGeladen] = (0, import_react2.useState)(false);
+    const [zicht, setZicht] = (0, import_react2.useState)(start === "bibliotheek" ? "bibliotheek" : "wizard");
+    const [toonKeuzes, setToonKeuzes] = (0, import_react2.useState)(true);
+    const [st, setSt] = (0, import_react2.useState)(null);
+    const [stap, setStap] = (0, import_react2.useState)(0);
+    const [neoOpen, setNeoOpen] = (0, import_react2.useState)(false);
+    const [neoPrompt, setNeoPrompt] = (0, import_react2.useState)("");
+    const [neoBezig, setNeoBezig] = (0, import_react2.useState)(false);
+    const [neoFout, setNeoFout] = (0, import_react2.useState)("");
+    const [neoVoorstel, setNeoVoorstel] = (0, import_react2.useState)(null);
+    const [werkvormKiezer, setWerkvormKiezer] = (0, import_react2.useState)(false);
+    const [sjabloonKiezer, setSjabloonKiezer] = (0, import_react2.useState)(false);
+    const [bibTab, setBibTab] = (0, import_react2.useState)("mijn");
+    const [bibFilter, setBibFilter] = (0, import_react2.useState)({ thema: "", niveau: "", type: "", status: "" });
+    const [melding, setMelding] = (0, import_react2.useState)("");
+    const [opslag, setOpslag] = (0, import_react2.useState)("");
+    const [preview, setPreview] = (0, import_react2.useState)(false);
+    const conceptTimer = (0, import_react2.useRef)(null);
+    const magStudio = ["mentor", "coach", "vakdocent", "docent"].includes(gebruiker && gebruiker.rol || "");
+    (0, import_react2.useEffect)(() => {
+      let live = true;
+      (async () => {
+        const l = await studioStore.list();
+        if (live) {
+          setLijst(l);
+          setGeladen(true);
+        }
+      })();
+      return () => {
+        live = false;
+      };
+    }, []);
+    (0, import_react2.useEffect)(() => {
+      if (start === "bibliotheek") {
+        setZicht("bibliotheek");
+      } else {
+        setZicht("wizard");
+        setToonKeuzes(true);
+        if (!st || st.status !== "concept" || studioValidatie(st.data).length >= 9) setSt(studioLeeg(gebruiker));
+        setStap(0);
+      }
+    }, [start]);
+    (0, import_react2.useEffect)(() => {
+      if (!st && zicht === "wizard") setSt(studioLeeg(gebruiker));
+    }, [zicht, st]);
+    const d = st && st.data;
+    const zet = (patch) => setSt((s) => ({ ...s, gewijzigd: (/* @__PURE__ */ new Date()).toISOString(), data: { ...s.data, ...patch } }));
+    const bewaarIn = async (sjabloon, toon) => {
+      const l = lijst.some((x) => x.id === sjabloon.id) ? lijst.map((x) => x.id === sjabloon.id ? sjabloon : x) : [sjabloon, ...lijst];
+      setLijst(l);
+      const ok = await studioStore.saveAll(l);
+      setOpslag(ok ? "Bewaard " + (/* @__PURE__ */ new Date()).toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" }) : "Bewaren lukte niet");
+      if (toon) setMelding(ok ? "Bewaard in mijn bibliotheek." : "Bewaren lukte niet. Probeer het nog eens.");
+      return ok;
+    };
+    (0, import_react2.useEffect)(() => {
+      if (!st || zicht !== "wizard") return;
+      if (!studioTekst(st.data.titel) && !studioTekst(st.data.beschrijving) && !lijst.some((x) => x.id === st.id)) return;
+      if (conceptTimer.current) clearTimeout(conceptTimer.current);
+      conceptTimer.current = setTimeout(() => {
+        bewaarIn(st, false);
+      }, 1200);
+      return () => {
+        if (conceptTimer.current) clearTimeout(conceptTimer.current);
+      };
+    }, [st]);
+    const nieuwStart = (basis, bron) => {
+      const s = { ...studioLeeg(gebruiker), bron: bron || "zelf", ...basis || {} };
+      setSt(s);
+      setStap(0);
+      setZicht("wizard");
+      setMelding("");
+      setOpslag("");
+      setToonKeuzes(true);
+      try {
+        setTimeout(() => {
+          const el2 = document.querySelector('input[placeholder^="Bijv. Verantwoord"]');
+          if (el2) el2.focus();
+        }, 50);
+      } catch {
+      }
+    };
+    const vanSjabloon = (sj) => {
+      const s = studioLeeg(gebruiker);
+      s.bron = "sjabloon";
+      s.data = { ...s.data, ...studioVoorstelNormaliseer({ titel: sj.titel, beschrijving: sj.beschrijving || sj.situatie, thema: sj.thema, subthema: sj.subthema, niveau: sj.niveau, werkvormen: [sj.werkvorm && sj.werkvorm.naam], leerdoelen: sj.leerdoelen, competenties: sj.competenties, stappen: sj.stappen, succescriteria: sj.succescriteria, bewijsvormen: ["foto", "tekst"], bewijs: sj.bewijs }, s.data) };
+      setSjabloonKiezer(false);
+      setSt(s);
+      setStap(0);
+      setZicht("wizard");
+    };
+    const neemVoorstelOver = (deel) => {
+      if (!neoVoorstel) return;
+      const v = neoVoorstel.voorstel;
+      const velden = deel ? [deel] : Object.keys(v);
+      const MAX = { leerdoelen: 5, competenties: 8, stappen: 12, succescriteria: 8, werkvormen: 3, benodigdheden: 8, bewijsvormen: 8 };
+      const patch = {};
+      velden.forEach((k) => {
+        const w = v[k];
+        if (w === void 0 || w === "" || Array.isArray(w) && !w.length) return;
+        if (Array.isArray(w)) {
+          const oud = Array.isArray(d[k]) ? d[k] : [];
+          const sleutel = (x) => typeof x === "string" ? x.toLowerCase() : String(x.titel || x.tekst || "").toLowerCase();
+          const set = new Set(oud.map(sleutel));
+          patch[k] = [...oud, ...w.filter((x) => !set.has(sleutel(x)))].slice(0, MAX[k] || 12);
+        } else if (!deel && typeof d[k] === "string" && d[k].trim()) return;
+        else patch[k] = w;
+      });
+      zet(patch);
+      if (!deel) {
+        setNeoVoorstel(null);
+        setNeoOpen(false);
+      }
+    };
+    const vraagNeo = async (deel) => {
+      if (!st) return;
+      setNeoBezig(true);
+      setNeoFout("");
+      try {
+        const r = await studioNeoVoorstel({ prompt: neoPrompt, basis: st.data, platformNeo, gebruiker });
+        setNeoVoorstel({ ...r, deel: deel || null });
+      } catch (e) {
+        setNeoFout("Neo kon nu geen voorstel maken. Je kunt alles zelf invullen of het later opnieuw proberen.");
+      } finally {
+        setNeoBezig(false);
+      }
+    };
+    if (!magStudio) return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { margin: 0 }, children: "GROW Studio is er voor mentoren en vakdocenten." });
+    const Keuzes = () => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-keuzes", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-keuze", onClick: () => nieuwStart(null, "zelf"), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-icoon is-groot", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: "plus", size: 20 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-keuze-titel", children: "Zelf maken" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-keuze-sub", children: "Begin met een lege uitdaging." })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-keuze", onClick: () => {
+          nieuwStart(null, "neo");
+          setNeoOpen(true);
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-icoon is-groot", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "spark", size: 20 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-keuze-neo", "aria-hidden": "true", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("svg", { className: "studio-keuze-stralen", width: "40", height: "30", viewBox: "0 0 40 30", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { stroke: "#F47721", strokeWidth: "3", strokeLinecap: "round", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M6 24 L12 16" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M20 20 L20 8" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M34 24 L28 16" })
+            ] }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(NeoFiguur, { width: 96, zweef: false })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-keuze-titel", children: "Met Neo maken" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-keuze-sub", children: "Beschrijf je idee en laat Neo een voorstel genereren." })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-keuze", onClick: () => setSjabloonKiezer(true), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-icoon is-groot", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "doc", size: 20 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-keuze-beeld", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("svg", { width: "110", height: "78", viewBox: "0 0 110 78", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { transform: "rotate(-6 55 40)", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("rect", { x: "6", y: "14", width: "96", height: "30", rx: "7", fill: "#fff", stroke: "#E7E4DD", strokeWidth: "2" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("circle", { cx: "21", cy: "29", r: "8", fill: "#DCE5D6" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("rect", { x: "36", y: "22", width: "52", height: "5", rx: "2.5", fill: "#E4E9DF" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("rect", { x: "36", y: "31", width: "38", height: "5", rx: "2.5", fill: "#F0EEE8" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { transform: "rotate(-6 55 40)", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("rect", { x: "12", y: "46", width: "96", height: "30", rx: "7", fill: "#fff", stroke: "#E7E4DD", strokeWidth: "2" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("circle", { cx: "27", cy: "61", r: "8", fill: "#F8E6D2" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("rect", { x: "42", y: "54", width: "52", height: "5", rx: "2.5", fill: "#E4E9DF" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("rect", { x: "42", y: "63", width: "30", height: "5", rx: "2.5", fill: "#F0EEE8" })
+            ] })
+          ] }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-keuze-titel", children: "Vanuit sjabloon" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-keuze-sub", children: "Gebruik een uitdaging uit de didactische bibliotheek." })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-keuze is-uit", disabled: true, "aria-disabled": "true", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-icoon is-groot is-groen", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "upload", size: 20 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-keuze-beeld is-grow", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("svg", { width: "66", height: "78", viewBox: "0 0 66 78", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M6 4h36l18 18v48a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4z", fill: "#FFFFFF", stroke: "#E7E4DD", strokeWidth: "2" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M42 4v18h18", fill: "#F4F3EF", stroke: "#E7E4DD", strokeWidth: "2" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("text", { x: "33", y: "52", textAnchor: "middle", fontSize: "11", fontWeight: "700", fill: "#6B6A66", fontFamily: "Inter,Arial", children: ".GROW" })
+          ] }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-keuze-titel", children: "GROW importeren" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-keuze-sub", children: "Open een gedeelde uitdaging (.grow bestand). Fase C." })
+        ] })
+      ] }),
+      sjabloonKiezer && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioSjabloonKiezer, { onKies: vanSjabloon, onSluit: () => setSjabloonKiezer(false) })
+    ] });
+    const Bibliotheek = () => {
+      const eigen = lijst.filter((x) => x.eigen !== false);
+      const gedeeld = lijst.filter((x) => x.eigen === false);
+      const bron = bibTab === "mijn" ? eigen : bibTab === "gedeeld" ? gedeeld : lijst.filter((x) => x.zichtbaarheid === "school");
+      const f = bibFilter;
+      const zichtbaar = bron.filter((x) => (!f.thema || x.data.thema === f.thema) && (!f.niveau || x.data.niveau === f.niveau) && (!f.type || x.data.challengeType === f.type) && (!f.status || x.status === f.status)).sort((a, b) => String(b.gewijzigd || "").localeCompare(String(a.gewijzigd || "")));
+      const actie = async (x, wat) => {
+        if (wat === "bewerken") {
+          setSt(x);
+          setStap(0);
+          setZicht("wizard");
+          return;
+        }
+        if (wat === "bekijken") {
+          setSt(x);
+          setPreview(true);
+          return;
+        }
+        if (wat === "dupliceren") {
+          const k = { ...x, id: "st-" + nieuwId(), status: "concept", zichtbaarheid: "prive", versie: 1, aangemaakt: (/* @__PURE__ */ new Date()).toISOString(), gewijzigd: (/* @__PURE__ */ new Date()).toISOString(), eigen: true, __maker: void 0, data: { ...x.data, titel: (x.data.titel || "Uitdaging") + " (kopie)" } };
+          delete k.__maker;
+          await bewaarIn(k, false);
+          setMelding("Kopie gemaakt.");
+          return;
+        }
+        if (wat === "archiveren") {
+          await bewaarIn({ ...x, status: x.status === "gearchiveerd" ? "concept" : "gearchiveerd", gewijzigd: (/* @__PURE__ */ new Date()).toISOString() }, false);
+          return;
+        }
+      };
+      const SelectF = ({ k, opties, label }) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("select", { className: "field studio-select", "aria-label": label, value: f[k], onChange: (e) => setBibFilter({ ...f, [k]: e.target.value }), children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "", children: label }),
+        opties.map(([v, l]) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: v, children: l }, v))
+      ] });
+      return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-kop", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h1", { className: "studio-paginatitel", children: "Mijn GROW-bibliotheek" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "studio-sub", children: "Je eigen uitdagingen, wat collega's met je deelden en de schoolbibliotheek." })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent studio-knop", onClick: () => setZicht("start"), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: "plus", size: 15 }),
+            " Maak uitdaging"
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lv-schakel", role: "tablist", "aria-label": "Bibliotheek", children: [["mijn", "Mijn uitdagingen"], ["gedeeld", "Gedeeld met mij"], ["school", "Schoolbibliotheek"]].map(([k, l]) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { role: "tab", type: "button", "aria-selected": bibTab === k, className: "lv-schakel-knop" + (bibTab === k ? " is-aan" : ""), onClick: () => setBibTab(k), children: l }, k)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-filters", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SelectF, { k: "thema", label: "Thema", opties: THEMAS.map((t) => [t.key, t.label]).concat([["eigen", "Eigen thema"]]) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SelectF, { k: "niveau", label: "Niveau", opties: ["Bronze", "Silver", "Gold", "Platinum"].map((n) => [n, n]) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SelectF, { k: "type", label: "Type", opties: [["micro", "Micro"], ["core", "Core"], ["deep", "Deep"]] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SelectF, { k: "status", label: "Status", opties: [["concept", "Concept"], ["gepubliceerd", "Gepubliceerd"], ["gearchiveerd", "Gearchiveerd"]] })
+        ] }),
+        !geladen ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", children: "Laden\u2026" }) : zichtbaar.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-leeg", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { children: bibTab === "mijn" ? "Nog geen eigen uitdagingen. Maak je eerste uitdaging in ongeveer vijf minuten." : bibTab === "gedeeld" ? "Nog niets met je gedeeld." : "De schoolbibliotheek bevat alleen uitdagingen die bewust binnen de school zijn gedeeld." }) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-raster", children: zichtbaar.map((x) => {
+          const dd = x.data;
+          const tk = dd.challengeType === "auto" ? "core" : dd.challengeType;
+          return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-kaart", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-kaart-kop", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-kaart-thema", children: studioThemaLabel(dd) }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-status is-" + x.status, children: x.status === "concept" ? "Concept" : x.status === "gepubliceerd" ? "Gepubliceerd" : "Gearchiveerd" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "studio-kaart-titel", children: dd.titel || "Zonder titel" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-kaart-meta", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-meta", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: dd.niveau || "Silver", size: 15 }),
+                dd.niveau
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-meta", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ChallengeTypeIcoon, { type: STUDIO_TYPE_NAAM[tk], size: 15 }),
+                tk.charAt(0).toUpperCase() + tk.slice(1)
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-meta", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "clock", size: 14 }),
+                studioTijd(dd) || "\u2014"
+              ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-kaart-voet", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "muted", children: [
+              x.gewijzigd ? "Gewijzigd " + datumNL(x.gewijzigd) : "",
+              x.zichtbaarheid === "school" ? " \xB7 school" : " \xB7 priv\xE9"
+            ] }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-kaart-acties", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil is-klein", onClick: () => actie(x, "bekijken"), children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "eye", size: 13 }),
+                " Bekijken"
+              ] }),
+              x.eigen !== false && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil is-klein", onClick: () => actie(x, "bewerken"), children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "edit", size: 13 }),
+                " Bewerken"
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil is-klein", onClick: () => actie(x, "dupliceren"), children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "kopie", size: 13 }),
+                " Dupliceren"
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil is-klein", disabled: true, title: "Toewijzen komt in fase B", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "users", size: 13 }),
+                " Toewijzen"
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil is-klein", disabled: true, title: "Exporteren komt in fase C", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "download", size: 13 }),
+                " Exporteren"
+              ] }),
+              x.eigen !== false && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil is-klein", onClick: () => actie(x, "archiveren"), children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "layers", size: 13 }),
+                " ",
+                x.status === "gearchiveerd" ? "Herstellen" : "Archiveren"
+              ] })
+            ] })
+          ] }, x.id);
+        }) }),
+        melding && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "pf2-kaart-sub", role: "status", children: melding })
+      ] });
+    };
+    if (zicht === "bibliotheek") return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+      Bibliotheek(),
+      preview && st && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioPreview, { st, gebruiker, onSluit: () => setPreview(false) })
+    ] });
+    if (!st) return null;
+    const ontbreekt = studioValidatie(d);
+    const subLijst = d.thema && d.thema !== "eigen" ? SUBTHEMAS[d.thema] || [] : [];
+    const compLijst = [.../* @__PURE__ */ new Set([...d.thema && THEMA_COMPETENTIES[d.thema] ? THEMA_COMPETENTIES[d.thema] : [], ...Object.values(THEMA_COMPETENTIES).flat()])].slice(0, 24);
+    const toggle = (k, v) => zet({ [k]: (d[k] || []).includes(v) ? d[k].filter((x) => x !== v) : [...d[k] || [], v] });
+    const stapPaneel = (() => {
+      if (stap === 0) return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-stap", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "studio-stap-titel", children: "De basis" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "studio-stap-sub", children: "Geef je uitdaging een duidelijke basis. Dit helpt leerlingen begrijpen wat ze gaan doen." }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioVeld, { label: "Titel van de uitdaging", verplicht: true, teller: (d.titel || "").length + "/100", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field studio-input", maxLength: 100, value: d.titel, onChange: (e) => zet({ titel: e.target.value }), placeholder: "Bijv. Verantwoord posten op social media" }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioVeld, { label: "Korte beschrijving", verplicht: true, teller: (d.beschrijving || "").length + "/300", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("textarea", { className: "field studio-input", rows: 3, maxLength: 300, value: d.beschrijving, onChange: (e) => zet({ beschrijving: e.target.value }), placeholder: "Waar gaat de uitdaging over en waarom is die de moeite waard?" }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-twee", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(StudioVeld, { label: "Thema", verplicht: true, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("select", { className: "field studio-select", value: d.thema, onChange: (e) => zet({ thema: e.target.value, subthema: "" }), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "", children: "Kies een thema" }),
+              THEMAS.map((t) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: t.key, children: t.label }, t.key)),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "eigen", children: "Eigen thema\u2026" })
+            ] }),
+            d.thema === "eigen" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field studio-input", style: { marginTop: 8 }, maxLength: 60, value: d.themaEigen, onChange: (e) => zet({ themaEigen: e.target.value }), placeholder: "Naam van je eigen thema (blijft binnen je school)" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioVeld, { label: "Subthema", children: d.thema === "eigen" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field studio-input", maxLength: 60, value: d.subthemaEigen, onChange: (e) => zet({ subthema: "eigen", subthemaEigen: e.target.value }), placeholder: "Eigen subthema (optioneel)" }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("select", { className: "field studio-select", value: d.subthema, onChange: (e) => zet({ subthema: e.target.value }), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "", children: "Kies een subthema" }),
+              subLijst.map((s) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: s, children: s }, s)),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "eigen", children: "Eigen subthema\u2026" })
+            ] }),
+            d.subthema === "eigen" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field studio-input", style: { marginTop: 8 }, maxLength: 60, value: d.subthemaEigen, onChange: (e) => zet({ subthemaEigen: e.target.value }), placeholder: "Naam van je eigen subthema" })
+          ] }) })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-twee", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-label", children: [
+              "Moeilijkheidsniveau",
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-verplicht", "aria-hidden": "true", children: " *" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-tegels", role: "radiogroup", "aria-label": "Moeilijkheidsniveau", children: NIVEAUS2.map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", role: "radio", "aria-checked": d.niveau === n.key, className: "studio-tegel" + (d.niveau === n.key ? " is-aan" : ""), onClick: () => zet({ niveau: n.key }), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: n.key, size: 26 }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-tegel-titel", children: n.key }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-tegel-sub", children: n.duur }),
+              d.niveau === n.key && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-tegel-vink", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 11 }) })
+            ] }, n.key)) })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-label", children: [
+              "Type uitdaging",
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-verplicht", "aria-hidden": "true", children: " *" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-tegels", role: "radiogroup", "aria-label": "Type uitdaging", children: STUDIO_TYPES.map(([k, l, sub]) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", role: "radio", "aria-checked": d.challengeType === k, className: "studio-tegel" + (d.challengeType === k ? " is-aan" : ""), onClick: () => zet({ challengeType: k }), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ChallengeTypeIcoon, { type: STUDIO_TYPE_NAAM[k], size: 24 }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-tegel-titel", children: l }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-tegel-sub", children: k === "auto" ? sub : CHALLENGE_TYPES[k].tijd }),
+              d.challengeType === k && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-tegel-vink", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 11 }) })
+            ] }, k)) })
+          ] })
+        ] })
+      ] });
+      if (stap === 1) return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-stap", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "studio-stap-titel", children: "Invulling" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "studio-stap-sub", children: "Hoe gaat de leerling aan de slag?" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-label", children: "Wat heb je nodig?" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-chips", children: STUDIO_BENODIGD.map((b) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioChip, { aan: d.benodigdheden.includes(b), onClick: () => toggle("benodigdheden", b), children: b }, b)) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field studio-input", style: { marginTop: 8 }, maxLength: 80, value: d.benodigdEigen, onChange: (e) => zet({ benodigdEigen: e.target.value }), placeholder: "Zelf iets toevoegen (optioneel)" })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-twee", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-label", children: "Met wie?" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-chips", children: [
+              STUDIO_SAMEN.map((s) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioChip, { aan: d.samenwerking === s, onClick: () => zet({ samenwerking: s }), children: s }, s)),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioChip, { aan: d.samenwerking === "eigen", onClick: () => zet({ samenwerking: "eigen" }), children: "Zelf invullen" })
+            ] }),
+            d.samenwerking === "eigen" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field studio-input", style: { marginTop: 8 }, maxLength: 60, value: d.samenwerkingEigen, onChange: (e) => zet({ samenwerkingEigen: e.target.value }), placeholder: "Bijv. met je team" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-label", children: "Hoe lang?" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-chips", children: [
+              STUDIO_TIJD.map((t) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioChip, { aan: d.tijd === t, onClick: () => zet({ tijd: t }), children: t }, t)),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioChip, { aan: d.tijd === "eigen", onClick: () => zet({ tijd: "eigen" }), children: "Eigen tijdsduur" })
+            ] }),
+            d.tijd === "eigen" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field studio-input", style: { marginTop: 8 }, maxLength: 40, value: d.tijdEigen, onChange: (e) => zet({ tijdEigen: e.target.value }), placeholder: "Bijv. 2 weken, 10 minuten per dag" }),
+            !d.tijd && d.challengeType !== "auto" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-hint", children: [
+              "Zonder keuze geldt de tijd van het type: ",
+              CHALLENGE_TYPES[d.challengeType].tijd,
+              "."
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-label", children: [
+            "Wat ga je maken of doen?",
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-verplicht", "aria-hidden": "true", children: " *" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-chips", children: [
+            d.werkvormen.map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioChip, { aan: true, onClick: () => toggle("werkvormen", n), children: n }, n)),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil", onClick: () => setWerkvormKiezer(true), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "book", size: 14 }),
+              " Kies uit de werkvormenbibliotheek"
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-hint", children: "Werkvormen komen uit de bestaande didactische bibliotheek. Kies er een of meer." })
+        ] }),
+        werkvormKiezer && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioWerkvormKiezer, { gekozen: d.werkvormen, niveau: d.niveau, onKies: (n) => toggle("werkvormen", n), onSluit: () => setWerkvormKiezer(false) })
+      ] });
+      if (stap === 2) return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-stap", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "studio-stap-titel", children: "Leren en aantonen" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "studio-stap-sub", children: "Wat leert de leerling en hoe laat die dat zien?" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-label", children: [
+            "Wat ga je leren?",
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-verplicht", "aria-hidden": "true", children: " *" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioLijstVeld, { label: "Leerdoel", items: d.leerdoelen, onChange: (l) => zet({ leerdoelen: l }), max: 5, placeholder: "Bijv. Ik kan uitleggen wat een veilige post is" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-hulp", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil", onClick: () => {
+              setNeoOpen(true);
+              vraagNeo("leerdoelen");
+            }, disabled: neoBezig, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "spark", size: 14 }),
+              " Laat Neo leerdoelen voorstellen"
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-hint", children: "Maximaal vijf. Voorstellen bevestig je zelf." })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-label", children: "Competenties" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-chips", children: compLijst.map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioChip, { klein: true, aan: d.competenties.includes(c), onClick: () => toggle("competenties", c), children: c }, c)) })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-label", children: [
+            "Hoe laat je zien wat je hebt gedaan?",
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-verplicht", "aria-hidden": "true", children: " *" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-bewijs", children: STUDIO_BEWIJS.map(([id, l]) => {
+            const aan = d.bewijsvormen.includes(id), ver = d.bewijsVereist.includes(id);
+            return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-bewijs-rij" + (aan ? " is-aan" : ""), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioChip, { aan, onClick: () => {
+                toggle("bewijsvormen", id);
+                if (aan && ver) zet({ bewijsVereist: d.bewijsVereist.filter((x) => x !== id) });
+              }, icoon: id === "docentbevestiging" ? "check" : void 0, children: l }),
+              aan && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("label", { className: "studio-vereist", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { type: "checkbox", checked: ver, onChange: () => toggle("bewijsVereist", id) }),
+                " vereist"
+              ] })
+            ] }, id);
+          }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("textarea", { className: "field studio-input", rows: 2, maxLength: 300, value: d.bewijsOpdracht, onChange: (e) => zet({ bewijsOpdracht: e.target.value }), placeholder: "Bewijsopdracht in leerlingtaal (optioneel), bijv. Upload een foto van je poster en schrijf er twee zinnen bij." }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-hulp", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil", onClick: () => {
+            setNeoOpen(true);
+            vraagNeo("bewijsOpdracht");
+          }, disabled: neoBezig, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "spark", size: 14 }),
+            " Laat Neo een bewijsopdracht voorstellen"
+          ] }) })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioVeld, { label: "Wil je de uitdaging verdiepen?", hint: "Optioneel. Een verdiepende opdracht voor wie verder wil.", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("textarea", { className: "field studio-input", rows: 2, maxLength: 600, value: d.verdieping, onChange: (e) => zet({ verdieping: e.target.value }) }) })
+      ] });
+      if (stap === 3) return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-stap", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "studio-stap-titel", children: "Stappen en beoordeling" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "studio-stap-sub", children: "Hoe voert de leerling de uitdaging uit?" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-label", children: [
+            "Stap voor stap",
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-verplicht", "aria-hidden": "true", children: " *" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-stappen", children: [
+            d.stappen.map((s, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-stapkaart", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-stapkaart-kop", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-nr", children: i + 1 }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field studio-input", maxLength: 80, value: s.titel, placeholder: "Korte titel", onChange: (e) => zet({ stappen: d.stappen.map((x, j) => j === i ? { ...x, titel: e.target.value } : x) }), "aria-label": "Titel stap " + (i + 1) }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-stapkaart-knoppen", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "studio-icoonknop", "aria-label": "Omhoog", disabled: i === 0, onClick: () => {
+                    const l = [...d.stappen];
+                    [l[i - 1], l[i]] = [l[i], l[i - 1]];
+                    zet({ stappen: l });
+                  }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 14 }) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "studio-icoonknop is-omlaag", "aria-label": "Omlaag", disabled: i === d.stappen.length - 1, onClick: () => {
+                    const l = [...d.stappen];
+                    [l[i + 1], l[i]] = [l[i], l[i + 1]];
+                    zet({ stappen: l });
+                  }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 14 }) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "studio-icoonknop", "aria-label": "Verwijder stap " + (i + 1), onClick: () => zet({ stappen: d.stappen.filter((_, j) => j !== i) }), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "trash", size: 14 }) })
+                ] })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("textarea", { className: "field studio-input", rows: 2, maxLength: 400, value: s.uitleg, placeholder: "Duidelijke instructie", onChange: (e) => zet({ stappen: d.stappen.map((x, j) => j === i ? { ...x, uitleg: e.target.value } : x) }), "aria-label": "Instructie stap " + (i + 1) }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-twee", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field studio-input", maxLength: 200, value: s.tip || "", placeholder: "Tip (optioneel)", onChange: (e) => zet({ stappen: d.stappen.map((x, j) => j === i ? { ...x, tip: e.target.value } : x) }), "aria-label": "Tip stap " + (i + 1) }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field studio-input", maxLength: 200, value: s.bewijs || "", placeholder: "Bewijsopdracht bij deze stap (optioneel)", onChange: (e) => zet({ stappen: d.stappen.map((x, j) => j === i ? { ...x, bewijs: e.target.value } : x) }), "aria-label": "Bewijs stap " + (i + 1) })
+              ] })
+            ] }, i)),
+            d.stappen.length < 12 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil", onClick: () => zet({ stappen: [...d.stappen, { titel: "", uitleg: "", tip: "", bewijs: "" }] }), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: "plus", size: 14 }),
+              " Stap toevoegen"
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-hulp", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil", onClick: () => {
+              setNeoOpen(true);
+              vraagNeo("stappen");
+            }, disabled: neoBezig, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "spark", size: 14 }),
+              " Laat Neo stappen voorstellen"
+            ] }) })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-label", children: [
+            "Wanneer heb je dit goed gedaan?",
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-verplicht", "aria-hidden": "true", children: " *" })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-lijst", children: [
+            d.succescriteria.map((c, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-lijst-rij", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("select", { className: "field studio-select is-smal", value: c.soort || "uitvoering", onChange: (e) => zet({ succescriteria: d.succescriteria.map((x, j) => j === i ? { ...x, soort: e.target.value } : x) }), "aria-label": "Soort criterium " + (i + 1), children: STUDIO_CRITERIUM_SOORT.map(([k, l]) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: k, children: l }, k)) }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field studio-input", maxLength: 200, value: c.tekst, onChange: (e) => zet({ succescriteria: d.succescriteria.map((x, j) => j === i ? { ...x, tekst: e.target.value } : x) }), placeholder: "Concreet en observeerbaar, bijv. De poster bevat drie tips met uitleg.", "aria-label": "Criterium " + (i + 1) }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "studio-icoonknop", "aria-label": "Verwijder criterium " + (i + 1), onClick: () => zet({ succescriteria: d.succescriteria.filter((_, j) => j !== i) }), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "trash", size: 15 }) })
+            ] }, i)),
+            d.succescriteria.length < 8 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil", onClick: () => zet({ succescriteria: [...d.succescriteria, { tekst: "", soort: "uitvoering" }] }), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: "plus", size: 14 }),
+              " Criterium toevoegen"
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-hulp", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil", onClick: () => {
+                const w = WERKVORMEN.find((x) => x.naam === d.werkvormen[0]);
+                const bank = w && PRAKTIJK_WERKVORMEN.find((p) => p.naam === w.naam) || null;
+                const crit = bank ? bank.criteria : [];
+                if (crit.length) zet({ succescriteria: [...d.succescriteria, ...crit.slice(0, 3).map((t) => ({ tekst: t, soort: "kwaliteit" }))].slice(0, 8) });
+                else setMelding("Voor deze werkvorm zijn geen bestaande criteria beschikbaar.");
+              }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "rubric", size: 14 }),
+                " Bestaande criteria gebruiken"
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil", onClick: () => {
+                setNeoOpen(true);
+                vraagNeo("succescriteria");
+              }, disabled: neoBezig, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "spark", size: 14 }),
+                " Laat Neo criteria voorstellen"
+              ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-hint", children: "De beoordeling blijft bij de docent; Neo kent nooit zelf een beoordeling of prestatie toe." })
+          ] })
+        ] })
+      ] });
+      const ch = studioNaarChallenge(st);
+      return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-stap", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "studio-stap-titel", children: "Bekijken, bewaren en delen" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "studio-stap-sub", children: "Je uitdaging is klaar om te bekijken. Zo ervaren leerlingen hem." }),
+        ontbreekt.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-ontbreekt", role: "alert", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: "Nog niet compleet:" }),
+          " ",
+          ontbreekt.join(" \xB7 ")
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-controle", children: [["Titel", ch.titel], ["Thema en niveau", ch.thema + (ch.subthema ? " \u203A " + ch.subthema : "") + " \xB7 " + ch.niveau], ["Type en tijd", ch.challengeType + " \xB7 " + (ch.tijd || "\u2014")], ["Benodigdheden", ch.benodigdheden.join(", ") || "\u2014"], ["Met wie", ch.samenwerking], ["Werkvorm", ch.werkvormen.join(", ") || "\u2014"], ["Leerdoelen", ch.leerdoelen.length + " " + (ch.leerdoelen.length === 1 ? "leerdoel" : "leerdoelen")], ["Competenties", ch.competenties.join(", ") || "\u2014"], ["Bewijs", st.data.bewijsvormen.map((id) => (STUDIO_BEWIJS.find((b) => b[0] === id) || [id, id])[1] + (st.data.bewijsVereist.includes(id) ? " (vereist)" : "")).join(", ") || "\u2014"], ["Stappen", ch.stappen.length + " " + (ch.stappen.length === 1 ? "stap" : "stappen")], ["Succescriteria", ch.succescriteria.length + " " + (ch.succescriteria.length === 1 ? "criterium" : "criteria")]].map(([k, v]) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-controle-rij", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-controle-k", children: k }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-controle-v", children: v })
+        ] }, k)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-twee", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-label", children: "Zichtbaarheid" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-chips", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioChip, { aan: st.zichtbaarheid === "prive", onClick: () => setSt((s) => ({ ...s, zichtbaarheid: "prive" })), icoon: "lock", children: "Priv\xE9 (alleen ik)" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioChip, { aan: st.zichtbaarheid === "school", onClick: () => setSt((s) => ({ ...s, zichtbaarheid: "school" })), icoon: "school", children: "Binnen mijn school" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-hint", children: "Naar buiten delen kan alleen via een expliciete export (fase C). Er is geen publieke bibliotheek." })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-label", children: "Status" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-chips", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioChip, { aan: st.status === "concept", onClick: () => setSt((s) => ({ ...s, status: "concept" })), children: "Concept" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioChip, { aan: st.status === "gepubliceerd", onClick: () => {
+                if (ontbreekt.length) {
+                  setMelding("Vul eerst de ontbrekende onderdelen in.");
+                  return;
+                }
+                setSt((s) => ({ ...s, status: "gepubliceerd" }));
+              }, children: "Gepubliceerd" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-hint", children: "Gepubliceerd betekent: klaar om toe te wijzen (fase B). Niets wordt automatisch gepubliceerd." })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-acties", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-licht studio-knop", onClick: () => setPreview(true), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "eye", size: 15 }),
+            " Bekijk als leerling"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent studio-knop", onClick: async () => {
+            const ok = await bewaarIn({ ...st, gewijzigd: (/* @__PURE__ */ new Date()).toISOString() }, true);
+            if (ok) setZicht("bibliotheek");
+          }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "bewaar", size: 15 }),
+            " Bewaar in mijn bibliotheek"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-licht studio-knop", disabled: true, title: "Fase B", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "users", size: 15 }),
+            " Wijs toe aan leerlingen"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-licht studio-knop", disabled: true, title: "Fase C", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "upload", size: 15 }),
+            " Deel of exporteer"
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "studio-hint", children: "Toewijzen (fase B) en delen of exporteren (fase C) volgen in een volgende versie; de knoppen staan er alvast." })
+      ] });
+    })();
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-kop", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h1", { className: "studio-paginatitel", children: "GROW Studio" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "studio-sub", children: "Maak je eigen uitdaging of gebruik de AI-assistent, sjablonen of importeer een gedeelde uitdaging." })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-kop-acties", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil", onClick: () => {
+            setNeoOpen((o) => !o);
+          }, "aria-expanded": neoOpen ? "true" : "false", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "spark", size: 14 }),
+            " Neo-hulp"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil", onClick: () => setZicht("bibliotheek"), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "book", size: 14 }),
+            " Mijn bibliotheek",
+            lijst.length ? " \xB7 " + lijst.length : ""
+          ] })
+        ] })
+      ] }),
+      stap === 0 && toonKeuzes && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Keuzes, {}),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "studio-status-regel", children: [
+        st.data.titel || "Nieuwe uitdaging",
+        " \xB7 ",
+        st.status === "gepubliceerd" ? "Gepubliceerd" : "Concept",
+        opslag ? " \xB7 " + opslag : " \xB7 wordt automatisch bewaard"
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("ol", { className: "studio-voortgang", "aria-label": "Stappen", children: STUDIO_STAPPEN.map((n, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("li", { className: "studio-voortgang-stap" + (i === stap ? " is-actief" : i < stap ? " is-klaar" : ""), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-voortgang-knop", "aria-current": i === stap ? "step" : void 0, onClick: () => setStap(i), children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-voortgang-nr", children: i < stap ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 12 }) : i + 1 }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-voortgang-naam", children: n })
+      ] }) }, n)) }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-werk" + (neoOpen ? " met-neo" : stap < 4 ? " met-zijkaart" : ""), children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-werk-hoofd", children: stapPaneel }),
+        !neoOpen && stap < 4 && (() => {
+          const tk = d.challengeType === "auto" ? null : d.challengeType;
+          const foto = d.thema && THEMA_ACHTERGROND[d.thema];
+          return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("aside", { className: "studio-zijkaart", "aria-label": "Voorbeeld van de kaart", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-zijkaart-beeld", children: [
+              foto ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("img", { src: foto, alt: "" }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(AfrondLandschap, {}),
+              stap !== 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil is-klein studio-zijkaart-wijzig", onClick: () => setStap(0), children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "edit", size: 13 }),
+                " Wijzigen"
+              ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "studio-zijkaart-titel", children: d.titel || "Titel van je uitdaging" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "studio-zijkaart-thema", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "target", size: 15 }) }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: d.thema ? studioThemaLabel(d) : "Thema" }),
+                studioSubLabel(d) ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("br", {}),
+                  studioSubLabel(d)
+                ] }) : null
+              ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-chips", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "afrond-chip", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: d.niveau || "Silver", size: 13 }),
+                " ",
+                d.niveau
+              ] }),
+              tk && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "afrond-chip", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ChallengeTypeIcoon, { type: STUDIO_TYPE_NAAM[tk], size: 13 }),
+                " ",
+                tk.charAt(0).toUpperCase() + tk.slice(1)
+              ] }),
+              studioTijd(d) && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "afrond-chip is-tijd", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "clock", size: 13 }),
+                " ",
+                studioTijd(d)
+              ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "studio-zijkaart-tekst", children: d.beschrijving || "Je korte beschrijving komt hier te staan." }),
+            d.werkvormen.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "studio-hint", children: [
+              "Werkvorm: ",
+              d.werkvormen.join(", ")
+            ] })
+          ] });
+        })(),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("aside", { className: "studio-neo" + (neoOpen ? " is-open" : ""), "aria-label": "Neo-hulp", children: neoOpen && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-neo-kop", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(NeoFiguur, { width: 56, zweef: false }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: "Neo helpt ontwerpen" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-hint", children: "Beschrijf je idee; Neo doet een voorstel, jij beslist." })
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("textarea", { className: "field studio-input", rows: 3, maxLength: 900, value: neoPrompt, onChange: (e) => setNeoPrompt(e.target.value), placeholder: "Bijv. Maak een Core Challenge over verantwoord omgaan met sociale media voor havo 3. Leerlingen werken in tweetallen en maken een korte video." }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-hulp", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "btn btn-accent studio-knop", disabled: neoBezig, onClick: () => vraagNeo(null), children: neoBezig ? "Neo denkt na\u2026" : "Maak een voorstel" }) }),
+          neoFout && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "studio-ontbreekt", role: "alert", children: neoFout }),
+          neoVoorstel && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-voorstel", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-voorstel-kop", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("b", { children: [
+                "Voorstel",
+                neoVoorstel.deel ? ": " + ({ leerdoelen: "leerdoelen", stappen: "stappen", succescriteria: "succescriteria", bewijsOpdracht: "bewijsopdracht" }[neoVoorstel.deel] || neoVoorstel.deel) : ""
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "ob-soort " + (neoVoorstel.bron === "neo" ? "is-advies" : "is-uitkomst"), children: neoVoorstel.bron === "neo" ? "Neo (AI)" : "Lokaal voorstel, zonder AI" })
+            ] }),
+            neoVoorstel.bron !== "neo" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-hint", children: [
+              "Geen AI-koppeling beschikbaar",
+              neoVoorstel.reden ? " (" + neoVoorstel.reden + ")" : "",
+              "; dit voorstel komt uit de ingebouwde generator."
+            ] }),
+            (neoVoorstel.deel ? [neoVoorstel.deel] : ["titel", "beschrijving", "leerdoelen", "werkvormen", "stappen", "succescriteria", "bewijsOpdracht"]).map((k) => {
+              const v = neoVoorstel.voorstel[k];
+              if (v === void 0 || v === "" || Array.isArray(v) && !v.length) return null;
+              return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-voorstel-deel", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-label", children: { titel: "Titel", beschrijving: "Beschrijving", leerdoelen: "Leerdoelen", werkvormen: "Werkvorm", stappen: "Stappen", succescriteria: "Succescriteria", bewijsOpdracht: "Bewijsopdracht" }[k] }),
+                Array.isArray(v) ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("ul", { className: "studio-voorstel-lijst", children: v.map((x, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("li", { children: typeof x === "string" ? x : (x.titel || x.tekst) + (x.uitleg ? " \u2014 " + x.uitleg : "") }, i)) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { children: v }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil is-klein", onClick: () => neemVoorstelOver(k), children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 13 }),
+                  " Neem over"
+                ] })
+              ] }, k);
+            }),
+            !neoVoorstel.deel && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "btn btn-accent studio-knop", onClick: () => neemVoorstelOver(null), children: "Alles overnemen" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-hint", children: '"Alles overnemen" vult alleen lege velden en vult lijsten aan; "Neem over" bij een onderdeel vervangt dat ene tekstveld of vult die lijst aan.' })
+          ] })
+        ] }) })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-voet", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil", onClick: () => {
+          if (stap === 0) {
+            setSt(studioLeeg(gebruiker));
+            setToonKeuzes(true);
+            setOpslag("");
+          } else setStap(stap - 1);
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.2", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M19 12H5M11 6l-6 6 6 6" }) }),
+          " ",
+          stap === 0 ? "Annuleren" : "Vorige"
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-hint", children: ontbreekt.length ? ontbreekt.length + " verplicht onderdeel" + (ontbreekt.length === 1 ? "" : "en") + " nog open" : "Alle verplichte onderdelen zijn ingevuld" }),
+        stap < 4 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent studio-knop", onClick: () => setStap(stap + 1), children: [
+          "Verder ",
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.2", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M5 12h14M13 6l6 6-6 6" }) })
+        ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent studio-knop", onClick: async () => {
+          const ok = await bewaarIn({ ...st, gewijzigd: (/* @__PURE__ */ new Date()).toISOString() }, true);
+          if (ok) setZicht("bibliotheek");
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "bewaar", size: 15 }),
+          " Bewaren"
+        ] })
+      ] }),
+      melding && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "pf2-kaart-sub", role: "status", children: melding }),
+      preview && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioPreview, { st, gebruiker, onSluit: () => setPreview(false) })
+    ] });
+  }
+  function StudioWerkvormKiezer({ gekozen, niveau, onKies, onSluit }) {
+    const [q, setQ] = (0, import_react2.useState)("");
+    const [cat, setCat] = (0, import_react2.useState)("Alle");
+    const alle = (0, import_react2.useMemo)(() => WERKVORMEN.map((w) => ({ ...w, categorie: w.type, meta: werkvormMeta(w) })), []);
+    const cats = Object.keys(WERKVORM_CATEGORIE).filter((c) => alle.some((w) => w.categorie === c));
+    const z = q.trim().toLowerCase();
+    const filt = alle.filter((w) => (cat === "Alle" || w.categorie === cat) && (!z || (w.naam + " " + w.beschrijving).toLowerCase().includes(z)));
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(PfPaneel, { titel: "Werkvormenbibliotheek", sub: "Kies een of meer werkvormen", icoon: "book", breed: 900, onSluit, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-filters", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { className: "field studio-input", value: q, onChange: (e) => setQ(e.target.value), placeholder: "Zoek een werkvorm", "aria-label": "Zoek een werkvorm" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("select", { className: "field studio-select", value: cat, onChange: (e) => setCat(e.target.value), "aria-label": "Categorie", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { children: "Alle" }),
+          cats.map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: c, children: WERKVORM_CATEGORIE[c].label }, c))
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "wvb-raster studio-wvb", children: filt.slice(0, 60).map((w) => {
+        const aan = gekozen.includes(w.naam);
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "wvb-kaart" + (aan ? " is-aan" : ""), "aria-pressed": aan ? "true" : "false", onClick: () => onKies(w.naam), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: WERKVORM_CAT_ICOON[w.categorie] || "spark", size: 18 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "wvb-kaart-tekst", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-kaart-naam", children: w.naam }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-kaart-uitleg", children: w.beschrijving }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "wvb-kaart-meta", children: [
+              w.meta.label,
+              " \xB7 ",
+              w.niveaus.join(" \xB7 ")
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-kaart-pijl", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: aan ? "check" : "chevron", size: 15 }) })
+        ] }, w.naam);
+      }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-acties", style: { marginTop: 12 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent studio-knop", onClick: onSluit, children: [
+        "Klaar (",
+        gekozen.length,
+        " gekozen)"
+      ] }) })
+    ] });
+  }
+  function StudioSjabloonKiezer({ onKies, onSluit }) {
+    const [thema, setThema] = (0, import_react2.useState)(THEMAS[0].key);
+    const [niveau, setNiveau] = (0, import_react2.useState)("Silver");
+    const [lijst, setLijst] = (0, import_react2.useState)([]);
+    (0, import_react2.useEffect)(() => {
+      const subs = (SUBTHEMAS[thema] || []).slice(0, 4);
+      const uit = [];
+      subs.forEach((s) => {
+        try {
+          const ch = genereerLokaal({ thema, themaLabel: themaLabel(thema), subs: [s], niveau, leeftijd: 14, klas: "", vermijdWerkvormen: [], vermijdOnderwerpen: [], recenteTypes: [] });
+          if (ch && ch.titel) uit.push({ ...ch, thema, subthema: s, niveau });
+        } catch {
+        }
+      });
+      setLijst(uit);
+    }, [thema, niveau]);
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(PfPaneel, { titel: "Vanuit sjabloon", sub: "Een uitdaging uit de didactische bibliotheek als vertrekpunt", icoon: "doc", breed: 900, onSluit, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-filters", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("select", { className: "field studio-select", value: thema, onChange: (e) => setThema(e.target.value), "aria-label": "Thema", children: THEMAS.map((t) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: t.key, children: t.label }, t.key)) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("select", { className: "field studio-select", value: niveau, onChange: (e) => setNiveau(e.target.value), "aria-label": "Niveau", children: ["Bronze", "Silver", "Gold", "Platinum"].map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: n, children: n }, n)) })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-raster", children: lijst.map((sj, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-kaart is-knop", onClick: () => onKies(sj), children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-kaart-thema", children: sj.subthema }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-kaart-titel", children: sj.titel }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-kaart-sub", children: (sj.situatie || "").slice(0, 120) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-kaart-meta", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "studio-meta", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: niveau, size: 15 }),
+            niveau
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-meta", children: sj.werkvorm && sj.werkvorm.naam })
+        ] })
+      ] }, i)) }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "studio-hint", children: "Sjablonen komen uit dezelfde bibliotheek als de uitdagingen van leerlingen. Je past alles daarna zelf aan." })
+    ] });
+  }
+  function StudioPreview({ st, gebruiker, onSluit }) {
+    const rec = (0, import_react2.useMemo)(() => studioNaarRecord(st, "Voorbeeldleerling"), [st]);
+    const voorbeeld = (0, import_react2.useMemo)(() => ({ naam: "Voorbeeldleerling", rol: "leerling", klas: "", leeftijd: 14, discovery: { route: "groei" } }), []);
+    const geen = async () => ({ ok: false, reden: "voorbeeld" });
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ModalLaag, { onSluit, label: "Voorbeeld voor leerlingen", pad: 0, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-preview", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-preview-balk", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "eye", size: 15 }),
+          " Zo ziet een leerling deze uitdaging. Niets wordt bewaard."
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "pf2-sluit", "aria-label": "Sluiten", onClick: onSluit, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "x", size: 18 }) })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-preview-inhoud grow-root", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+        Uitdaging,
+        {
+          rec,
+          reedsAf: false,
+          startStap: 0,
+          records: [],
+          gebruiker: voorbeeld,
+          onAfgerond: geen,
+          onBewaar: () => {
+          },
+          onStap: () => {
+          },
+          onNieuw: onSluit,
+          onInleveren: null,
+          onWerk: null,
+          platformNeo: null,
+          onBewijzen: async () => {
+          },
+          bewijsApi: null,
+          onConcept: null,
+          onVerder: onSluit
+        },
+        rec.id
+      ) })
+    ] }) });
+  }
+  function Mentor({ gebruiker, alle, klassen, onKlassen, onOpen, projecten, onBeoordeel, onBeoordeelUitdaging, onPortfolio, onSync, syncBezig, syncInfo, heeftSchool, bewijsApi, onBevestigBewijs, portfolioVan, vaardigStanden, nav, onNav, onTerugNav, platformNeo, studioVraag }) {
     const readOnly = gebruiker.rol === "coach";
     const [mfRec, setMfRec] = (0, import_react2.useState)(null);
     (0, import_react2.useEffect)(() => {
@@ -74637,6 +75954,13 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const eyebrow = readOnly ? "Coach \xB7 alleen-lezen" : "Mentor";
     const sub = readOnly ? "Bekijk de voortgang en XP van de leerlingen." : "Zoek een leerling, bekijk zijn ontwikkeling en geef feedback.";
     const [mentorView, setMentorView] = (0, import_react2.useState)("leerlingen");
+    const [studioStart, setStudioStart] = (0, import_react2.useState)(null);
+    (0, import_react2.useEffect)(() => {
+      if (studioVraag && studioVraag.n) {
+        setMentorView("studio");
+        setStudioStart(studioVraag.wat + ":" + studioVraag.n);
+      }
+    }, [studioVraag]);
     const [klasPopup, setKlasPopup] = (0, import_react2.useState)(null);
     const N = nav || MENTOR_NAV_LEEG;
     const zetNav = (wijz, opties) => onNav && onNav({ ...N, ...wijz }, opties);
@@ -74687,8 +76011,49 @@ ${String(stapTekst).slice(0, 900)}` : ""
         ] })
       ] });
     };
+    if (mentorView === "studio") {
+      const items = [
+        ["start", "Start", "home", () => {
+          setMentorView("leerlingen");
+          zetNav({ weergave: "klassen", klasId: null, leerlingId: null }, { vervang: true });
+        }],
+        ["leerlingen", "Leerlingen", "users", () => {
+          setMentorView("leerlingen");
+          zetNav({ weergave: "leerlingen", klasId: null, leerlingId: null }, { vervang: true });
+        }],
+        ["uitdagingen", "Uitdagingen", "target", () => setMentorView("bibliotheek")],
+        ["studio", "GROW Studio", "edit", () => setStudioStart("nieuw:" + Date.now())],
+        ["bibliotheek", "Mijn bibliotheek", "book", () => setStudioStart("bibliotheek:" + Date.now())],
+        ["klassen", "Klassen", "school", () => {
+          setMentorView("leerlingen");
+          zetNav({ weergave: "klassen", klasId: null, leerlingId: null }, { vervang: true });
+        }],
+        ["beoordelingen", "Beoordelingen", "rubric", () => {
+          setMentorView("leerlingen");
+          setKlasPopup("__inleveringen");
+        }]
+      ];
+      const actief = (studioStart || "").startsWith("bibliotheek") ? "bibliotheek" : "studio";
+      return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-shell", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("aside", { className: "studio-zijbalk", "aria-label": "Mentoromgeving", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("nav", { className: "studio-zijnav", children: items.map(([k, l, ic, fn]) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-zijknop" + (k === actief ? " is-actief" : ""), "aria-current": k === actief ? "page" : void 0, onClick: fn, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: ic, size: 18 }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: l })
+          ] }, k)) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-zijbalk-natuur", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(AfrondLandschap, {}) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-zijbalk-voet", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: "2scool GROW" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: "Samen groeien" })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-inhoud", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GrowStudio, { gebruiker, platformNeo, start: studioStart ? studioStart.split(":")[0] : null, onOpenRecord: onOpen }) })
+      ] });
+    }
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(Section, { eyebrow, titel: "Leerlingen", sub, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(AdminTabs, { tabs: [["leerlingen", "Leerlingen", "users"], ["bibliotheek", "Didactische bibliotheek", "briefcase"]], actief: mentorView, onKies: setMentorView, label: "Mentoromgeving" }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(AdminTabs, { tabs: [["leerlingen", "Leerlingen", "users"], ["bibliotheek", "Didactische bibliotheek", "briefcase"], ["studio", "GROW Studio", "edit"]], actief: mentorView, onKies: (k) => {
+        setMentorView(k);
+        if (k === "studio") setStudioStart("nieuw:" + Date.now());
+      }, label: "Mentoromgeving" }),
       mentorView === "leerlingen" && !N.leerlingId && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lv-schakel", role: "tablist", "aria-label": "Weergave", children: [["klassen", "Klassen"], ["leerlingen", "Alle leerlingen"]].map(([k, lab]) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
           "button",
@@ -80698,6 +82063,7 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
       } catch {
       }
     }, []);
+    const [studioVraag, setStudioVraag] = (0, import_react2.useState)(null);
     const go = (0, import_react2.useCallback)((s, nieuweNav) => {
       if (typeof window !== "undefined") {
         bewaarScroll();
@@ -81593,10 +82959,24 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
     }, [isWerkStap]);
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "tc grow-root" + (isWerkStap ? " is-werk" : ""), children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("style", { children: STYLES }),
-      step !== "hero" && step !== "auth" && step !== "rolkeuze" && step !== "discovery" && step !== "route" && step !== "intake" && step !== "avatar" && step !== "promo" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Header, { step, naarProfiel: () => {
-        setProfielTab(null);
-        go("profiel");
-      }, wachtrij, gebruiker, go, uitloggen }),
+      step !== "hero" && step !== "auth" && step !== "rolkeuze" && step !== "discovery" && step !== "route" && step !== "intake" && step !== "avatar" && step !== "promo" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+        Header,
+        {
+          step,
+          naarProfiel: () => {
+            setProfielTab(null);
+            go("profiel");
+          },
+          wachtrij,
+          gebruiker,
+          go,
+          uitloggen,
+          onStudio: (wat) => {
+            setStudioVraag((v) => ({ wat, n: (v && v.n || 0) + 1 }));
+            go("mentor");
+          }
+        }
+      ),
       gebruiker && platform && platform.userId && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(SyncStrook, {}),
       uitlogVraag && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-sync is-mislukt", role: "alertdialog", "aria-labelledby": "uitlog-vraag", style: { margin: "10px auto", maxWidth: 720 }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "waarschuwing", size: 14 }),
@@ -82181,6 +83561,8 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
                   setActief(r);
                   go("uitdaging");
                 },
+                platformNeo: platform && platform.vraagNeo,
+                studioVraag,
                 nav,
                 onNav: gaNaarStand,
                 onTerugNav: () => {
