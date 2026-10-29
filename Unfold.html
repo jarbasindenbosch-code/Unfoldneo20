@@ -50457,6 +50457,25 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .sjb-uitleg .rubric-meer{font-size:.8rem}
 .sjb-uitleg-tekst{margin:6px 0 0;font-size:.8rem;line-height:1.5;max-width:76ch}
 .sjb-opening{font-style:italic}
+/* v112.6.2: stap-voor-stap-flow in de didactische bibliotheek */
+.bibstap{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.bibstap-intro{margin:0;font-size:.84rem;line-height:1.5}
+.bibstap-balk{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.bibstap-knop{appearance:none;width:100%;display:flex;align-items:center;gap:10px;text-align:left;padding:10px 12px;border-radius:12px;border:1px solid var(--lijn-fijn);background:var(--kaart);font:inherit;color:var(--inkt);cursor:pointer;min-height:56px}
+.bibstap-knop:hover{background:var(--tegel-licht)}
+.bibstap-knop:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
+.bibstap-item.is-huidig .bibstap-knop{background:var(--salie-zacht);border-color:var(--salie)}
+.bibstap-nummer{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;font-size:.8rem;font-weight:700;background:var(--tegel);color:var(--inkt-zacht)}
+.bibstap-item.is-huidig .bibstap-nummer{background:var(--salie-diep);color:#fff}
+.bibstap-item.is-klaar .bibstap-nummer{background:var(--salie-licht);color:var(--salie-diep)}
+.bibstap-tekst{display:grid;gap:1px;min-width:0}
+.bibstap-titel{font-size:.9rem;font-weight:600}
+.bibstap-uitleg{font-size:.76rem;color:var(--inkt-zacht);line-height:1.3}
+.bibstap-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;position:sticky;bottom:0;z-index:3;padding:10px 0;background:var(--werk-bg,var(--bg));border-top:1px solid var(--lijn-fijn)} /* blijft in beeld bij de lange werkvormenlijst */
+.bibstap-teller{font-size:.8rem}
+.bibstap-volgende{padding:.6rem 1.1rem;min-height:38px;font-size:.9rem;border-radius:11px}
+.bibstap-nav .admin-btn-sec[disabled]{opacity:.45;cursor:default}
+@media (max-width:700px){ .bibstap-balk{grid-template-columns:1fr} .bibstap-uitleg{display:none} .bibstap-knop{min-height:44px} .bibstap-teller{order:3;width:100%;text-align:center} }
 /* v112.2: de rubricmatrix \u2014 naar het ontwerp van JB: kolomtegels met een
    groei-icoon, \xE9\xE9n rij per criterium op een lichte ondergrond, ring-met-kern
    als keuze, \xE9\xE9n opmerking, Annuleren links en Opslaan rechts. */
@@ -50578,6 +50597,72 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 @media(max-width:640px){
   .afrond-acties.is-primair{position:sticky;bottom:0;background:var(--kaart);padding:12px 0 10px;margin:0 -2px;border-top:1px solid var(--lijn-fijn);z-index:2}
 }
+/* v112.6.3 \u2014 Final Completion Screen: hero met abstract landschap, groeikaart, werk + Neo,
+   reflectie- en inleverrij, \xE9\xE9n oranje afrondknop. Alleen CSS/markup; gegevens ongewijzigd. */
+.afrond-kaart.is-rustig{gap:14px}
+.afrond-hero{position:relative;margin:-24px -24px 0;padding:26px 24px 20px;overflow:hidden;border-radius:inherit;border-bottom-left-radius:0;border-bottom-right-radius:0}
+.afrond-landschap{position:absolute;top:0;right:0;width:min(76%,620px);height:100%;pointer-events:none;z-index:0;
+  -webkit-mask-image:linear-gradient(to left,#000 38%,transparent 100%);mask-image:linear-gradient(to left,#000 38%,transparent 100%)}
+.afrond-landschap svg{display:block;width:100%;height:100%}
+.afrond-hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:44px;background:linear-gradient(to bottom,rgba(255,255,255,0),var(--kaart));pointer-events:none;z-index:0}
+.afrond-hero-tekst{position:relative;z-index:1;max-width:min(100%,430px)}
+.afrond-hero .afrond-titel{font-size:1.55rem;letter-spacing:-.02em}
+.afrond-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.afrond-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--accent-zacht);color:var(--accent-diep);font-size:.8rem;font-weight:560;white-space:nowrap}
+.afrond-chip.is-tijd{background:#EEF1F4;color:#3F4B5E}
+.afrond-groei{display:grid;gap:8px;padding:0}
+.afrond-groei .afrond-kop{margin:0}
+.afrond-tegel{border:1px solid var(--lijn-fijn);border-radius:16px;background:var(--kaart);padding:14px 16px;box-shadow:0 1px 2px rgba(60,70,55,.04)}
+.afrond-sectie.afrond-tegel{border-top:1px solid var(--lijn-fijn)}
+.afrond-duo{display:grid;grid-template-columns:minmax(0,11fr) minmax(0,9fr);gap:14px;align-items:stretch}
+.afrond-duo.is-enkel{grid-template-columns:minmax(0,1fr)}
+.afrond-werk .afrond-kop{margin-bottom:6px}
+.afrond-werk{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;align-content:start}
+.afrond-werk>:not(.afrond-werk-icoon):not(.afrond-kop){grid-column:1 / -1}
+.afrond-werk .afrond-kop{align-self:center;margin:0}
+.afrond-werk .bewijs-sv-icoon{width:52px;height:52px;border-radius:10px}
+.afrond-werk .bewijs-sv-rij{margin-top:8px;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"status knop" "iconen knop";row-gap:10px;align-items:center}
+.afrond-werk .bewijs-sv-status{grid-area:status;color:var(--inkt-zacht);font-size:.86rem}
+.afrond-werk .bewijs-sv-iconen{grid-area:iconen}
+.afrond-werk .bewijs-sv-knop{grid-area:knop;margin:0;align-self:center;text-decoration:none;border:1px solid var(--accent-rand);border-radius:999px;padding:7px 14px;min-height:36px;font-size:.84rem;color:var(--accent-diep);background:var(--kaart)}
+.afrond-werk .bewijs-sv-knop:hover{background:var(--accent-zacht)}
+.afrond-neo{display:flex;align-items:center;gap:14px;border:1px solid var(--lijn-fijn);border-radius:16px;background:var(--kaart);padding:14px 16px;box-shadow:0 1px 2px rgba(60,70,55,.04)}
+.afrond-neo-beeld{flex:0 0 auto;display:grid;place-items:center;width:104px}
+.groei-compact-icoon{}
+.afrond-groei .groei-compact-icoon{width:54px;height:54px;border-radius:16px}
+.afrond-neo-beeld img{max-width:100%;height:auto}
+.afrond-neo-tekst{min-width:0}
+.afrond-neo-tekst .afrond-kop{margin:0 0 2px}
+.afrond-pil{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:7px 14px;min-height:36px;border:1px solid var(--accent-rand);border-radius:999px;background:var(--kaart);color:var(--accent-diep);font:inherit;font-size:.84rem;font-weight:600;cursor:pointer}
+.afrond-pil:hover{background:var(--accent-zacht)}
+.afrond-pil.is-klein{margin:0 0 0 auto;margin-top:0}
+.afrond-pil:focus-visible{outline:2.5px solid var(--accent-diep);outline-offset:2px}
+.afrond-tegel .afrond-regel{align-items:center;flex-wrap:nowrap}
+.afrond-icoon{width:36px;height:36px;border-radius:11px;background:var(--accent-zacht);color:var(--accent-diep);display:grid;place-items:center;flex-shrink:0}
+.afrond-regel-tekst{flex:1;min-width:0}
+.afrond-regel-actie{margin:0 0 0 auto;margin-top:0;white-space:nowrap;text-decoration:none;font-weight:600;padding:7px 4px;min-height:36px}
+.afrond-regel-actie:hover{text-decoration:underline}
+.afrond-inleveren .inlever-compact-icoon{width:36px;height:36px;border-radius:11px;background:var(--accent-zacht);color:var(--accent-diep)}
+.afrond-inleveren .inlever-compact-kop{flex-wrap:nowrap}
+.afrond-inleveren .inlever-compact-kop>div{min-width:0}
+.afrond-kaart.is-rustig .afrond-acties.is-primair{border-top:none;padding-top:2px;justify-items:end}
+.uitd-kaart:has(.afrond-hero){overflow:clip}
+.afrond-kaart.is-rustig .afrond-knop{justify-self:end;min-width:220px;border-radius:999px;padding-inline:22px}
+@media (max-width:820px){ .afrond-neo-beeld{width:76px} }
+@media (max-width:640px){
+  .afrond-hero{margin:-16px -14px 0;padding:20px 14px 16px}
+  .afrond-landschap{width:70%;opacity:.7}
+  .afrond-duo{grid-template-columns:minmax(0,1fr)}
+  .afrond-tegel .afrond-regel,.afrond-inleveren .inlever-compact-kop{flex-wrap:wrap}
+  .afrond-reflectie-sectie .afrond-regel{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:12px}
+  .afrond-regel-actie{grid-column:1 / -1;margin:4px 0 0;justify-self:start;min-height:44px}
+  .afrond-inleveren .inlever-compact-kop>div{flex:1 1 140px}
+  .afrond-pil,.afrond-werk .bewijs-sv-knop{min-height:44px}
+  .afrond-neo-tekst{padding-left:4px}
+  .afrond-kaart.is-rustig .afrond-knop{width:100%}
+  .afrond-kaart.is-rustig .afrond-acties.is-primair{justify-items:stretch}
+}
+
 .groei-compact{display:flex;align-items:center;gap:14px}
 .groei-compact-icoon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;color:#fff;flex-shrink:0}
 .groei-compact-tekst{flex:1;min-width:0}
@@ -57192,8 +57277,8 @@ ${xref}
   var GROEINIVEAUS = [
     { naam: "Seed", min: 0, kleur: "#7E8C77" },
     // v112.6.1: = --salie (groenfamilie)
-    { naam: "Explorer", min: 200, kleur: "#6E9E76" },
-    { naam: "Builder", min: 600, kleur: "#7FA95F" },
+    { naam: "Explorer", min: 200, kleur: "#7C9475" },
+    { naam: "Builder", min: 600, kleur: "#7E9468" },
     { naam: "Creator", min: 1400, kleur: "#BBA83F" },
     { naam: "Challenger", min: 2600, kleur: "#D69A36" },
     { naam: "Performer", min: 4200, kleur: "#E4852B" },
@@ -58918,6 +59003,23 @@ Antwoord met ALLEEN de JSON.`;
       ] })
     ] });
   }
+  function AfrondLandschap() {
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "afrond-landschap", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("svg", { viewBox: "0 0 640 260", preserveAspectRatio: "xMaxYMin slice", focusable: "false", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("circle", { cx: "478", cy: "64", r: "30", fill: "#F5DDB9" }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M0 200 C80 150 170 120 260 150 C340 176 420 120 510 96 C560 84 604 88 640 98 L640 260 L0 260Z", fill: "#E4E9DF" }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M150 232 C230 176 310 160 390 184 C470 208 550 150 640 156 L640 260 L150 260Z", fill: "#CBD6C3" }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M300 260 C380 214 470 200 550 214 C590 221 620 218 640 214 L640 260Z", fill: "#B3C2A9" }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { fill: "#8FA286", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M548 190 C541 168 546 150 560 134 C566 154 562 174 548 190Z" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M548 190 C556 172 572 160 590 156 C586 174 570 188 548 190Z" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M548 190 L551 170 L549 190Z" })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("g", { fill: "#9DAE93", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M606 222 C601 206 605 192 616 180 C620 196 617 210 606 222Z" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M606 222 C612 210 624 202 638 200 C634 212 622 221 606 222Z" })
+      ] })
+    ] }) });
+  }
   function GroeiCompact({ xp, beloning, stand }) {
     const g = groeiNiveauVan(xp);
     const kleur = g.huidig.kleur || "var(--accent)";
@@ -58939,7 +59041,7 @@ Antwoord met ALLEEN de JSON.`;
           beloning != null && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "groei-compact-xp" + (stand === "verdiend" ? " is-verdiend" : ""), children: stand === "verdiend" ? `+${beloning} XP verdiend` : `${beloning} XP te verdienen` })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "groei-compact-sub muted", children: g.volgend ? `Nog ${xpGetal(g.naarVolgend)} XP tot ${g.volgend.naam}` : "Hoogste groeiniveau bereikt" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "groei-compact-balk", role: "progressbar", "aria-valuemin": 0, "aria-valuemax": 100, "aria-valuenow": Math.round(g.frac * 100), "aria-label": "Voortgang naar " + (g.volgend ? g.volgend.naam : "de hoogste rang"), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { width: `${Math.round(vul * 100)}%` } }) })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "groei-compact-balk", role: "progressbar", "aria-valuemin": 0, "aria-valuemax": 100, "aria-valuenow": Math.round(g.frac * 100), "aria-label": "Voortgang naar " + (g.volgend ? g.volgend.naam : "de hoogste rang"), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { width: `${Math.round(vul * 100)}%`, background: kleur } }) })
       ] })
     ] });
   }
@@ -68866,7 +68968,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
     if (uitzondering) return { reden: "netwerk-of-parse", tekst: "Neo kan nu even niet antwoorden." };
     return { reden: "onbekend", tekst: "Neo kan nu even niet antwoorden." };
   }
-  function NeoHulp({ rec, stap, gebruiker, stapLabel, stilTeken, platformNeo, onSignaal, vaardigheden }) {
+  function NeoHulp({ rec, stap, gebruiker, stapLabel, stilTeken, platformNeo, onSignaal, vaardigheden, variant }) {
     const [open, setOpen] = (0, import_react2.useState)(false);
     const [cue, setCue] = (0, import_react2.useState)(false);
     const laatsteCue = (0, import_react2.useRef)(0);
@@ -68984,7 +69086,20 @@ ${String(stapTekst).slice(0, 900)}` : ""
       vraagNeo(soortVanInvoer(t), t);
     };
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "neo-knop" + (cue ? " is-cue" : ""), onClick: () => {
+      variant === "kaart" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-neo", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "afrond-neo-beeld", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(NeoFiguur, { width: 104, zweef: false }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-neo-tekst", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "afrond-kop", children: "Hulp van Neo" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "afrond-regel-sub", children: "Vragen, voorbeelden of tips? Neo helpt je op weg." }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "afrond-pil", onClick: () => {
+            setCue(false);
+            setOpen(true);
+          }, "aria-label": "Vraag Neo om tips of uitleg", children: [
+            "Vraag Neo ",
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 14 })
+          ] })
+        ] })
+      ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "neo-knop" + (cue ? " is-cue" : ""), onClick: () => {
         setCue(false);
         setOpen(true);
       }, "aria-label": "Neo om tips of uitleg vragen", children: [
@@ -69945,9 +70060,15 @@ ${String(stapTekst).slice(0, 900)}` : ""
     { id: "meer", label: "Meer opties", sub: "Link, meting en meer", icoon: "meer", vormen: ["link", "meting", "docentbevestiging"] }
   ];
   var bewijsCategorieVan = (vormId) => BEWIJS_CATEGORIEEN.find((c) => c.vormen.includes(vormId)) || BEWIJS_CATEGORIEEN[BEWIJS_CATEGORIEEN.length - 1];
-  function BewijsBlok({ rec, stapId, tp, api, onBewijzen, alleenLezen, vormen, concept: bewaardConcept, onConcept, kop = true, id, samenvatting = false }) {
+  function BewijsBlok({ rec, stapId, tp, api, onBewijzen, alleenLezen, vormen, concept: bewaardConcept, onConcept, kop = true, id, samenvatting = false, onUitgeklapt }) {
     const bewijzen = Array.isArray(rec && rec.bewijzen) ? rec.bewijzen : [];
     const [uitgeklapt, setUitgeklapt] = (0, import_react2.useState)(false);
+    (0, import_react2.useEffect)(() => {
+      try {
+        onUitgeklapt && onUitgeklapt(uitgeklapt);
+      } catch {
+      }
+    }, [uitgeklapt]);
     const sleutelWacht = String(rec && rec.id || "") + "|" + String(stapId || "");
     const c0 = bewaardConcept && typeof bewaardConcept === "object" ? bewaardConcept : null;
     const [menuOpen, setMenuOpen] = (0, import_react2.useState)(false);
@@ -70214,11 +70335,11 @@ ${String(stapTekst).slice(0, 900)}` : ""
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: n > 0 ? `${n} bewijsstuk${n === 1 ? "" : "ken"} toegevoegd` : "Nog geen bewijs toegevoegd." })
           ] }),
           n > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "bewijs-sv-iconen", "aria-hidden": "true", children: [
-            bewijzen.slice(0, 2).map((b) => {
+            bewijzen.slice(0, n > 3 ? 2 : 3).map((b) => {
               const foto = b.soort === "foto" && (b.url || b.dataUrl);
-              return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bewijs-sv-icoon" + (foto ? " is-foto" : ""), title: b.bestandsnaam || b.soort, children: foto ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("img", { src: b.url || b.dataUrl, alt: "" }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: b.soort === "meting" ? "tekst" : b.soort === "bevestiging" ? "check" : b.soort, size: 15 }) }, b.id);
+              return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bewijs-sv-icoon" + (foto ? " is-foto" : ""), title: b.bestandsnaam || b.soort, children: foto ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("img", { src: b.url || b.dataUrl, alt: "" }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: b.soort === "meting" ? "tekst" : b.soort === "bevestiging" ? "check" : b.soort, size: 18 }) }, b.id);
             }),
-            n > 2 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "bewijs-sv-icoon bewijs-sv-meer", children: [
+            n > 3 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "bewijs-sv-icoon bewijs-sv-meer", children: [
               "+",
               n - 2
             ] })
@@ -70238,7 +70359,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
                   focusDoel.current = ".bewijs-cat, .bewijs-vorm";
                 }
               },
-              children: n > 0 ? "Bekijk of wijzig" : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+              children: n > 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+                "Bekijk of wijzig ",
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 14 })
+              ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: "plus", size: 15 }),
                 " Voeg bewijs toe"
               ] })
@@ -70625,6 +70749,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
     }, [afrond.stand, afrond.bevestigd]);
     const [werkMelding, setWerkMelding] = (0, import_react2.useState)(false);
     const [reflectieOpen, setReflectieOpen] = (0, import_react2.useState)(false);
+    const [werkOpen, setWerkOpen] = (0, import_react2.useState)(false);
     const werkRef = (0, import_react2.useRef)(null);
     const praktijkW = d && d.werkvormId ? werkvormVan(d.werkvormId) : null;
     const vragen = praktijkW ? praktijkRubric(praktijkW).map((r) => ({ v: r.vraag, a: [...r.schaal], leerdoel: r.as, toelichting: r.toelichting })) : d.leerdoelen && d.leerdoelen.length ? rubricUitLeerdoelen(d.leerdoelen, rec.niveau) : RUBRIC[rec.niveau] || RUBRIC.Bronze;
@@ -70736,7 +70861,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { height: 8, borderRadius: 99, background: "#EDEDED", overflow: "hidden" }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { height: "100%", width: progPct + "%", background: "var(--accent)", borderRadius: 99, transition: "width .35s ease" } }) })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }, children: [
+      !(huidig.type === "uitslag" && afrond.stand !== "klaar") && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }, children: [
         huidig.type !== "uitslag" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pill", children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: rec.niveau, size: 16 }),
           " ",
@@ -71046,13 +71171,14 @@ ${String(stapTekst).slice(0, 900)}` : ""
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "afrond-antwoord", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LTplat, { tekst: gekozen, tp: tprofUitd }) })
                 ] }, vi);
               }) });
-              const reflectieSectie = /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-sectie afrond-reflectie-sectie", children: [
+              const reflectieSectie = /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-sectie afrond-tegel afrond-reflectie-sectie", children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-regel", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "afrond-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "edit", size: 18 }) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "afrond-regel-tekst", children: [
                     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "afrond-kop", children: "Jouw reflectie" }),
                     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "afrond-regel-sub", children: beantwoord === vragen.length ? `${vragen.length} ${vragen.length === 1 ? "vraag" : "vragen"} beantwoord` : `${beantwoord} van ${vragen.length} vragen beantwoord` })
                   ] }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "afrond-link", "aria-expanded": reflectieOpen ? "true" : "false", "aria-controls": "afrond-reflectie-" + rec.id, onClick: () => setReflectieOpen((o) => !o), children: reflectieOpen ? "Verberg mijn antwoorden \u2191" : "Bekijk mijn antwoorden \u2193" })
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "afrond-link afrond-regel-actie", "aria-expanded": reflectieOpen ? "true" : "false", "aria-controls": "afrond-reflectie-" + rec.id, onClick: () => setReflectieOpen((o) => !o), children: reflectieOpen ? "Verberg mijn antwoorden \u2191" : "Bekijk mijn antwoorden \u2193" })
                 ] }),
                 reflectieOpen && reflectieRijen,
                 reflectieOpen && !behaaldNu && !klaar && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "afrond-link", onClick: () => {
@@ -71092,46 +71218,72 @@ ${String(stapTekst).slice(0, 900)}` : ""
                 }, children: "Verder" }) })
               ] });
               return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-kaart is-rustig", children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "afrond-kaart-kop", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "eyebrow", style: { marginBottom: 4 }, children: "Bijna klaar" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "afrond-titel", children: "Je bent er bijna!" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "afrond-naam", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LTplat, { tekst: d.titel || "Jouw uitdaging", tp: tprofUitd }) }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "afrond-sub", children: "Bekijk je werk en rond je uitdaging af." })
-                ] }) }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-sectie afrond-groei", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-hero", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(AfrondLandschap, {}),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-hero-tekst", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "eyebrow", style: { marginBottom: 4 }, children: "Bijna klaar" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "afrond-titel", children: "Je bent er bijna!" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "afrond-naam", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LTplat, { tekst: d.titel || "Jouw uitdaging", tp: tprofUitd }) }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "afrond-sub", children: "Bekijk je werk en rond je uitdaging af." }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-chips", children: [
+                      behaaldNu && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "afrond-chip is-xp", children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "star", size: 13 }),
+                        " ",
+                        rec.xp,
+                        " XP te verdienen"
+                      ] }),
+                      d.tijd && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "afrond-chip is-tijd", children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "clock", size: 13 }),
+                        " ",
+                        d.tijd
+                      ] }),
+                      (d.challengeType || d.werkvorm && d.werkvorm.naam) && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "afrond-chip", children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "spark", size: 13 }),
+                        " ",
+                        d.challengeType || d.werkvorm.naam
+                      ] })
+                    ] })
+                  ] })
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-groei", children: [
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "afrond-kop", children: "Jouw groei" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GroeiCompact, { xp: xpNu, beloning: behaaldNu ? rec.xp : null, stand: "wacht" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "afrond-tegel", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GroeiCompact, { xp: xpNu, beloning: null, stand: "wacht" }) }),
                   !behaaldNu && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "afrond-regel-sub muted", children: "Volgens je reflectie heb je het niveau nog niet gehaald. Je kunt afronden zonder XP, of je reflectie opnieuw doen." })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-sectie afrond-werk" + (werkMelding && tekort ? " is-tekort" : ""), ref: werkRef, children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("h4", { className: "afrond-kop", children: [
-                    "Jouw werk",
-                    !werkVereist(rec) && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "afrond-kop-sub muted", children: " \xB7 niet verplicht" })
-                  ] }),
-                  werkMelding && tekort && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "afrond-melding", role: "alert", children: "Voeg eerst je werk toe \u2014 deze uitdaging vraagt erom. Daarna kun je afronden." }),
-                  !begeleiderWeergave && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-                    BewijsBlok,
-                    {
-                      rec,
-                      stapId: "afronden",
-                      tp: tprofUitd,
-                      api: bewijsApi,
-                      onBewijzen,
-                      vormen: arr(d.bewijsvormen),
-                      kop: false,
-                      samenvatting: true,
-                      concept: rec && rec.bewijsConcept,
-                      onConcept: (c) => {
-                        try {
-                          conceptRef.current && conceptRef.current({ bewijsConcept: c });
-                        } catch {
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-duo" + (werkOpen || begeleiderWeergave ? " is-enkel" : ""), children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-tegel afrond-werk" + (werkMelding && tekort ? " is-tekort" : ""), ref: werkRef, children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "afrond-icoon afrond-werk-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "layers", size: 18 }) }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("h4", { className: "afrond-kop", children: [
+                      "Jouw werk",
+                      !werkVereist(rec) && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "afrond-kop-sub muted", children: " \xB7 niet verplicht" })
+                    ] }),
+                    werkMelding && tekort && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "afrond-melding", role: "alert", children: "Voeg eerst je werk toe \u2014 deze uitdaging vraagt erom. Daarna kun je afronden." }),
+                    !begeleiderWeergave && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                      BewijsBlok,
+                      {
+                        rec,
+                        stapId: "afronden",
+                        tp: tprofUitd,
+                        api: bewijsApi,
+                        onBewijzen,
+                        vormen: arr(d.bewijsvormen),
+                        kop: false,
+                        samenvatting: true,
+                        onUitgeklapt: setWerkOpen,
+                        concept: rec && rec.bewijsConcept,
+                        onConcept: (c) => {
+                          try {
+                            conceptRef.current && conceptRef.current({ bewijsConcept: c });
+                          } catch {
+                          }
                         }
                       }
-                    }
-                  )
+                    )
+                  ] }),
+                  !begeleiderWeergave && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(NeoHulp, { variant: "kaart", rec, stap: null, gebruiker, stapLabel: stapSleutelLabel, platformNeo, vaardigheden: neoVaardigheden, onSignaal, stilTeken: stapSleutel + "|uitslag" })
                 ] }),
                 reflectieSectie,
-                !begeleiderWeergave && onInleveren && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "afrond-sectie afrond-inleveren", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(InleverKaart, { rec, gebruiker, onInleveren, compact: true }) }),
+                !begeleiderWeergave && onInleveren && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "afrond-tegel afrond-inleveren", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(InleverKaart, { rec, gebruiker, onInleveren, compact: true }) }),
                 afrond.fout && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "afrond-melding", role: "alert", children: afrond.fout }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-acties is-primair", children: [
                   tekort && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { id: "afrond-werk-hint", className: "afrond-hint", children: "Eerst je werk toevoegen, dan afronden." }),
@@ -71144,8 +71296,8 @@ ${String(stapTekst).slice(0, 900)}` : ""
                       onClick: bevestig,
                       "aria-describedby": tekort ? "afrond-werk-hint" : void 0,
                       children: afrond.stand === "bezig" ? "Opslaan\u2026" : behaaldNu ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
-                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 15 }),
-                        " Rond uitdaging af"
+                        "Rond uitdaging af ",
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 15 })
                       ] }) : "Toch afronden"
                     }
                   )
@@ -71417,10 +71569,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "inlever-compact-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "download", size: 16 }) }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { flex: 1, minWidth: 140 }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "inlever-compact-titel", children: inl ? "Ingeleverd bij je docent" : "Inleveren bij je docent" }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "muted", style: { fontSize: ".78rem", lineHeight: 1.4 }, children: inl ? "Ingeleverd op " + datumNL(inl.ingeleverdOp) + ". Je docent beoordeelt het." : "Deel je resultaat als je docent daarom vraagt." })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "muted", style: { fontSize: ".78rem", lineHeight: 1.4 }, children: inl ? "Ingeleverd op " + datumNL(inl.ingeleverdOp) + ". Je docent beoordeelt het." : inleverBestandKan() ? "Tekst, link of bestand \u2014 als je docent daarom vraagt." : "Tekst of link \u2014 als je docent daarom vraagt." })
       ] }),
       st && inl && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { background: st.achtergrond, color: st.kleur, fontWeight: 800, fontSize: ".72rem" }, children: st.kort || st.label }),
-      !open && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "admin-btn-sec", style: { padding: "6px 12px", minHeight: 0, fontSize: ".8rem" }, onClick: () => setOpen(true), children: inl ? "Bekijk of pas aan" : "Inleveren" })
+      !open && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "afrond-pil is-klein", "aria-expanded": "false", onClick: () => setOpen(true), children: inl ? "Bekijk of pas aan" : "Inleveren" })
     ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }, children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { width: 36, height: 36, borderRadius: 11, background: "var(--accent-zacht)", color: "var(--accent-diep)", display: "grid", placeItems: "center" }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "download", size: 18 }) }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { flex: 1, minWidth: 160 }, children: [
@@ -73801,10 +73953,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
             ] })
           ] });
         })() }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { fontSize: ".84rem", lineHeight: 1.5, margin: 0 }, children: "De bronnen waarmee 2scool GROW elke uitdaging opbouwt: activerende werkvormen en combineerbare opdracht-sjablonen. Handig om bij de les te pakken of om te zien hoe de AI varieert." }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "card", style: { padding: 18 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Werkvormenbibliotheek, {}) }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "card", style: { padding: 18 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ChallengeSjabloonBibliotheek, {}) }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "card", style: { padding: 18 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsBibliotheek, {}) })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BibliotheekStappen, {})
       ] }),
       mentorView === "leerlingen" && (() => {
         const weekGrens = new Date(Date.now() - 7 * 864e5).toISOString();
@@ -79265,6 +79414,58 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "wvb-kaart-pijl", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 15 }) })
         ] }, s.key);
       }) })
+    ] });
+  }
+  var BIB_STAPPEN = [
+    { sleutel: "werkvormen", titel: "Werkvormen", uitleg: "Hoe leerlingen leren" },
+    { sleutel: "sjablonen", titel: "Challenge-sjablonen", uitleg: "Welke opdrachtvormen er zijn" },
+    { sleutel: "bewijs", titel: "Bewijsbibliotheek", uitleg: "Wat leerlingen kunnen laten zien" }
+  ];
+  function BibliotheekStappen() {
+    const [stap, setStap] = (0, import_react2.useState)(0);
+    const kopRef = (0, import_react2.useRef)(null);
+    const ga = (n) => {
+      setStap(n);
+      try {
+        requestAnimationFrame(() => {
+          kopRef.current && kopRef.current.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        });
+      } catch {
+      }
+    };
+    const huidig = BIB_STAPPEN[stap];
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "bibstap", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted bibstap-intro", children: "De bronnen waarmee 2scool GROW elke uitdaging opbouwt. Loop ze stap voor stap door." }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("ol", { className: "bibstap-balk", ref: kopRef, "aria-label": "Stappen van de didactische bibliotheek", children: BIB_STAPPEN.map((st, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("li", { className: "bibstap-item" + (i === stap ? " is-huidig" : "") + (i < stap ? " is-klaar" : ""), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "bibstap-knop", "aria-current": i === stap ? "step" : void 0, onClick: () => ga(i), children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bibstap-nummer", "aria-hidden": "true", children: i < stap ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 13 }) : i + 1 }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "bibstap-tekst", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bibstap-titel", children: st.titel }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bibstap-uitleg", children: st.uitleg })
+        ] })
+      ] }) }, st.sleutel)) }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "card bibstap-inhoud", style: { padding: 18 }, role: "region", "aria-label": "Stap " + (stap + 1) + " van " + BIB_STAPPEN.length + ": " + huidig.titel, children: [
+        stap === 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Werkvormenbibliotheek, {}),
+        stap === 1 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ChallengeSjabloonBibliotheek, {}),
+        stap === 2 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsBibliotheek, {})
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "bibstap-nav", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "admin-btn-sec", disabled: stap === 0, onClick: () => ga(stap - 1), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "left", size: 14 }),
+          " Vorige"
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "muted bibstap-teller", "aria-live": "polite", children: [
+          "Stap ",
+          stap + 1,
+          " van ",
+          BIB_STAPPEN.length
+        ] }),
+        stap < BIB_STAPPEN.length - 1 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent bibstap-volgende", onClick: () => ga(stap + 1), children: [
+          "Volgende: ",
+          BIB_STAPPEN[stap + 1].titel,
+          " ",
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 14 })
+        ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "admin-btn-sec", onClick: () => ga(0), children: "Opnieuw beginnen" })
+      ] })
     ] });
   }
   function DeveloperDashboard({ onTerug }) {
