@@ -50648,6 +50648,114 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .afrond-kaart.is-rustig .afrond-acties.is-primair{border-top:none;padding-top:2px;justify-items:end}
 .uitd-kaart:has(.afrond-hero){overflow:clip}
 .afrond-kaart.is-rustig .afrond-knop{justify-self:end;min-width:220px;border-radius:999px;padding-inline:22px}
+/* v112.6.4 \u2014 volle-breedte groeiportfolio (mentor/vakdocent) */
+.pf2{--pf-g:clamp(16px,3vw,48px);--pfw:calc(100vw - var(--pf-g)*2);width:max(100%,var(--pfw));margin-left:calc((100% - max(100%,var(--pfw))) / 2);padding-top:22px;display:grid;gap:14px;
+  --pf-oranje:#CE4702;--pf-groen:#7E9468;--pf-rand:var(--lijn-fijn)}
+.pf2-kop{position:relative;overflow:hidden;padding:6px 0 10px;min-height:170px}
+.pf2-kop .afrond-landschap{top:-24px;height:calc(100% + 24px);width:min(40%,560px);opacity:.95}
+.pf2-kop::after{content:"";position:absolute;left:0;right:0;bottom:0;height:40px;background:linear-gradient(to bottom,rgba(250,249,246,0),var(--bg,#FAF9F6));pointer-events:none}
+.pf2-thema-foto{width:72px;height:52px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--tegel)}
+.pf2-thema-foto img{width:100%;height:100%;object-fit:cover;display:block}
+.pf2-kop-inhoud{position:relative;z-index:1}
+.pf2-kruimels{display:flex;align-items:center;flex-wrap:wrap;gap:2px;font-size:.84rem;margin:0 0 6px}
+.pf2-naam{margin:0;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-.02em;line-height:1.15;color:var(--inkt)}
+.pf2-sub{margin:4px 0 0;font-size:.95rem;color:var(--inkt-zacht);max-width:62ch}
+.pf2-kop-rij{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+.pf2-terug,.pf2-export{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:6px 14px;border-radius:10px;border:1px solid rgba(206,71,2,.32);background:var(--kaart);color:var(--accent-diep);font:inherit;font-size:.84rem;font-weight:600;cursor:pointer}
+.pf2-export{margin-left:auto;width:auto}
+.pf2-terug:hover,.pf2-export:hover{background:var(--accent-zacht);color:var(--accent-diep)}
+.pf2-terug:focus-visible,.pf2-export:focus-visible,.pf2-actie:focus-visible,.pf2-bekijk:focus-visible,.pf2-kaart-kop:focus-visible,.pf2-rapport:focus-visible,.pf2-info:focus-visible,.pf2-sluit:focus-visible{outline:2.5px solid var(--accent-diep);outline-offset:2px}
+.pf2-stat{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:5px 12px;border-radius:10px;background:var(--tegel-licht);color:var(--inkt-zacht);font-size:.82rem;font-weight:560;white-space:nowrap}
+.pf2-stat.is-groen{background:#EEF2EA;color:#4A5F3E}
+.pf2-stat.is-oranje{background:var(--accent-zacht);color:var(--accent-diep)}
+.pf2-stat.is-blauw{background:#EEF1F6;color:#3F4B5E}
+.pf2-inzicht{display:grid;grid-template-columns:1.25fr 1fr 1fr 1.25fr;border:1px solid var(--pf-rand);border-radius:16px;background:var(--kaart);padding:16px 18px;box-shadow:0 1px 2px rgba(60,70,55,.04)}
+.pf2-inzicht-deel{display:flex;gap:12px;align-items:flex-start;padding:4px 18px;border-left:1px solid var(--pf-rand);min-width:0;flex-wrap:wrap}
+.pf2-inzicht-deel:first-child{border-left:none;padding-left:0}
+.pf2-inzicht-deel>div{flex:1 1 140px;min-width:0}
+.pf2-h2{margin:0;font-size:1.08rem;font-weight:650;color:var(--inkt)}
+.pf2-h3{margin:0;font-size:.9rem;font-weight:600;color:var(--inkt)}
+.pf2-tekst{display:block;margin:3px 0 0;font-size:.85rem;line-height:1.45;color:var(--inkt-zacht)}
+.pf2-icoon{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;flex-shrink:0;background:var(--accent-zacht);color:var(--accent-diep)}
+.pf2-icoon.is-groot{width:44px;height:44px;border-radius:13px}
+.pf2-icoon.is-groen{background:#EEF2EA;color:#4A5F3E}
+.pf2-icoon.is-blauw{background:#EEF1F6;color:#3F4B5E}
+.pf2-icoon.is-wit{background:var(--tegel-licht);color:var(--inkt-zacht)}
+.pf2-actie{display:inline-flex;align-items:center;gap:4px;align-self:center;margin-left:auto;min-height:36px;padding:6px 12px;border-radius:10px;border:1px solid rgba(206,71,2,.32);background:var(--kaart);color:var(--accent-diep);font:inherit;font-size:.82rem;font-weight:600;cursor:pointer;white-space:nowrap}
+.pf2-actie:hover{background:var(--accent-zacht)}
+.pf2-sectie{margin:8px 0 -4px;font-size:1rem;font-weight:620;color:var(--inkt)}
+.pf2-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}
+.pf2-kaart{grid-column:span 3;display:grid;align-content:start;gap:12px;border:1px solid var(--pf-rand);border-radius:16px;background:var(--kaart);padding:14px 16px;min-height:170px;box-shadow:0 1px 2px rgba(60,70,55,.04)}
+.pf2-kaart-kop{display:flex;align-items:center;gap:12px;width:100%;background:none;border:none;padding:0;text-align:left;font:inherit;cursor:pointer;color:inherit;border-radius:10px;min-height:44px}
+.pf2-kaart-tekst{display:grid;gap:2px;flex:1;min-width:0}
+.pf2-kaart-titel{font-size:.96rem;font-weight:620;color:var(--inkt)}
+.pf2-kaart-titel.is-klein{font-size:.88rem}
+.pf2-kaart-sub{font-size:.8rem;color:var(--grijs);line-height:1.4}
+.pf2-pijl{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--accent-zacht);color:var(--accent-diep);flex-shrink:0;transition:transform .2s ease}
+.pf2-kaart-kop:hover .pf2-pijl{transform:translateX(2px)}
+.pf2-tegels{display:flex;gap:8px;flex-wrap:wrap}
+.pf2-tegel{width:56px;height:56px;border-radius:10px}
+.pf2-medailles{display:flex;gap:4px;flex-wrap:wrap}
+.pf2-medailles .agrs-badge span{display:none}
+.pf2-labels{display:flex;gap:6px;flex-wrap:wrap;min-width:0}
+.pf2-label{display:inline-flex;align-items:center;padding:4px 10px;border-radius:8px;background:var(--accent-zacht);color:var(--accent-diep);font-size:.78rem;font-weight:560;white-space:nowrap}
+.pf2-label.is-meer{background:var(--tegel-licht);color:var(--inkt-zacht)}
+.pf2-leeg{margin:0;font-size:.82rem;color:var(--grijs)}
+.pf2-rapport{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border:1px solid var(--pf-rand);border-radius:12px;background:var(--kaart);font:inherit;text-align:left;cursor:pointer;color:inherit;min-height:44px}
+.pf2-rapport:hover{border-color:rgba(206,71,2,.32)}
+.pf2-rijen,.pf2-onder{display:grid;gap:10px}
+.pf2-rij{display:grid;grid-template-columns:auto minmax(180px,1.1fr) minmax(0,1.6fr) auto auto;align-items:center;gap:16px;border:1px solid var(--pf-rand);border-radius:16px;background:var(--kaart);padding:12px 16px;box-shadow:0 1px 2px rgba(60,70,55,.04)}
+.pf2-rij-wie{display:grid;gap:3px;min-width:0}
+.pf2-balk{margin:4px 0 0;max-width:340px;height:6px;background:#EAE8E2}
+.pf2-balk>span{background:var(--pf-groen)}
+.pf2-status{justify-self:end;border-radius:8px}
+.pf2-status.is-aangetoond{background:#EEF2EA;color:#4A5F3E}
+.pf2-bekijk{display:inline-flex;align-items:center;gap:4px;min-height:40px;padding:6px 14px;border-radius:10px;border:1px solid rgba(206,71,2,.32);background:var(--kaart);color:var(--accent-diep);font:inherit;font-size:.84rem;font-weight:600;cursor:pointer}
+.pf2-bekijk:hover{background:var(--accent-zacht)}
+.pf2-feedback,.pf2-privacy{grid-template-columns:auto minmax(0,1fr) auto}
+.pf2-rij.is-leeg{grid-template-columns:1fr}
+.pf2-info{width:36px;height:36px;border-radius:10px;border:1px solid var(--pf-rand);background:var(--kaart);color:var(--inkt-zacht);display:grid;place-items:center;cursor:pointer}
+.pf2-paneel{width:min(760px,calc(100vw - 32px));max-height:min(86vh,900px);overflow:auto;background:var(--kaart);border-radius:16px;padding:18px 20px}
+.pf2-paneel-kop{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.pf2-paneel-titel{margin:0;font-size:1.1rem;font-weight:650}
+.pf2-sluit{width:40px;height:40px;border-radius:10px;border:1px solid var(--pf-rand);background:var(--kaart);display:grid;place-items:center;cursor:pointer;color:var(--inkt-zacht)}
+@media (max-width:1279px){
+  .pf2-inzicht{grid-template-columns:1fr 1fr;row-gap:14px}
+  .pf2-inzicht-deel:nth-child(3){border-left:none;padding-left:0}
+  .pf2-kaart{grid-column:span 6}
+  .pf2-rij{grid-template-columns:auto minmax(0,1fr) auto auto}
+  .pf2-rij-labels{grid-column:2 / -1;grid-row:2}
+}
+@media (max-width:720px){
+  .pf2-inzicht{grid-template-columns:1fr}
+  .pf2-inzicht-deel{border-left:none;padding:6px 0;border-top:1px solid var(--pf-rand)}
+  .pf2-inzicht-deel:first-child{border-top:none}
+  .pf2-kaart{grid-column:span 12;min-height:0}
+  .pf2-kop .afrond-landschap{width:70%;opacity:.55}
+  .pf2-export{margin-left:0}
+  .pf2-rij{grid-template-columns:auto minmax(0,1fr);gap:10px 12px}
+  .pf2-rij-labels{grid-column:1 / -1;grid-row:auto}
+  .pf2-status{justify-self:start}
+  .pf2-bekijk{justify-self:end}
+  .pf2-feedback,.pf2-privacy{grid-template-columns:auto minmax(0,1fr)}
+  .pf2-feedback .pf2-actie{grid-column:1 / -1;justify-self:start;margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){ .pf2-pijl{transition:none} }
+/* v112.6.4 \u2014 huisstijl: oranje en groen uit de referentie, minder ronde knoppen, bredere kaart */
+.afrond-kaart{--afrond-oranje:#CE4702;--afrond-oranje-hover:#B03C02;--afrond-groen:#7E9468;--afrond-radius:12px}
+@media (min-width:900px){
+  .uitd-rij:has(.afrond-kaart.is-rustig){--afw:min(1180px,calc(100vw - 64px));width:var(--afw);max-width:none;margin-left:calc((100% - var(--afw)) / 2)}
+}
+.afrond-kaart .afrond-pil,.afrond-werk .bewijs-sv-knop,.afrond-kaart .afrond-regel-actie{border-radius:var(--afrond-radius);color:var(--afrond-oranje);border-color:rgba(206,71,2,.35)}
+.afrond-kaart .afrond-regel-actie{border-color:transparent}
+.afrond-kaart.is-rustig .afrond-knop{border-radius:var(--afrond-radius)}
+.afrond-kaart .btn-accent{background:var(--afrond-oranje);color:#fff}
+.afrond-kaart .btn-accent:not(:disabled):hover{background-color:var(--afrond-oranje-hover)}
+.afrond-werk .bewijs-hoofdknop,.afrond-werk .btn{border-radius:var(--afrond-radius)}
+.afrond-chip.is-tijd{color:#3F4B5E}
+.afrond-icoon,.afrond-inleveren .inlever-compact-icoon{color:var(--afrond-oranje);border-radius:10px}
+.afrond-groei .groei-compact-icoon{border-radius:12px}
+@media (max-width:720px){ .afrond-duo{grid-template-columns:minmax(0,1fr)} }
 @media (max-width:820px){ .afrond-neo-beeld{width:76px} }
 @media (max-width:640px){
   .afrond-hero{margin:-16px -14px 0;padding:20px 14px 16px}
@@ -55879,7 +55987,10 @@ ${xref}
     return ops + "Q\n";
   }
   function bouwUitdagingPdf(rec, opties = {}) {
-    const M = uitdagingPrintModel(rec, opties);
+    return bouwSjabloonPdf(uitdagingPrintModel(rec, opties), String(rec && (rec.id || rec.thema) || "x"));
+  }
+  function bouwSjabloonPdf(M, zaad2) {
+    const rec = { id: zaad2 || "x" };
     const PW = 595, PH = 842, ML = 40, MR = 40, W = PW - ML - MR, TOP = PH - 40, ONDER = 56;
     const KL = { bg: "#F4F3EF", kaart: "#FFFFFF", inkt: "#1C1B19", grijs: "#6B6A66", accent: "#F47721", accentDiep: "#AE4E0C", zacht: "#FDEEE2", tegel: "#F7F6F2", lijn: "#E7E4DD", info: "#EEF1F4", infoTekst: "#4A5568" };
     const paginas = [];
@@ -55932,7 +56043,7 @@ ${xref}
       y -= 22;
     }
     let px = ML;
-    M.pills.forEach((p, i) => {
+    (M.pills || []).forEach((p, i) => {
       const tekst = pdfTekst(p), bw = pdfBreedte(tekst, 8.5, true) + 18;
       if (px + bw > ML + W) {
         px = ML;
@@ -56014,7 +56125,7 @@ ${xref}
         ty -= 13.5;
       });
     };
-    M.secties.forEach((sec) => {
+    (M.secties || []).forEach((sec) => {
       const items = [];
       sec.blokken.forEach((b) => b.items.forEach((it) => items.push({ b, it, m: meet(b, it) })));
       let i = 0, eerste = true;
@@ -56157,7 +56268,7 @@ ${xref}
     wrap.style.cssText = "position:fixed;inset:0;z-index:99999;background:rgba(20,19,17,.62);display:flex;align-items:center;justify-content:center;padding:16px;font-family:'Space Grotesk',system-ui,-apple-system,Arial,sans-serif";
     const panel = document.createElement("div");
     panel.style.cssText = "background:#fff;border-radius:18px;width:min(820px,100%);height:min(90vh,1000px);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.35)";
-    const titel = rec && themaLabel(rec.thema) ? themaLabel(rec.thema) : "Uitdaging";
+    const titel = rec && rec.titel || (rec && themaLabel(rec.thema) ? themaLabel(rec.thema) : "Uitdaging");
     const head = document.createElement("div");
     head.style.cssText = "display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid #ECE7E1";
     const hl = document.createElement("div");
@@ -56382,7 +56493,97 @@ ${xref}
       if (!ok) legacy();
     }).catch(() => legacy());
   }
+  function pdfNaarBytes(out) {
+    const bytes = new Uint8Array(out.length);
+    for (let i = 0; i < out.length; i++) bytes[i] = out.charCodeAt(i) & 255;
+    return bytes;
+  }
+  function leverSjabloonPdf(out, fname, ctx) {
+    const bytes = pdfNaarBytes(out);
+    let ingesloten = true;
+    try {
+      ingesloten = window.self !== window.top;
+    } catch (e) {
+      ingesloten = true;
+    }
+    if (!ingesloten) {
+      try {
+        const url = URL.createObjectURL(new Blob([bytes], { type: "application/pdf" }));
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fname;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => {
+          try {
+            URL.revokeObjectURL(url);
+          } catch (_) {
+          }
+        }, 3e3);
+        return true;
+      } catch (e) {
+      }
+    }
+    return toonPdfOverlay(bytes, fname, ctx || { thema: null });
+  }
+  function portfolioPrintModel(pf, weergave, deel, samenvatting) {
+    weergave = weergave || "leerling";
+    deel = deel || PORTFOLIO_DEEL_DEFAULT;
+    const toon = (sec2) => weergave === "leerling" ? true : deel[sec2] !== false;
+    const k = pf.kerncijfers, secties = [];
+    const sec = (kop, blokken) => {
+      const b = blokken.filter((x) => x && x.items && x.items.length);
+      if (b.length) secties.push({ kop, blokken: b });
+    };
+    if (samenvatting && samenvatting.totaal) sec("Samenvatting van de groeireis", [{ type: "p", items: [samenvatting.totaal] }]);
+    if (toon("kerncijfers")) sec("Kerncijfers", [{ type: "info", items: [
+      { label: "Uitdagingen", waarde: [k.afgerond + " afgerond", k.themaCount ? k.themaCount + " " + (k.themaCount === 1 ? "thema" : "thema's") : "", k.subthemaCount ? k.subthemaCount + " " + (k.subthemaCount === 1 ? "subthema" : "subthema's") : ""].filter(Boolean).join(" \xB7 ") },
+      { label: "Groei", waarde: `${weergave === "ouder" ? "" : k.xp + " XP \xB7 "}${k.prestatiesVerdiend} groei-prestaties \xB7 langste reeks ${k.streakBest} dagen` },
+      ...beoordeeldAantal({ challenges: [].concat(...(pf.perThema || []).map((t) => t.challenges || [])) }) >= BEOORDEELD_VOOR_PERCENTAGE ? [{ label: "Gemiddelde mastery", waarde: k.gemMastery + "%" }] : []
+    ] }]);
+    if (toon("patronen")) sec("Sterke punten & ontwikkeling", [
+      pf.patronen.sterkePunten.length ? { type: "info", items: [{ label: "Sterke punten", waarde: pf.patronen.sterkePunten.slice(0, 6).join(" \xB7 ") }] } : null,
+      pf.patronen.ontwikkelpunten.length && weergave !== "ouder" ? { type: "info", items: [{ label: "In ontwikkeling", waarde: pf.patronen.ontwikkelpunten.slice(0, 6).join(" \xB7 ") }] } : null,
+      pf.patronen.leerstrategieen.length ? { type: "info", items: [{ label: "Leerstrategie\xEBn", waarde: pf.patronen.leerstrategieen.join(", ") }] } : null,
+      pf.patronen.interesses.length ? { type: "info", items: [{ label: "Interesses", waarde: pf.patronen.interesses.join(", ") }] } : null,
+      pf.patronen.motivatie ? { type: "info", items: [{ label: "Motivatie", waarde: pf.patronen.motivatie }] } : null
+    ]);
+    if (toon("themas")) sec("Ontwikkeling per thema", [{ type: "info", items: (pf.perThema || []).map((t) => {
+      const st = vaardigheidStand(t);
+      const sv = samenvatting && samenvatting.perThema && samenvatting.perThema[t.thema];
+      const nv = Object.keys(t.niveaus).filter((n) => t.niveaus[n]).map((n) => `${n}: ${t.niveaus[n]}`).join(" \xB7 ");
+      return { label: t.themaLabel + " \xB7 " + st.status, waarde: [st.uitleg + (st.pct != null ? " Mastery \xB1" + st.pct + "%." : ""), sv && !/te weinig/.test(sv) ? sv : "", t.competenties.length ? "Competenties: " + t.competenties.slice(0, 6).join(", ") : "", nv ? "Niveaus: " + nv : ""].filter(Boolean).join(" ") };
+    }) }]);
+    if (toon("prestaties") && pf.prestaties.verdiend.length) sec("Verdiende groei-prestaties", [{ type: "lijst", items: pf.prestaties.verdiend.map((p) => `${p.naam} (${p.rar.label}) \u2014 ${p.beschrijving}`) }]);
+    if (toon("mentorfeedback") && pf.mentorfeedback.length) sec("Mentorfeedback", [{ type: "info", items: pf.mentorfeedback.slice(-6).reverse().map((m) => ({ label: `${themaLabel(m.thema)}${m.door ? " \xB7 " + m.door : ""}${m.rubricScore != null ? " \xB7 " + m.rubricScore + "%" : ""}`, waarde: m.feedback || "\u2014" })) }]);
+    if (toon("tijdlijn")) sec("Groeireis (tijdlijn)", [{ type: "lijst", items: pf.tijdlijn.filter((x) => x.type === "challenge").slice(-16).map((x) => `${x.datum ? datumNL(x.datum) + " \xB7 " : ""}${x.titel} (${x.niveau || "-"})${x.route && ROUTES[x.route] ? " \xB7 " + ROUTES[x.route].naam : ""}${x.mastery != null ? " \xB7 mastery " + x.mastery + "%" : ""}`) }]);
+    const pills = [`${k.afgerond} afgerond`];
+    if (toon("kerncijfers") && weergave !== "ouder") pills.push(`${k.xp} XP`);
+    if (k.themaCount) pills.push(`${k.themaCount} ${k.themaCount === 1 ? "thema" : "thema's"}`);
+    return {
+      eyebrow: "GROEIPORTFOLIO" + (weergave && weergave !== "leerling" ? " \xB7 " + String(weergave).toUpperCase() : ""),
+      titel: pf.leerling.naam || "Groeiportfolio",
+      meta: [pf.leerling.klas && pf.leerling.klas !== "\u2014" ? pf.leerling.klas : "", pf.leerling.leeftijd ? pf.leerling.leeftijd + " jaar" : "", "gegenereerd " + datumNL((/* @__PURE__ */ new Date()).toISOString())].filter(Boolean).join(" \xB7 "),
+      pills,
+      secties
+    };
+  }
+  function rapportPrintModel(r) {
+    return {
+      eyebrow: "RAPPORT" + (r.type ? " \xB7 " + String(r.type).toUpperCase() : ""),
+      titel: r.titel || "Rapport",
+      meta: r.ondertitel || "",
+      pills: [],
+      secties: (r.secties || []).map((x) => ({ kop: x.kop || "", blokken: [x.tekst ? { type: "p", items: [x.tekst] } : null, (x.items || []).length ? { type: "lijst", items: x.items.map(String) } : null].filter(Boolean) })).filter((x) => x.blokken.length)
+    };
+  }
   function downloadPortfolioPdf(pf, weergave, deel, samenvatting) {
+    try {
+      const fn = `groeiportfolio-${String(pf.leerling.naam || "leerling").replace(/\s+/g, "-").toLowerCase()}.pdf`;
+      if (leverSjabloonPdf(bouwSjabloonPdf(portfolioPrintModel(pf, weergave, deel, samenvatting), "pf-" + (pf.leerling.naam || "")), fn, { thema: null, titel: "Groeiportfolio" })) return;
+    } catch (e) {
+    }
     weergave = weergave || "leerling";
     deel = deel || PORTFOLIO_DEEL_DEFAULT;
     const toon = (sec) => weergave === "leerling" ? true : deel[sec] !== false;
@@ -56539,6 +56740,11 @@ ${xref}
     return blocks;
   }
   function downloadRapportPdf(r) {
+    try {
+      const fn = `${String(r.type || "rapport")}-${String(r.naam || "leerling").replace(/\s+/g, "-").toLowerCase()}.pdf`;
+      if (leverSjabloonPdf(bouwSjabloonPdf(rapportPrintModel(r), "rp-" + (r.type || "") + (r.naam || "")), fn, { thema: null, titel: r.titel || "Rapport" })) return;
+    } catch (e) {
+    }
     const PW = 595, PH = 842, ML = 56, lead = 4, usableW = PW - ML * 2, TOPINSET = 132, BOTINSET = 80;
     const blocks = rapportNaarBlocks(r);
     const _footer = "2scool GROW - een onderdeel van Unfold Education. Alle rechten voorbehouden.";
@@ -59020,9 +59226,9 @@ Antwoord met ALLEEN de JSON.`;
       ] })
     ] }) });
   }
-  function GroeiCompact({ xp, beloning, stand }) {
+  function GroeiCompact({ xp, beloning, stand, kleur: vasteKleur }) {
     const g = groeiNiveauVan(xp);
-    const kleur = g.huidig.kleur || "var(--accent)";
+    const kleur = vasteKleur || g.huidig.kleur || "var(--accent)";
     const [vul, setVul] = (0, import_react2.useState)(0);
     (0, import_react2.useEffect)(() => {
       const t = setTimeout(() => setVul(g.frac), 140);
@@ -61526,11 +61732,11 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
     </div>`;
     }).join("") || '<p class="leeg">Nog geen afgeronde uitdagingen.</p>';
     const sterkComp = (plm.sterkeCompetenties || []).map((c) => c.naam);
-    const css = `*{box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1E1F22;max-width:900px;margin:0 auto;padding:32px 24px;line-height:1.5}h1{font-size:1.7rem;margin:0 0 4px}h2{font-size:1.05rem;margin:26px 0 8px;padding-bottom:6px;border-bottom:2px solid #F47721}.sub{color:#6b6b6b;margin:0 0 18px;font-size:.9rem}.kaart{background:#F7F6F2;border-radius:12px;padding:14px 16px;margin:8px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}.cijfer{background:#fff;border:1px solid #eee;border-radius:10px;padding:10px;text-align:center}.cijfer b{display:block;font-size:1.3rem;color:#F47721}.cijfer span{font-size:.72rem;color:#6b6b6b}table{width:100%;border-collapse:collapse;font-size:.78rem;margin-top:6px}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid #eee;vertical-align:top}th{color:#6b6b6b}.ch{border:1px solid #eee;border-radius:12px;padding:12px 14px;margin:8px 0}.ch-kop{display:flex;justify-content:space-between;font-size:.95rem}.ch-kop span{color:#6b6b6b;font-size:.8rem}.meta{color:#4b4b4b;font-size:.82rem;margin:4px 0}.lab{color:#F47721;font-weight:700;font-size:.82rem}ul{margin:4px 0;padding-left:20px;font-size:.85rem}li{margin:2px 0}.leeg{color:#9a9a9a;font-style:italic}em{color:#555}.bars{display:flex;flex-direction:column;gap:6px;margin-top:8px}.bar{display:grid;grid-template-columns:150px 1fr 54px;align-items:center;gap:8px;font-size:.8rem}.bl{color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bt{background:#eee;border-radius:6px;height:12px;overflow:hidden}.bf{display:block;height:100%}.bv{color:#6b6b6b;text-align:right}.badge{display:inline-block;background:#EDF0E9;color:#4C5943;border-radius:999px;padding:4px 10px;font-size:.76rem;margin:3px 4px 0 0}.chart{background:#fff;border:1px solid #eee;border-radius:12px;padding:12px;margin:8px 0}.toolbar{position:sticky;top:0;background:#1E1F22;color:#1C1B19;padding:10px 14px;border-radius:10px;display:flex;align-items:center;gap:12px;margin-bottom:16px}.toolbar button{background:#C2510A;color:#fff;border:0;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:.85rem}.toolbar span{font-size:.78rem;color:#cfcfcf}.footer{margin-top:30px;color:#9a9a9a;font-size:.72rem;border-top:1px solid #eee;padding-top:10px}@media print{.no-print{display:none!important}body{padding:0;max-width:none}h2{border-color:#999}.ch,.chart,section,.kaart{page-break-inside:avoid}}`;
+    const css = `*{box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#1E1F22;max-width:900px;margin:0 auto;padding:32px 24px;line-height:1.5}h1{font-size:1.7rem;margin:0 0 4px}h2{font-size:1.05rem;margin:26px 0 8px;padding-bottom:6px;border-bottom:2px solid #F47721}.sub{color:#6b6b6b;margin:0 0 18px;font-size:.9rem}.kaart{background:#F7F6F2;border-radius:12px;padding:14px 16px;margin:8px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}.cijfer{background:#fff;border:1px solid #eee;border-radius:10px;padding:10px;text-align:center}.cijfer b{display:block;font-size:1.3rem;color:#F47721}.cijfer span{font-size:.72rem;color:#6b6b6b}table{width:100%;border-collapse:collapse;font-size:.78rem;margin-top:6px}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid #eee;vertical-align:top}th{color:#6b6b6b}.ch{border:1px solid #eee;border-radius:12px;padding:12px 14px;margin:8px 0}.ch-kop{display:flex;justify-content:space-between;font-size:.95rem}.ch-kop span{color:#6b6b6b;font-size:.8rem}.meta{color:#4b4b4b;font-size:.82rem;margin:4px 0}.lab{color:#F47721;font-weight:700;font-size:.82rem}ul{margin:4px 0;padding-left:20px;font-size:.85rem}li{margin:2px 0}.leeg{color:#9a9a9a;font-style:italic}em{color:#555}.bars{display:flex;flex-direction:column;gap:6px;margin-top:8px}.bar{display:grid;grid-template-columns:150px 1fr 54px;align-items:center;gap:8px;font-size:.8rem}.bl{color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bt{background:#eee;border-radius:6px;height:12px;overflow:hidden}.bf{display:block;height:100%}.bv{color:#6b6b6b;text-align:right}.badge{display:inline-block;background:#EDF0E9;color:#4C5943;border-radius:999px;padding:4px 10px;font-size:.76rem;margin:3px 4px 0 0}.chart{background:#fff;border:1px solid #eee;border-radius:12px;padding:12px;margin:8px 0}.toolbar{position:sticky;top:0;background:#1E1F22;color:#1C1B19;padding:10px 14px;border-radius:10px;display:flex;align-items:center;gap:12px;margin-bottom:16px}.toolbar button{background:#C2510A;color:#fff;border:0;border-radius:8px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:.85rem}.toolbar span{font-size:.78rem;color:#cfcfcf}.footer{margin-top:30px;color:#9a9a9a;font-size:.72rem;border-top:1px solid #eee;padding-top:10px}@media print{.no-print{display:none!important}body{padding:0;max-width:none}h2{border-color:#999}.ch,.chart,section,.kaart{page-break-inside:avoid}}/* v112.6.4: zelfde sjabloon als de uitdaging-PDF */body{background:#F4F3EF;color:#1C1B19;font-family:Inter,Helvetica,Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}.sj-kop{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;margin:0 0 18px}.sj-eyebrow{font-size:.66rem;font-weight:800;letter-spacing:.14em;color:#AE4E0C;text-transform:uppercase;margin-bottom:6px}.sj-logo{background:#fff;border:1px solid #E7E4DD;border-radius:14px;padding:8px 12px;flex-shrink:0}.sj-logo img{height:40px;width:auto;display:block}h1{font-size:1.75rem;letter-spacing:-.01em}h2{font-size:.66rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#AE4E0C;border:none;padding:0;margin:24px 0 8px}.kaart,.ch,.chart,.cijfer{background:#fff;border:1px solid #E7E4DD;border-radius:16px}.cijfer b,.lab{color:#AE4E0C}.toolbar{background:#fff;border:1px solid #E7E4DD;color:#1C1B19}.toolbar span{color:#6B6A66}.footer{border-top:1px solid #E7E4DD;color:#6B6A66}.sj-voet{margin-top:10px;color:#6B6A66;font-size:.72rem}`;
     return `<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>2scool GROW \u2014 Leerlingoverzicht ${esc(gebruiker && gebruiker.naam)}</title><style>${css}</style></head><body>
     <div class="toolbar no-print"><button onclick="window.print()">Opslaan als PDF</button><span>Kies in het printvenster "Bewaar als PDF".</span></div>
-    <h1>${esc(gebruiker && gebruiker.naam || "Leerling")}</h1>
-    <p class="sub">${esc(gebruiker && gebruiker.klas || "")}${d.route ? " \xB7 route " + esc(d.route) : ""} \xB7 overzicht gegenereerd op ${esc(nu)}</p>
+    <div class="sj-kop"><div><div class="sj-eyebrow">Mentoroverzicht</div><h1>${esc(gebruiker && gebruiker.naam || "Leerling")}</h1>
+    <p class="sub">${esc(gebruiker && gebruiker.klas || "")}${d.route ? " \xB7 route " + esc(d.route) : ""} \xB7 overzicht gegenereerd op ${esc(nu)}</p></div><div class="sj-logo"><img src="${LOGO_GROW_ZWART}" alt="2scool GROW"/></div></div>
     <div class="grid"><div class="cijfer"><b>${kc.afgerond || 0}</b><span>Uitdagingen</span></div><div class="cijfer"><b>${kc.xp || 0}</b><span>XP</span></div><div class="cijfer"><b>${kc.gemMastery != null ? kc.gemMastery + "%" : "\u2014"}</b><span>Gem. mastery</span></div><div class="cijfer"><b>${kc.prestatiesVerdiend || 0}</b><span>Badges</span></div><div class="cijfer"><b>${kc.streakBest || 0}</b><span>Beste reeks</span></div></div>
     <h2>Intake &amp; profiel</h2>
     <div class="kaart">${d.samenvatting ? `<p>${esc(d.samenvatting)}</p>` : '<p class="leeg">Geen intakesamenvatting.</p>'}
@@ -61558,6 +61764,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
     <div class="kaart"><p class="lab">Sterke competenties (Personal Learning Model)</p>${lijst(sterkComp)}
       <p class="lab">Aangetoonde sterke punten</p>${lijst(pat.sterkePunten)}</div>
     <div class="footer">Gegenereerd door 2scool GROW \xB7 Unfold Education Platform op ${esc(nu)}. Behandel dit overzicht vertrouwelijk (AVG). Pseudonieme audit-sleutel: ${esc(pseudo)}.</div>
+    <div class="sj-voet">2scool GROW \u2014 onderdeel van Unfold Education \xB7 DISCOVER \xB7 LEARN \xB7 PERFORM</div>
   </body></html>`;
   }
   function MentorExportKnop({ records, gebruiker }) {
@@ -62748,6 +62955,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
     const magAnalyse = rol !== "ouder" && toon("analyse");
     const feedback = pf.mentorfeedback || [];
     const themas = pf.perThema || [];
+    if (weergave !== "leerling") return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(PortfolioBreed, { ...{ records, gebruiker, pf, sv, aiBezig, rol, prefs, toon, isOuder, isMentor, magAnalyse, feedback, themas, voornaam, onTerug, onOpen, kruimels, k, Stat, dotKleur } });
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
       Section,
       {
@@ -63036,6 +63244,393 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
         ]
       }
     );
+  }
+  function pfInzichten(pf, themas) {
+    const mv = (n, e, m) => n + " " + (n === 1 ? e : m);
+    const standen = themas.map((t) => ({ t, st: vaardigheidStand(t) }));
+    const beoordeeld = standen.reduce((n, x) => n + x.st.n, 0);
+    const onvoldoende = "Nog onvoldoende informatie om dit betrouwbaar vast te stellen.";
+    const intro = pf.kerncijfers.afgerond ? mv(pf.kerncijfers.afgerond, "uitdaging", "uitdagingen") + " afgerond, " + (beoordeeld ? mv(beoordeeld, "beoordeeld", "beoordeeld") + " door een docent." : "nog geen beoordeeld.") : "Nog geen afgeronde uitdagingen.";
+    const sterkT = standen.filter((x) => x.st.status === "aangetoond");
+    const sterk = [...new Set([].concat(...sterkT.map((x) => x.t.competenties || [])))].slice(0, 2);
+    const sterkTekst = sterkT.length ? sterk.length ? sterk.join(" en ") + " \u2014 aangetoond in " + sterkT[0].t.themaLabel + "." : "Aangetoond in " + sterkT.map((x) => x.t.themaLabel).slice(0, 2).join(" en ") + "." : onvoldoende;
+    const ontwT = standen.find((x) => x.st.n > 0 && x.st.status !== "aangetoond");
+    const ontwTekst = ontwT ? ontwT.t.competenties && ontwT.t.competenties[0] ? ontwT.t.competenties[0] + " verder ontwikkelen binnen " + ontwT.t.themaLabel + "." : "Verder bouwen binnen " + ontwT.t.themaLabel + "." : onvoldoende;
+    const stap = ontwT ? "Kies een uitdaging in " + ontwT.t.themaLabel + " om dit opnieuw te oefenen." : sterkT.length ? "Kies een uitdaging op een hoger niveau binnen " + sterkT[0].t.themaLabel + "." : pf.kerncijfers.afgerond ? "Beoordeel het ingeleverde werk, zodat er een volgende stap te bepalen is." : "Laat de leerling een eerste uitdaging kiezen.";
+    return { intro, sterkTekst, ontwTekst, stap, beoordeeld };
+  }
+  function PfPaneel({ titel, onSluit, children }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ModalLaag, { onSluit, label: titel, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-paneel", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-paneel-kop", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "pf2-paneel-titel", children: titel }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "pf2-sluit", onClick: onSluit, "aria-label": "Sluiten", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "x", size: 18 }) })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "pf2-paneel-inhoud", children })
+    ] }) });
+  }
+  function PortfolioBreed({ records, gebruiker, pf, sv, aiBezig, rol, prefs, toon, isOuder, isMentor, magAnalyse, feedback, themas, voornaam, onTerug, onOpen, kruimels, k, Stat, dotKleur }) {
+    const [paneel, setPaneel] = (0, import_react2.useState)(null);
+    const [privacyUitleg, setPrivacyUitleg] = (0, import_react2.useState)(false);
+    const sluit = () => setPaneel(null);
+    const ins = (0, import_react2.useMemo)(() => pfInzichten(pf, themas), [pf, themas]);
+    const lopend = (records || []).filter((r) => r && !r.afgerond && r.data && r.type !== "event" && r.type !== "bonus").length;
+    const aangetoond = themas.filter((t) => vaardigheidStand(t).status === "aangetoond").length;
+    const afgerondeRecs = themas.reduce((a, t) => a.concat(t.challenges || []), []);
+    const bewijsTegels = afgerondeRecs.slice().reverse().reduce((a, r) => a.concat((r.bewijzen || []).filter((b) => b && b.soort !== "bevestiging")), []);
+    const gesprekLabels = (pf.competenties || []).slice(0, 3).map((c) => c.naam);
+    const kruimelItems = (kruimels || []).filter((x) => x && x.label !== "Groeiportfolio");
+    const terugLabel = kruimels && kruimels.length > 1 ? "Terug naar " + kruimels[kruimels.length - 2].label : "Terug";
+    const laatsteFb = feedback.length ? feedback[feedback.length - 1] : null;
+    const export_ = () => downloadPortfolioPdf(pf, rol, prefs, sv);
+    const KaartKop = ({ icoon, titel, sub, onOpen: open, label }) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "pf2-kaart-kop", onClick: open, "aria-label": label || titel, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: icoon, size: 18 }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pf2-kaart-tekst", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-kaart-titel", children: titel }),
+        sub && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-kaart-sub", children: sub })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-pijl", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 15 }) })
+    ] });
+    const werkLijst = (lijst) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "grid", gap: 6 }, children: [
+      lijst.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { margin: 0, fontSize: ".86rem" }, children: "Nog geen afgeronde uitdagingen." }),
+      lijst.map((r) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { onClick: () => {
+        sluit();
+        onOpen && onOpen(r);
+      }, className: "vaardig-werk", disabled: !onOpen || isOuder, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+          r.data && r.data.titel || "Uitdaging",
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "muted", children: [
+            " \xB7 ",
+            themaLabel(r.thema),
+            " \xB7 ",
+            r.niveau
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "muted", children: [
+          r.rubricScore != null ? r.rubricScore + "%" : "nog niet beoordeeld",
+          r.alpe && r.alpe.mentorfeedback ? " \xB7 feedback gegeven" : ""
+        ] })
+      ] }, r.id))
+    ] });
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2 in", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("header", { className: "pf2-kop", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(AfrondLandschap, {}),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-kop-inhoud", children: [
+          kruimelItems.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("nav", { className: "pf2-kruimels", "aria-label": "Je bent hier", children: kruimelItems.map((x, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "kruimel-deel", children: [
+            i > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "kruimel-pijl", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 13 }) }),
+            i === kruimelItems.length - 1 || !x.onGa ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "kruimel is-hier", "aria-current": "page", children: x.label }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "kruimel", onClick: x.onGa, children: x.label })
+          ] }, i)) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h1", { className: "pf2-naam", children: pf.leerling.naam }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "pf2-sub", children: [
+            "Waar ",
+            voornaam,
+            " staat, wat is aangetoond en wat de volgende stap is."
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-kop-rij", children: [
+            onTerug && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "pf2-terug", onClick: onTerug, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "left", size: 14 }),
+              " ",
+              terugLabel
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pf2-stat is-groen", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 13 }),
+              " ",
+              k.afgerond,
+              " ",
+              k.afgerond === 1 ? "uitdaging" : "uitdagingen",
+              " afgerond"
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pf2-stat is-oranje", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "clock", size: 13 }),
+              " ",
+              lopend,
+              " in ontwikkeling"
+            ] }),
+            toon("themas") && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pf2-stat is-blauw", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "target", size: 13 }),
+              " ",
+              aangetoond,
+              " aangetoond"
+            ] }),
+            !isOuder && toon("kerncijfers") && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pf2-stat", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chart", size: 13 }),
+              " ",
+              xpGetal(k.xp),
+              " XP totaal"
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "pf-export pf2-export", onClick: export_, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "download", size: 14 }),
+              " Exporteer als pdf"
+            ] })
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("section", { className: "pf2-inzicht", "aria-label": "Kerninzichten", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-inzicht-deel is-intro", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-icoon is-groot", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "spark", size: 20 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h2", { className: "pf2-h2", children: "Kerninzichten" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "pf2-tekst", children: ins.intro })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-inzicht-deel", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-icoon is-groen", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "star", size: 16 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "pf2-h3", children: "Sterke punten" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "pf2-tekst", children: toon("patronen") || toon("themas") ? ins.sterkTekst : "Niet gedeeld door de leerling." })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-inzicht-deel", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "flag", size: 16 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "pf2-h3", children: "Ontwikkelpunt" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "pf2-tekst", children: toon("patronen") || toon("themas") ? ins.ontwTekst : "Niet gedeeld door de leerling." })
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-inzicht-deel", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-icoon is-blauw", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chart", size: 16 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "pf2-h3", children: "Volgende stap" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "pf2-tekst", children: ins.stap })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "pf2-actie", onClick: () => setPaneel({ soort: "onderbouwing" }), children: [
+            "Bekijk onderbouwing ",
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 13 })
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h2", { className: "pf2-sectie", children: "Lees meer in dit portfolio" }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-grid", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-kaart", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(KaartKop, { icoon: "target", titel: "Uitdagingen", sub: k.afgerond + " afgerond \xB7 " + lopend + " in ontwikkeling", onOpen: () => setPaneel({ soort: "uitdagingen" }) }),
+          bewijsTegels.length > 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-tegels", "aria-hidden": "true", children: [
+            bewijsTegels.slice(0, bewijsTegels.length > 3 ? 2 : 3).map((b) => {
+              const foto = b.soort === "foto" && (b.url || b.dataUrl);
+              return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bewijs-sv-icoon pf2-tegel" + (foto ? " is-foto" : ""), children: foto ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("img", { src: b.url || b.dataUrl, alt: "" }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: b.soort === "meting" ? "tekst" : b.soort, size: 18 }) }, b.id);
+            }),
+            bewijsTegels.length > 3 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "bewijs-sv-icoon pf2-tegel bewijs-sv-meer", children: [
+              "+",
+              bewijsTegels.length - 2
+            ] })
+          ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "pf2-leeg", children: "Nog geen bewijs toegevoegd." })
+        ] }),
+        toon("prestaties") && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-kaart", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(KaartKop, { icoon: "medal", titel: "Groei-prestaties", sub: pf.prestaties.verdiend.length + " verdiend", onOpen: () => setPaneel({ soort: "prestaties" }) }),
+          pf.prestaties.verdiend.length ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "pf2-medailles", children: pf.prestaties.verdiend.slice(0, 3).map((p) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(PrestatieMedaille, { p, size: 40 }, p.id)) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "pf2-leeg", children: "Nog geen prestaties verdiend." })
+        ] }),
+        isMentor && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-kaart", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(KaartKop, { icoon: "coach", titel: "Gesprekspunten", sub: "Voor het mentorgesprek", onOpen: () => setPaneel({ soort: "gesprek" }) }),
+          gesprekLabels.length ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "pf2-labels", children: gesprekLabels.map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-label", children: c }, c)) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "pf2-leeg", children: "Nog geen onderwerpen." })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-kaart", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(KaartKop, { icoon: "chart", titel: "Rapporten", sub: "Overzichten en export", onOpen: () => setPaneel({ soort: "rapporten" }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "pf2-rapport", onClick: export_, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-icoon is-wit", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "doc", size: 16 }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pf2-kaart-tekst", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-kaart-titel is-klein", children: "Portfolio-overzicht" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-kaart-sub", children: "PDF" })
+            ] })
+          ] })
+        ] })
+      ] }),
+      toon("themas") && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h2", { className: "pf2-sectie", children: "Thema's" }),
+        themas.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "pf2-rij is-leeg", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "pf2-leeg", style: { margin: 0 }, children: "Er is nog geen beoordeeld werk, dus er valt nog niets over vaardigheden te zeggen." }) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "pf2-rijen", children: themas.map((t) => {
+          const st = vaardigheidStand(t);
+          const comps = t.competenties || [];
+          return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-rij", children: [
+            THEMA_ACHTERGROND[t.thema] ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-thema-foto", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("img", { src: THEMA_ACHTERGROND[t.thema], alt: "" }) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-icoon is-groot is-groen", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "target", size: 20 }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-rij-wie", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-kaart-titel", children: t.themaLabel }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pf2-kaart-sub", title: st.uitleg, children: [
+                st.n ? st.n + " " + (st.n === 1 ? "uitdaging" : "uitdagingen") + " beoordeeld" : "nog niet beoordeeld",
+                st.pct == null && st.n ? " \xB7 te weinig voor een percentage" : ""
+              ] }),
+              st.pct != null && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "vaardig-balk pf2-balk", role: "img", "aria-label": "mastery " + st.pct + " procent, gebaseerd op " + st.n + " beoordeelde uitdagingen", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { width: st.pct + "%" } }) })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-labels pf2-rij-labels", children: [
+              comps.slice(0, 4).map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-label", children: c }, c)),
+              comps.length > 4 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pf2-label is-meer", title: comps.slice(4).join(", "), children: [
+                "+",
+                comps.length - 4,
+                " meer"
+              ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "vaardig-status pf2-status is-" + st.toon + (st.status === "aangetoond" ? " is-aangetoond" : ""), children: st.status.charAt(0).toUpperCase() + st.status.slice(1) }),
+            !isOuder && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "pf2-bekijk", onClick: () => setPaneel({ soort: "thema", thema: t }), "aria-label": "Bekijk " + t.themaLabel, children: [
+              "Bekijk ",
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 13 })
+            ] })
+          ] }, t.thema);
+        }) })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h2", { className: "pf2-sectie", children: "Feedback en reflectie" }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-onder", children: [
+        toon("mentorfeedback") && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-rij pf2-feedback", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "mail", size: 16 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-rij-wie", children: [
+            laatsteFb ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pf2-kaart-sub", children: [
+                themaLabel(laatsteFb.thema),
+                laatsteFb.door ? " \xB7 " + laatsteFb.door : "",
+                laatsteFb.rubricScore != null ? " \xB7 " + laatsteFb.rubricScore + "%" : ""
+              ] }),
+              laatsteFb.feedback && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-tekst", children: laatsteFb.feedback })
+            ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-tekst muted", children: "Nog geen mentorfeedback vastgelegd." }),
+            toon("reflecties") && pf.reflecties.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pf2-kaart-sub", children: [
+              pf.reflecties.length,
+              " reflectiemoment",
+              pf.reflecties.length === 1 ? "" : "en",
+              " vastgelegd"
+            ] })
+          ] }),
+          feedback.length > 1 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "pf2-actie", onClick: () => setPaneel({ soort: "feedback" }), children: [
+            "Bekijk alle feedback ",
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 13 })
+          ] })
+        ] }),
+        !toon("analyse") && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-rij pf2-privacy", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "lock", size: 16 }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-rij-wie", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-tekst", children: "AI-coachinginzichten zijn niet gedeeld. De leerling bepaalt of deze informatie zichtbaar is." }),
+            privacyUitleg && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-kaart-sub", id: "pf2-privacy-uitleg", children: "Het gaat om de AI-analyse en coaching-inzichten (Intelligence Core, leerprofiel, Learning Graph en voorspellingen). Deze zijn alleen zichtbaar met toestemming van de leerling." })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "pf2-info", "aria-expanded": privacyUitleg ? "true" : "false", "aria-controls": "pf2-privacy-uitleg", "aria-label": "Meer uitleg over AI-coachinginzichten", onClick: () => setPrivacyUitleg((o) => !o), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "search", size: 15 }) })
+        ] })
+      ] }),
+      paneel && paneel.soort === "uitdagingen" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(PfPaneel, { titel: "Uitdagingen", onSluit: sluit, children: werkLijst(afgerondeRecs.slice().reverse()) }),
+      paneel && paneel.soort === "thema" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(PfPaneel, { titel: paneel.thema.themaLabel, onSluit: sluit, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "muted", style: { margin: "0 0 10px", fontSize: ".84rem" }, children: [
+          vaardigheidStand(paneel.thema).uitleg,
+          vaardigheidStand(paneel.thema).pct != null ? " \xB7 mastery \xB1" + vaardigheidStand(paneel.thema).pct + "%" : ""
+        ] }),
+        werkLijst((paneel.thema.challenges || []).slice(-6)),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginTop: 10 }, children: [
+          (paneel.thema.competenties || []).map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-label", children: c }, c)),
+          Object.keys(paneel.thema.niveaus || {}).filter((n) => paneel.thema.niveaus[n]).map((n) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "pill", style: { display: "inline-flex", alignItems: "center", gap: 5, fontSize: ".74rem" }, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: n, size: 13 }),
+            paneel.thema.niveaus[n]
+          ] }, n))
+        ] })
+      ] }),
+      paneel && paneel.soort === "prestaties" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(PfPaneel, { titel: "Groei-prestaties", onSluit: sluit, children: pf.prestaties.verdiend.length ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 10, flexWrap: "wrap" }, children: pf.prestaties.verdiend.map((p) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(PrestatieMedaille, { p }, p.id)) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { margin: 0, fontSize: ".86rem" }, children: "Nog geen prestaties verdiend." }) }),
+      paneel && paneel.soort === "gesprek" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(PfPaneel, { titel: "Gesprekspunten voor het mentorgesprek", onSluit: sluit, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GesprekspuntenKaart, { records, gebruiker, type: "mentor" }) }),
+      paneel && paneel.soort === "rapporten" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(PfPaneel, { titel: "Rapporten", onSluit: sluit, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(RapportGenerator, { records, gebruiker, weergave: rol }) }),
+      paneel && paneel.soort === "feedback" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(PfPaneel, { titel: "Alle feedback", onSluit: sluit, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 8 }, children: feedback.slice().reverse().map((m, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "card", style: { padding: 14, borderLeft: "3px solid var(--st-sterk)" }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "muted", style: { fontSize: ".76rem", marginBottom: 3 }, children: [
+          themaLabel(m.thema),
+          m.door ? " \xB7 " + m.door : "",
+          m.rubricScore != null ? " \xB7 " + m.rubricScore + "%" : ""
+        ] }),
+        m.feedback && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { style: { margin: 0, fontSize: ".88rem", lineHeight: 1.45 }, children: m.feedback })
+      ] }, i)) }) }),
+      paneel && paneel.soort === "onderbouwing" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(PfPaneel, { titel: "Onderbouwing", onSluit: sluit, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { style: { margin: "0 0 12px", fontSize: ".9rem", lineHeight: 1.55 }, children: [
+          sv.totaal,
+          aiBezig ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "muted", children: " \xB7 AI verfijnt\u2026" }) : sv.bron === "ai" ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "muted", children: " \xB7 door AI" }) : null
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "vouw-groep", children: [
+          toon("patronen") && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+            Vouw,
+            {
+              id: "patronen",
+              titel: "Wat dit portfolio laat zien",
+              kind: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "grid", gap: 10 }, children: [
+                pf.patronen.sterkePunten.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { style: { fontSize: ".86rem" }, children: "Sterke punten" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginTop: 5 }, children: pf.patronen.sterkePunten.map((x, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { background: "#EDF3EA", color: "#3E6633", fontSize: ".76rem" }, children: x }, i)) })
+                ] }),
+                !isOuder && pf.patronen.ontwikkelpunten.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { style: { fontSize: ".86rem" }, children: "In ontwikkeling" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginTop: 5 }, children: pf.patronen.ontwikkelpunten.map((x, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pill", style: { background: "var(--accent-zacht)", color: "var(--accent-diep)", fontSize: ".76rem" }, children: x }, i)) })
+                ] }),
+                pf.patronen.leerstrategieen.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { fontSize: ".86rem" }, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: "Leerstrategie\xEBn:" }),
+                  " ",
+                  pf.patronen.leerstrategieen.join(", ")
+                ] }),
+                pf.patronen.interesses.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { fontSize: ".86rem" }, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: "Interesses:" }),
+                  " ",
+                  pf.patronen.interesses.join(", ")
+                ] }),
+                pf.patronen.motivatie && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { fontSize: ".86rem" }, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: "Motivatie:" }),
+                  " ",
+                  pf.patronen.motivatie
+                ] })
+              ] })
+            }
+          ),
+          toon("kerncijfers") && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+            Vouw,
+            {
+              id: "kerncijfers",
+              titel: "Kerncijfers",
+              meta: k.afgerond + " afgerond \xB7 " + k.xp + " XP",
+              kind: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "space-between", alignItems: "center" }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Stat, { w: k.afgerond, l: "uitdagingen" }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Stat, { w: k.themaCount, l: "thema's" }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Stat, { w: k.prestatiesVerdiend, l: "prestaties" }),
+                !isOuder && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Stat, { w: k.xp, l: "XP" }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Stat, { w: k.streakBest, l: "reeks" }),
+                pf.patronen.groeiOverTijd.length > 2 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { flex: "1 1 200px" }, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "muted", style: { fontSize: ".72rem", marginBottom: 2 }, children: "Groei over tijd" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GroeiSpark, { data: pf.patronen.groeiOverTijd })
+                ] })
+              ] })
+            }
+          ),
+          toon("tijdlijn") && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+            Vouw,
+            {
+              id: "journey",
+              titel: isMentor ? "Growth Journey \xB7 volledige groeireis" : "Growth Journey",
+              kind: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GrowthJourneyKaart, { records, gebruiker, weergave: rol })
+            }
+          ),
+          toon("tijdlijn") && pf.tijdlijn.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+            Vouw,
+            {
+              id: "tijdlijn",
+              titel: "Groeireis-tijdlijn",
+              meta: pf.tijdlijn.length + " momenten",
+              kind: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { position: "relative", paddingLeft: 18 }, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { position: "absolute", left: 5, top: 4, bottom: 14, width: 2, background: "#EDEBE6" } }),
+                pf.tijdlijn.filter((x) => isOuder ? x.type !== "mentor" : true).slice(-22).map((x, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { position: "relative", marginBottom: 14 }, children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { position: "absolute", left: -17, top: 3, width: 10, height: 10, borderRadius: "50%", background: dotKleur[x.type] || "#ccc", boxShadow: "0 0 0 3px #fff" } }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { fontSize: ".88rem", fontWeight: 700 }, children: [
+                    x.titel,
+                    x.niveau ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "muted", style: { fontWeight: 600 }, children: [
+                      " \xB7 ",
+                      x.niveau
+                    ] }) : null,
+                    x.rar ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "muted", style: { fontWeight: 600 }, children: [
+                      " \xB7 ",
+                      x.rar
+                    ] }) : null
+                  ] }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "muted", style: { fontSize: ".76rem" }, children: [
+                    x.datum ? datumNL(x.datum) : "prestatie",
+                    x.route && ROUTES[x.route] ? ` \xB7 ${ROUTES[x.route].naam}` : "",
+                    x.mastery != null ? ` \xB7 mastery ${x.mastery}%` : "",
+                    x.door ? ` \xB7 ${x.door}` : ""
+                  ] })
+                ] }, i))
+              ] })
+            }
+          ),
+          magAnalyse && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Vouw, { id: "volgende", titel: "Eerstvolgende ontwikkelstap (AI)", kind: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(IntelligenceCoreKaart, { records, gebruiker, weergave: rol }) }),
+          magAnalyse && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Vouw, { id: "coaching", titel: "Coaching-inzichten", kind: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(CoachingInzichten, { records, gebruiker, weergave: rol }) }),
+          magAnalyse && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Vouw, { id: "leerprofiel", titel: "Persoonlijk leerprofiel (AI-model)", kind: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(PersonalLearningModelKaart, { records, gebruiker, weergave: rol }) }),
+          isMentor && toon("analyse") && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Vouw, { id: "graph", titel: "Learning Graph \xB7 wat werkt", kind: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LearningGraphKaart, { records, gebruiker }) }),
+          isMentor && toon("analyse") && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Vouw, { id: "voorspellingen", titel: "Voorspellingen & vroegsignalen", kind: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(VoorspellingenKaart, { records, gebruiker }) }),
+          isMentor && toon("analyse") && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Vouw, { id: "audit", titel: "Beslis-audittrail", kind: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", justifyContent: "flex-end", marginBottom: 10 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MentorExportKnop, { records, gebruiker }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(AudittrailKaart, { records, gebruiker })
+          ] }) })
+        ] })
+      ] })
+    ] });
   }
   function PrestatieMedaille({ p, vergrendeld, geheim, size = 58, onClick }) {
     const rar = p.rar || ZELDZAAMHEID.Common;
@@ -66637,8 +67232,8 @@ ${kiesInstr}${variatieInstr}${praktijkInstr}${adviesInstr}${persoonlijkInstr}${p
     @media print{body{padding:0}}
   </style></head>
   <body>
-    <div class="merk">2scool GROW</div>
-    <div class="meta">${meta}</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px"><div><div class="merk">2scool GROW</div>
+    <div class="meta">${meta}</div></div><img src="${LOGO_GROW_ZWART}" alt="2scool GROW" style="height:40px;width:auto"/></div>
     <hr/>
     ${body}
     <div class="voet">2scool GROW \xB7 Parmant Topsport Talentschool \xB7 onderdeel van Unfold Education</div>
@@ -71210,7 +71805,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                     }
                   }, children: "Opnieuw proberen" })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "afrond-sectie", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GroeiCompact, { xp: xpNu + (behaaldNu ? rec.xp || 0 : 0), beloning: behaaldNu ? rec.xp : null, stand: afrond.bevestigd ? "verdiend" : "wacht" }) }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "afrond-sectie", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GroeiCompact, { xp: xpNu + (behaaldNu ? rec.xp || 0 : 0), beloning: behaaldNu ? rec.xp : null, stand: afrond.bevestigd ? "verdiend" : "wacht", kleur: "var(--afrond-groen)" }) }),
                 reflectieSectie,
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "afrond-acties", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "btn btn-accent", onClick: () => {
                   if (onVerder) onVerder();
@@ -71247,10 +71842,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
                 ] }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-groei", children: [
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "afrond-kop", children: "Jouw groei" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "afrond-tegel", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GroeiCompact, { xp: xpNu, beloning: null, stand: "wacht" }) }),
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "afrond-tegel", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GroeiCompact, { xp: xpNu, beloning: null, stand: "wacht", kleur: "var(--afrond-groen)" }) }),
                   !behaaldNu && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "afrond-regel-sub muted", children: "Volgens je reflectie heb je het niveau nog niet gehaald. Je kunt afronden zonder XP, of je reflectie opnieuw doen." })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-duo" + (werkOpen || begeleiderWeergave ? " is-enkel" : ""), children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-duo" + (begeleiderWeergave ? " is-enkel" : ""), children: [
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "afrond-tegel afrond-werk" + (werkMelding && tekort ? " is-tekort" : ""), ref: werkRef, children: [
                     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "afrond-icoon afrond-werk-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "layers", size: 18 }) }),
                     /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("h4", { className: "afrond-kop", children: [
