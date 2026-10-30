@@ -49936,7 +49936,17 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
   padding:.3rem .5rem .3rem 0;border-radius:8px;margin-bottom:18px}
 .lp-terug:hover{color:var(--accent-diep)}
 .lp-terug:focus-visible{outline:3px solid var(--accent-diep);outline-offset:2px}
-.lp-kop{display:flex;align-items:flex-start;gap:14px;margin-bottom:26px}
+.lp-wissel{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.lp-wissel .lp-terug{margin:0}
+.lp-wissel-rechts{display:flex;align-items:center;gap:6px}
+.lp-wissel-knop{width:38px;height:38px;border-radius:10px;border:1px solid var(--lijn-fijn);background:var(--kaart);color:var(--inkt);display:grid;place-items:center;cursor:pointer}
+.lp-wissel-knop:hover:not(:disabled){border-color:var(--accent-rand);color:var(--accent-diep)}
+.lp-wissel-knop:disabled{opacity:.35;cursor:default}
+.lp-wissel-knop.is-volgende svg{transform:rotate(180deg)}
+.lp-wissel-knop:focus-visible,.lp-wissel-kies:focus-visible{outline:2.5px solid var(--accent-diep);outline-offset:2px}
+.lp-wissel-kies{height:38px;min-width:200px;max-width:60vw;padding:0 34px 0 12px;border-radius:10px;border:1px solid var(--lijn-fijn);background:var(--kaart);font:inherit;font-size:.9rem;font-weight:600;color:var(--inkt)}
+.lp-wissel-pos{font-size:.78rem;color:var(--grijs);min-width:34px;text-align:center}
+.lp-kop{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px}
 .lp-wie{flex:1 1 auto;min-width:0}
 .lp-naam{margin:0;font-size:1.65rem;font-weight:700;letter-spacing:-.022em;line-height:1.12} /* 26,4px \u2014 richtmaat 24\u201328 */
 .lp-klas{font-size:.88rem;color:var(--grijs);margin-top:3px}
@@ -49994,7 +50004,7 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .lp-werk-status.is-wacht{background:var(--accent-zacht);color:var(--accent-diep)}
 .lp-werk-status.is-beoordeeld{background:var(--salie-zacht);color:var(--salie-diep)}
 .lp-pijlerlijst{display:grid;gap:4px}
-.lp-pijlerrij{appearance:none;border:1px solid var(--lijn-fijn);background:var(--tegel-licht);font:inherit;text-align:left;cursor:pointer;display:grid;grid-template-columns:auto minmax(80px,110px) minmax(0,1fr) auto auto;align-items:center;gap:12px;padding:10px 10px 10px 12px;border-radius:12px;min-height:48px;color:var(--inkt)}
+.lp-pijlerrij{appearance:none;border:1px solid var(--lijn-fijn);background:var(--tegel-licht);font:inherit;text-align:left;cursor:pointer;display:grid;grid-template-columns:auto minmax(80px,110px) minmax(0,1fr) auto auto;align-items:center;gap:12px;padding:7px 10px 7px 12px;border-radius:12px;min-height:42px;color:var(--inkt)}
 .lp-pijlerrij:hover{background:var(--tegel)}
 .lp-pijlerrij:focus-visible{outline:3px solid var(--accent-diep);outline-offset:-3px}
 .lp-pijlerrij-icoon{display:inline-flex;color:var(--salie-diep)}
@@ -50993,7 +51003,10 @@ textarea.studio-input{resize:vertical;min-height:0}
 .studio-status.is-gearchiveerd{background:#EEF1F4;color:#4A5568}
 .studio-leeg{padding:24px;border:1px dashed var(--lijn);border-radius:16px;text-align:center;color:var(--grijs);font-size:.9rem}
 .studio-leeg p{margin:0}
-.studio-wvb{max-height:50vh;overflow:auto;padding:2px}
+/* v112.7.2.1: rijen nooit kleiner dan hun inhoud (teksten overlapten in de kiezer) */
+.studio-wvb{max-height:min(62vh,640px);overflow:auto;padding:2px;grid-auto-rows:max-content;align-content:start}
+.studio-wvb .wvb-kaart,.wvb-raster .wvb-kaart{min-height:max-content;height:auto}
+.wvb-kaart-meta{line-height:1.35}
 .studio-preview{width:min(1040px,100vw);max-height:100vh;display:grid;grid-template-rows:auto minmax(0,1fr);background:var(--bg);border-radius:16px;overflow:hidden}
 .studio-preview-balk{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;background:var(--kaart);border-bottom:1px solid var(--lijn-fijn);font-size:.86rem;color:var(--inkt-zacht)}
 .studio-preview-balk>span{display:inline-flex;align-items:center;gap:8px}
@@ -51013,6 +51026,8 @@ textarea.studio-input{resize:vertical;min-height:0}
 .studio-beeld.is-vul{position:absolute;inset:0}
 .studio-kaart-afgeleid{display:inline-flex;align-items:center;gap:5px;font-size:.74rem;color:var(--salie-diep)}
 .studio-kop.is-ingebed{align-items:center}
+.studio-start-voet{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.studio-verder{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .studio:has(>.studio-kop.is-ingebed){gap:12px}
 .studio-kop.is-ingebed .studio-subtabs{margin:0}
 .studio-hint-regel{margin:-6px 0 0}
@@ -51091,14 +51106,15 @@ textarea.studio-input{resize:vertical;min-height:0}
 .okv-acties{display:flex;gap:8px;flex-wrap:wrap}
 .okv-pijl{display:inline-flex;transform:rotate(90deg);transition:transform .2s}
 .okv-pijl.is-open{transform:rotate(-90deg)}
-.okv-meer{display:grid;gap:0;padding:4px 20px 14px;border-top:1px solid var(--lijn-fijn)}
-.okv-meer>.studio-hint{padding:8px 0 2px}
-.okv-sectie{border-bottom:1px solid var(--lijn-fijn)}
-.okv-sectie:last-child{border-bottom:none}
-.okv-sectie-kop{display:flex;align-items:center;gap:12px;width:100%;padding:12px 4px;background:none;border:none;font:inherit;color:var(--inkt);cursor:pointer;text-align:left;border-radius:8px}
-.okv-sectie-naam{font-weight:620;font-size:.92rem;flex:0 0 230px}
-.okv-sectie-sam{flex:1;min-width:0;font-size:.84rem;color:var(--grijs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.okv-sectie-inhoud{padding:4px 4px 16px}
+.okv-meer{display:grid;grid-template-columns:240px minmax(0,1fr);gap:20px;min-height:min(56vh,520px)}
+.okv-meer-nav{display:grid;gap:4px;align-content:start;border-right:1px solid var(--lijn-fijn);padding-right:14px}
+.okv-meer-open{margin:8px 4px 0}
+.okv-sectie-kop{display:grid;gap:2px;width:100%;padding:9px 12px;background:none;border:none;font:inherit;color:var(--inkt);cursor:pointer;text-align:left;border-radius:10px}
+.okv-sectie-kop:hover{background:var(--tegel-licht)}
+.okv-sectie-kop.is-open{background:var(--accent-zacht);color:var(--accent-diep)}
+.okv-sectie-naam{font-weight:620;font-size:.9rem}
+.okv-sectie-sam{min-width:0;font-size:.78rem;color:var(--grijs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.okv-sectie-inhoud{min-width:0;align-self:start}
 .okn{display:grid;gap:14px}
 .okn-kop{display:flex;align-items:center;gap:16px}
 .okn-neo{display:inline-flex;flex-shrink:0}
@@ -51133,7 +51149,7 @@ textarea.studio-input{resize:vertical;min-height:0}
 .imp-optie{display:flex;align-items:center;gap:8px;font-size:.9rem;padding:4px 0;cursor:pointer}
 .imp-optie input{accent-color:var(--accent-knop);width:18px;height:18px}
 @media (max-width:1000px){ .okv-body{grid-template-columns:1fr} .okv-blok+.okv-blok{border-left:none;border-top:1px solid var(--lijn-fijn)} .okn-keuzes{grid-template-columns:1fr} }
-@media (max-width:720px){ .okv-kop{grid-template-columns:1fr;gap:14px;padding:14px} .okv-beeld,.okv-beeld .studio-beeld.is-kaart{min-height:120px;height:120px} .okv-titel-tekst{font-size:1.22rem} .okv-blok,.okv-neo,.okv-voet,.okv-voorstel,.okv-meer{padding-left:14px;padding-right:14px} .okv-acties{width:100%} .okv-acties .studio-knop{flex:1 1 auto;justify-content:center} .okv-sectie-naam{flex-basis:auto} .okv-sectie-sam{display:none} .okv-oud,.okv-nieuw{grid-template-columns:1fr;gap:0} .eth{grid-template-columns:1fr} .eth-voorbeeld{position:static} .okn-kop .okn-neo{display:none} }
+@media (max-width:720px){ .okv-kop{grid-template-columns:1fr;gap:14px;padding:14px} .okv-beeld,.okv-beeld .studio-beeld.is-kaart{min-height:120px;height:120px} .okv-titel-tekst{font-size:1.22rem} .okv-blok,.okv-neo,.okv-voet,.okv-voorstel,.okv-meer{padding-left:14px;padding-right:14px} .okv-acties{width:100%} .okv-acties .studio-knop{flex:1 1 auto;justify-content:center} .okv-meer{grid-template-columns:1fr;min-height:0} .okv-meer-nav{grid-template-columns:repeat(2,minmax(0,1fr));border-right:none;padding-right:0;border-bottom:1px solid var(--lijn-fijn);padding-bottom:10px} .okv-sectie-sam{display:none} .okv-oud,.okv-nieuw{grid-template-columns:1fr;gap:0} .eth{grid-template-columns:1fr} .eth-voorbeeld{position:static} .okn-kop .okn-neo{display:none} }
 @media (prefers-reduced-motion:reduce){ .okv-pijl{transition:none} }
 /* v112.7.2 \u2014 Learning by doing: de opdrachtkaart voor leerlingen */
 .doe{display:grid;gap:16px;text-align:left}
@@ -76356,7 +76372,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
   }
   function StudioOntwerpKaart({ st, zet, setSt, themas, onNieuwThema, onBewerkThema, onPreview, onWizard, onBewaar, bewaard, platformNeo, ingebed, opslagTekst, bronLabel, onMelding }) {
     const d = st.data;
-    const [bewerk, setBewerk] = (0, import_react2.useState)(null);
+    const [bewerk, setBewerk] = (0, import_react2.useState)(() => !ingebed && !studioTekst(st.data && st.data.titel) ? "titel" : null);
     const [meer, setMeer] = (0, import_react2.useState)(false);
     const [sectie, setSectie] = (0, import_react2.useState)(null);
     const [verfijn, setVerfijn] = (0, import_react2.useState)(null);
@@ -76723,19 +76739,33 @@ ${String(stapTekst).slice(0, 900)}` : ""
           ] })
         ] })
       ] }),
-      !ingebed && meer && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "okv-meer", id: "okv-meer-" + st.id, children: [
-        ontbreekt.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "studio-hint", children: [
-          "Nog open: ",
-          ontbreekt.join(" \xB7 ")
-        ] }),
-        SECTIES.map(([k, l, sam]) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "okv-sectie" + (sectie === k ? " is-open" : ""), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "okv-sectie-kop", "aria-expanded": sectie === k ? "true" : "false", onClick: () => setSectie((s) => s === k ? null : k), children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "okv-sectie-naam", children: l }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "okv-sectie-sam", children: sam }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "okv-pijl" + (sectie === k ? " is-open" : ""), "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 14 }) })
+      !ingebed && meer && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(PfPaneel, { titel: "Meer aanpassen", sub: d.titel || "Mijn uitdaging", icoon: "layers", toon: "groen", breed: 980, onSluit: () => {
+        setMeer(false);
+        setSectie(null);
+      }, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "okv-meer", id: "okv-meer-" + st.id, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("nav", { className: "okv-meer-nav", "aria-label": "Onderdelen", children: [
+            SECTIES.map(([k, l, sam]) => {
+              const actief = (sectie || SECTIES[0][0]) === k;
+              return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "okv-sectie-kop" + (actief ? " is-open" : ""), "aria-current": actief ? "true" : void 0, onClick: () => setSectie(k), children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "okv-sectie-naam", children: l }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "okv-sectie-sam", children: sam })
+              ] }, k);
+            }),
+            ontbreekt.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "studio-hint okv-meer-open", children: [
+              "Nog open: ",
+              ontbreekt.join(" \xB7 ")
+            ] })
           ] }),
-          sectie === k && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "okv-sectie-inhoud", children: sectieInhoud(k) })
-        ] }, k))
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "okv-sectie-inhoud", role: "region", "aria-label": (SECTIES.find((x) => x[0] === (sectie || SECTIES[0][0])) || [])[1], children: sectieInhoud(sectie || SECTIES[0][0]) })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-acties eth-acties", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent studio-knop", onClick: () => {
+          setMeer(false);
+          setSectie(null);
+        }, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "check", size: 15 }),
+          " Klaar"
+        ] }) })
       ] }),
       wvKiezer && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioWerkvormKiezer, { gekozen: d.werkvormen || [], niveau: d.niveau, onKies: (n) => toggle("werkvormen", n), onSluit: () => setWvKiezer(false) })
     ] });
@@ -76777,10 +76807,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
       ] }) })
     ] });
   }
-  function GrowStudio({ gebruiker, platformNeo, start, onOpenRecord, ingebed }) {
+  function GrowStudio({ gebruiker, platformNeo, start, startToken, onOpenRecord, ingebed }) {
     const [lijst, setLijst] = (0, import_react2.useState)([]);
     const [geladen, setGeladen] = (0, import_react2.useState)(false);
-    const [zicht, setZicht] = (0, import_react2.useState)(start === "bibliotheek" ? "bibliotheek" : "wizard");
+    const [zicht, setZicht] = (0, import_react2.useState)(start === "bibliotheek" ? "bibliotheek" : "start");
     const [toonKeuzes, setToonKeuzes] = (0, import_react2.useState)(true);
     const [st, setSt] = (0, import_react2.useState)(null);
     const [stap, setStap] = (0, import_react2.useState)(0);
@@ -76823,14 +76853,14 @@ ${String(stapTekst).slice(0, 900)}` : ""
       } else if (start === "maken" && st && studioTekst(st.data.titel)) {
         setZicht((z) => z === "bibliotheek" ? "kaart" : z);
       } else {
-        setZicht("wizard");
+        setZicht("start");
         setToonKeuzes(true);
         if (!st || st.status !== "concept" || studioValidatie(st.data).length >= 9) setSt(studioLeeg(gebruiker));
         setStap(0);
       }
-    }, [start]);
+    }, [start, startToken]);
     (0, import_react2.useEffect)(() => {
-      if (!st && zicht === "wizard") setSt(studioLeeg(gebruiker));
+      if (!st && (zicht === "wizard" || zicht === "start")) setSt(studioLeeg(gebruiker));
     }, [zicht, st]);
     const d = st && st.data;
     const zet = (patch) => setSt((s) => ({ ...s, gewijzigd: (/* @__PURE__ */ new Date()).toISOString(), data: { ...s.data, ...patch } }));
@@ -76858,10 +76888,28 @@ ${String(stapTekst).slice(0, 900)}` : ""
       const s = { ...studioLeeg(gebruiker), bron: bron || "zelf", ...basis || {} };
       setSt(s);
       setStap(0);
-      setZicht("wizard");
+      setZicht("start");
       setMelding("");
       setOpslag("");
       setToonKeuzes(true);
+    };
+    const zelfMaken = () => {
+      const s = { ...studioLeeg(gebruiker), bron: "zelf" };
+      setSt(s);
+      setStap(0);
+      setKaartBron("");
+      setZicht("kaart");
+      setMelding("");
+      setOpslag("");
+    };
+    const uitgebreid = () => {
+      const s = { ...studioLeeg(gebruiker), bron: "zelf" };
+      setSt(s);
+      setStap(0);
+      setToonKeuzes(false);
+      setZicht("wizard");
+      setMelding("");
+      setOpslag("");
       try {
         setTimeout(() => {
           const el2 = document.querySelector('input[placeholder^="Bijv. Verantwoord"]');
@@ -76877,7 +76925,8 @@ ${String(stapTekst).slice(0, 900)}` : ""
       setSjabloonKiezer(false);
       setSt(s);
       setStap(0);
-      setZicht("wizard");
+      setKaartBron("vanuit sjabloon");
+      setZicht("kaart");
     };
     const neemVoorstelOver = (deel) => {
       if (!neoVoorstel) return;
@@ -77054,10 +77103,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
     ] });
     const Keuzes = () => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-keuzes", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-keuze", onClick: () => nieuwStart(null, "zelf"), children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-keuze", onClick: zelfMaken, children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-icoon is-groot", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(BewijsIcoon, { soort: "plus", size: 20 }) }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-keuze-titel", children: "Zelf maken" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-keuze-sub", children: "Begin met een lege uitdaging." })
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-keuze-sub", children: "Vul \xE9\xE9n kaart in: klik op een onderdeel." })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-keuze", onClick: () => {
           nieuwStart(null, "neo");
@@ -77256,6 +77305,26 @@ ${String(stapTekst).slice(0, 900)}` : ""
       modals
     ] });
     if (!st) return null;
+    if (zicht === "start") {
+      const concepten = lijst.filter((x) => x.eigen !== false && x.status === "concept" && studioTekst(x.data && x.data.titel)).sort((a, b) => String(b.gewijzigd || "").localeCompare(String(a.gewijzigd || ""))).slice(0, 3);
+      return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio", children: [
+        kop("GROW Studio", "Kies hoe je begint.", null),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Keuzes, {}),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-start-voet", children: [
+          concepten.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-verder", "aria-label": "Verder met een concept", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-label", children: "Verder met" }),
+            concepten.map((x) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil is-klein", onClick: () => openKaart(x, ""), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "edit", size: 13 }),
+              " ",
+              studioTekst(x.data.titel, 48)
+            ] }, x.id))
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "studio-link", onClick: uitgebreid, "data-studio": "uitgebreid", children: "Uitgebreid ontwerpen in vijf stappen" })
+        ] }),
+        melding && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "pf2-kaart-sub studio-melding", role: "status", children: melding }),
+        modals
+      ] });
+    }
     if (zicht === "neo" || zicht === "kaart") {
       const bewaard = lijst.some((x) => x.id === st.id);
       return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio", children: [
@@ -77561,7 +77630,6 @@ ${String(stapTekst).slice(0, 900)}` : ""
         ] }),
         bibKnop
       ] })),
-      stap === 0 && toonKeuzes && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Keuzes, {}),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "studio-status-regel", children: [
         st.data.titel || "Nieuwe uitdaging",
         " \xB7 ",
@@ -77666,6 +77734,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
             setSt(studioLeeg(gebruiker));
             setToonKeuzes(true);
             setOpslag("");
+            setZicht("start");
           } else setStap(stap - 1);
         }, children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("svg", { width: "16", height: "16", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.2", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M19 12H5M11 6l-6 6 6 6" }) }),
@@ -78121,14 +78190,15 @@ ${String(stapTekst).slice(0, 900)}` : ""
       ] });
     };
     const TAB_KOP = { leerlingen: ["Leerlingen", sub], bibliotheek: ["Didactische bibliotheek", "Werkvormen en challenge-sjablonen om uitdagingen mee te maken."], studio: ["GROW Studio", "Maak, bewerk en deel uitdagingen voor je leerlingen."] };
-    const [tabTitel, tabSub] = TAB_KOP[mentorView] || TAB_KOP.leerlingen;
+    const [tabTitel, tabSubRuw] = TAB_KOP[mentorView] || TAB_KOP.leerlingen;
+    const tabSub = mentorView === "leerlingen" && N.leerlingId ? null : tabSubRuw;
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(Section, { eyebrow: readOnly ? eyebrow : "Mentor \xB7 Vakdocent", titel: tabTitel, sub: tabSub, children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(AdminTabs, { tabs: [["leerlingen", "Leerlingen", "users"], ["bibliotheek", "Didactische bibliotheek", "briefcase"], ["studio", "GROW Studio", "edit"]], actief: mentorView, onKies: (k) => {
         if (k === mentorView) return;
         setMentorView(k);
         if (k === "studio") setStudioStart("maken:" + Date.now());
       }, label: "Mentoromgeving" }),
-      mentorView === "studio" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GrowStudio, { gebruiker, platformNeo, start: studioStart ? studioStart.split(":")[0] : "maken", onOpenRecord: onOpen, ingebed: true }),
+      mentorView === "studio" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GrowStudio, { gebruiker, platformNeo, start: studioStart ? studioStart.split(":")[0] : "maken", startToken: studioStart || "", onOpenRecord: onOpen, ingebed: true }),
       mentorView === "leerlingen" && !N.leerlingId && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lv-schakel", role: "tablist", "aria-label": "Weergave", children: [["klassen", "Klassen"], ["leerlingen", "Alle leerlingen"]].map(([k, lab]) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
           "button",
@@ -78766,24 +78836,38 @@ ${String(stapTekst).slice(0, 900)}` : ""
               ] }))
             ] }, r.id);
             return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
-                "button",
-                {
-                  className: "lp-terug",
-                  onClick: () => {
+              (() => {
+                const lln = sorteerLeerlingen(openKlas.leerlingen || []);
+                const ix = lln.findIndex((x) => x.id === l.id);
+                const naar = (x) => {
+                  if (!x || x.id === l.id) return;
+                  setMfRec(null);
+                  zetNav({ leerlingId: x.id, llTab: "", llPaneel: "", llOpen: "" }, { vervang: true });
+                };
+                return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-wissel", role: "navigation", "aria-label": "Leerling wisselen", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { className: "lp-terug", onClick: () => {
                     if (tab) terugNaarOverzicht();
                     else {
                       setMfRec(null);
                       sluitNav();
                     }
-                  },
-                  children: [
+                  }, children: [
                     /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "left", size: 15 }),
                     " ",
                     tab ? "Terug naar het overzicht" : "Terug naar " + openKlas.naam
-                  ]
-                }
-              ),
+                  ] }),
+                  lln.length > 1 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-wissel-rechts", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "lp-wissel-knop", "aria-label": "Vorige leerling" + (ix > 0 ? ": " + lln[ix - 1].naam : ""), disabled: ix <= 0, onClick: () => naar(lln[ix - 1]), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "left", size: 16 }) }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("select", { className: "lp-wissel-kies", "aria-label": "Kies een leerling uit de klas", value: l.id, onChange: (e) => naar(lln.find((x) => x.id === e.target.value)), children: lln.map((x) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: x.id, children: x.naam }, x.id)) }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lp-wissel-pos", "aria-hidden": "true", children: [
+                      ix + 1,
+                      "/",
+                      lln.length
+                    ] }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "lp-wissel-knop is-volgende", "aria-label": "Volgende leerling" + (ix < lln.length - 1 ? ": " + lln[ix + 1].naam : ""), disabled: ix >= lln.length - 1, onClick: () => naar(lln[ix + 1]), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "left", size: 16 }) })
+                  ] })
+                ] });
+              })(),
               /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-kop", children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Avatar, { foto: l.foto, naam: l.naam, size: 56 }),
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-wie", children: [
@@ -78861,131 +78945,113 @@ ${String(stapTekst).slice(0, 900)}` : ""
                 )
               ] }),
               leeg && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "lp-leeg", children: "Hier wordt de ontwikkeling zichtbaar zodra er werk en feedback zijn toegevoegd." }),
-              !tab && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lp-tegels", role: "navigation", "aria-label": "Ontwikkelpijlers", children: PIJLERS.map((pj) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(
-                  "button",
-                  {
-                    type: "button",
-                    className: "lp-tegel",
-                    onClick: () => zetNav({ llTab: "pijler:" + pj.naam }, { vervang: true }),
-                    children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-tegel-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: pj.icoon, size: 22 }) }),
-                      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
-                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-tegel-naam", children: pj.naam }),
-                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-tegel-obs", children: pj.uitleg })
+              !tab && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(import_jsx_runtime2.Fragment, { children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-kolommen", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-kolom-links", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("section", { className: "lp-blok lp-recent", "aria-labelledby": "lp-recent", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-sectiekop", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", id: "lp-recent", children: "Recent werk" }),
+                      alleRecs.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-link", onClick: () => zetNav({ llTab: "werk" }, { vervang: true }), children: [
+                        "Bekijk al het werk ",
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 13 })
                       ] })
-                    ]
-                  },
-                  pj.naam
-                )) }),
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-kolommen", children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-kolom-links", children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("section", { className: "lp-blok lp-recent", "aria-labelledby": "lp-recent", children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-sectiekop", children: [
-                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", id: "lp-recent", children: "Recent werk" }),
-                        alleRecs.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-link", onClick: () => zetNav({ llTab: "werk" }, { vervang: true }), children: [
-                          "Bekijk al het werk ",
-                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 13 })
-                        ] })
-                      ] }),
-                      recent.length ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lp-werklijst", children: recent.map(werkRij) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "lp-stil", children: "Er is nog geen werk ingeleverd." })
                     ] }),
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("section", { className: "lp-blok lp-ontwikkeling", "aria-labelledby": "lp-ontw", children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-sectiekop", children: [
-                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", id: "lp-ontw", children: "Ontwikkeling" }),
-                        onPortfolio && st.recs.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-link", onClick: () => onPortfolio(l), children: [
-                          "Bekijk voortgang ",
-                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 13 })
-                        ] })
-                      ] }),
-                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lp-pijlerlijst", children: PIJLERS.map((pj) => {
-                        const ps = pijlerStand(pj.naam);
-                        const totaal = ps.rijen.length;
-                        const sterk = ps.rijen.filter((x) => x.niveau === "voldoende" || x.niveau === "zelfstandig").length;
-                        const metOordeel = ps.rijen.filter((x) => x.aantal > 0).length;
-                        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-pijlerrij", onClick: () => zetNav({ llTab: "pijler:" + pj.naam }, { vervang: true }), children: [
-                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijlerrij-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: pj.icoon, size: 18 }) }),
-                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijlerrij-naam", children: pj.naam }),
-                          metOordeel > 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijlerrij-balk", role: "img", "aria-label": sterk + " van " + totaal + " vaardigheden aangetoond", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { width: Math.round(100 * sterk / Math.max(1, totaal)) + "%" } }) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijlerrij-balk is-leeg", "aria-hidden": "true" }),
-                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijlerrij-status" + (ps.status === "aangetoond" ? " is-sterk" : ps.status ? " is-groei" : ""), children: metOordeel > 0 ? ps.status === "aangetoond" ? sterk + " van " + totaal + " aangetoond" : "In ontwikkeling" : "Nog geen beoordeling" }),
-                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijl", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 16 }) })
-                        ] }, pj.naam);
-                      }) })
-                    ] })
+                    recent.length ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lp-werklijst", children: recent.map(werkRij) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "lp-stil", children: "Er is nog geen werk ingeleverd." })
                   ] }),
-                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-kolom-rechts", children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("section", { className: "lp-blok lp-volgende", "aria-labelledby": "lp-vs", children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", id: "lp-vs", children: "Volgende stap" }),
-                      wachtend.length > 0 ? (
-                        /* actie nodig: werk wacht op beoordeling — één primaire knop */
-                        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-gesprek", children: [
-                          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "lp-gesprek-obs lp-actie", children: [
-                            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-actie-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "target", size: 18 }) }),
-                            wachtend.length === 1 ? "1 opdracht wacht op feedback." : wachtend.length + " opdrachten wachten op feedback."
-                          ] }),
-                          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "lp-gesprek-regel", children: [
-                            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-label", children: "Actie" }),
-                            wachtend[0].data && wachtend[0].data.titel || themaLabel(wachtend[0].thema),
-                            wachtend.length > 1 ? " en " + (wachtend.length - 1) + " meer" : ""
-                          ] }),
-                          !readOnly ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent lp-hoofdactie", onClick: () => naarBeoordeling(wachtend[0]), children: [
-                            "Bekijk opdrachten ",
-                            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 15 })
-                          ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "btn btn-licht lp-hoofdactie", onClick: () => zetNav({ llTab: "werk" }, { vervang: true }), children: "Bekijk opdrachten" }),
-                          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-link lp-tweede", onClick: () => zetNav({ llTab: "verder" }, { vervang: true }), children: [
-                            "Bespreek ontwikkeling ",
-                            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 13 })
-                          ] })
-                        ] })
-                      ) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-                        VolgendeStap,
-                        {
-                          records: alleRecs,
-                          leerling: l,
-                          klas: openKlas.naam,
-                          feedbackGegeven,
-                          beoordeeld: beoordeeldeRecs.length,
-                          onBespreek: () => zetNav({ llTab: "verder" }, { vervang: true })
-                        }
-                      )
-                    ] }),
-                    !readOnly && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("section", { className: "lp-blok lp-feedbackkaart", "aria-labelledby": "lp-fb", children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", id: "lp-fb", children: "Feedback" }),
-                      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-gesprek", children: [
-                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "lp-gesprek-obs", children: "Feedback wordt gekoppeld aan het werk van deze leerling." }),
-                        laatsteAfgerond ? (() => {
-                          const doel = wachtend[0] || laatsteAfgerond;
-                          const titel = doel.data && doel.data.titel || themaLabel(doel.thema);
-                          return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent lp-hoofdactie", onClick: () => naarBeoordeling(doel), title: "Beoordeel uitdaging: " + titel, children: [
-                            "Beoordeel uitdaging",
-                            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lp-hoofdactie-sub", children: [
-                              " \xB7 ",
-                              titel
-                            ] })
-                          ] });
-                        })() : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "lp-stil", children: "Zodra er afgerond werk is, kun je hier een uitdaging beoordelen." }),
-                        feedbackLijst.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-link lp-eerder", "aria-expanded": N.llPaneel === "feedback" ? "true" : "false", onClick: () => zetNav({ llPaneel: N.llPaneel === "feedback" ? "" : "feedback" }, { vervang: true }), children: [
-                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "bewaar", size: 14 }),
-                          " Eerdere feedback (",
-                          feedbackLijst.length,
-                          ")"
-                        ] }),
-                        N.llPaneel === "feedback" && feedbackLijst.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lp-eerderlijst", children: feedbackLijst.slice(0, 5).map((r) => {
-                          const mf = r.alpe.mentorfeedback;
-                          return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-eerderrij", children: [
-                            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lp-eerderrij-meta", children: [
-                              r.data && r.data.titel || themaLabel(r.thema),
-                              mf.op ? " \xB7 " + datumNL(mf.op) : "",
-                              mf.door ? " \xB7 " + mf.door : ""
-                            ] }),
-                            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-eerderrij-tekst", children: String(mf.feedback).length > 200 ? String(mf.feedback).slice(0, 200).trim() + "\u2026" : mf.feedback })
-                          ] }, r.id);
-                        }) })
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("section", { className: "lp-blok lp-ontwikkeling", "aria-labelledby": "lp-ontw", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-sectiekop", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", id: "lp-ontw", children: "Ontwikkeling" }),
+                      onPortfolio && st.recs.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-link", onClick: () => onPortfolio(l), children: [
+                        "Bekijk voortgang ",
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 13 })
                       ] })
+                    ] }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lp-pijlerlijst", children: PIJLERS.map((pj) => {
+                      const ps = pijlerStand(pj.naam);
+                      const totaal = ps.rijen.length;
+                      const sterk = ps.rijen.filter((x) => x.niveau === "voldoende" || x.niveau === "zelfstandig").length;
+                      const metOordeel = ps.rijen.filter((x) => x.aantal > 0).length;
+                      return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-pijlerrij", onClick: () => zetNav({ llTab: "pijler:" + pj.naam }, { vervang: true }), children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijlerrij-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: pj.icoon, size: 18 }) }),
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijlerrij-naam", children: pj.naam }),
+                        metOordeel > 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijlerrij-balk", role: "img", "aria-label": sterk + " van " + totaal + " vaardigheden aangetoond", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { width: Math.round(100 * sterk / Math.max(1, totaal)) + "%" } }) }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijlerrij-balk is-leeg", "aria-hidden": "true" }),
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijlerrij-status" + (ps.status === "aangetoond" ? " is-sterk" : ps.status ? " is-groei" : ""), children: metOordeel > 0 ? ps.status === "aangetoond" ? sterk + " van " + totaal + " aangetoond" : "In ontwikkeling" : "Nog geen beoordeling" }),
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-pijl", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 16 }) })
+                      ] }, pj.naam);
+                    }) })
+                  ] })
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-kolom-rechts", children: [
+                  /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("section", { className: "lp-blok lp-volgende", "aria-labelledby": "lp-vs", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", id: "lp-vs", children: "Volgende stap" }),
+                    wachtend.length > 0 ? (
+                      /* actie nodig: werk wacht op beoordeling — één primaire knop */
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-gesprek", children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "lp-gesprek-obs lp-actie", children: [
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-actie-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "target", size: 18 }) }),
+                          wachtend.length === 1 ? "1 opdracht wacht op feedback." : wachtend.length + " opdrachten wachten op feedback."
+                        ] }),
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "lp-gesprek-regel", children: [
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-label", children: "Actie" }),
+                          wachtend[0].data && wachtend[0].data.titel || themaLabel(wachtend[0].thema),
+                          wachtend.length > 1 ? " en " + (wachtend.length - 1) + " meer" : ""
+                        ] }),
+                        !readOnly ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent lp-hoofdactie", onClick: () => naarBeoordeling(wachtend[0]), children: [
+                          "Bekijk opdrachten ",
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 15 })
+                        ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "btn btn-licht lp-hoofdactie", onClick: () => zetNav({ llTab: "werk" }, { vervang: true }), children: "Bekijk opdrachten" }),
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-link lp-tweede", onClick: () => zetNav({ llTab: "verder" }, { vervang: true }), children: [
+                          "Bespreek ontwikkeling ",
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 13 })
+                        ] })
+                      ] })
+                    ) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+                      VolgendeStap,
+                      {
+                        records: alleRecs,
+                        leerling: l,
+                        klas: openKlas.naam,
+                        feedbackGegeven,
+                        beoordeeld: beoordeeldeRecs.length,
+                        onBespreek: () => zetNav({ llTab: "verder" }, { vervang: true })
+                      }
+                    )
+                  ] }),
+                  !readOnly && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("section", { className: "lp-blok lp-feedbackkaart", "aria-labelledby": "lp-fb", children: [
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", id: "lp-fb", children: "Feedback" }),
+                    /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-gesprek", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "lp-gesprek-obs", children: "Feedback wordt gekoppeld aan het werk van deze leerling." }),
+                      laatsteAfgerond ? (() => {
+                        const doel = wachtend[0] || laatsteAfgerond;
+                        const titel = doel.data && doel.data.titel || themaLabel(doel.thema);
+                        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent lp-hoofdactie", onClick: () => naarBeoordeling(doel), title: "Beoordeel uitdaging: " + titel, children: [
+                          "Beoordeel uitdaging",
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lp-hoofdactie-sub", children: [
+                            " \xB7 ",
+                            titel
+                          ] })
+                        ] });
+                      })() : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "lp-stil", children: "Zodra er afgerond werk is, kun je hier een uitdaging beoordelen." }),
+                      feedbackLijst.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "lp-link lp-eerder", "aria-expanded": N.llPaneel === "feedback" ? "true" : "false", onClick: () => zetNav({ llPaneel: N.llPaneel === "feedback" ? "" : "feedback" }, { vervang: true }), children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "bewaar", size: 14 }),
+                        " Eerdere feedback (",
+                        feedbackLijst.length,
+                        ")"
+                      ] }),
+                      N.llPaneel === "feedback" && feedbackLijst.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lp-eerderlijst", children: feedbackLijst.slice(0, 5).map((r) => {
+                        const mf = r.alpe.mentorfeedback;
+                        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "lp-eerderrij", children: [
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "lp-eerderrij-meta", children: [
+                            r.data && r.data.titel || themaLabel(r.thema),
+                            mf.op ? " \xB7 " + datumNL(mf.op) : "",
+                            mf.door ? " \xB7 " + mf.door : ""
+                          ] }),
+                          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "lp-eerderrij-tekst", children: String(mf.feedback).length > 200 ? String(mf.feedback).slice(0, 200).trim() + "\u2026" : mf.feedback })
+                        ] }, r.id);
+                      }) })
                     ] })
                   ] })
                 ] })
-              ] }),
+              ] }) }),
               pijlerOpen && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "lp-sectie", children: pijlerOpen }),
                 portfolioVan ? portfolioVan(l, {
