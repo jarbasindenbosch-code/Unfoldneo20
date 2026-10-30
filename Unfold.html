@@ -70431,6 +70431,81 @@ ${String(stapTekst).slice(0, 900)}` : ""
       }
     }
   };
+  var m365BewijsOpslag = {
+    soort: "m365",
+    max: BEWIJS_MAX,
+    beschikbaar() {
+      try {
+        return !platformOpslagActief() && spCfgCompleet(spCfgLaad());
+      } catch {
+        return false;
+      }
+    },
+    async upload(bestand, meta, onVoortgang) {
+      const grens = BEWIJS_MAX[meta.type] || BEWIJS_MAX.bestand;
+      if (bestand.size > grens) {
+        const e = new Error("te-groot");
+        e.code = "te-groot";
+        e.grens = grens;
+        throw e;
+      }
+      onVoortgang && onVoortgang(8);
+      const file = bestand instanceof File ? bestand : new File([bestand], meta.bestandsnaam || "bewijs", { type: bestand.type || "" });
+      const item = await spUploadInlevering(file, { naam: meta.leerlingNaam, klas: meta.leerlingKlas, titel: meta.titel, map: "Neo Bewijs", maxMb: Math.ceil(grens / 1048576) });
+      onVoortgang && onVoortgang(100);
+      return { pad: "m365/" + item.id, mime: bestand.type || "", grootte: bestand.size, opslag: "m365", webUrl: item.url || "" };
+    },
+    /* Lezen: via Graph een tijdelijke downloadlink van het item; die wordt als
+       blob opgehaald zodat foto, audio en video inline tonen. Lukt dat niet
+       (geen aanmelding, CORS), dan valt BewijsRegel terug op de SharePoint-link. */
+    async url(pad) {
+      try {
+        const id = String(pad || "").replace(/^m365\//, "");
+        if (!id) return null;
+        const cfg = spCfgLaad();
+        const token = await spStilToken(cfg);
+        if (!token) return null;
+        const { siteId } = await spVindLijst(token, cfg);
+        const r = await fetch("https://graph.microsoft.com/v1.0/sites/" + siteId + "/drive/items/" + encodeURIComponent(id) + "?select=id,@microsoft.graph.downloadUrl,webUrl", { headers: { Authorization: "Bearer " + token } });
+        if (!r.ok) return null;
+        const j = await r.json();
+        const dl = j["@microsoft.graph.downloadUrl"];
+        if (!dl) return null;
+        try {
+          const b = await fetch(dl);
+          if (b.ok) {
+            const blob = await b.blob();
+            return URL.createObjectURL(blob);
+          }
+        } catch {
+        }
+        return null;
+      } catch {
+        return null;
+      }
+    },
+    async verwijder(pad) {
+      try {
+        const id = String(pad || "").replace(/^m365\//, "");
+        if (!id) return false;
+        const cfg = spCfgLaad();
+        const token = await spStilToken(cfg);
+        if (!token) return false;
+        const { siteId } = await spVindLijst(token, cfg);
+        const r = await fetch("https://graph.microsoft.com/v1.0/sites/" + siteId + "/drive/items/" + encodeURIComponent(id), { method: "DELETE", headers: { Authorization: "Bearer " + token } });
+        return r.ok || r.status === 404;
+      } catch {
+        return false;
+      }
+    }
+  };
+  function bewijsOpslagVoor(bewijs, api) {
+    const o = bewijs && bewijs.opslag;
+    if (o === "m365") return m365BewijsOpslag;
+    if (o === "lokaal") return lokaleBewijsOpslag;
+    if (o === "supabase") return api && api.soort === "supabase" ? api : null;
+    return api || lokaleBewijsOpslag;
+  }
   function GeluidOpnemen({ onKlaar, onAnnuleer, onBestand }) {
     const [staat, setStaat] = (0, import_react2.useState)("klaar");
     const [seconden, setSeconden] = (0, import_react2.useState)(0);
@@ -70558,9 +70633,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
     (0, import_react2.useEffect)(() => {
       let weg = false;
       let gemaakt = null;
-      if (open && bewijs.pad && api) {
+      const bron = bewijsOpslagVoor(bewijs, api);
+      if (open && bewijs.pad && bron) {
         setLeeg(false);
-        api.url(bewijs.pad).then((u) => {
+        bron.url(bewijs.pad).then((u) => {
           if (weg) return;
           gemaakt = u;
           setUrl(u);
@@ -70568,6 +70644,8 @@ ${String(stapTekst).slice(0, 900)}` : ""
         }).catch(() => {
           if (!weg) setLeeg(true);
         });
+      } else if (open && bewijs.pad && !bron) {
+        setLeeg(true);
       }
       return () => {
         weg = true;
@@ -70610,11 +70688,28 @@ ${String(stapTekst).slice(0, 900)}` : ""
         bewijs.toelichting && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "bewijs-regel-toelichting", children: bewijs.toelichting }),
         open && !geenBestand && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "bewijs-voorbeeld", children: [
           !url && !leeg && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "muted", style: { fontSize: ".84rem" }, children: "Bezig met ophalen\u2026" }),
-          leeg && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "muted", style: { fontSize: ".84rem" }, children: bewijs.opslag === "lokaal" ? "Dit bestand staat op het apparaat van de leerling zelf." : "Dit bestand kan nu niet worden opgehaald." }),
+          leeg && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "muted", style: { fontSize: ".84rem" }, children: [
+            bewijs.opslag === "lokaal" ? "Dit bestand is alleen op het apparaat van de leerling bewaard (toegevoegd zonder Microsoft-aanmelding of platformopslag). Vraag de leerling het opnieuw toe te voegen terwijl hij is aangemeld; dan komt het in SharePoint en is het hier te openen." : bewijs.opslag === "m365" ? bewijs.webUrl ? "Het bestand staat in SharePoint. Inline tonen lukt nu niet \u2014 open het daar." : "Het bestand staat in SharePoint, maar kon niet worden opgehaald. Ben je aangemeld bij Microsoft?" : "Dit bestand kan nu niet worden opgehaald.",
+            bewijs.webUrl && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+              " ",
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("a", { href: bewijs.webUrl, target: "_blank", rel: "noopener noreferrer", style: { color: "var(--accent-diep)", fontWeight: 700 }, children: "Openen in SharePoint" })
+            ] })
+          ] }),
           url && bewijs.soort === "foto" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("img", { src: url, alt: titel }),
           url && bewijs.soort === "audio" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("audio", { src: url, controls: true, preload: "metadata" }),
           url && bewijs.soort === "video" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("video", { src: url, controls: true, preload: "metadata" }),
-          url && bewijs.soort === "bestand" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("a", { href: url, target: "_blank", rel: "noopener noreferrer", children: "Openen" })
+          url && bewijs.soort === "bestand" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("a", { href: url, target: "_blank", rel: "noopener noreferrer", download: bewijs.bestandsnaam || void 0, children: "Openen of downloaden" }),
+          url && bewijs.soort !== "bestand" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "bewijs-voorbeeld-links", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("a", { href: url, download: bewijs.bestandsnaam || void 0, style: { fontSize: ".8rem" }, children: "Downloaden" }),
+            bewijs.webUrl && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+              " \xB7 ",
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("a", { href: bewijs.webUrl, target: "_blank", rel: "noopener noreferrer", style: { fontSize: ".8rem" }, children: "In SharePoint" })
+            ] })
+          ] }),
+          url && bewijs.soort === "bestand" && bewijs.webUrl && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+            " \xB7 ",
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("a", { href: bewijs.webUrl, target: "_blank", rel: "noopener noreferrer", style: { fontSize: ".8rem" }, children: "In SharePoint" })
+          ] })
         ] })
       ] }),
       !geenBestand && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "admin-btn-sec bewijs-mini", onClick: () => setOpen((o) => !o), children: open ? "Verbergen" : "Bekijken" }),
@@ -71182,7 +71277,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const [fout, setFout] = (0, import_react2.useState)("");
     const [gelukt, setGelukt] = (0, import_react2.useState)("");
     const kiesRef = (0, import_react2.useRef)(null);
-    const opslag = api || lokaleBewijsOpslag;
+    const opslag = api || (m365BewijsOpslag.beschikbaar() ? m365BewijsOpslag : lokaleBewijsOpslag);
     (0, import_react2.useEffect)(() => () => {
       if (concept && concept.url) URL.revokeObjectURL(concept.url);
     }, [concept]);
@@ -71282,13 +71377,25 @@ ${String(stapTekst).slice(0, 900)}` : ""
       setFout("");
       setPct(0);
       try {
-        const uit = await opslag.upload(bestand, {
+        let uit = null, viaLokaal = false;
+        const meta = {
           challengeKey: String(rec && rec.id || "uitdaging"),
           stepId: stapId,
           type: soort,
           bestandsnaam: extra && extra.bestandsnaam || bestand.name || BEWIJS_NAAM[soort],
-          duurSec: extra && extra.duurSec
-        }, (p) => setPct(p));
+          duurSec: extra && extra.duurSec,
+          leerlingNaam: rec && rec.leerling && rec.leerling.naam,
+          leerlingKlas: rec && rec.leerling && rec.leerling.klas,
+          titel: rec && rec.data && rec.data.titel
+        };
+        try {
+          uit = await opslag.upload(bestand, meta, (p) => setPct(p));
+        } catch (e) {
+          if (opslag.soort === "m365" && !(e && e.code === "te-groot")) {
+            uit = await lokaleBewijsOpslag.upload(bestand, meta, (p) => setPct(p));
+            viaLokaal = true;
+          } else throw e;
+        }
         const uitB = await voegToe({
           id: "b" + Date.now().toString(36),
           soort,
@@ -71302,9 +71409,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
           bytes: uit.grootte || bestand.size,
           duurSec: extra && extra.duurSec || null,
           opslag: uit.opslag,
-          pad: uit.pad
+          pad: uit.pad,
+          ...uit.webUrl ? { webUrl: uit.webUrl } : {}
         });
-        setGelukt(bewaardTekst(uitB, "Bewaard. Je mentor kan dit nu zien."));
+        setGelukt(viaLokaal || uit.opslag === "lokaal" && !api && m365BewijsOpslag.beschikbaar() ? "Bewaard op dit apparaat. Je mentor kan het bestand pas zien als je het opnieuw toevoegt terwijl je bij Microsoft bent aangemeld." : bewaardTekst(uitB, uit.opslag === "lokaal" ? "Bewaard op dit apparaat." : "Bewaard. Je mentor kan dit nu zien."));
         setPct(null);
         sluit();
       } catch (e) {
@@ -72488,10 +72596,11 @@ ${String(stapTekst).slice(0, 900)}` : ""
     if (!spCfgCompleet(cfg)) throw new Error("De Microsoft 365-koppeling is niet ingesteld; bestanden uploaden kan nog niet. Voeg een link toe of vraag je mentor.");
     const token = await spStilToken(cfg);
     if (!token) throw new Error("Je bent niet aangemeld bij Microsoft. Log in met je schoolaccount om bestanden te uploaden.");
-    if (file.size > INLEVER_MAX_MB * 1024 * 1024) throw new Error("\u201C" + file.name + "\u201D is groter dan " + INLEVER_MAX_MB + " MB. Deel grote bestanden via een link.");
+    const maxMb = meta && meta.maxMb || INLEVER_MAX_MB;
+    if (file.size > maxMb * 1024 * 1024) throw new Error("\u201C" + file.name + "\u201D is groter dan " + maxMb + " MB. Deel grote bestanden via een link.");
     const { siteId } = await spVindLijst(token, cfg);
     const datum = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
-    const map = ["Neo Inleveringen", _spVeiligeNaam(meta.klas || "Zonder klas"), _spVeiligeNaam(meta.naam || "Leerling")].join("/");
+    const map = [meta && meta.map || "Neo Inleveringen", _spVeiligeNaam(meta.klas || "Zonder klas"), _spVeiligeNaam(meta.naam || "Leerling")].join("/");
     const naam = _spVeiligeNaam(datum + " " + (meta.titel || "uitdaging")).slice(0, 60) + " - " + _spVeiligeNaam(file.name);
     const pad = encodeURI(map + "/" + naam).replace(/#/g, "%23");
     const basis = "https://graph.microsoft.com/v1.0/sites/" + siteId + "/drive/root:/" + pad + ":";
@@ -82422,6 +82531,13 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
     const stemRegisterAf = (0, import_react2.useCallback)(async (lijst, stil) => {
       setRegisterBezig(true);
       const stappen = [];
+      if (!Array.isArray(lijst) || !lijst.length) {
+        try {
+          const bron = platform && Array.isArray(platform.klassen) ? platform.klassen : await klasStore.list();
+          if (Array.isArray(bron) && bron.length) lijst = bron;
+        } catch {
+        }
+      }
       try {
         const cfg = spCfgLaad();
         const token = await spStilToken(cfg);
