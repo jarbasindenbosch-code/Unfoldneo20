@@ -47751,9 +47751,14 @@
   var EVOT_NIVEAUS = {
     Brons: { bloom: ["onthouden", "herkennen", "begrijpen", "benoemen"], uitleg: "Herkennen, onthouden, begrijpen en benoemen." },
     Zilver: { bloom: ["toepassen", "analyseren", "vergelijken", "verklaren"], uitleg: "Toepassen, analyseren, vergelijken en verklaren." },
-    Goud: { bloom: ["evalueren", "cre\xEBren", "adviseren", "ontwerpen"], uitleg: "Evalueren, cre\xEBren, adviseren en ontwerpen." }
+    Goud: { bloom: ["evalueren", "cre\xEBren", "adviseren", "ontwerpen"], uitleg: "Evalueren, cre\xEBren, adviseren en ontwerpen." },
+    /* v112.7.3.1: Platinum bestaat in GROW (NIVEAUS: "Duale carrière & leiderschap",
+       Bloom "Evalueren & creëren", vanaf 15 jaar), maar niet in de EVOT-masterprompt.
+       De invulling hieronder is dus de GROW-definitie, niet een EVOT-bron. */
+    Platinum: { bloom: ["evalueren", "cre\xEBren", "leiden", "begeleiden"], uitleg: "Evalueren en cre\xEBren met leiderschap: je ontwerpt, adviseert of begeleidt anderen (GROW-niveau, vanaf 15 jaar)." }
   };
-  var EVOT_NIVEAU_NAMEN = ["Brons", "Zilver", "Goud"];
+  var EVOT_NIVEAU_NAMEN = ["Brons", "Zilver", "Goud", "Platinum"];
+  var EVOT_MET_EXTRA = ["Goud", "Platinum"];
   var EVOT_DOMEINEN = {
     sport: "Sportieve ontwikkeling \u2014 beter trainen, beter herstellen, beter presteren",
     persoon: "Persoonlijke ontwikkeling \u2014 bewust keuzes maken, verantwoordelijkheid nemen, omgaan met tegenslagen",
@@ -47826,7 +47831,7 @@
   var EVOT_KWALITEIT = [
     "Passend bij leeftijd",
     "Passend bij onderwijsniveau",
-    "Passend bij sportniveau",
+    "Passend voor topsportleerlingen",
     "Minimaal \xE9\xE9n activerende werkvorm",
     "Minimaal drie competenties",
     "Reflectie aanwezig",
@@ -47877,11 +47882,11 @@
   var EVOT_BEWIJSVORMEN = ["video", "foto", "audio", "tekst", "document"];
   var typeVan = (t, niveau) => {
     const s = String(t || "").toLowerCase();
-    return s.startsWith("micro") ? "Micro" : s.startsWith("deep") ? "Deep" : s.startsWith("core") ? "Core" : niveau === "Goud" ? "Deep" : "Core";
+    return s.startsWith("micro") ? "Micro" : s.startsWith("deep") ? "Deep" : s.startsWith("core") ? "Core" : niveau === "Goud" || niveau === "Platinum" ? "Deep" : "Core";
   };
   var niveauVan2 = (n) => {
     const s = String(n || "").toLowerCase();
-    return s.startsWith("goud") || s.startsWith("gold") ? "Goud" : s.startsWith("zilver") || s.startsWith("silver") ? "Zilver" : s.startsWith("brons") || s.startsWith("bronze") ? "Brons" : "";
+    return s.startsWith("platin") ? "Platinum" : s.startsWith("goud") || s.startsWith("gold") ? "Goud" : s.startsWith("zilver") || s.startsWith("silver") ? "Zilver" : s.startsWith("brons") || s.startsWith("bronze") ? "Brons" : "";
   };
   function evotNormaliseer(v) {
     const o = v && typeof v === "object" ? v : {};
@@ -47915,7 +47920,7 @@
         voldoende: tekst(r && r.voldoende, 240),
         goed: tekst(r && r.goed, 240)
       })).filter((r) => r.criterium),
-      extraUitdaging: niveau === "Goud" ? tekst(o.extraUitdaging, 600) : "",
+      extraUitdaging: EVOT_MET_EXTRA.includes(niveau) ? tekst(o.extraUitdaging, 600) : "",
       reflectie: { vragen: lijst(o.reflectie && o.reflectie.vragen, 5, 200), link: EVOT_REFLECTIE_LINK },
       transfer: tekst(o.transfer, 400) || EVOT_TRANSFERVRAAG,
       doorstroom: tekst(o.doorstroom, 300),
@@ -47929,7 +47934,7 @@
   function evotSchemaFouten(e) {
     const f = [];
     if (!e.titel) f.push("titel ontbreekt");
-    if (!e.niveau) f.push("niveau (Brons, Zilver of Goud) ontbreekt");
+    if (!e.niveau) f.push("niveau (Brons, Zilver, Goud of Platinum) ontbreekt");
     if (!e.werkvorm) f.push("activerende werkvorm ontbreekt");
     if (e.leerdoelen.length < 1) f.push("leerdoelen ontbreken");
     if (e.competenties.length < 3) f.push("minder dan drie ontwikkelcompetenties");
@@ -47948,7 +47953,7 @@
     if (zwak.length) w.push(zwak.length + " leerdoel(en) zonder waarneembaar handelingswerkwoord.");
     if (!e.rubric.length) w.push("Geen rubric (Doc2) meegeleverd.");
     else if (e.leerdoelen.some((l) => !e.rubric.some((r) => r.leerdoel && (r.leerdoel === l || l.includes(r.leerdoel) || r.leerdoel.includes(l.slice(0, 30)))))) w.push("Niet elk leerdoel komt terug in de rubric.");
-    if (e.niveau === "Goud" && !e.extraUitdaging) w.push("Goud zonder extra uitdaging.");
+    if (EVOT_MET_EXTRA.includes(e.niveau) && !e.extraUitdaging) w.push(e.niveau + " zonder extra uitdaging.");
     const gevaar = /\b(diagnose|stoornis|afvallen|crash ?dieet|vasten|pijn negeren|doorgaan met pijn|maximaal gewicht)\b/i;
     if (gevaar.test([e.situatie, e.stappen.map((s) => s.uitleg).join(" "), e.leerling.opdracht].join(" "))) w.push("Mogelijk onveilig advies (medisch, voeding of belasting) \u2014 controleer.");
     return w;
@@ -47957,9 +47962,8 @@
     const f = [];
     if (!i.onderwijs || !EVOT_ONDERWIJS.includes(i.onderwijs)) f.push("Kies een onderwijsniveau.");
     if (!i.leerjaar || !(EVOT_LEERJAREN[i.onderwijs || ""] || []).includes(Number(i.leerjaar))) f.push("Kies een leerjaar.");
-    if (!i.sportniveau || !EVOT_SPORTNIVEAUS.includes(i.sportniveau)) f.push("Kies een sportniveau.");
-    if (!i.leerlijn && !i.growThema) f.push("Kies een thema.");
-    if (!i.niveau || !EVOT_NIVEAU_NAMEN.includes(i.niveau)) f.push("Kies Brons, Zilver of Goud.");
+    if (!i.thema) f.push("Kies een thema.");
+    if (!i.niveau || !EVOT_NIVEAU_NAMEN.includes(i.niveau)) f.push("Kies Brons, Zilver, Goud of Platinum.");
     if (!i.werkvorm) f.push("Kies een werkvorm.");
     if (i.idee && String(i.idee).length > 400) f.push("Houd je idee korter dan 400 tekens.");
     return f;
@@ -76973,7 +76977,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
       ["verdieping", "Verdieping", studioTekst(d.verdieping) ? "Ingevuld" : "Optioneel"],
       ["reflectie", "Reflectie en transfer", ((d.reflectievragen || []).length ? (d.reflectievragen || []).length + " vragen" : "Geen eigen vragen") + (studioTekst(d.transfer) ? " \xB7 transfer" : "")],
       ...d.evot && d.evot.origineel ? [
-        ["evot", "EVOT-didactiek", (d.evot.bron === "ai" ? "EVOT (AI)" : "Lokaal voorbeeld") + " \xB7 " + (d.evot.invoer && d.evot.invoer.leerlijn || "")],
+        ["evot", "EVOT-didactiek", (d.evot.bron === "ai" ? "EVOT (AI)" : "Lokaal voorbeeld") + " \xB7 " + (d.evot.invoer && (d.evot.invoer.thema || d.evot.invoer.leerlijn) || "")],
         ["rubric", "Rubric (EVOT)", (d.evot.origineel.rubric || []).length + " criteria"],
         ["colofon", "Colofon", EVOT_COLOFON_VAST.licentie.split(" (")[0]]
       ] : [],
@@ -77034,13 +77038,11 @@ ${String(stapTekst).slice(0, 900)}` : ""
               [ev.invoer.onderwijs, ev.invoer.leerjaar ? "leerjaar " + ev.invoer.leerjaar : "", ev.invoer.sportniveau].filter(Boolean).join(" \xB7 ")
             ] }),
             /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: "Leerlijn \u2192 GROW" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: "GROW-thema" }),
               " ",
-              m.leerlijn,
-              " \u2192 ",
+              m.leerlijn ? m.leerlijn + " \u2192 " : "",
               d.thema === "eigen" ? studioThemaLabel(d) : themaLabel(m.thema || d.thema),
-              m.subthema ? " \u203A " + m.subthema : "",
-              m.zeker ? "" : " (bevestigd door docent)"
+              m.subthema ? " \u203A " + m.subthema : ""
             ] }),
             /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: "Niveau" }),
@@ -77194,7 +77196,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
           d.evot && d.evot.bron === "ai" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "okv-afgeleid", "data-evot": "ai-label", children: [
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "medal", size: 13 }),
             " Uitgewerkt met EVOT (",
-            d.evot.invoer && d.evot.invoer.leerlijn,
+            d.evot.invoer && (d.evot.invoer.thema || d.evot.invoer.leerlijn),
             " \xB7 ",
             d.evot.mapping && d.evot.mapping.niveau && d.evot.mapping.niveau.evot,
             "). De volledige didactiek staat onder \u2018Meer aanpassen\u2019."
@@ -77504,24 +77506,27 @@ ${String(stapTekst).slice(0, 900)}` : ""
       ] }) })
     ] });
   }
-  var EVOT_KOPPELING = {
-    "Schone Sport": { thema: "doping", sub: "Eerlijk presteren & integriteit", zeker: true },
-    "Voeding": { thema: "voeding", sub: "Voeding rond trainingen", zeker: true },
-    "Slaap & Herstel": { thema: "voeding", sub: "Slaap & ritme", zeker: true },
-    "Krachttraining": { thema: "kracht", sub: "", zeker: true },
-    "Belastbaarheid & Blessurepreventie": { thema: "blessure", sub: "Belasting slim doseren", zeker: true },
-    "Executieve Functies": { thema: "ef", sub: "", zeker: true },
-    "Mentale Vaardigheden": { thema: "mentaal", sub: "", zeker: true },
-    "Veerkracht": { thema: "weerbaarheid", sub: "", zeker: true },
-    "Social Media": { thema: "socialmedia", sub: "", zeker: true },
-    "Duale Carri\xE8re": { thema: "duaal", sub: "Sport en school combineren", zeker: true },
-    "RTII & OMZA": { thema: "studie", sub: "Leren leren", zeker: false },
-    "Periodisering": { thema: "kracht", sub: "Trainingsschema opbouwen", zeker: false },
-    "Omgaan met Druk & Verwachtingen": { thema: "mentaal", sub: "Omgaan met wedstrijdspanning", zeker: false },
-    "Studievaardigheden": { thema: "studie", sub: "", zeker: true },
-    "Leiderschap & Teamgedrag": { thema: "leiderschap", sub: "", zeker: true }
-  };
-  var EVOT_NIVEAU_NAAR_GROW = { Brons: "Bronze", Zilver: "Silver", Goud: "Gold" };
+  function evotThemaInfo(inv) {
+    if (inv && inv.thema === "eigen" && inv.eigenThema) return { key: "eigen", label: studioTekst(inv.eigenThema.naam, 60), desc: studioTekst(inv.eigenThema.omschrijving, 160), hoofd: inv.eigenThema.koppeling || "" };
+    const t = THEMAS.find((x) => x.key === (inv && inv.thema));
+    return t ? { key: t.key, label: t.label, desc: t.desc || "", hoofd: t.key } : { key: "", label: "", desc: "", hoofd: "" };
+  }
+  function evotGrowRegels(inv) {
+    const f = [];
+    const ti = evotThemaInfo(inv);
+    const g = EVOT_NIVEAU_NAAR_GROW[inv.niveau];
+    if (!ti.key || !g) return f;
+    const t = THEMAS.find((x) => x.key === ti.hoofd);
+    const lft = evotLeeftijd(inv.leerjaar);
+    const n = NIVEAUS2.find((x) => x.key === g) || {};
+    if (t && Array.isArray(t.niveaus) && !t.niveaus.includes(g)) f.push("In GROW kent het thema " + t.label + " alleen " + t.niveaus.join(" en ") + ".");
+    if (g === "Platinum" && Array.isArray(n.themas) && ti.hoofd && !n.themas.includes(ti.hoofd)) f.push("Platinum is in GROW er voor de thema's " + n.themas.map((k) => themaLabel(k)).join(", ") + ".");
+    if (g === "Platinum" && ti.key === "eigen" && !ti.hoofd) f.push("Koppel je eigen thema aan een GROW-thema om Platinum te kiezen.");
+    if (inv.leerjaar && n.minLeeftijd && lft < n.minLeeftijd) f.push(g + " is in GROW bedoeld vanaf " + n.minLeeftijd + " jaar; kies een hoger leerjaar of een lager niveau.");
+    if (inv.leerjaar && t && t.minLeeftijd && lft < t.minLeeftijd) f.push("Het thema " + t.label + " is in GROW bedoeld vanaf " + t.minLeeftijd + " jaar.");
+    return f;
+  }
+  var EVOT_NIVEAU_NAAR_GROW = { Brons: "Bronze", Zilver: "Silver", Goud: "Gold", Platinum: "Platinum" };
   var EVOT_WERKVORM_NAAR_GROW = {
     "Poster": ["Poster"],
     "Infographic": ["Infographic"],
@@ -77590,10 +77595,6 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const min = Number(m[1]) * (m[2] === "uur" ? 60 : 1);
     return { tijd: min <= 10 ? "5\u201310 minuten" : min <= 20 ? "10\u201320 minuten" : min <= 45 ? "20\u201345 minuten" : "Meerdere lessen", tijdEigen: "" };
   }
-  function evotKoppelingVoor(leerlijn) {
-    const k = EVOT_KOPPELING[leerlijn];
-    return k ? { leerlijn, thema: k.thema, subthema: k.sub || "", zeker: k.zeker, bevestigd: k.zeker, eigenThema: null } : { leerlijn, thema: "", subthema: "", zeker: false, bevestigd: false, eigenThema: null };
-  }
   var EVOT_VB = {
     "Vlog": { stappen: ["Film korte momenten van je schooldag en training.", "Monteer je beelden tot een vlog van maximaal twee minuten."], inleveren: "Upload je video.", bewijs: "video", opdracht: (o) => "Maak een vlog van maximaal twee minuten over " + o + ".", nodig: ["Telefoon"] },
     "Videoanalyse": { stappen: ["Film jezelf tijdens een training of wedstrijd.", "Bekijk de beelden en schrijf twee dingen op die je wilt verbeteren."], inleveren: "Upload je video met je twee verbeterpunten.", bewijs: "video", opdracht: (o) => "Analyseer een video van jezelf over " + o + ".", nodig: ["Telefoon"] },
@@ -77605,47 +77606,47 @@ ${String(stapTekst).slice(0, 900)}` : ""
     "Praktische opdracht": { stappen: ["Kies \xE9\xE9n ding dat je deze week anders gaat doen.", "Voer het uit en houd bij hoe het ging."], inleveren: "Lever een foto of korte uitleg in van wat je hebt gedaan.", bewijs: "foto", opdracht: (o) => "Probeer deze week iets uit rond " + o + ".", nodig: [] }
   };
   var EVOT_VB_COMP = {
-    "Schone Sport": ["verantwoordelijkheid", "eigenaarschap", "sportiviteit"],
-    "Voeding": ["discipline", "herstel", "eigenaarschap"],
-    "Slaap & Herstel": ["herstel", "discipline", "zelfinzicht"],
-    "Krachttraining": ["trainingsbewustzijn", "discipline", "belastbaarheid"],
-    "Belastbaarheid & Blessurepreventie": ["belastbaarheid", "herstel", "zelfinzicht"],
-    "Executieve Functies": ["plannen", "organiseren", "taakinitiatie"],
-    "Mentale Vaardigheden": ["focus", "zelfvertrouwen", "emotieregulatie"],
-    "Veerkracht": ["doorzettingsvermogen", "emotieregulatie", "zelfinzicht"],
-    "Social Media": ["communicatie", "verantwoordelijkheid", "zelfinzicht"],
-    "Duale Carri\xE8re": ["plannen", "prioriteren", "eigenaarschap"],
-    "RTII & OMZA": ["zelfregulatie", "zelfinzicht", "organiseren"],
-    "Periodisering": ["periodisering", "trainingsbewustzijn", "plannen"],
-    "Omgaan met Druk & Verwachtingen": ["stressmanagement", "emotieregulatie", "zelfvertrouwen"],
-    "Studievaardigheden": ["plannen", "zelfregulatie", "organiseren"],
-    "Leiderschap & Teamgedrag": ["leiderschap", "communicatie", "samenwerken"]
+    mentaal: ["focus", "zelfvertrouwen", "emotieregulatie"],
+    weerbaarheid: ["doorzettingsvermogen", "emotieregulatie", "zelfinzicht"],
+    ef: ["plannen", "organiseren", "taakinitiatie"],
+    studie: ["plannen", "zelfregulatie", "organiseren"],
+    duaal: ["plannen", "prioriteren", "eigenaarschap"],
+    voeding: ["herstel", "discipline", "eigenaarschap"],
+    blessure: ["belastbaarheid", "herstel", "zelfinzicht"],
+    kracht: ["trainingsbewustzijn", "discipline", "belastbaarheid"],
+    socialmedia: ["communicatie", "verantwoordelijkheid", "zelfinzicht"],
+    doping: ["verantwoordelijkheid", "eigenaarschap", "sportiviteit"],
+    leiderschap: ["leiderschap", "communicatie", "samenwerken"],
+    sportevent: ["wedstrijdvoorbereiding", "focus", "zelfinzicht"],
+    commercie: ["communicatie", "verantwoordelijkheid", "eigenaarschap"]
   };
-  function evotTitelUitIdee(idee, leerlijn) {
+  function evotTitelUitIdee(idee, themaNaam) {
     let s = String(idee || "").split(/[,.;]|\bwaarin\b|\bwaarbij\b/i)[0].trim();
     s = s.replace(/^(maak|film|ontwerp)\s+(een\s+)?\w+\s+(over|van)\s+/i, "").replace(/\buit (mijn|je|jouw) leven\b\s*/i, "").replace(/\bmijn\b/gi, "je").trim();
-    if (!s) return leerlijn;
+    if (!s) return themaNaam;
     return (s.charAt(0).toUpperCase() + s.slice(1)).slice(0, 60);
   }
   function evotVoorbeeld(inv) {
+    const ti = evotThemaInfo(inv);
+    const tn = ti.label || "dit thema";
     const wv = EVOT_VB[inv.werkvorm] ? inv.werkvorm : "Praktische opdracht";
     const vb = EVOT_VB[wv];
-    const onderwerp = studioTekst(inv.idee, 160).replace(/[.!?]+$/, "").replace(/^./, (c) => c.toLowerCase()) || inv.leerlijn.toLowerCase();
-    const ww = { Brons: ["benoemen", "uitleggen"], Zilver: ["toepassen", "vergelijken"], Goud: ["beoordelen", "adviseren"] }[inv.niveau] || ["benoemen", "uitleggen"];
-    const leerdoelen = ["Ik kan " + ww[0] + " wat " + inv.leerlijn.toLowerCase() + " voor mij als sporter en leerling betekent.", "Ik kan met een voorbeeld uit mijn eigen sport of school " + ww[1] + " wat ik hierover heb geleerd.", "Ik kan \xE9\xE9n concrete actie kiezen om dit morgen toe te passen in mijn sport of studie."];
-    const comp = (EVOT_VB_COMP[inv.leerlijn] || ["zelfinzicht", "eigenaarschap", "plannen"]).map((n) => ({ naam: n, domein: evotDomeinVan(n) }));
+    const onderwerp = studioTekst(inv.idee, 160).replace(/[.!?]+$/, "").replace(/^./, (c) => c.toLowerCase()) || tn.toLowerCase();
+    const ww = { Brons: ["benoemen", "uitleggen"], Zilver: ["toepassen", "vergelijken"], Goud: ["beoordelen", "adviseren"], Platinum: ["ontwerpen", "onderbouwen"] }[inv.niveau] || ["benoemen", "uitleggen"];
+    const leerdoelen = ["Ik kan " + ww[0] + " wat " + tn.toLowerCase() + " voor mij als sporter en leerling betekent.", "Ik kan met een voorbeeld uit mijn eigen sport of school " + ww[1] + " wat ik hierover heb geleerd.", "Ik kan \xE9\xE9n concrete actie kiezen om dit morgen toe te passen in mijn sport of studie."];
+    const comp = (EVOT_VB_COMP[ti.hoofd] || ["zelfinzicht", "eigenaarschap", "plannen"]).map((n) => ({ naam: n, domein: evotDomeinVan(n) }));
     const crit = (EVOT_SUCCESCRITERIA_VOORBEELD[wv] || ["laat een herkenbare situatie uit sport of school zien", "bevat een voorbeeld uit je eigen sport", "eindigt met een concrete actie voor morgen"]).map((c) => "Je " + (wv === "Praktische opdracht" ? "opdracht" : wv.toLowerCase()) + " " + c + ".");
-    const deep = inv.niveau === "Goud";
+    const deep = inv.niveau === "Goud" || inv.niveau === "Platinum";
     const e = {
-      titel: evotTitelUitIdee(inv.idee, inv.leerlijn),
-      thema: inv.leerlijn,
+      titel: evotTitelUitIdee(inv.idee, tn),
+      thema: tn,
       subthema: inv.subthema || "",
       niveau: inv.niveau,
       type: deep ? "Deep" : "Core",
       duur: deep ? "90 minuten" : "45 minuten",
       leerdoelen,
       competenties: comp,
-      orientatie: { activiteit: "Maak een woordweb: wat weet je al over " + inv.leerlijn.toLowerCase() + " in jouw sport en op school?", werkvorm: "Woordweb" },
+      orientatie: { activiteit: "Maak een woordweb: wat weet je al over " + tn.toLowerCase() + " in jouw sport en op school?", werkvorm: "Woordweb" },
       situatie: "Je combineert trainen, wedstrijden en school. Iedere week maak je keuzes die invloed hebben op hoe je presteert, in je sport en in de klas.",
       werkvorm: wv,
       stappen: [
@@ -77657,20 +77658,20 @@ ${String(stapTekst).slice(0, 900)}` : ""
       ],
       succescriteria: crit,
       rubric: leerdoelen.map((l, k) => ({ criterium: k === 0 ? "Inhoud" : k === 1 ? "Onderbouwing" : "Toepassing", leerdoel: l, onvoldoende: "Het leerdoel is niet of onvoldoende zichtbaar in je werk.", voldoende: "Het leerdoel is zichtbaar in je werk.", goed: "Het leerdoel is duidelijk zichtbaar en goed onderbouwd met een eigen voorbeeld." })),
-      extraUitdaging: deep ? "Geef een teamgenoot advies op basis van wat je hebt geleerd en vraag om feedback." : "",
+      extraUitdaging: inv.niveau === "Platinum" ? "Begeleid een jongere sporter of je team: leg uit wat je hebt geleerd, laat het toepassen en vraag om feedback." : deep ? "Geef een teamgenoot advies op basis van wat je hebt geleerd en vraag om feedback." : "",
       reflectie: { vragen: ["Wat ging goed?", "Wat zou je de volgende keer anders doen?", "Wat heb je over jezelf als sporter en leerling ontdekt?"] },
       transfer: EVOT_TRANSFERVRAAG,
-      doorstroom: inv.leerlijn + " \u2013 " + (inv.niveau === "Brons" ? "Zilver" : inv.niveau === "Zilver" ? "Goud" : "Goud (leiderschapsopdracht)"),
+      doorstroom: tn + " \u2013 " + (inv.niveau === "Brons" ? "Zilver" : inv.niveau === "Zilver" ? "Goud" : inv.niveau === "Goud" ? "Platinum (leiderschapsopdracht)" : "een nieuw thema op Platinum"),
       bewijs: { vorm: vb.bewijs, opdracht: vb.inleveren },
       veiligheid: /video|foto/.test(vb.bewijs) ? "Vraag toestemming voordat je anderen herkenbaar filmt of fotografeert." : "",
-      leerling: { titel: evotTitelUitIdee(inv.idee, inv.leerlijn), opdracht: vb.opdracht(onderwerp), stappen: vb.stappen.slice(0, 2), inleveren: vb.inleveren },
-      colofon: { toelichting: inv.niveau + " \u2014 " + inv.leerlijn + ". Vul de juiste leerdoelen aan.", trefwoorden: [inv.leerlijn.toLowerCase(), wv.toLowerCase(), "topsport", "school"], studiebelasting: deep ? "1 uur 30 minuten" : "45 minuten" },
+      leerling: { titel: evotTitelUitIdee(inv.idee, tn), opdracht: vb.opdracht(onderwerp), stappen: vb.stappen.slice(0, 2), inleveren: vb.inleveren },
+      colofon: { toelichting: inv.niveau + " \u2014 " + tn + ". Vul de juiste leerdoelen aan.", trefwoorden: [tn.toLowerCase(), wv.toLowerCase(), "topsport", "school"], studiebelasting: deep ? "1 uur 30 minuten" : "45 minuten" },
       kwaliteitscontrole: {}
     };
     return evotNormaliseer(e);
   }
   async function evotGenereer(inv, platformNeo) {
-    const context = { rol: "docent", studio: true, evot: { onderwijs: inv.onderwijs, leerjaar: inv.leerjaar, leeftijd: evotLeeftijd(inv.leerjaar), sportniveau: inv.sportniveau, leerlijn: inv.leerlijn, subthema: inv.subthema || "", niveau: inv.niveau, werkvorm: inv.werkvorm } };
+    const context = { rol: "docent", studio: true, evot: { onderwijs: inv.onderwijs, leerjaar: inv.leerjaar, leeftijd: evotLeeftijd(inv.leerjaar), thema: evotThemaInfo(inv).label, themaOmschrijving: evotThemaInfo(inv).desc, subthema: inv.subthema || "", niveau: inv.niveau, werkvorm: inv.werkvorm } };
     let r;
     try {
       r = await askNeo({ action: "evot_generate", question: studioTekst(inv.idee, 400), context, viaPlatform: platformNeo });
@@ -77687,7 +77688,8 @@ ${String(stapTekst).slice(0, 900)}` : ""
   }
   function evotNaarStudio(e, inv, bron, gebruiker) {
     const s = studioLeeg(gebruiker);
-    const k = inv.koppeling || evotKoppelingVoor(inv.leerlijn);
+    const ti = evotThemaInfo(inv);
+    const eigen = ti.key === "eigen" ? inv.eigenThema : null;
     const growNiveau = inv.growNiveau || EVOT_NIVEAU_NAAR_GROW[e.niveau || inv.niveau] || "Silver";
     const tk = e.type === "Micro" ? "micro" : e.type === "Deep" ? "deep" : "core";
     const wv = evotWerkvormNaarGrow(e.werkvorm || inv.werkvorm);
@@ -77702,16 +77704,16 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const tijd = evotTijd(e.duur);
     const bewijsvorm = e.bewijs.vorm || { Vlog: "video", Videoanalyse: "video", Podcast: "audio", Interview: "audio", Poster: "foto" }[inv.werkvorm] || "tekst";
     const nodig = (EVOT_VB[inv.werkvorm] || { nodig: [] }).nodig;
-    const thema = k.eigenThema ? "eigen" : k.thema || "";
+    const thema = ti.key || "";
     const data = {
       ...s.data,
       titel: studioTekst(e.leerling.titel || e.titel, 100),
       beschrijving: studioTekst(e.leerling.opdracht, 300),
       situatie: studioTekst(e.situatie, 700),
       thema,
-      themaEigen: k.eigenThema ? k.eigenThema.naam : "",
-      eigenThema: k.eigenThema || void 0,
-      subthema: k.subthema || "",
+      themaEigen: eigen ? eigen.naam : "",
+      eigenThema: eigen || void 0,
+      subthema: eigen ? "" : inv.subthema || "",
       subthemaEigen: "",
       niveau: growNiveau,
       challengeType: tk,
@@ -77734,8 +77736,8 @@ ${String(stapTekst).slice(0, 900)}` : ""
         methodiek: EVOT_METHODIEK,
         bron,
         gegenereerdOp: (/* @__PURE__ */ new Date()).toISOString(),
-        invoer: { onderwijs: inv.onderwijs, leerjaar: inv.leerjaar, sportniveau: inv.sportniveau, leerlijn: inv.leerlijn, niveau: inv.niveau, werkvorm: inv.werkvorm, idee: studioTekst(inv.idee, 400) },
-        mapping: { leerlijn: inv.leerlijn, thema, subthema: k.subthema || "", zeker: !!k.zeker, bevestigd: !!k.bevestigd, niveau: { evot: e.niveau || inv.niveau, grow: growNiveau }, werkvorm: wv, competenties: comp },
+        invoer: { onderwijs: inv.onderwijs, leerjaar: inv.leerjaar, thema: ti.label, themaKey: thema, subthema: inv.subthema || "", niveau: inv.niveau, werkvorm: inv.werkvorm, idee: studioTekst(inv.idee, 400) },
+        mapping: { thema, themaLabel: ti.label, subthema: inv.subthema || "", niveau: { evot: e.niveau || inv.niveau, grow: growNiveau }, werkvorm: wv, competenties: comp },
         waarschuwingen: evotWaarschuwingen(e),
         origineel: e
       }
@@ -77751,21 +77753,24 @@ ${String(stapTekst).slice(0, 900)}` : ""
       methodiek: EVOT_METHODIEK,
       bron: b.bron === "ai" ? "ai" : b.bron === "import" ? "import" : "voorbeeld",
       gegenereerdOp: studioTekst(b.gegenereerdOp, 40),
+      /* v112.7.3.1: nieuw = GROW-thema; oudere ontwerpen (leerlijn, sportniveau) blijven leesbaar */
       invoer: {
         onderwijs: EVOT_ONDERWIJS.includes(i.onderwijs) ? i.onderwijs : "",
         leerjaar: Number(i.leerjaar) || 0,
-        sportniveau: EVOT_SPORTNIVEAUS.includes(i.sportniveau) ? i.sportniveau : "",
-        leerlijn: EVOT_LEERLIJNEN.includes(i.leerlijn) ? i.leerlijn : "",
+        thema: studioTekst(i.thema, 60),
+        themaKey: studioTekst(i.themaKey, 40),
+        subthema: studioTekst(i.subthema, 80),
+        ...EVOT_SPORTNIVEAUS.includes(i.sportniveau) ? { sportniveau: i.sportniveau } : {},
+        ...EVOT_LEERLIJNEN.includes(i.leerlijn) ? { leerlijn: i.leerlijn } : {},
         niveau: EVOT_NIVEAU_NAMEN.includes(i.niveau) ? i.niveau : "",
         werkvorm: studioTekst(i.werkvorm, 60),
         idee: studioTekst(i.idee, 400)
       },
       mapping: {
-        leerlijn: studioTekst(m.leerlijn, 60),
         thema: studioTekst(m.thema, 40),
+        themaLabel: studioTekst(m.themaLabel, 60),
         subthema: studioTekst(m.subthema, 80),
-        zeker: !!m.zeker,
-        bevestigd: !!m.bevestigd,
+        ...m.leerlijn ? { leerlijn: studioTekst(m.leerlijn, 60), zeker: !!m.zeker, bevestigd: !!m.bevestigd } : {},
         niveau: { evot: studioTekst(m.niveau && m.niveau.evot, 10), grow: studioTekst(m.niveau && m.niveau.grow, 10) },
         werkvorm: { evot: studioTekst(m.werkvorm && m.werkvorm.evot, 60), grow: studioTekst(m.werkvorm && m.werkvorm.grow, 60), benadering: !!(m.werkvorm && m.werkvorm.benadering) },
         competenties: (Array.isArray(m.competenties) ? m.competenties : []).slice(0, 8).map((c) => ({ evot: studioTekst(c && c.evot, 60), grow: studioTekst(c && c.grow, 60), soort: ["gelijk", "synoniem", "evot"].includes(c && c.soort) ? c.soort : "evot", domein: studioTekst(c && c.domein, 40) }))
@@ -77785,7 +77790,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
       if (b.length) secties.push({ kop, blokken: b });
     };
     sec("Algemene informatie", [{ type: "info", items: [
-      { label: "Thema", waarde: e.thema || inv.leerlijn || studioThemaLabel(d) },
+      { label: "Thema", waarde: e.thema || inv.thema || inv.leerlijn || studioThemaLabel(d) },
       { label: "Subthema", waarde: e.subthema || studioSubLabel(d) || "\u2014" },
       { label: "Niveau", waarde: (e.niveau || inv.niveau) + " (GROW: " + d.niveau + ")" },
       { label: "Type", waarde: e.type || "\u2014" },
@@ -77808,7 +77813,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
     sec("Doorstroom", [{ type: "p", items: [d.doorstroom || e.doorstroom] }]);
     if (e.veiligheid) sec("Veiligheid", [{ type: "p", items: [e.veiligheid] }]);
     sec("Colofon", [{ type: "info", items: [
-      { label: "Arrangement", waarde: (e.thema || inv.leerlijn) + " \u2013 " + (e.niveau || inv.niveau) + " \u2013 " + (d.titel || e.titel) },
+      { label: "Arrangement", waarde: (e.thema || inv.thema || inv.leerlijn) + " \u2013 " + (e.niveau || inv.niveau) + " \u2013 " + (d.titel || e.titel) },
       { label: "Auteur", waarde: EVOT_COLOFON_VAST.auteur },
       { label: "Licentie", waarde: EVOT_COLOFON_VAST.licentie + ". " + EVOT_COLOFON_VAST.licentieUitleg },
       { label: "Toelichting", waarde: e.colofon.toelichting || "\u2014" },
@@ -77822,7 +77827,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
     return {
       eyebrow: "EVOT-UITDAGING \xB7 " + String(e.niveau || inv.niveau || "").toUpperCase(),
       titel: d.titel || e.titel || "EVOT-uitdaging",
-      meta: [e.thema || inv.leerlijn, [inv.onderwijs, inv.leerjaar ? "leerjaar " + inv.leerjaar : ""].filter(Boolean).join(" "), inv.sportniveau].filter(Boolean).join(" \xB7 "),
+      meta: [e.thema || inv.thema || inv.leerlijn, [inv.onderwijs, inv.leerjaar ? "leerjaar " + inv.leerjaar : ""].filter(Boolean).join(" "), inv.sportniveau].filter(Boolean).join(" \xB7 "),
       pills: [e.niveau || inv.niveau, e.type, e.duur].filter(Boolean),
       secties
     };
@@ -77841,11 +77846,11 @@ ${String(stapTekst).slice(0, 900)}` : ""
       { label: "Gebruik in GROW", waarde: "GROW Studio \xB7 Met EVOT maken. De AI-instructie staat server-side; deze pagina vat de methodiek samen." }
     ] }]);
     sec("Visie \u2014 drie ontwikkeldomeinen", [{ type: "lijst", items: Object.values(EVOT_DOMEINEN) }]);
-    sec("Doelgroep", [{ type: "info", items: [{ label: "Leeftijd", waarde: "12 t/m 19 jaar" }, { label: "Onderwijs", waarde: "VMBO, HAVO, VWO" }, { label: "Sportniveau", waarde: EVOT_SPORTNIVEAUS.join(", ") }] }]);
+    sec("Doelgroep", [{ type: "info", items: [{ label: "Leeftijd", waarde: "12 t/m 19 jaar" }, { label: "Onderwijs", waarde: "VMBO, HAVO, VWO" }, { label: "Sportniveau", waarde: EVOT_SPORTNIVEAUS.join(", ") + " (in GROW geen keuze: elke uitdaging past bij topsportleerlingen van elk niveau)" }] }]);
     sec("Pedagogisch kader en coachrol", [{ type: "p", items: ["De leerling staat centraal. De coach stelt vragen, activeert voorkennis, stimuleert reflectie en laat leerlingen keuzes maken. Nooit veroordelen, beschuldigen, kleineren of preken; altijd ondersteunen, uitdagen, motiveren en eigenaarschap laten ontstaan.", "Volgorde: vraag stellen \xB7 voorkennis activeren \xB7 onderzoeken \xB7 analyseren \xB7 concluderen \xB7 reflecteren \xB7 toepassen."] }]);
     sec("Didactische uitgangspunten", [{ type: "lijst", items: [...EVOT_PRINCIPES, "Motivatie volgens de self-determination theory: autonomie, competentie, verbondenheid", "Iedere uitdaging eindigt met: \u201C" + EVOT_TRANSFERVRAAG + "\u201D"] }]);
     sec("Leercyclus", [{ type: "lijst", items: ["Stap 1 \u2013 Ori\xEBnteren: voorkennis activeren", "Stap 2 \u2013 Onderzoeken: nieuwe inzichten ontdekken", "Stap 3 \u2013 Toepassen: in de eigen situatie gebruiken", "Stap 4 \u2013 Reflecteren: terugkijken op keuzes en ervaringen", "Stap 5 \u2013 Transfer: vertalen naar morgen"] }]);
-    sec("Niveaus (Bloom)", [{ type: "info", items: EVOT_NIVEAU_NAMEN.map((n) => ({ label: n, waarde: EVOT_NIVEAUS[n].bloom.join(", ") })) }]);
+    sec("Niveaus (Bloom)", [{ type: "info", items: EVOT_NIVEAU_NAMEN.map((n) => ({ label: n === "Platinum" ? "Platinum (GROW-niveau)" : n, waarde: EVOT_NIVEAUS[n].bloom.join(", ") + (n === "Platinum" ? " \u2014 staat niet in de EVOT-masterprompt; GROW-definitie: duale carri\xE8re en leiderschap, vanaf 15 jaar" : "") })) }]);
     sec("Leerlijnen", [{ type: "lijst", items: [...EVOT_LEERLIJNEN] }]);
     sec("Ontwikkelcompetenties (minimaal drie per uitdaging)", [{ type: "info", items: Object.entries(EVOT_COMPETENTIES).map(([k, v]) => ({ label: k, waarde: v.join(", ") })) }]);
     sec("Activerende werkvormen (minimaal \xE9\xE9n)", [{ type: "p", items: [EVOT_WERKVORMEN.join(", ") + "."] }, { type: "p", items: ["Iedere werkvorm voldoet aan drie voorwaarden: actieve betrokkenheid, persoonlijke betekenis en transfer."] }]);
@@ -77871,11 +77876,12 @@ ${String(stapTekst).slice(0, 900)}` : ""
     ] }]);
     sec("GROW-uitwerking \u2014 koppeling met GROW", [
       { type: "p", items: ["Dit deel staat niet in de EVOT-bronnen. Het beschrijft hoe GROW EVOT presenteert. Controleer en pas aan waar nodig."] },
-      { type: "info", items: Object.entries(EVOT_KOPPELING).map(([l, k]) => ({ label: l, waarde: themaLabel(k.thema) + (k.sub ? " \u203A " + k.sub : "") + (k.zeker ? "" : " \u2014 docent bevestigt de koppeling") })) },
+      { type: "p", items: ["Thema: de docent kiest een bestaand GROW-thema (of een eigen thema). De EVOT-leerlijnen hierboven zijn inhoudelijke inspiratie; de AI neemt het GROW-thema letterlijk over. Er is geen sportniveau-keuze."] },
+      { type: "info", items: THEMAS.map((t) => ({ label: t.label, waarde: (Array.isArray(t.niveaus) ? "alleen " + t.niveaus.join(" en ") : "alle niveaus") + (t.minLeeftijd ? " \xB7 vanaf " + t.minLeeftijd + " jaar" : "") })) },
       { type: "info", items: Object.entries(EVOT_NIVEAU_NAAR_GROW).map(([e, g]) => ({ label: "EVOT " + e, waarde: "GROW-niveau " + g + " (" + niveauInfo(g).xp + " XP volgens de bestaande GROW-regels; per uitdaging aan te passen)" })) },
       { type: "p", items: ["De leerling ziet \xE9\xE9n opdrachtkaart met maximaal twee stappen (bij Deep meer, \xE9\xE9n kaart per stap). Reflectie en transfer komen in de bestaande afrondflow. De volledige EVOT-inhoud blijft bewaard bij de uitdaging en staat in de EVOT-pdf."] }
     ]);
-    return { eyebrow: "REFERENTIE \xB7 EVOT-METHODIEK", titel: "EVOT-methodiek v2 in 2scool GROW", meta: EVOT_METHODIEK + " \xB7 " + datumNL((/* @__PURE__ */ new Date()).toISOString()), pills: ["Brons", "Zilver", "Goud"], secties };
+    return { eyebrow: "REFERENTIE \xB7 EVOT-METHODIEK", titel: "EVOT-methodiek v2 in 2scool GROW", meta: EVOT_METHODIEK + " \xB7 " + datumNL((/* @__PURE__ */ new Date()).toISOString()), pills: ["Brons", "Zilver", "Goud", "Platinum"], secties };
   }
   function evotDownloadReferentie() {
     return leverSjabloonPdf(bouwSjabloonPdf(evotReferentieModel(), "evot-referentie"), "evot-methodiek-v2-referentie.pdf", { thema: null, titel: "EVOT-referentie" });
@@ -77891,7 +77897,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
     return [
       ["Passend bij leeftijd", zelfOordeel("leeftijd"), ai ? "volgens de EVOT-AI" : "niet beoordeeld (geen AI)"],
       ["Passend bij onderwijsniveau", zelfOordeel("onderwijsniveau"), ai ? "volgens de EVOT-AI" : "niet beoordeeld (geen AI)"],
-      ["Passend bij sportniveau", zelfOordeel("sportniveau"), ai ? "volgens de EVOT-AI" : "niet beoordeeld (geen AI)"],
+      ["Passend voor topsportleerlingen", zelfOordeel("topsport") !== null ? zelfOordeel("topsport") : zelfOordeel("sportniveau"), ai ? "volgens de EVOT-AI" : "niet beoordeeld (geen AI)"],
       ["Minimaal \xE9\xE9n activerende werkvorm", !!((d.werkvormen || []).length || o.werkvorm), ""],
       ["Minimaal drie competenties", (d.competenties || []).length >= 3, ""],
       ["Reflectie aanwezig", !!((d.reflectievragen || []).length || (o.reflectie && o.reflectie.vragen || []).length), ""],
@@ -77902,17 +77908,32 @@ ${String(stapTekst).slice(0, 900)}` : ""
     ];
   }
   function StudioEvotStart({ themas, onNieuwThema, bezig, fout, onMaak, onVoorbeeld, onTerug }) {
-    const [inv, setInv] = (0, import_react2.useState)(() => ({ onderwijs: "", leerjaar: 0, sportniveau: "", leerlijn: "", niveau: "", werkvorm: "", idee: "", koppeling: null, growNiveau: "" }));
+    const [inv, setInv] = (0, import_react2.useState)(() => ({ onderwijs: "", leerjaar: 0, thema: "", eigenThema: null, subthema: "", niveau: "", werkvorm: "", idee: "", growNiveau: "" }));
     const [toonFouten, setToonFouten] = (0, import_react2.useState)(false);
-    const [anderThema, setAnderThema] = (0, import_react2.useState)(false);
     const zetI = (p) => setInv((x) => ({ ...x, ...p }));
-    const kiesLeerlijn = (l) => zetI({ leerlijn: l, koppeling: l ? evotKoppelingVoor(l) : null });
-    const k = inv.koppeling;
-    const fouten = [...evotInvoerFouten({ ...inv, growThema: k && (k.thema || k.eigenThema && "eigen") }), ...k && !k.bevestigd ? ["Bevestig de koppeling met het GROW-thema."] : []];
+    const eigen = (Array.isArray(themas) ? themas : []).filter((t) => t && t.id && t.naam);
+    const themaWaarde = inv.thema === "eigen" && inv.eigenThema ? "eigen:" + inv.eigenThema.id : inv.thema;
+    const kiesThema = (v) => {
+      if (v === "__nieuw") {
+        onNieuwThema && onNieuwThema();
+        return;
+      }
+      if (v.startsWith("eigen:")) {
+        const t = eigen.find((x) => "eigen:" + x.id === v);
+        if (t) {
+          const p = studioEigenThemaPatch(t);
+          zetI({ thema: "eigen", eigenThema: p.eigenThema, subthema: "" });
+        }
+        return;
+      }
+      zetI({ thema: v, eigenThema: null, subthema: "" });
+    };
+    const fouten = [...evotInvoerFouten(inv), ...evotGrowRegels(inv)];
     const jaren = EVOT_LEERJAREN[inv.onderwijs] || [1, 2, 3, 4, 5, 6];
     const chip = (aan, onClick, inhoud, label) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", role: "radio", "aria-checked": aan, "aria-label": label, className: "studio-chip is-klein" + (aan ? " is-aan" : ""), onClick, children: inhoud });
     const meerWv = EVOT_WERKVORMEN.filter((w) => !EVOT_HOOFD_WERKVORMEN.includes(w));
-    const d = { thema: k && k.eigenThema ? "eigen" : k && k.thema || "", eigenThema: k && k.eigenThema, themaEigen: k && k.eigenThema ? k.eigenThema.naam : "", subthema: k && k.subthema };
+    const subs = inv.thema && inv.thema !== "eigen" ? SUBTHEMAS[inv.thema] || [] : [];
+    const ti = evotThemaInfo(inv);
     const maak2 = () => {
       setToonFouten(true);
       if (fouten.length) return;
@@ -77923,7 +77944,8 @@ ${String(stapTekst).slice(0, 900)}` : ""
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "evt-medailles", "aria-hidden": "true", children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: "Bronze", size: 26 }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: "Silver", size: 26 }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: "Gold", size: 26 })
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: "Gold", size: 26 }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MedalBadge, { tier: "Platinum", size: 26 })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "studio-stap-titel", children: "Met EVOT maken" }),
@@ -77939,9 +77961,21 @@ ${String(stapTekst).slice(0, 900)}` : ""
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-label", children: "Leerjaar" }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-chips", role: "radiogroup", "aria-label": "Leerjaar", children: jaren.map((j) => chip(inv.leerjaar === j, () => zetI({ leerjaar: j }), j, "Leerjaar " + j)) })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-label", children: "Sportniveau" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "studio-chips", role: "radiogroup", "aria-label": "Sportniveau", children: EVOT_SPORTNIVEAUS.map((s) => chip(inv.sportniveau === s, () => zetI({ sportniveau: s }), s)) })
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld evt-thema", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-label", children: "Thema" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-twee", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("select", { className: "field studio-select", value: themaWaarde, onChange: (e) => kiesThema(e.target.value), "aria-label": "Thema", "data-evot": "thema", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "", children: "Kies een GROW-thema" }),
+              THEMAS.map((t) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: t.key, children: t.label }, t.key)),
+              eigen.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("optgroup", { label: "Mijn eigen thema's", children: eigen.map((t) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "eigen:" + t.id, children: t.naam }, t.id)) }),
+              onNieuwThema && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "__nieuw", children: "+ Nieuw eigen thema\u2026" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("select", { className: "field studio-select", value: inv.subthema, disabled: !subs.length, onChange: (e) => zetI({ subthema: e.target.value }), "aria-label": "Subthema", "data-evot": "subthema", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "", children: subs.length ? "Subthema (optioneel)" : "Geen subthema" }),
+              subs.map((x) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: x, children: x }, x))
+            ] })
+          ] }),
+          ti.desc && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-hint", children: ti.desc })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld", children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-label", children: "Niveau" }),
@@ -77956,37 +77990,6 @@ ${String(stapTekst).slice(0, 900)}` : ""
             " (",
             niveauInfo(EVOT_NIVEAU_NAAR_GROW[inv.niveau]).xp,
             " XP)."
-          ] })
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld evt-thema", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "studio-label", children: "Thema (EVOT-leerlijn)" }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("select", { className: "field studio-select", value: inv.leerlijn, onChange: (e) => kiesLeerlijn(e.target.value), "aria-label": "EVOT-leerlijn", "data-evot": "leerlijn", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "", children: "Kies een leerlijn" }),
-            EVOT_LEERLIJNEN.map((l) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: l, children: l }, l))
-          ] }),
-          k && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "evt-koppeling" + (k.bevestigd ? "" : " is-open"), "data-evot": "koppeling", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "target", size: 13 }),
-              " In GROW: ",
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: k.eigenThema ? k.eigenThema.naam : themaLabel(k.thema) }),
-              k.subthema ? " \u203A " + k.subthema : "",
-              !k.zeker && !k.eigenThema ? " (voorstel)" : ""
-            ] }),
-            !k.zeker && !k.eigenThema && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("label", { className: "evt-bevestig", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { type: "checkbox", checked: !!k.bevestigd, onChange: (e) => zetI({ koppeling: { ...k, bevestigd: e.target.checked } }), "data-evot": "bevestig" }),
-              " Koppeling klopt"
-            ] }),
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "studio-link", onClick: () => setAnderThema((a) => !a), children: anderThema ? "Klaar" : "Ander GROW-thema of eigen thema" })
-          ] }),
-          k && anderThema && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-twee evt-ander", children: [
-            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(StudioThemaKiezer, { d, themas, onKiesGrow: (g) => zetI({ koppeling: { ...k, thema: g, subthema: "", eigenThema: null, bevestigd: true } }), onKiesEigen: (t) => {
-              const p = studioEigenThemaPatch(t);
-              zetI({ koppeling: { ...k, eigenThema: p.eigenThema, subthema: p.subthema, bevestigd: true } });
-            }, onNieuw: onNieuwThema }),
-            !k.eigenThema && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("select", { className: "field studio-select", value: k.subthema, onChange: (e) => zetI({ koppeling: { ...k, subthema: e.target.value } }), "aria-label": "GROW-subthema", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: "", children: "Subthema (optioneel)" }),
-              (SUBTHEMAS[k.thema] || []).map((s) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: s, children: s }, s))
-            ] })
           ] })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-veld evt-werkvorm", children: [
