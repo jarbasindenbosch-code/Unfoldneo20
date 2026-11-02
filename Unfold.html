@@ -48335,7 +48335,8 @@
         duur: tussen(r, 13, 24),
         wacht: -tussen(r, 0, 22),
         drift: tussen(r, 16, 88),
-        draai: tussen(r, 220, 540),
+        draai: tussen(r, 40, 160),
+        grond: tussen(r, 2, 14),
         kleur: palet.blad[Math.floor(r() * palet.blad.length)],
         maat: tussen(r, 6, 11),
         /* v111.1: welke bladvorm, en of dít blad straks wordt weggeblazen.
@@ -48358,7 +48359,8 @@
           animationDelay: `${b.wacht}s`,
           ["--nat-drift"]: `${b.drift}px`,
           ["--nat-draai"]: `${b.draai}deg`,
-          ["--nat-weg"]: `${b.weg}px`
+          ["--nat-weg"]: `${b.weg}px`,
+          ["--nat-grond"]: `${b.grond}%`
         },
         children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
           "svg",
@@ -48383,7 +48385,8 @@
         wacht: -tussen(r, 0, 28),
         drift: tussen(r, 12, 58),
         maat: tussen(r, 2.5, 5),
-        op: tussen(r, 0.45, 0.85)
+        op: tussen(r, 0.45, 0.85),
+        grond: tussen(r, 2, 12)
       }));
     }, [aantal, zaadje]);
     return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "nat-sneeuw", "aria-hidden": "true", children: vlokken.map((v, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
@@ -48397,65 +48400,10 @@
           opacity: v.op,
           animationDuration: `${v.duur}s`,
           animationDelay: `${v.wacht}s`,
-          ["--nat-drift"]: `${v.drift}px`
-        }
-      },
-      i
-    )) });
-  }
-  function RainLayer({ aantal = 13, zaadje = 1 }) {
-    const druppels = (0, import_react.useMemo)(() => {
-      const r = zaad(zaadje * 86028121);
-      return Array.from({ length: aantal }, () => ({
-        x: tussen(r, 1, 99),
-        duur: tussen(r, 1.1, 2.1),
-        wacht: -tussen(r, 0, 2),
-        lang: tussen(r, 8, 14),
-        op: tussen(r, 0.1, 0.2)
-      }));
-    }, [aantal, zaadje]);
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", { className: "nat-regen", "aria-hidden": "true", children: [
-      druppels.map((d, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-        "span",
-        {
-          className: "nat-druppel",
-          style: {
-            left: `${d.x}%`,
-            height: d.lang,
-            opacity: d.op,
-            animationDuration: `${d.duur}s`,
-            animationDelay: `${d.wacht}s`
-          }
-        },
-        i
-      )),
-      /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", { className: "nat-plas", "aria-hidden": "true" })
-    ] });
-  }
-  function HailLayer({ aantal = 10, zaadje = 1 }) {
-    const korrels = (0, import_react.useMemo)(() => {
-      const r = zaad(zaadje * 15299);
-      return Array.from({ length: aantal }, () => ({
-        x: tussen(r, 2, 98),
-        duur: tussen(r, 2.6, 4.4),
-        wacht: -tussen(r, 0, 9),
-        drift: tussen(r, 6, 22),
-        maat: tussen(r, 2, 3.4),
-        op: tussen(r, 0.5, 0.85)
-      }));
-    }, [aantal, zaadje]);
-    return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", { className: "nat-hagel", "aria-hidden": "true", children: korrels.map((k, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(
-      "span",
-      {
-        className: "v11-hagel",
-        style: {
-          left: `${k.x}%`,
-          width: k.maat,
-          height: k.maat,
-          opacity: k.op,
-          animationDuration: `${k.duur}s`,
-          animationDelay: `${k.wacht}s`,
-          ["--nat-drift"]: `${k.drift}px`
+          ["--nat-drift"]: `${v.drift}px`,
+          ["--nat-weg"]: `${(v.drift * 1.4).toFixed(0)}px`,
+          ["--nat-draai"]: "0deg",
+          ["--nat-grond"]: `${v.grond}%`
         }
       },
       i
@@ -49306,7 +49254,7 @@
     const beweging = beweegt && !stil;
     const info = LANDSCHAP_INFO[land] || LANDSCHAP_INFO.kamikochi;
     const weerSoort = !r.weer ? null : info.weer ? info.weer : s === "winter" ? "sneeuw" : (regen != null ? regen : regentHet()) ? "regen" : null;
-    const overPagina = (r.overPagina || 0) > 0 && (s === "herfst" || s === "winter");
+    const overPagina = false;
     const bandVult = !!(r.heuvels || landschap || r.gras || r.bomen || r.wolken || r.wind || weerSoort);
     return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
       overPagina && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(
@@ -49341,13 +49289,9 @@
             r.bomen > 0 && info.gras && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AnimatedTrees, { palet, aantal: r.bomen, zaadje }),
             r.gras > 0 && info.gras && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AnimatedGrass, { palet, aantal: r.gras, zaadje }),
             r.wind > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(WindParticles, { aantal: r.wind, zaadje }),
-            r.bladeren > 0 && s !== "winter" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SeasonalLeaves, { palet, aantal: r.bladeren, zaadje }),
-            weerSoort === "sneeuw" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SnowLayer, { zaadje }),
-            weerSoort === "regen" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(RainLayer, { zaadje }),
-            weerSoort === "hagel" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SnowLayer, { aantal: 5, zaadje }),
-              /* @__PURE__ */ (0, import_jsx_runtime.jsx)(HailLayer, { zaadje })
-            ] }),
+            s !== "winter" && (r.bladeren > 0 || s === "herfst" && (r.overPagina || 0) > 0) && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SeasonalLeaves, { palet, aantal: r.bladeren || r.overPagina, zaadje }),
+            (weerSoort === "sneeuw" || s === "winter" && (r.overPagina || 0) > 0) && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SnowLayer, { aantal: weerSoort === "sneeuw" ? 9 : r.overPagina, zaadje }),
+            weerSoort === "hagel" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SnowLayer, { aantal: 5, zaadje }),
             weerSoort === "zand" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SandLayer, { zaadje })
           ]
         }
@@ -49407,15 +49351,16 @@
 /* ijsschotsen drijven rustig van links naar rechts en dobberen op het water */
 .nat-schots{animation-name:natSchots;animation-timing-function:linear;
   animation-iteration-count:infinite;will-change:transform,opacity}
+/* v112.7.3.2: de wind duwt de schotsen mee; bij een vlaag drijven ze verder */
 @keyframes natSchots{0%{transform:translateX(-17px);opacity:0}
-  15%{opacity:1}85%{opacity:1}100%{transform:translateX(17px);opacity:0}}
+  15%{opacity:1}85%{opacity:1}100%{transform:translateX(calc(12px + var(--wind,.5) * 22px));opacity:0}}
 .nat-dobber{animation-name:natDobber;animation-timing-function:ease-in-out;
   animation-iteration-count:infinite;animation-direction:alternate;will-change:transform}
 @keyframes natDobber{from{transform:translateY(-.45px)}to{transform:translateY(.6px)}}
 /* bamboe en riet buigen vanuit de voet, de den wiegt in zijn geheel */
 .nat-stengel,.nat-riet,.nat-den{animation-name:natBuig;animation-timing-function:ease-in-out;
   animation-iteration-count:infinite;animation-direction:alternate;will-change:transform}
-@keyframes natBuig{from{transform:rotate(-1.1deg)}to{transform:rotate(1.7deg)}}
+@keyframes natBuig{from{transform:rotate(calc(var(--wind,.5) * -1.4deg))}to{transform:rotate(calc(var(--wind,.5) * 3.6deg))}}
 .nat-rimpels path{animation-name:natRimpelLijn;animation-timing-function:ease-in-out;
   animation-iteration-count:infinite;animation-direction:alternate;will-change:transform,opacity}
 @keyframes natRimpelLijn{from{transform:translateX(-1.5px);opacity:.3}to{transform:translateX(1.5px);opacity:.75}}
@@ -49423,14 +49368,14 @@
 .nat-spriet{position:absolute;bottom:0;width:10px;margin-left:-5px;transform-origin:50% 100%;
   animation-name:natWuif;animation-timing-function:cubic-bezier(.45,.05,.55,.95);
   animation-iteration-count:infinite;animation-direction:alternate;will-change:transform}
-@keyframes natWuif{from{transform:rotate(-2.4deg)}to{transform:rotate(3.4deg)}}
+@keyframes natWuif{from{transform:rotate(calc(var(--wind,.5) * -3deg))}to{transform:rotate(calc(var(--wind,.5) * 7deg))}}
 
 .nat-bomen{left:0;right:0;bottom:22px;height:0}
 .nat-boom{position:absolute;bottom:0;width:60px;height:90px;transform-origin:50% 100%;
   animation-name:natWieg;animation-timing-function:ease-in-out;animation-iteration-count:infinite;
   animation-direction:alternate;will-change:transform}
-@keyframes natWieg{from{transform:rotate(calc(var(--nat-kant,1) * -.5deg))}
-                   to{transform:rotate(calc(var(--nat-kant,1) * .7deg))}}
+@keyframes natWieg{from{transform:rotate(calc(var(--nat-kant,1) * var(--wind,.5) * -.8deg))}
+                   to{transform:rotate(calc(var(--nat-kant,1) * var(--wind,.5) * 1.8deg))}}
 /* de kruin beweegt iets sneller en verder dan de stam */
 .nat-kruin{transform-origin:50% 80%;animation-name:natKruin;animation-timing-function:ease-in-out;
   animation-iteration-count:infinite;animation-direction:alternate;will-change:transform}
@@ -49443,34 +49388,25 @@
                     to{transform:translateX(calc(100vw + 280px)) scale(var(--nat-schaal,1))}}
 
 .nat-bladeren,.nat-sneeuw,.nat-regen,.nat-wind,.nat-bloemen{left:0;right:0;top:0;bottom:0}
-.nat-blad{position:absolute;top:-24px;animation-name:natDwarrel;animation-timing-function:linear;
+/* v112.7.3.2 (JB): niets valt meer van boven \u2014 dat gaf onrust. Bladeren
+   (en sneeuw) liggen al op de grond van het landschap; af en toe neemt een
+   zuchtje wind ze een stukje mee van links naar rechts, daarna liggen ze
+   weer stil. Hoe ver hangt af van --nat-weg (per blad) en de gedeelde wind. */
+.nat-blad{position:absolute;top:auto;bottom:var(--nat-grond,6%);opacity:0;animation-name:natGrondWind;animation-timing-function:ease-in-out;
   animation-iteration-count:infinite;will-change:transform,opacity}
-/* v111.1: het blad dwarrelt, blijft liggen, en wordt d\xE1n pas door een vlaag
-   naar rechts meegenomen \u2014 hoe hard hangt af van --nat-weg, dat per blad
-   verschilt, en van de gedeelde wind. Bladeren met een kleine --nat-weg
-   blijven vrijwel liggen en vervagen; ongeveer \xE9\xE9n op de drie krijgt een
-   grote en waait echt weg. Daardoor is het een windvlaag en niet een lopende
-   band. */
-@keyframes natDwarrel{
-  0%{transform:translate3d(0,-10px,0) rotate(0);opacity:0}
-  12%{opacity:.85}
-  /* vanaf hier ligt het blad op de grond */
-  62%{transform:translate3d(var(--nat-drift,30px),var(--nat-val,32vh),0) rotate(var(--nat-draai,360deg));opacity:.85}
-  /* stil blijven liggen: zonder deze rust leest het als doorwaaien */
-  78%{transform:translate3d(var(--nat-drift,30px),var(--nat-val,32vh),0) rotate(var(--nat-draai,360deg));opacity:.85}
-  /* de vlaag pakt het op */
-  88%{transform:translate3d(calc(var(--nat-drift,30px) + var(--nat-weg,40px) * var(--wind,.5) * .3),
-                            calc(var(--nat-val,32vh) - 6px),0)
-      rotate(calc(var(--nat-draai,360deg) + 40deg));opacity:.8}
-  100%{transform:translate3d(calc(var(--nat-drift,30px) + var(--nat-weg,40px) * var(--wind,.5)),
-                             var(--nat-val,32vh),0)
-      rotate(calc(var(--nat-draai,360deg) + 110deg));opacity:0}}
+@keyframes natGrondWind{
+  0%{transform:translate3d(0,0,0) rotate(0);opacity:0}
+  10%{opacity:.85}
+  /* rustig liggen */
+  58%{transform:translate3d(0,0,0) rotate(0);opacity:.85}
+  /* een zuchtje wind */
+  76%{transform:translate3d(calc(var(--nat-weg,40px) * var(--wind,.5) * .55),-2px,0) rotate(calc(var(--nat-draai,90deg) * .4));opacity:.85}
+  90%{transform:translate3d(calc(var(--nat-weg,40px) * var(--wind,.5)),0,0) rotate(var(--nat-draai,90deg));opacity:.8}
+  100%{transform:translate3d(calc(var(--nat-weg,40px) * var(--wind,.5)),0,0) rotate(var(--nat-draai,90deg));opacity:0}}
 
-.nat-vlok{position:absolute;top:-10px;border-radius:50%;background:#FFFFFF;
+.nat-vlok{position:absolute;top:auto;bottom:var(--nat-grond,5%);border-radius:50%;background:#FFFFFF;
   box-shadow:0 0 0 .5px rgba(150,160,170,.25);
-  animation-name:natVlok;animation-timing-function:linear;animation-iteration-count:infinite;will-change:transform}
-@keyframes natVlok{0%{transform:translate3d(0,-12px,0)}
-  100%{transform:translate3d(var(--nat-drift,20px),var(--nat-val,32vh),0)}}
+  animation-name:natGrondWind;animation-timing-function:ease-in-out;animation-iteration-count:infinite;will-change:transform,opacity}
 
 .nat-druppel{position:absolute;top:-20px;width:1.5px;border-radius:1px;
   background:linear-gradient(to bottom,rgba(140,165,185,0),rgba(140,165,185,.9));
@@ -49517,14 +49453,16 @@
 .v11-tak{animation-name:v11Tak}
 .v11-kroon{animation-name:v11Kroon}
 .v11-spriet{animation-name:v11Spriet}
-@keyframes v11Stam{from{transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) * -.25deg))}
-                   to  {transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) *  .3deg))}}
-@keyframes v11Tak{from{transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) * -.9deg))}
-                  to  {transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) * 1.1deg))}}
-@keyframes v11Kroon{from{transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) * -1.8deg))}
-                    to  {transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) *  2.2deg))}}
-@keyframes v11Spriet{from{transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) * -4deg))}
-                     to  {transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) *  5deg))}}
+/* v112.7.3.2 (JB): bomen, gras en struiken bewegen zichtbaar mee met de wind
+   \u2014 de uitslag is groter en leunt mee met de windrichting (links \u2192 rechts) */
+@keyframes v11Stam{from{transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) * -.35deg))}
+                   to  {transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) *  .9deg))}}
+@keyframes v11Tak{from{transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) * -1.1deg))}
+                  to  {transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) * 2.6deg))}}
+@keyframes v11Kroon{from{transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) * -2deg))}
+                    to  {transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) *  4.6deg))}}
+@keyframes v11Spriet{from{transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) * -4.5deg))}
+                     to  {transform:rotate(calc(var(--wind-kant,1) * var(--wind,.5) *  9deg))}}
 
 /* weerspiegeling op het water: korte streepjes die heel traag verschuiven */
 .v11-spiegel rect{animation-name:v11Spiegel;animation-timing-function:ease-in-out;
@@ -51439,8 +51377,10 @@ textarea.studio-input{resize:vertical;min-height:0}
 .doe{display:grid;gap:16px;text-align:left}
 /* v112.7.3: smalle beeldstrook bovenaan i.p.v. het grote vierkant; opdracht links, 'Aan de slag' rechts */
 .doe-strook{display:grid}
-.doe-strook .studio-beeld.is-doe-strook{height:clamp(76px,11vw,112px);border-radius:16px}
-.doe-kop{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 28px;align-items:end}
+.doe-strook .studio-beeld.is-doe-strook{height:clamp(96px,9vw,120px);border-radius:16px;overflow:hidden}
+.doe-strook .studio-beeld.is-doe-strook img{width:100%;height:100%;object-fit:cover;object-position:center 38%}
+/* v112.7.3.2: \xE9\xE9n kolom \u2014 opdracht, kenmerken, en daaronder 'Aan de slag' met 'Meer uitleg' ernaast */
+.doe-kop{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
 .doe-kop-tekst{display:grid;gap:10px;align-content:start;min-width:0}
 .doe-neo{display:flex;align-items:flex-end;gap:10px;font-size:.92rem;font-weight:600;color:var(--salie-diep)}
 .doe-neo-figuur{display:inline-flex;height:52px;align-items:flex-end}
@@ -51473,7 +51413,7 @@ textarea.studio-input{resize:vertical;min-height:0}
 .doe-bewijs{display:flex;gap:8px;align-items:flex-start;margin:0;font-size:1rem;line-height:1.5;color:var(--inkt);font-weight:560}
 .doe-bewijs svg{flex-shrink:0;margin-top:3px;color:var(--accent-diep)}
 .doe-actie{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;margin-top:4px}
-.doe-kop .doe-actie{justify-content:flex-end;margin:0}
+.doe-kop .doe-actie{justify-content:flex-start;margin:2px 0 0}
 .doe-blok .doe-feit{margin:0}
 .doe-feit.is-hoofd{color:var(--inkt);font-size:.98rem}
 .doe-feit svg{flex-shrink:0;margin-top:2px}
@@ -51524,8 +51464,8 @@ textarea.studio-input{resize:vertical;min-height:0}
 .doe-schema td.is-train{background:var(--salie-zacht);color:var(--salie-diep)}
 .doe-schema td.is-wed{background:var(--accent-zacht);color:var(--accent-diep);font-weight:700}
 @media (prefers-reduced-motion:reduce){ .doe-reeks li{animation:none} }
-@media (max-width:900px){ .doe-midden{grid-template-columns:1fr} .doe-kop{grid-template-columns:1fr} .doe-kop .doe-actie{justify-content:flex-start} }
-@media (max-width:640px){ .doe-kop{gap:12px} .doe-strook .studio-beeld.is-doe-strook{height:72px} .doe-start{width:100%} .doe-neo-figuur{display:none} .doe-voet{grid-template-columns:1fr} }
+@media (max-width:900px){ .doe-midden{grid-template-columns:1fr} }
+@media (max-width:640px){ .doe-kop{gap:12px} .doe-strook .studio-beeld.is-doe-strook{height:96px} .doe-start{width:100%} .doe-neo-figuur{display:none} .doe-voet{grid-template-columns:1fr} }
 @media (max-width:820px){ .afrond-neo-beeld{width:76px} }
 @media (max-width:640px){
   .afrond-hero{margin:-16px -14px 0;padding:20px 14px 16px}
@@ -72539,7 +72479,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const meer = stappen.length - zichtbaar.length;
     const voornaam = voornaamVan(gebruiker && gebruiker.naam);
     const eigenBeeld = studioBeeldSchoon(d.themaBeeld);
-    const beeld = eigenBeeld && (eigenBeeld.soort === "upload" || eigenBeeld.soort === "natuur") ? eigenBeeld : { soort: "natuur", ref: NATUUR_PRENTEN[[...String(rec.thema || "")].reduce((t, c) => t + c.charCodeAt(0), 0) % NATUUR_PRENTEN.length] };
+    const beeld = eigenBeeld || (THEMA_ACHTERGROND[rec.thema] ? { soort: "grow", ref: rec.thema } : { soort: "natuur", ref: NATUUR_PRENTEN[[...String(rec.thema || "")].reduce((t, c) => t + c.charCodeAt(0), 0) % NATUUR_PRENTEN.length] });
     const visual = doeVisualSoort(rec, d);
     const arr = (v) => Array.isArray(v) ? v : v ? [v] : [];
     const bnd = arr(d.benodigdheden);
@@ -72586,14 +72526,6 @@ ${String(stapTekst).slice(0, 900)}` : ""
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "vraag", size: 14 }),
             " Meer uitleg"
           ] })
-        ] })
-      ] }),
-      d.veiligheid && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "praktijk-veiligheid doe-veilig", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "waarschuwing", size: 17 }),
-        " ",
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: "Let op: " }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LT, { tekst: d.veiligheid, tp })
         ] })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "doe-midden", children: [
@@ -72656,6 +72588,14 @@ ${String(stapTekst).slice(0, 900)}` : ""
             " ",
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LT, { tekst: doeBewijsZin(d, tp), tp }) })
           ] })
+        ] })
+      ] }),
+      d.veiligheid && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "praktijk-veiligheid doe-veilig", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "waarschuwing", size: 17 }),
+        " ",
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: "Let op: " }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LT, { tekst: d.veiligheid, tp })
         ] })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "doe-voet", children: [
@@ -75584,15 +75524,27 @@ ${String(stapTekst).slice(0, 900)}` : ""
       }
       return [];
     },
-    async saveAll(lijst2) {
+    /* v112.7.3.2: {volledig:true} = de lijst is compleet; eigen ontwerpen die ontbreken worden ook op de server verwijderd */
+    async saveAll(lijst2, opties) {
       try {
         if (typeof window !== "undefined" && window.storage) {
-          const r = await window.storage.set(STUDIO_KEY, JSON.stringify(lijst2), false);
+          const r = await window.storage.set(STUDIO_KEY, JSON.stringify(lijst2), false, opties);
           return r && r.ok !== false;
         }
       } catch {
       }
       return false;
+    },
+    /* bij verwijderen willen we weten of ook de server het heeft verwerkt */
+    async verwijderUit(lijst2) {
+      try {
+        if (typeof window !== "undefined" && window.storage) {
+          const r = await window.storage.set(STUDIO_KEY, JSON.stringify(lijst2), false, { volledig: true });
+          return { ok: !!(r && r.ok !== false), server: !(r && r.stand === "mislukt") };
+        }
+      } catch {
+      }
+      return { ok: false, server: false };
     }
   };
   var STUDIO_TYPES = [["auto", "Neo kiest", "past bij de inhoud"], ["micro", "Micro", "Klein en snel"], ["core", "Core", "Meer diepgang"], ["deep", "Deep", "Grote uitdaging"]];
@@ -76007,10 +75959,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
       }
       return [];
     },
-    async saveAll(lijst2) {
+    async saveAll(lijst2, opties) {
       try {
         if (typeof window !== "undefined" && window.storage) {
-          const r = await window.storage.set(TOEWIJZING_KEY, JSON.stringify(lijst2), false);
+          const r = await window.storage.set(TOEWIJZING_KEY, JSON.stringify(lijst2), false, opties);
           return r && r.ok !== false;
         }
       } catch {
@@ -78033,6 +77985,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const [toew, setToew] = (0, import_react2.useState)([]);
     const [twVoor, setTwVoor] = (0, import_react2.useState)(null);
     const [verlaatVraag, setVerlaatVraag] = (0, import_react2.useState)(false);
+    const [weg, setWeg] = (0, import_react2.useState)(null);
     const [geladen, setGeladen] = (0, import_react2.useState)(false);
     const [zicht, setZicht] = (0, import_react2.useState)(start === "bibliotheek" ? "bibliotheek" : "start");
     const [toonKeuzes, setToonKeuzes] = (0, import_react2.useState)(true);
@@ -78152,6 +78105,24 @@ ${String(stapTekst).slice(0, 900)}` : ""
       setTwVoor(null);
       const ok = await toewijzingStore.saveAll(l);
       setMelding(ok ? "Toegewezen aan " + doelen.map((dl) => dl.soort === "klas" ? dl.klasNaam : (dl.leerlingen || [])[0]).join(", ") + ". De leerling ziet de uitdaging op zijn startscherm." : "Toewijzen lukte niet. Probeer het nog eens.");
+    };
+    const verwijder = async (x) => {
+      if (!x || x.eigen === false) return;
+      if (conceptTimer.current) clearTimeout(conceptTimer.current);
+      const l = lijst2.filter((y) => y.id !== x.id);
+      setLijst(l);
+      setWeg(null);
+      if (st && st.id === x.id) {
+        setSt(studioLeeg(gebruiker));
+      }
+      const r = await studioStore.verwijderUit(l);
+      const tw = toew.filter((t) => t.studioId === x.id);
+      if (tw.length) {
+        const lt = toew.filter((t) => t.studioId !== x.id);
+        setToew(lt);
+        await toewijzingStore.saveAll(lt, { volledig: true });
+      }
+      setMelding(!r.ok ? "Verwijderen lukte niet. Probeer het nog eens." : "\u2018" + (x.data.titel || "Uitdaging") + "\u2019 is verwijderd" + (tw.length ? " en de toewijzing is ingetrokken" : "") + "." + (r.server ? "" : " Online verwijderen lukte nu niet; hij kan na herladen terugkomen. Verwijder hem dan opnieuw als je verbinding hebt."));
     };
     const nieuwStart = (basis, bron) => {
       const s = { ...studioLeeg(gebruiker), bron: bron || "zelf", ...basis || {} };
@@ -78352,6 +78323,34 @@ ${String(stapTekst).slice(0, 900)}` : ""
       }
     };
     const modals = /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+      weg && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Popup, { titel: "Uitdaging verwijderen?", onSluit: () => setWeg(null), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "doe-pop", "data-studio": "verwijder-vraag", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("b", { children: [
+            "\u2018",
+            weg.data.titel || "Uitdaging",
+            "\u2019"
+          ] }),
+          " wordt definitief uit je bibliotheek verwijderd. Dit kun je niet ongedaan maken."
+        ] }),
+        toegewezenAan(toew, weg.id) && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { children: [
+          toegewezenAan(toew, weg.id),
+          ". De toewijzing wordt ingetrokken: leerlingen die nog niet begonnen zijn, zien hem niet meer. Leerlingen die al bezig of klaar zijn, houden hun eigen uitdaging, bewijs en XP."
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "studio-hint", children: "Wil je hem alleen uit het zicht? Kies dan Archiveren; dan kun je hem later herstellen." }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "studio-acties", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "btn btn-accent studio-knop", onClick: () => verwijder(weg), "data-studio": "verwijder-ja", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "trash", size: 15 }),
+            " Definitief verwijderen"
+          ] }),
+          weg.status !== "gearchiveerd" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "btn btn-licht studio-knop", onClick: async () => {
+            const x = weg;
+            setWeg(null);
+            await bewaarIn({ ...x, status: "gearchiveerd", gewijzigd: (/* @__PURE__ */ new Date()).toISOString() }, false);
+            setMelding("Gearchiveerd. Je kunt hem herstellen via de filter Status.");
+          }, children: "Archiveren" }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "btn btn-licht studio-knop", onClick: () => setWeg(null), children: "Annuleren" })
+        ] })
+      ] }) }),
       twVoor && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ToewijzenPaneel, { st: twVoor, klassen, onBevestig: wijsToe, onSluit: () => setTwVoor(null) }),
       themaModal && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(EigenThemaModal, { start: themaModal.start, onBewaar: bewaarThema, onSluit: () => setThemaModal(null) }),
       importRes && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(GrowImportDialoog, { res: importRes, themas, onImporteer: importeer, onSluit: () => setImportRes(null) }),
@@ -78510,6 +78509,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
           setMelding("Kopie gemaakt.");
           return;
         }
+        if (wat === "verwijderen") {
+          if (x.eigen !== false) setWeg(x);
+          return;
+        }
         if (wat === "archiveren") {
           await bewaarIn({ ...x, status: x.status === "gearchiveerd" ? "concept" : "gearchiveerd", gewijzigd: (/* @__PURE__ */ new Date()).toISOString() }, false);
           return;
@@ -78612,6 +78615,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
                 /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "layers", size: 13 }),
                 " ",
                 x.status === "gearchiveerd" ? "Herstellen" : "Archiveren"
+              ] }),
+              x.eigen !== false && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "studio-pil is-klein", "data-studio": "verwijder", onClick: () => actie(x, "verwijderen"), "aria-label": "Verwijder \u2018" + (dd.titel || "Uitdaging") + "\u2019", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "trash", size: 13 }),
+                " Verwijderen"
               ] })
             ] })
           ] }, x.id);
@@ -86625,7 +86632,7 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
         "main",
         {
           className: ["mentor", "school", "platformadmin", "developer", "portfolio"].includes(step) ? "werkomgeving" : void 0,
-          style: step === "hero" || step === "route" || step === "intake" || step === "thuis" || step === "promo" ? {} : step === "abonnementen" || step === "school" || step === "platformadmin" || step === "developer" ? { maxWidth: 1060, margin: "0 auto", padding: "0 18px 96px" } : step === "mentor" || step === "portfolio" ? { maxWidth: 1400, margin: "0 auto", padding: "0 clamp(18px,2.5vw,40px) 96px" } : step === "profiel" || step === "uitdaging" ? { maxWidth: 960, margin: "0 auto", padding: "0 18px 96px" } : { maxWidth: 760, margin: "0 auto", padding: "0 18px 96px" },
+          style: step === "hero" || step === "route" || step === "intake" || step === "thuis" || step === "promo" ? {} : step === "abonnementen" || step === "school" || step === "platformadmin" || step === "developer" ? { maxWidth: 1060, margin: "0 auto", padding: "0 18px 96px" } : step === "mentor" || step === "portfolio" ? { maxWidth: 1400, margin: "0 auto", padding: "0 clamp(18px,2.5vw,40px) 96px" } : step === "uitdaging" ? { maxWidth: 1120, margin: "0 auto", padding: "0 18px 96px" } : step === "profiel" ? { maxWidth: 960, margin: "0 auto", padding: "0 18px 96px" } : { maxWidth: 760, margin: "0 auto", padding: "0 18px 96px" },
           children: [
             step === "hero" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Hero, { onStart: () => go(gebruiker ? "builder" : "auth"), onAbonnementen: () => go("abonnementen") }),
             step === "auth" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Auth, { onIn: (u) => {
