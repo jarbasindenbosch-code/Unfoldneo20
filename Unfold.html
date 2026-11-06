@@ -16137,25 +16137,25 @@
     return o2;
   }
   function evert_key(obj, key) {
-    var o = [], K = keys(obj);
-    for (var i = 0; i !== K.length; ++i) if (o[obj[K[i]][key]] == null) o[obj[K[i]][key]] = K[i];
+    var o = [], K2 = keys(obj);
+    for (var i = 0; i !== K2.length; ++i) if (o[obj[K2[i]][key]] == null) o[obj[K2[i]][key]] = K2[i];
     return o;
   }
   function evert(obj) {
-    var o = [], K = keys(obj);
-    for (var i = 0; i !== K.length; ++i) o[obj[K[i]]] = K[i];
+    var o = [], K2 = keys(obj);
+    for (var i = 0; i !== K2.length; ++i) o[obj[K2[i]]] = K2[i];
     return o;
   }
   function evert_num(obj) {
-    var o = [], K = keys(obj);
-    for (var i = 0; i !== K.length; ++i) o[obj[K[i]]] = parseInt(K[i], 10);
+    var o = [], K2 = keys(obj);
+    for (var i = 0; i !== K2.length; ++i) o[obj[K2[i]]] = parseInt(K2[i], 10);
     return o;
   }
   function evert_arr(obj) {
-    var o = [], K = keys(obj);
-    for (var i = 0; i !== K.length; ++i) {
-      if (o[obj[K[i]]] == null) o[obj[K[i]]] = [];
-      o[obj[K[i]]].push(K[i]);
+    var o = [], K2 = keys(obj);
+    for (var i = 0; i !== K2.length; ++i) {
+      if (o[obj[K2[i]]] == null) o[obj[K2[i]]] = [];
+      o[obj[K2[i]]].push(K2[i]);
     }
     return o;
   }
@@ -47970,6 +47970,523 @@
     return f;
   }
 
+  // act.ts
+  var ACT_VERSIE = "act-1";
+  var ACT_CLAIMGRENS = "ACT is een onderzochte therapievorm in klinische en volwassen populaties. GROW gebruikt alleen de onderliggende principes als ontwerpbron voor oefengedrag in school en sport. Dat GROW-uitdagingen zelf werken, is niet onderzocht en wordt niet geclaimd.";
+  var ACT_PRINCIPES = {
+    acceptatie: {
+      key: "acceptatie",
+      naam: "Acceptatie",
+      leerling: "Spanning of teleurstelling mag er soms zijn; je kunt toch doen wat je van plan was.",
+      ontwerp: "Laat de leerling opmerken wat er speelt en t\xF3ch een gekozen actie uitvoeren. Het doel is niet dat het gevoel weggaat.",
+      vermijd: "Niet vragen om gevoelens weg te drukken, op te lossen of te beoordelen."
+    },
+    defusie: {
+      key: "defusie",
+      naam: "Cognitieve defusie",
+      leerling: "Een gedachte herkennen als gedachte, niet automatisch als feit.",
+      ontwerp: "Laat de leerling \xE9\xE9n gedachte opschrijven of uitspreken en kiezen wat hij of zij daarna doet, zonder de gedachte te hoeven weerleggen of weg te duwen.",
+      vermijd: "Geen 'positief denken'-opdracht en geen discussie of de gedachte klopt."
+    },
+    hierennu: {
+      key: "hierennu",
+      naam: "Hier en nu",
+      leerling: "Je aandacht terugbrengen naar wat je op dit moment doet.",
+      ontwerp: "Laat de leerling een moment van afdwalen opmerken en met \xE9\xE9n concrete handeling terugkeren naar de taak.",
+      vermijd: "Geen lange meditatie- of ademoefening; het gaat om terugkeren naar de taak."
+    },
+    zelfcontext: {
+      key: "zelfcontext",
+      naam: "Zelf als context",
+      leerling: "E\xE9n prestatie, fout of gedachte bepaalt niet wie je bent.",
+      ontwerp: "Laat de leerling een moment beschrijven als gebeurtenis ('ik miste die bal') in plaats van als oordeel over zichzelf ('ik ben slecht').",
+      vermijd: "Geen identiteits- of persoonlijkheidsvragen; beschrijf gedrag, nooit de persoon."
+    },
+    waarden: {
+      key: "waarden",
+      naam: "Waarden",
+      leerling: "Onderzoeken wat je echt belangrijk vindt in sport, school of daarbuiten.",
+      ontwerp: "Laat de leerling kiezen wat hij of zij belangrijk vindt en dat koppelen aan iets wat je kunt zien doen.",
+      vermijd: "Geen waarden voorschrijven of beoordelen; de keuze is van de leerling."
+    },
+    handelen: {
+      key: "handelen",
+      naam: "Toegewijd handelen",
+      leerling: "Een kleine, concrete stap zetten richting wat je belangrijk vindt, ook als het lastig voelt.",
+      ontwerp: "Laat de leerling \xE9\xE9n haalbare actie kiezen, uitvoeren in een echte situatie en daarna een vervolgstap noemen.",
+      vermijd: "Geen grote voornemens; \xE9\xE9n stap die deze week past."
+    }
+  };
+  var ACT_WERKVORMEN = {
+    aandachtterug: {
+      key: "aandachtterug",
+      naam: "Mijn aandacht terug",
+      principes: ["hierennu", "handelen"],
+      doel: "Een moment van afleiding herkennen en met \xE9\xE9n actie terug naar de taak.",
+      categorie: "praktisch",
+      bewijsvormen: ["tekst", "audio"],
+      alternatief: "Wil je liever geen eigen moment gebruiken? Kies dan een gewone huiswerkopdracht van tien minuten en let daar op je aandacht.",
+      niveaus: {
+        Bronze: {
+          titel: "Waar was ik?",
+          leerdoel: "Ik kan merken dat mijn aandacht wegdrijft en zeggen wat mij terugbracht.",
+          intro: "Iedereen dwaalt weleens af. Ontdek wanneer dat bij jou gebeurt en hoe je terugkomt bij je taak.",
+          stappen: ["Kies een les, training of huiswerkmoment", "Merk \xE9\xE9n keer op dat je afdwaalt"],
+          uitleg: ["Kies een moment van deze week waarop je je taak wilt afmaken.", "Merk \xE9\xE9n keer op dat je aandacht ergens anders is. Wat deed je om terug te gaan naar je taak?"],
+          bewijs: "Een korte tekst of audio: waar dwaalde je naartoe en wat bracht je terug?",
+          criteria: ["Je beschrijft \xE9\xE9n echt moment.", "Je noemt wat jou terugbracht naar je taak."],
+          reflectie: "Wat hielp je om weer bij je taak te komen?",
+          transfer: "Bij welke les of training let je hier deze week weer op?"
+        },
+        Silver: {
+          titel: "Mijn aandacht terug",
+          leerdoel: "Ik kan met een vooraf gekozen actie mijn aandacht terugbrengen in een echte situatie.",
+          intro: "Kies vooraf \xE9\xE9n actie die jou terugbrengt bij je taak, en gebruik die in een echt moment.",
+          stappen: ["Kies je terugkeeractie", "Gebruik hem in een echt moment"],
+          uitleg: ["Kies \xE9\xE9n korte actie, bijvoorbeeld je blik op de bal of je pen op de eerste vraag. Schrijf hem op.", "Merk tijdens een training, les of toets op wanneer je afdwaalt. Gebruik dan je actie."],
+          bewijs: "Een korte tekst, audio of video: welke actie koos je, wanneer gebruikte je hem en wat merkte je?",
+          criteria: ["Je hebt vooraf \xE9\xE9n concrete actie gekozen.", "Je hebt hem in een echt moment gebruikt.", "Je beschrijft eerlijk wat je merkte."],
+          reflectie: "Wat merkte je toen je je actie gebruikte?",
+          transfer: "Waar op school kun je dezelfde actie gebruiken?"
+        },
+        Gold: {
+          titel: "Twee momenten, \xE9\xE9n aanpak",
+          leerdoel: "Ik kan mijn aanpak in twee situaties vergelijken, onderbouwd kiezen en een ander helpen.",
+          intro: "Gebruik je terugkeeractie in twee verschillende situaties. Vergelijk, kies wat het best werkt en leg het aan iemand uit.",
+          stappen: ["Gebruik je actie in sport \xE9n op school", "Vergelijk, kies en leg uit"],
+          uitleg: ["Gebruik je terugkeeractie \xE9\xE9n keer in je sport en \xE9\xE9n keer op school.", "Vergelijk de twee keren. Kies wat je houdt en leg het in een paar zinnen uit aan een teamgenoot of klasgenoot."],
+          bewijs: "Je vergelijking in een paar zinnen, je keuze en wat je de ander uitlegde.",
+          criteria: ["Je vergelijkt twee echte situaties.", "Je keuze is onderbouwd met wat je merkte.", "Je legt je aanpak begrijpelijk uit aan een ander."],
+          reflectie: "Waarom werkte je aanpak in de ene situatie anders dan in de andere?",
+          transfer: "Hoe ziet jouw aanpak eruit voor je volgende toets of wedstrijd?"
+        }
+      }
+    },
+    gedachtefeit: {
+      key: "gedachtefeit",
+      naam: "Gedachte of feit?",
+      principes: ["defusie", "zelfcontext", "handelen"],
+      doel: "Een lastige gedachte herkennen als gedachte en toch kiezen wat je doet.",
+      categorie: "reflectief",
+      bewijsvormen: ["tekst", "audio"],
+      alternatief: "Wil je liever geen eigen gedachte delen? Kies dan een gedachte die veel sporters of leerlingen hebben, zoals 'dit lukt toch niet'.",
+      niveaus: {
+        Bronze: {
+          titel: "Gedachte of feit?",
+          leerdoel: "Ik kan een lastige gedachte herkennen als gedachte en niet als feit.",
+          intro: "Soms denk je 'ik ga dit verpesten'. Dat is een gedachte, geen feit. Onderzoek er \xE9\xE9n.",
+          stappen: ["Schrijf \xE9\xE9n lastige gedachte op", "Onderzoek: gedachte of feit?"],
+          uitleg: ["Kies een gedachte die je weleens hebt voor een training, wedstrijd, toets of presentatie.", "Schrijf erachter: is dit iets wat zeker gebeurt, of iets wat je denkt? Wat zou je doen als je de gedachte gewoon laat staan?"],
+          bewijs: "Je gedachte en twee zinnen over wat je ontdekte.",
+          criteria: ["Je noemt \xE9\xE9n concrete gedachte.", "Je maakt het verschil tussen gedachte en feit duidelijk."],
+          reflectie: "Wat verandert er als je een gedachte 'gewoon een gedachte' noemt?",
+          transfer: "Wanneer kun je dit deze week opnieuw opmerken?"
+        },
+        Silver: {
+          titel: "Gedachte erbij, toch doorgaan",
+          leerdoel: "Ik kan een lastige gedachte opmerken en toch mijn gekozen actie uitvoeren.",
+          intro: "Je hoeft een gedachte niet weg te duwen. Merk hem op en doe toch wat je van plan was.",
+          stappen: ["Kies je situatie en je actie", "Merk de gedachte op en ga door"],
+          uitleg: ["Kies een moment waarop je een lastige gedachte verwacht. Kies vooraf \xE9\xE9n actie die je wilt uitvoeren.", "Komt de gedachte, zeg dan in jezelf: 'daar is die gedachte weer'. Voer daarna je actie uit."],
+          bewijs: "Een korte tekst of audio: de situatie, de gedachte, je actie en wat je merkte.",
+          criteria: ["Je hebt een echte situatie gekozen.", "Je hebt je actie uitgevoerd, ook met de gedachte erbij.", "Je beschrijft wat je merkte."],
+          reflectie: "Wat deed de gedachte toen je hem alleen opmerkte?",
+          transfer: "Bij welk ander moment kun je dit proberen?"
+        },
+        Gold: {
+          titel: "Mijn gedachtenaanpak",
+          leerdoel: "Ik kan mijn aanpak voor lastige gedachten in twee situaties vergelijken en een ander op weg helpen.",
+          intro: "Gebruik je aanpak bij twee momenten, kijk wat werkte en help iemand anders met een eigen aanpak.",
+          stappen: ["Gebruik je aanpak twee keer", "Vergelijk en help een ander"],
+          uitleg: ["Gebruik je aanpak bij twee verschillende momenten, bijvoorbeeld een wedstrijd en een toets.", "Vergelijk: wanneer hielp het, wanneer minder? Leg je aanpak uit aan iemand die ook weleens zo'n gedachte heeft."],
+          bewijs: "Je vergelijking, je keuze en wat je de ander meegaf.",
+          criteria: ["Je vergelijkt twee echte momenten.", "Je onderbouwt wat werkte.", "Je aanpak is voor een ander bruikbaar, zonder te zeggen wat die moet voelen."],
+          reflectie: "Wat werkt voor jou als een lastige gedachte opkomt?",
+          transfer: "Hoe gebruik je dit bij je volgende spannende moment?"
+        }
+      }
+    },
+    kompas: {
+      key: "kompas",
+      naam: "Mijn kompas",
+      principes: ["waarden", "handelen"],
+      doel: "Kiezen wat je belangrijk vindt en daar \xE9\xE9n haalbare actie aan koppelen.",
+      categorie: "reflectief",
+      bewijsvormen: ["tekst", "audio", "foto"],
+      alternatief: "Wil je liever niet over jezelf schrijven? Kies dan wat jouw team of klas belangrijk vindt en koppel daar een actie aan.",
+      niveaus: {
+        Bronze: {
+          titel: "Wat vind ik belangrijk?",
+          leerdoel: "Ik kan benoemen wat ik belangrijk vind in mijn sport of op school.",
+          intro: "Wat maakt jouw sport of school de moeite waard? Kies wat voor jou telt.",
+          stappen: ["Kies wat jij belangrijk vindt", "Zoek een moment waarop je dat liet zien"],
+          uitleg: ["Kies \xE9\xE9n of twee dingen die je belangrijk vindt, bijvoorbeeld eerlijk spelen, een goede teamgenoot zijn of iets nieuws leren.", "Zoek een moment van deze week waarop je dat liet zien, al was het klein."],
+          bewijs: "Een korte tekst, audio of foto: wat vind je belangrijk en wanneer liet je dat zien?",
+          criteria: ["Je noemt wat jij belangrijk vindt.", "Je beschrijft een echt moment waarop je dat liet zien."],
+          reflectie: "Waarom is dit belangrijk voor jou?",
+          transfer: "Waar kun je dit deze week nog meer laten zien?"
+        },
+        Silver: {
+          titel: "Mijn kompas",
+          leerdoel: "Ik kan wat ik belangrijk vind koppelen aan \xE9\xE9n actie en die uitvoeren.",
+          intro: "Gebruik wat jij belangrijk vindt als kompas voor \xE9\xE9n actie deze week.",
+          stappen: ["Koppel je kompas aan een actie", "Voer je actie uit"],
+          uitleg: ["Kies wat je belangrijk vindt en bedenk \xE9\xE9n actie die daarbij past, met een dag of moment.", "Voer je actie uit, ook als het die dag minder makkelijk voelt. Kijk daarna kort terug."],
+          bewijs: "Je kompas, je actie en een korte notitie of foto van de uitvoering.",
+          criteria: ["Je actie past bij wat je belangrijk vindt.", "Je actie heeft een dag of moment.", "Je hebt hem echt uitgevoerd."],
+          reflectie: "Wat maakte het makkelijk of moeilijk om je actie te doen?",
+          transfer: "Welke actie past volgende week bij je kompas?"
+        },
+        Gold: {
+          titel: "Kiezen met mijn kompas",
+          leerdoel: "Ik kan een lastige keuze maken op basis van wat ik belangrijk vind en die keuze uitleggen.",
+          intro: "Gebruik je kompas bij een echte keuze tussen sport, school of iets anders, en leg je keuze uit.",
+          stappen: ["Leg twee opties naast je kompas", "Kies, voer uit en leg uit"],
+          uitleg: ["Kies een echte keuze van deze week. Bekijk bij beide opties wat past bij wat jij belangrijk vindt.", "Maak je keuze, voer hem uit en leg aan je mentor, trainer of een klasgenoot uit waarom."],
+          bewijs: "Je twee opties, je keuze met onderbouwing en wat je deed.",
+          criteria: ["Je vergelijkt twee echte opties.", "Je keuze is onderbouwd met wat jij belangrijk vindt.", "Je hebt je keuze uitgevoerd en uitgelegd."],
+          reflectie: "Wat leerde je over hoe jij keuzes maakt?",
+          transfer: "Bij welke keuze kun je je kompas nog meer gebruiken?"
+        }
+      }
+    },
+    invloed: {
+      key: "invloed",
+      naam: "Wat kan ik be\xEFnvloeden?",
+      principes: ["acceptatie", "handelen"],
+      doel: "Onderscheiden waar je invloed op hebt en daar je energie op richten.",
+      categorie: "reflectief",
+      bewijsvormen: ["tekst", "foto", "audio"],
+      alternatief: "Wil je liever geen eigen situatie gebruiken? Kies dan een situatie uit je sport die veel sporters kennen, zoals slecht weer of een strenge scheidsrechter.",
+      niveaus: {
+        Bronze: {
+          titel: "Wat kan ik be\xEFnvloeden?",
+          leerdoel: "Ik kan in een situatie aangeven waar ik invloed op heb en waar niet.",
+          intro: "Sommige dingen heb je in de hand, andere niet. Zoek het verschil in een situatie van jou.",
+          stappen: ["Kies een situatie van deze week", "Verdeel in wel en geen invloed"],
+          uitleg: ["Kies een training, wedstrijd, toets of schooldag die niet liep zoals je wilde.", "Maak twee lijstjes: waar had je invloed op, en waar niet? Omcirkel \xE9\xE9n ding uit je eerste lijstje."],
+          bewijs: "Je twee lijstjes als foto of tekst.",
+          criteria: ["Je situatie is echt.", "Je lijstjes maken het verschil duidelijk.", "Je omcirkelt \xE9\xE9n ding dat je zelf in de hand hebt."],
+          reflectie: "Wat valt je op aan je twee lijstjes?",
+          transfer: "Waar richt je je volgende keer op?"
+        },
+        Silver: {
+          titel: "Energie op wat ik kan doen",
+          leerdoel: "Ik kan mijn aandacht richten op wat ik kan be\xEFnvloeden en daar een actie bij kiezen.",
+          intro: "Richt je bij een echt moment op wat jij in de hand hebt, en laat de rest even voor wat het is.",
+          stappen: ["Maak je lijstjes vooraf", "Richt je op \xE9\xE9n actie"],
+          uitleg: ["Kies een moment dat eraan komt. Maak vooraf je lijstjes: wel en geen invloed.", "Kies uit je eerste lijstje \xE9\xE9n actie en richt je daar tijdens het moment op. Kijk achteraf wat het deed."],
+          bewijs: "Je lijstjes en een korte tekst of audio over hoe het ging.",
+          criteria: ["Je hebt vooraf gekozen waar je je op richt.", "Je hebt de actie in een echt moment uitgevoerd.", "Je beschrijft wat het deed."],
+          reflectie: "Hoe was het om je te richten op wat je zelf kon doen?",
+          transfer: "Welke situatie op school kun je zo aanpakken?"
+        },
+        Gold: {
+          titel: "Invloed in kaart",
+          leerdoel: "Ik kan twee situaties vergelijken op invloed, onderbouwd een aanpak kiezen en een ander helpen.",
+          intro: "Vergelijk twee situaties: waar had je invloed, wat deed je ermee? Help daarna iemand met hetzelfde.",
+          stappen: ["Vergelijk twee situaties", "Kies je aanpak en help een ander"],
+          uitleg: ["Kies een situatie die goed ging en een die minder ging. Waar lag jouw invloed, en wat deed je ermee?", "Kies wat je de volgende keer doet. Help een teamgenoot of klasgenoot om zijn eigen lijstjes te maken."],
+          bewijs: "Je vergelijking, je gekozen aanpak en hoe je de ander hielp.",
+          criteria: ["Je vergelijkt twee echte situaties.", "Je aanpak volgt uit je vergelijking.", "Je helpt een ander zonder het voor hem of haar in te vullen."],
+          reflectie: "Wat leerde je over waar jouw invloed zit?",
+          transfer: "Hoe gebruik je dit in een drukke week met sport en school?"
+        }
+      }
+    },
+    volgendestap: {
+      key: "volgendestap",
+      naam: "Mijn volgende stap",
+      principes: ["handelen", "waarden", "acceptatie"],
+      doel: "Een kleine, zelfgekozen actie oefenen in een echte situatie, ook als het lastig voelt.",
+      categorie: "praktisch",
+      bewijsvormen: ["tekst", "audio", "video"],
+      alternatief: "Voelt een eigen situatie te persoonlijk? Kies dan een kleine stap in een gewone les of training, zoals als eerste een vraag stellen.",
+      niveaus: {
+        Bronze: {
+          titel: "E\xE9n kleine stap",
+          leerdoel: "Ik kan \xE9\xE9n kleine stap kiezen die bij mijn doel past.",
+          intro: "Een grote verandering begint met een kleine stap. Kies er \xE9\xE9n die je deze week kunt zetten.",
+          stappen: ["Kies wat je wilt oefenen", "Kies je kleinste stap"],
+          uitleg: ["Denk aan iets wat je lastig vindt maar wel wilt, in je sport of op school.", "Maak er de kleinste stap van die je deze week kunt zetten. Schrijf op wanneer."],
+          bewijs: "Je stap in \xE9\xE9n of twee zinnen, met wanneer je hem zet.",
+          criteria: ["Je stap is klein en concreet.", "Je stap heeft een moment."],
+          reflectie: "Waarom kies je juist deze stap?",
+          transfer: "Wie kan je helpen om hem te zetten?"
+        },
+        Silver: {
+          titel: "Mijn volgende stap",
+          leerdoel: "Ik kan een zelfgekozen stap zetten in een echte situatie, ook als het spannend voelt.",
+          intro: "Zet je stap in een echte situatie. Het mag spannend voelen; het gaat erom dat je hem zet.",
+          stappen: ["Plan je stap", "Zet je stap en kijk terug"],
+          uitleg: ["Kies je stap, het moment en wat je doet als het spannend wordt.", "Zet je stap. Kijk daarna kort terug: wat deed je, wat merkte je, wat is je volgende stap?"],
+          bewijs: "Een korte tekst, audio of video over je stap en je vervolgstap.",
+          criteria: ["Je hebt je stap echt gezet.", "Je beschrijft wat je merkte.", "Je noemt een haalbare vervolgstap."],
+          reflectie: "Wat merkte je toen je je stap zette?",
+          transfer: "Wat wordt je volgende stap?"
+        },
+        Gold: {
+          titel: "Stap voor stap",
+          leerdoel: "Ik kan stappen in twee situaties vergelijken, mijn aanpak onderbouwen en een ander op weg helpen.",
+          intro: "Zet twee stappen in verschillende situaties, vergelijk ze en help iemand een eigen eerste stap te kiezen.",
+          stappen: ["Zet twee stappen", "Vergelijk en help een ander"],
+          uitleg: ["Zet \xE9\xE9n stap in je sport en \xE9\xE9n op school.", "Vergelijk: wat hielp je om de stap te zetten? Help daarna een teamgenoot of klasgenoot een eigen kleine stap te kiezen."],
+          bewijs: "Je twee stappen, je vergelijking en hoe je de ander hielp.",
+          criteria: ["Je hebt twee echte stappen gezet.", "Je vergelijking is onderbouwd.", "De ander kiest zelf een stap; jij helpt alleen."],
+          reflectie: "Wat helpt jou om een stap te zetten als het lastig voelt?",
+          transfer: "Hoe ziet je volgende stap eruit voor de komende maand?"
+        }
+      }
+    }
+  };
+  var ACT_SUBTHEMA_UITWERKING = {
+    "druk.aandachtterug.Silver": {
+      titel: "Spanning mag mee",
+      leerdoel: "Ik kan bewust een gekozen actie uitvoeren, ook als ik spanning voel.",
+      intro: "Spanning hoort erbij als iets belangrijk voor je is. Je hoeft hem niet weg te krijgen: je oefent om toch te doen wat je van plan was.",
+      stappen: ["Kies je moment en je actie", "Breng je aandacht terug naar je actie"],
+      uitleg: [
+        "Kies een training, wedstrijd, presentatie of toets waarbij je spanning verwacht. Bedenk vooraf \xE9\xE9n actie waarop jij je wilt richten.",
+        "Merk tijdens de situatie op wanneer je afgeleid raakt door spanning of gedachten. Breng je aandacht dan terug naar je gekozen actie."
+      ],
+      bewijs: "Een korte reflectie, audio of video waarin je vertelt welke situatie je koos, welke actie je wilde uitvoeren, wat je opmerkte en wat je de volgende keer wilt proberen.",
+      criteria: ["Je hebt een echte situatie gekozen.", "Je hebt bewust een actie geoefend.", "Je kunt uitleggen wat je hebt ervaren.", "Je benoemt een haalbare vervolgstap."],
+      reflectie: "Wat merkte je toen je je aandacht terugbracht naar je actie?",
+      transfer: "Bij welk ander spannend moment wil je dit de volgende keer proberen?"
+    }
+  };
+  var ACT_KOPPELING_PG = {
+    focus: {
+      principes: ["hierennu", "handelen"],
+      werkvormen: ["aandachtterug", "gedachtefeit"],
+      school: "afdwalen tijdens uitleg of huiswerk",
+      sport: "met je hoofd nog bij de vorige fout zitten"
+    },
+    doelen: {
+      principes: ["waarden", "handelen"],
+      werkvormen: ["kompas", "volgendestap"],
+      school: "kiezen waar je deze week tijd in steekt",
+      sport: "een doel kiezen dat past bij waarom je sport"
+    },
+    druk: {
+      principes: ["acceptatie", "hierennu", "defusie"],
+      werkvormen: ["aandachtterug", "gedachtefeit", "invloed"],
+      school: "spanning voor een toets of presentatie",
+      sport: "zenuwen voor een wedstrijd of selectiemoment"
+    },
+    flexibel: {
+      principes: ["acceptatie", "handelen"],
+      werkvormen: ["invloed", "volgendestap"],
+      school: "een rooster of toets die verschuift",
+      sport: "een andere positie, slecht weer of een blessure van een teamgenoot"
+    },
+    doorzetten: {
+      principes: ["zelfcontext", "handelen", "acceptatie"],
+      werkvormen: ["gedachtefeit", "volgendestap"],
+      school: "een tegenvallend cijfer",
+      sport: "een verloren wedstrijd of een fout die je bijblijft"
+    },
+    samenwerken: {
+      principes: ["defusie", "waarden"],
+      werkvormen: ["gedachtefeit", "kompas"],
+      school: "feedback van een docent die even pijn doet",
+      sport: "kritiek van een trainer of teamgenoot"
+    },
+    balans: {
+      principes: ["waarden", "acceptatie"],
+      werkvormen: ["kompas", "invloed"],
+      school: "een volle toetsweek naast trainingen",
+      sport: "kiezen tussen extra training en rust"
+    },
+    reflectie: {
+      principes: ["zelfcontext", "waarden"],
+      werkvormen: ["gedachtefeit", "kompas"],
+      school: "terugkijken op een les of toets zonder jezelf af te kraken",
+      sport: "terugkijken op een wedstrijd als gebeurtenis, niet als oordeel"
+    }
+  };
+  var K = (principes, werkvormen) => ({ principes, werkvormen });
+  var ACT_KOPPELING_BIBLIOTHEEK = {
+    "mentaal|Focus & concentratie": K(["hierennu"], ["aandachtterug"]),
+    "mentaal|Zelfvertrouwen opbouwen": K(["zelfcontext", "handelen"], ["gedachtefeit", "volgendestap"]),
+    "mentaal|Omgaan met wedstrijdspanning": K(["acceptatie", "defusie", "hierennu"], ["gedachtefeit", "aandachtterug"]),
+    "mentaal|Positieve zelfspraak": K(["defusie"], ["gedachtefeit"]),
+    "weerbaarheid|Doorzettingsvermogen": K(["handelen", "waarden"], ["volgendestap", "kompas"]),
+    "weerbaarheid|Omgaan met tegenslag": K(["acceptatie", "zelfcontext"], ["invloed", "gedachtefeit"]),
+    "weerbaarheid|Fouten verwerken": K(["zelfcontext", "hierennu"], ["gedachtefeit", "aandachtterug"]),
+    "weerbaarheid|Omgaan met kritiek": K(["defusie", "waarden"], ["gedachtefeit", "kompas"]),
+    "weerbaarheid|Stressbestendigheid": K(["acceptatie", "hierennu"], ["invloed", "aandachtterug"]),
+    "weerbaarheid|Zelfcompassie": K(["zelfcontext", "acceptatie"], ["gedachtefeit"]),
+    "ef|Aandacht erbij houden": K(["hierennu"], ["aandachtterug"]),
+    "ef|Aanpassen aan veranderingen": K(["acceptatie", "handelen"], ["invloed"]),
+    "ef|Omgaan met emoties": K(["acceptatie", "hierennu"], ["aandachtterug", "invloed"]),
+    "studie|Concentratie bij huiswerk": K(["hierennu"], ["aandachtterug"]),
+    "studie|Uitstelgedrag aanpakken": K(["acceptatie", "handelen"], ["volgendestap"]),
+    "duaal|Keuzes & prioriteiten stellen": K(["waarden"], ["kompas"]),
+    "duaal|Langetermijndoelen": K(["waarden", "handelen"], ["kompas", "volgendestap"]),
+    "blessure|Mentaal omgaan met een blessure": K(["acceptatie", "waarden", "handelen"], ["invloed", "kompas", "volgendestap"]),
+    "blessure|Terugkeer naar de sport": K(["acceptatie", "handelen"], ["volgendestap", "gedachtefeit"]),
+    "socialmedia|Omgaan met reacties en haat": K(["defusie", "zelfcontext"], ["gedachtefeit", "invloed"]),
+    "doping|Druk weerstaan": K(["waarden"], ["kompas"]),
+    "doping|Eerlijk presteren & integriteit": K(["waarden"], ["kompas"]),
+    "leiderschap|Voorbeeldgedrag": K(["waarden", "handelen"], ["kompas"]),
+    "t_ambitie|Zelfvertrouwen": K(["zelfcontext", "handelen"], ["gedachtefeit", "volgendestap"]),
+    "t_ambitie|Doelen stellen": K(["waarden", "handelen"], ["kompas", "volgendestap"]),
+    "g_zelfkennis|Persoonlijke waarden": K(["waarden"], ["kompas"]),
+    "g_zelfkennis|Zelfbeeld": K(["zelfcontext", "defusie"], ["gedachtefeit"]),
+    "g_doelen|Dromen vertalen naar actie": K(["waarden", "handelen"], ["kompas", "volgendestap"]),
+    "g_doelen|Keuzes maken": K(["waarden"], ["kompas"]),
+    "g_doelen|Focus houden": K(["hierennu"], ["aandachtterug"]),
+    "g_doelen|Motivatie vasthouden": K(["waarden", "handelen"], ["kompas", "volgendestap"]),
+    "g_zelfvertrouwen|Zelfacceptatie": K(["zelfcontext", "acceptatie"], ["gedachtefeit"]),
+    "g_zelfvertrouwen|Faalangst verminderen": K(["defusie", "acceptatie", "handelen"], ["gedachtefeit", "volgendestap"]),
+    "g_zelfvertrouwen|Omgaan met kritiek": K(["defusie", "waarden"], ["gedachtefeit"]),
+    "g_zelfvertrouwen|Met vertrouwen presenteren": K(["acceptatie", "hierennu", "handelen"], ["aandachtterug", "volgendestap"]),
+    "g_emoties|Emoties herkennen": K(["acceptatie", "hierennu"], ["aandachtterug"]),
+    "g_emoties|Emoties reguleren": K(["acceptatie", "hierennu"], ["aandachtterug", "invloed"]),
+    "g_emoties|Teleurstellingen verwerken": K(["acceptatie", "zelfcontext"], ["invloed", "gedachtefeit"]),
+    "g_emoties|Omgaan met verandering": K(["acceptatie", "handelen"], ["invloed"]),
+    "g_emoties|Herstellen na tegenslag": K(["acceptatie", "handelen"], ["invloed", "volgendestap"]),
+    "g_gewoontes|Uitstelgedrag verminderen": K(["acceptatie", "handelen"], ["volgendestap"]),
+    "g_mindset|Feedback gebruiken": K(["defusie"], ["gedachtefeit"]),
+    "g_mindset|Doorzettingsvermogen": K(["handelen", "waarden"], ["volgendestap"]),
+    "g_communicatie|Feedback ontvangen": K(["defusie"], ["gedachtefeit"]),
+    "g_communicatie|Grenzen aangeven": K(["waarden", "handelen"], ["kompas", "volgendestap"]),
+    "g_relaties|Omgaan met groepsdruk": K(["waarden"], ["kompas"]),
+    "g_tijd|Concentratie": K(["hierennu"], ["aandachtterug"]),
+    "g_tijd|Langdurige diepe focus": K(["hierennu"], ["aandachtterug"]),
+    "g_waarden|Besluitvorming": K(["waarden"], ["kompas"]),
+    "g_toekomst|Betekenisvol leven": K(["waarden"], ["kompas"]),
+    "g_toekomst|Persoonlijke missie": K(["waarden"], ["kompas"])
+  };
+  var PG_KEY_VAN_LABEL = {
+    "focus & aandacht": "focus",
+    "doelen & richting": "doelen",
+    "omgaan met druk": "druk",
+    "flexibel handelen": "flexibel",
+    "doorzetten & groeien": "doorzetten",
+    "samenwerken & feedback": "samenwerken",
+    "balans & herstel": "balans",
+    "reflectie & zelfinzicht": "reflectie"
+  };
+  function actKoppeling(thema, subthema) {
+    const t = String(thema ?? "").trim();
+    const s = String(subthema ?? "").trim();
+    if (!t || !s) return null;
+    if (t === "prestatiegedrag") {
+      const key = PG_KEY_VAN_LABEL[s.toLowerCase()] || (ACT_KOPPELING_PG[s] ? s : "");
+      return key ? ACT_KOPPELING_PG[key] : null;
+    }
+    return ACT_KOPPELING_BIBLIOTHEEK[t + "|" + s] || null;
+  }
+  function actUitRecord(r) {
+    const kb = r && r.data && r.data.kennisbron;
+    return kb && kb.methode === "ACT" ? { werkvorm: kb.werkvorm, subthema: r.data.subthema || r.subs && r.subs[0] } : null;
+  }
+  function kiesAct(opties) {
+    const subs = (opties.subs || []).filter(Boolean);
+    if (!subs.length) return null;
+    let sub = "", k = null;
+    for (const s of subs) {
+      const kk = actKoppeling(opties.thema, s);
+      if (kk) {
+        sub = s;
+        k = kk;
+        break;
+      }
+    }
+    if (!k) return null;
+    const recent = (opties.historie || []).slice(0, 5);
+    const actRecent = recent.map(actUitRecord);
+    if (actRecent.filter(Boolean).length >= 2) return null;
+    const vorige = actRecent[0];
+    if (vorige && String(vorige.subthema || "").toLowerCase() === sub.toLowerCase()) return null;
+    const gebruikt = new Set(actRecent.filter(Boolean).map((x) => x.werkvorm));
+    const werkvorm = k.werkvormen.find((w) => !gebruikt.has(w)) || k.werkvormen[(opties.historie || []).length % k.werkvormen.length];
+    const wv = ACT_WERKVORMEN[werkvorm];
+    const principe = wv.principes.find((p) => k.principes.includes(p)) || k.principes[0];
+    return {
+      principe,
+      werkvorm,
+      thema: opties.thema,
+      subthema: sub,
+      reden: `Subthema '${sub}' vraagt om ${ACT_PRINCIPES[principe].naam.toLowerCase()}; werkvorm gekozen op variatie.`
+    };
+  }
+  function actTekst(keuze, n) {
+    const pg = keuze.thema === "prestatiegedrag" ? PG_KEY_VAN_LABEL[keuze.subthema.toLowerCase()] : "";
+    return pg && ACT_SUBTHEMA_UITWERKING[pg + "." + keuze.werkvorm + "." + n] || ACT_WERKVORMEN[keuze.werkvorm].niveaus[n];
+  }
+  var NIV = (n) => n === "Silver" ? "Silver" : n === "Gold" || n === "Platinum" ? "Gold" : "Bronze";
+  var ACT_GRENZEN = "GROW is een educatief ontwikkelplatform, geen zorg- of behandelplatform. Daarom: geen diagnose, geen therapeutische intake, geen behandeling van angst, somberheid of trauma, geen uitspraken over mentale gezondheid op basis van antwoorden, geen verplichte onthulling van persoonlijke of gevoelige ervaringen, geen psychologische of klinische score, geen oordeel of een gevoel goed of fout is en geen beloning voor het wegdrukken van emoties. Laat de leerling zelf een veilige oefensituatie kiezen en bied een neutraal alternatief. Beoordeel bewust handelen, niet of een gevoel verdwenen is. Bij zorgen over hoe het met een leerling gaat: verwijs vriendelijk naar de mentor; Neo is geen behandelaar.";
+  var NIVEAU_OPDRACHT = {
+    Bronze: "Brons \u2014 ontdekken en begrijpen: de leerling herkent een situatie, onderzoekt eigen gedrag en probeert een eenvoudige oefening.",
+    Silver: "Zilver \u2014 zelfstandig toepassen: de leerling past de vaardigheid zelf toe in een echte school- of sportsituatie en verzamelt passend bewijs.",
+    Gold: "Goud \u2014 verdiepen, analyseren en ondersteunen: de leerling vergelijkt situaties, analyseert het eigen handelen, maakt een onderbouwde keuze en kan een ander helpen. Moeilijker, niet langer."
+  };
+  function actPromptblok(keuze, niveau) {
+    if (!keuze) return "";
+    const p = ACT_PRINCIPES[keuze.principe];
+    const wv = ACT_WERKVORMEN[keuze.werkvorm];
+    const n = NIV(niveau);
+    const vb = actTekst(keuze, n);
+    return `
+
+ACHTERGRONDBRON VOOR DEZE UITDAGING (verborgen, \xE9\xE9n van de bronnen; GROW blijft leidend):
+- Principe: ${p.naam}. Wat de leerling oefent: ${p.leerling}
+- Ontwerp: ${p.ontwerp} ${p.vermijd}
+- Passende GROW-werkvorm: "${wv.naam}" \u2014 ${wv.doel} Voorbeeld van de opbouw op dit niveau: titel "${vb.titel}", stappen "${vb.stappen[0]}" \u2192 "${vb.stappen[1]}". Schrijf een eigen, persoonlijke variant; kopieer het voorbeeld niet.
+- ${NIVEAU_OPDRACHT[n]}
+- Het leerdoel is bewust handelen in een echte situatie, met reflectie en een concrete vervolgstap. Succescriteria gaan over wat de leerling DEED, nooit over of spanning of een gevoel wegging.
+- Noem de bron, de therapievorm of psychologische termen NOOIT tegen de leerling (dus niet: ACT, therapie, defusie, acceptatie als vakterm, psychologische flexibiliteit, hexaflex). Gebruik gewone GROW-taal.
+- Neem in de situatie of een stap een neutraal alternatief op voor wie het te persoonlijk vindt, bijvoorbeeld: "${wv.alternatief}"
+- ${ACT_GRENZEN}`;
+  }
+  function actLokaal(ch, keuze, niveau) {
+    if (!ch || typeof ch !== "object" || !keuze) return ch;
+    const wv = ACT_WERKVORMEN[keuze.werkvorm];
+    const n = NIV(niveau);
+    const t = actTekst(keuze, n);
+    const sportZin = /Denk bijvoorbeeld aan ([^.]+)\./.exec(String(ch.situatie || ""));
+    const uit = {
+      ...ch,
+      titel: t.titel,
+      situatie: t.intro + (sportZin ? " " + sportZin[0] : "") + " " + wv.alternatief,
+      leerdoelen: [t.leerdoel],
+      stappen: [{ titel: t.stappen[0], uitleg: t.uitleg[0] }, { titel: t.stappen[1], uitleg: t.uitleg[1] }],
+      bewijs: t.bewijs,
+      succescriteria: t.criteria.slice(),
+      reflectie: [t.reflectie],
+      transfer: t.transfer,
+      werkvorm: { naam: wv.naam, beschrijving: wv.doel, categorie: wv.categorie },
+      bewijsvormen: wv.bewijsvormen.slice()
+    };
+    if (ch.prestatie && typeof ch.prestatie === "object") {
+      uit.prestatie = { ...ch.prestatie, werkvorm: wv.naam, bewijsvorm: t.bewijs, reflectie: t.reflectie, transfer: t.transfer };
+    }
+    return uit;
+  }
+  function actKennisbron(keuze, opties = {}) {
+    if (!keuze) return null;
+    const wv = ACT_WERKVORMEN[keuze.werkvorm];
+    const n = NIV(opties.niveau);
+    return {
+      methode: "ACT",
+      versie: ACT_VERSIE,
+      principe: keuze.principe,
+      leerdoel: actTekst(keuze, n).leerdoel,
+      subthema: keuze.subthema,
+      werkvorm: keuze.werkvorm,
+      bewijsvorm: wv.bewijsvormen.slice(),
+      niveau: n,
+      onderwijs: opties.onderwijs || "alle niveaus vo (taal volgt het taalprofiel)",
+      bronnen: ["gloster2020", "levin2024", "actinactie-watisact"],
+      beperking: ACT_CLAIMGRENS,
+      reden: keuze.reden,
+      bron: opties.bron || "ai"
+    };
+  }
+
   // prestatiegedrag.ts
   var PG_THEMA_KEY = "prestatiegedrag";
   var PG_NIVEAUS = ["Bronze", "Silver", "Gold"];
@@ -64504,20 +65021,20 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
         ] });
       })(),
       journey.kansen && journey.kansen.beschikbaar && (() => {
-        const K = journey.kansen;
+        const K2 = journey.kansen;
         const kleurKans = { hoog: "#3E6633", gemiddeld: "#C9971F", laag: "#7E8C77" };
         return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "card", style: { padding: 16, marginBottom: 16 }, children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8, flexWrap: "wrap", marginBottom: 4 }, children: [
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { style: { fontSize: ".92rem" }, children: "Kansen & ontwikkelpaden" }),
             /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "muted", style: { fontSize: ".74rem" }, children: [
               "confidence ",
-              K.confidence.pct,
+              K2.confidence.pct,
               "%",
-              K.externKoppelbaar ? " \xB7 uitbreidbaar met partners" : ""
+              K2.externKoppelbaar ? " \xB7 uitbreidbaar met partners" : ""
             ] })
           ] }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { margin: "0 0 12px", fontSize: ".76rem", lineHeight: 1.4 }, children: "Concrete kansen die passen bij wie je aan het worden bent \u2014 afgeleid uit je hele ontwikkelprofiel, niet willekeurig. Ze bewegen mee als je groeit." }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 8 }, children: K.kansen.slice(0, isOuder ? 5 : 12).map((k) => {
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "grid", gap: 8 }, children: K2.kansen.slice(0, isOuder ? 5 : 12).map((k) => {
             const uit = open === "kans:" + k.id;
             return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { onClick: () => setOpen(uit ? null : "kans:" + k.id), style: { textAlign: "left", cursor: "pointer", background: uit ? "#fff" : "#FAFAF8", border: "1px solid #ECEAE4", borderRadius: 12, padding: "10px 12px" }, children: [
               /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }, children: [
@@ -64564,7 +65081,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
               ] })
             ] }, k.id);
           }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { fontSize: ".7rem", lineHeight: 1.4, marginTop: 10 }, children: K.disclaimer })
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { fontSize: ".7rem", lineHeight: 1.4, marginTop: 10 }, children: K2.disclaimer })
         ] });
       })(),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }, children: groepen.map((g) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { onClick: () => {
@@ -68860,6 +69377,13 @@ AI-richting voor dit groeithema (kies passend bij de subthema's): ${GROEI_AI_RIC
 ${GROEI_WETENSCHAP}` : "";
         const routeInstr = routeNu === "topsport" ? "" : `
 ROUTE (ZEER BELANGRIJK): deze uitdaging hoort bij de route "${routeNu === "groei" ? "Persoonlijke groei" : "Talent & ambitie"}", NIET bij de topsportroute.${primaryRoute && primaryRoute !== routeNu ? ` De primaire focus van de leerling is "${ROUTES[primaryRoute].naam}": gebruik wat je over de leerling weet voor personalisatie, maar het onderwerp blijft deze route.` : ""} Verwijs in de uitdaging, de leerdoelen, de stappen, de voorbeelden, de succescriteria en de transfer NERGENS naar sport, training, wedstrijden, "jouw sport", een coach of topsport. Gebruik in plaats van "teamgenoot" het woord "klasgenoot" (of "klasgenoten"), en in plaats van "coach" of "trainer" het woord "mentor" of "ouders". Richt je volledig op ${routeNu === "groei" ? "persoonlijke groei, het dagelijks leven en school" : "het talent, de interesses en de ambities van de leerling (en waar passend school)"}.`;
+        let actKeuze = null;
+        try {
+          actKeuze = kiesAct({ thema, subs, historie });
+        } catch {
+          actKeuze = null;
+        }
+        const actInstr = actPromptblok(actKeuze, niveau);
         const leerdoelInstr = `
 LEERDOELEN: formuleer elk leerdoel in de ik-vorm en houd het consequent eerste persoon \u2014 gebruik "ik" en "mijn", nooit "jouw" of "je" binnen een leerdoel (dus bijvoorbeeld "in mijn sport", niet "in jouw sport").`;
         const opdracht = `Maak nu \xE9\xE9n challenge.
@@ -68869,7 +69393,7 @@ Niveau: ${niveau} \u2014 focus: ${ni.focus}, duur: ${ni.duur}, Bloom: ${ni.bloom
 Leeftijd leerling: ${leeftijd} jaar. Onderwijsniveau: ${tpOnd}.
 TAAL: schrijf 100% correct, natuurlijk Nederlands zonder Engelse woorden, en stem zinslengte en woordkeuze af op een leerling van ${leeftijd} jaar op ${tpOnd}-niveau${sportNu ? ` in de sport ${sportNu}` : ""}.
 ${extra}
-${kiesInstr}${variatieInstr}${praktijkInstr}${adviesInstr}${persoonlijkInstr}${profielInstr}${coreInstr}${mentorTwinInstr}`;
+${kiesInstr}${variatieInstr}${praktijkInstr}${actInstr}${adviesInstr}${persoonlijkInstr}${profielInstr}${coreInstr}${mentorTwinInstr}`;
         let ch = null;
         try {
           const res = await aiFetch({
@@ -68888,12 +69412,19 @@ ${kiesInstr}${variatieInstr}${praktijkInstr}${adviesInstr}${persoonlijkInstr}${p
         } catch (apiErr) {
           ch = null;
         }
+        const viaAI = !!(ch && ch.titel);
         if (!ch || !ch.titel) {
           const baseArgs = { thema, themaLabel: themaLabel(thema), subs, niveau, sport: sportNu, situatie, leeftijd, klas: gebruiker.klas, vermijdWerkvormen: vermijdWerkvormen2, vermijdOnderwerpen, route: routeNu, laatsteCategorie: laatsteWerkvormCategorie, recenteTypes, progressie, herkalibratie: coreHk };
           ch = regenereerAdaptief(baseArgs, historie, gebruiker) || genereerMetOrchestrator(baseArgs, historie) || genereerLokaal(baseArgs);
         }
         ch = lokaliseerRoute(ch, routeNu);
         if (thema === PG_THEMA_KEY) ch = pgAfronden(ch, { subs, niveau, sport: sportNu });
+        let actBron = null;
+        if (actKeuze && viaAI) actBron = actKennisbron(actKeuze, { niveau, onderwijs: tpOnd, bron: "ai" });
+        else if (actKeuze && thema === PG_THEMA_KEY) {
+          ch = actLokaal(ch, actKeuze, niveau);
+          actBron = actKennisbron(actKeuze, { niveau, onderwijs: tpOnd, bron: "lokaal" });
+        }
         if (gekozenType && gekozenType !== "auto") {
           ch.challengeType = gekozenType;
           const meta = CHALLENGE_TYPES[Object.keys(CHALLENGE_TYPES).find((k) => CHALLENGE_TYPES[k].naam === gekozenType)];
@@ -68910,6 +69441,7 @@ ${kiesInstr}${variatieInstr}${praktijkInstr}${adviesInstr}${persoonlijkInstr}${p
           ch._taalcontrole = bewaakt.rapport;
         } catch (e) {
         }
+        if (actBron && ch && typeof ch === "object") ch.kennisbron = actBron;
         const md = challengeNaarMarkdown(ch);
         if (coreHk && !ch._onderbouwing) {
           ch.regeneratie = ch.regeneratie || { modus: coreHk.modus, duur: coreHk.lengte.advies, ondersteuning: coreHk.ondersteuning.niveau, autonomie: coreHk.autonomie.niveau, bewijsvorm: coreHk.bewijs.type, mentorcontrole: coreHk.mentorbetrokkenheid.niveau, gamification: coreHk.gamification.intensiteit, challengeTypeAdvies: coreHk.challengeType.aanbevolen, niveauAdvies: coreHk.niveauAdvies.richting, vervolg: coreHk.vervolg.richting };
@@ -72357,6 +72889,8 @@ ${String(stapTekst).slice(0, 900)}` : ""
       const context = {
         challengeTitle: d.titel || "",
         theme: themaLabel(rec && rec.thema),
+        ...d.kennisbron && d.kennisbron.methode === "ACT" ? { backgroundMethod: "ACT" } : {},
+        /* v113.4: alleen een vlag; de grenzen staan op de server */
         level: rec && rec.niveau || "",
         stepNumber: stapLabel || "",
         instruction: stap && (stap.uitleg || stap.opdracht || "") || d.situatie || "",
