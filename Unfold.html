@@ -51415,6 +51415,74 @@ ACHTERGRONDBRON VOOR DEZE UITDAGING (verborgen, \xE9\xE9n van de bronnen; GROW b
     const d = new Date(str(a));
     return isNaN(d.getTime()) ? null : Math.floor((b.getTime() - d.getTime()) / 864e5);
   };
+  var numv = (v) => typeof v === "number" && isFinite(v) ? Math.round(v) : null;
+  function zelfScoreVan(r) {
+    if (!r) return null;
+    const z = numv(r.zelfRubricScore);
+    if (z != null) return z;
+    const a = r.alpe || {};
+    const s = numv(a.rubricScore);
+    if (s != null) return s;
+    if (a.mentorfeedback) return null;
+    return numv(r.rubricScore);
+  }
+  function docentOordeelVan(r) {
+    const mf = r && r.alpe && r.alpe.mentorfeedback;
+    if (!mf) return null;
+    const score = numv(mf.rubricScore);
+    const rubric = arr(mf.rubricNiveaus).filter((x) => x && x.criterium).map((x) => {
+      const w = RUBRIC_WOORD.indexOf(str(x.niveau));
+      const idx = w >= 0 ? w : typeof x.index === "number" ? x.index : -1;
+      return { criterium: str(x.criterium), index: idx, niveau: str(x.niveau) || RUBRIC_WOORD[idx] || "" };
+    }).filter((x) => x.index >= 0);
+    const echt = score != null || rubric.length > 0;
+    const gem = rubric.length ? rubric.reduce((t, x) => t + x.index, 0) / rubric.length : null;
+    const niveauIndex = gem != null ? Math.round(gem) : score != null ? score >= 70 ? 2 : score >= 40 ? 1 : 0 : null;
+    return {
+      door: str(mf.door),
+      op: str(mf.op || mf.datum),
+      score,
+      rubric,
+      echt,
+      niveauIndex,
+      niveau: niveauIndex != null ? RUBRIC_WOORD[niveauIndex] : "",
+      feedback: str(mf.feedback),
+      sterk: arr(mf.sterkePunten).map(str).filter(Boolean),
+      nog: arr(mf.nogOntwikkelen).map(str).filter(Boolean),
+      vervolg: str(mf.vervolg),
+      gesprekspunt: str(mf.gesprekspunt),
+      gesprekAfgerond: str(mf.gesprekAfgerondOp)
+    };
+  }
+  var STAND_PCT_MIN = 3;
+  function standVan(records) {
+    const rs = arr(records);
+    const oordelen = rs.map(docentOordeelVan).filter((o) => o && o.echt);
+    const n = oordelen.length;
+    const zelfAlleen = rs.filter((r) => !(docentOordeelVan(r) || {}).echt && zelfScoreVan(r) != null).length;
+    if (!n) return {
+      n: 0,
+      pct: null,
+      status: "nog te beoordelen",
+      toon: "wacht",
+      zelfAlleen,
+      niveau: "",
+      uitleg: "Nog geen docentbeoordeling voor dit onderdeel" + (zelfAlleen ? " (wel " + mv(zelfAlleen, "zelfbeoordeling", "zelfbeoordelingen") + ")" : "") + "."
+    };
+    const gem = oordelen.reduce((t, o) => t + o.niveauIndex, 0) / n;
+    const status = gem >= 1.5 ? "aangetoond" : gem >= 0.5 ? "in ontwikkeling" : "in opbouw";
+    const scores = oordelen.map((o) => o.score).filter((x) => x != null);
+    const pct = n >= STAND_PCT_MIN && scores.length === n ? Math.round(scores.reduce((t, x) => t + x, 0) / n) : null;
+    return {
+      n,
+      pct,
+      status,
+      toon: n >= STAND_PCT_MIN ? "vol" : "beperkt",
+      zelfAlleen,
+      niveau: RUBRIC_WOORD[Math.round(gem)],
+      uitleg: "Gemiddeld " + RUBRIC_WOORD[Math.round(gem)].toLowerCase() + " over " + mv(n, "docentbeoordeling", "docentbeoordelingen") + (n < STAND_PCT_MIN ? " \u2014 te weinig voor een percentage." : ".")
+    };
+  }
   var BEWIJS_STD = { tekst: "Tekst", foto: "Foto", video: "Video", audio: "Audio", bestand: "Bestand", document: "Document", meting: "Meting", bevestiging: "Bevestiging", link: "Link" };
   function rapportGegevens(records, leerling, ctx = {}) {
     const nu = ctx.nu || /* @__PURE__ */ new Date();
@@ -51440,31 +51508,16 @@ ACHTERGRONDBRON VOOR DEZE UITDAGING (verborgen, \xE9\xE9n van de bronnen; GROW b
       const vormen = uniek([...bewijzen.map((b) => bl(str(b.soort || b.vorm))), ...inl ? [bestanden ? mv(bestanden, "bijlage", "bijlagen") : "Inlevering"] : []]);
       const bewijsData = [...bewijzen.map((b) => str(b.tijdstip)), inl ? str(inl.ingeleverdOp) : ""].filter(Boolean).sort();
       const laatsteBewijs = bewijsData[bewijsData.length - 1] || "";
-      const num = (v) => typeof v === "number" && isFinite(v) ? Math.round(v) : null;
-      const zelf = num(r.rubricScore);
-      const beoordeling = mf ? {
-        door: str(mf.door),
-        op: str(mf.op || mf.datum),
-        score: num(mf.rubricScore),
-        feedback: str(mf.feedback),
-        sterk: arr(mf.sterkePunten).map(str).filter(Boolean),
-        nog: arr(mf.nogOntwikkelen).map(str).filter(Boolean),
-        rubric: arr(mf.rubricNiveaus).filter((x) => x && x.criterium).map((x) => {
-          const w = RUBRIC_WOORD.indexOf(str(x.niveau));
-          const idx = w >= 0 ? w : typeof x.index === "number" ? x.index : -1;
-          return { criterium: str(x.criterium), index: idx, niveau: str(x.niveau) || RUBRIC_WOORD[idx] || "" };
-        }).filter((x) => x.index >= 0),
-        vervolg: str(mf.vervolg),
-        gesprekspunt: str(mf.gesprekspunt),
-        gesprekAfgerond: str(mf.gesprekAfgerondOp),
-        gelijkAanZelf: num(mf.rubricScore) != null && zelf != null && num(mf.rubricScore) === zelf
-      } : null;
+      const zelf = zelfScoreVan(r);
+      const oordeel = docentOordeelVan(r);
+      const beoordeling = oordeel ? { ...oordeel, gelijkAanZelf: oordeel.score != null && zelf != null && oordeel.score === zelf } : null;
       const nieuwNaBeoordeling = !!(beoordeling && beoordeling.op && laatsteBewijs && laatsteBewijs > beoordeling.op);
       const heeftBewijs = bewijzen.length > 0 || !!inl;
       let status;
       if (beoordeling && nieuwNaBeoordeling) status = "Aanvulling ontvangen";
       else if (beoordeling && beoordeling.vervolg === "aanvullen") status = "Aanvulling gevraagd";
-      else if (beoordeling) status = "Beoordeeld";
+      else if (beoordeling && beoordeling.echt) status = "Beoordeeld";
+      else if (beoordeling) status = "Feedback, niet beoordeeld";
       else if (heeftBewijs && (r.afgerond || inl)) status = "Wacht op beoordeling";
       else if (r.afgerond) status = "Afgerond, zonder bewijs";
       else status = "Loopt";
@@ -51501,22 +51554,50 @@ ACHTERGRONDBRON VOOR DEZE UITDAGING (verborgen, \xE9\xE9n van de bronnen; GROW b
       };
     }).sort((a, b) => b.datum.localeCompare(a.datum));
     const afgerond = uitdagingen.filter((u) => u.afgerond);
-    const beoordeeld = uitdagingen.filter((u) => u.beoordeling);
+    const beoordeeld = uitdagingen.filter((u) => u.beoordeling && u.beoordeling.echt);
+    const metFeedback = uitdagingen.filter((u) => u.beoordeling);
+    const zelfAlleen = uitdagingen.filter((u) => !(u.beoordeling && u.beoordeling.echt) && u.zelf != null);
     const metBewijs = uitdagingen.filter((u) => u.heeftBewijs);
     const wacht = uitdagingen.filter((u) => u.status === "Wacht op beoordeling" || u.status === "Aanvulling ontvangen");
     const comp = {};
     const sleutel = (n) => laag(n);
+    let volg = 0;
     const zorg = (n) => {
       const k = sleutel(n);
-      if (!comp[k]) comp[k] = { naam: n, metingen: [], bewijsIn: [], geoefendIn: [] };
+      if (!comp[k]) comp[k] = { naam: n, metingen: [], bewijsIn: [], geoefendIn: [], links: /* @__PURE__ */ new Map(), volg: volg++ };
       return comp[k];
     };
+    const koppel = (z, u, hoe, crit) => {
+      const l2 = z.links.get(u.id) || {
+        id: u.id,
+        titel: u.titel,
+        niveauNL: u.niveauNL,
+        datum: u.datum,
+        afgerond: u.afgerond,
+        status: u.status,
+        hoe: [],
+        bewijs: u.bewijs,
+        zelf: u.zelf,
+        beoordeling: u.beoordeling ? { door: u.beoordeling.door, op: u.beoordeling.op, score: u.beoordeling.score, echt: u.beoordeling.echt, criteria: u.beoordeling.rubric } : null,
+        criterium: null
+      };
+      if (!l2.hoe.includes(hoe)) l2.hoe.push(hoe);
+      if (crit) l2.criterium = crit;
+      z.links.set(u.id, l2);
+    };
     uitdagingen.slice().reverse().forEach((u) => {
-      (u.beoordeling ? u.beoordeling.rubric : []).forEach((x) => zorg(x.criterium).metingen.push({ index: x.index, niveau: x.niveau, op: u.beoordeling.op || u.datum, door: u.beoordeling.door, uitdaging: u.titel }));
-      if (u.afgerond) u.opdrachtCompetenties.forEach((c) => {
+      (u.beoordeling ? u.beoordeling.rubric : []).forEach((x) => {
+        const z = zorg(x.criterium);
+        z.metingen.push({ index: x.index, niveau: x.niveau, op: u.beoordeling.op || u.datum, door: u.beoordeling.door, uitdaging: u.titel, id: u.id });
+        koppel(z, u, "rubric", x);
+      });
+      u.opdrachtCompetenties.forEach((c) => {
         const z = zorg(c);
-        z.geoefendIn.push(u.titel);
-        if (u.heeftBewijs) z.bewijsIn.push(u.titel);
+        koppel(z, u, "opdracht");
+        if (u.afgerond) {
+          z.geoefendIn.push(u.titel);
+          if (u.heeftBewijs) z.bewijsIn.push(u.titel);
+        }
       });
     });
     const competenties = Object.values(comp).map((c) => {
@@ -51529,23 +51610,27 @@ ACHTERGRONDBRON VOOR DEZE UITDAGING (verborgen, \xE9\xE9n van de bronnen; GROW b
         ontwikkeling = { richting: n > v ? "hoger" : n < v ? "lager" : "gelijk", van: m[0].niveau, naar: laatste.niveau, metingen: m.length };
       }
       const status = laatste ? "Beoordeeld" : c.bewijsIn.length ? "Bewijs, niet beoordeeld" : "Nog niet vastgesteld";
+      const links = [...c.links.values()].sort((a, b) => String(b.datum).localeCompare(String(a.datum)));
       return {
         naam: c.naam,
         status,
         laatste,
         metingen: m.length,
+        links,
+        volg: c.volg,
+        statusLang: laatste ? (laatste.index >= 2 ? "Aangetoond: " : "Beoordeeld: ") + laatste.niveau.toLowerCase() : c.bewijsIn.length ? "Bewijs ingeleverd, nog niet beoordeeld" : links.some((l2) => l2.zelf != null) ? "Alleen zelfbeoordeling en opdracht" : "Alleen in de opdracht",
         bewijs: uniek(c.bewijsIn).length,
         geoefend: uniek(c.geoefendIn).length,
         ontwikkeling,
         ontwikkelingTekst: ontwikkeling ? ontwikkeling.richting === "gelijk" ? "Gelijk gebleven (" + ontwikkeling.metingen + " beoordelingen)" : "Van " + ontwikkeling.van + " naar " + ontwikkeling.naar + " (" + ontwikkeling.metingen + " beoordelingen)" : m.length ? "Nog geen trend (" + mv(m.length, "beoordeling", "beoordelingen") + ")" : "\u2014"
       };
-    }).sort((a, b) => b.metingen - a.metingen || b.bewijs - a.bewijs || b.geoefend - a.geoefend || a.naam.localeCompare(b.naam));
+    }).sort((a, b) => b.metingen - a.metingen || b.bewijs - a.bewijs || b.geoefend - a.geoefend || a.volg - b.volg);
     const vastgesteld = competenties.filter((c) => c.laatste);
     const aangetoond = vastgesteld.filter((c) => c.laatste.index >= 2);
     const aandachtComp = vastgesteld.filter((c) => c.laatste.index === 0);
     const bundel = (soort) => {
       const m = /* @__PURE__ */ new Map();
-      beoordeeld.forEach((u) => u.beoordeling[soort].filter((s) => !isVraag(s)).forEach((s) => {
+      metFeedback.forEach((u) => u.beoordeling[soort].filter((s) => !isVraag(s)).forEach((s) => {
         const k = laag(s);
         if (!m.has(k)) m.set(k, { tekst: s, uitdaging: u.titel, door: u.beoordeling.door, op: u.beoordeling.op, n: 0 });
         m.get(k).n++;
@@ -51567,6 +51652,8 @@ ACHTERGRONDBRON VOOR DEZE UITDAGING (verborgen, \xE9\xE9n van de bronnen; GROW b
       uitdagingen,
       afgerond,
       beoordeeld,
+      metFeedback,
+      zelfAlleen,
       metBewijs,
       wacht,
       competenties,
@@ -51622,81 +51709,111 @@ ACHTERGRONDBRON VOOR DEZE UITDAGING (verborgen, \xE9\xE9n van de bronnen; GROW b
   function coachrapport(G) {
     const t = G.tellers;
     const punten = [];
-    const gebruikt = /* @__PURE__ */ new Set();
-    const voeg = (soort, p) => {
-      if (punten.length >= 3 || gebruikt.has(soort)) return;
-      gebruikt.add(soort);
-      punten.push({ soort, ...p });
+    const gebruiktU = /* @__PURE__ */ new Set();
+    const gegevensVan = (u) => !u ? [] : [
+      { label: "Uitdaging", waarde: u.titel + (u.niveauNL ? " \xB7 " + u.niveauNL : "") },
+      { label: "Status", waarde: u.status },
+      { label: "Bewijs", waarde: u.bewijs.aantal ? mv(u.bewijs.aantal, "stuk", "stukken") + (u.bewijs.vormen.length ? " (" + u.bewijs.vormen.join(", ") + ")" : "") + (u.bewijs.laatste ? ", laatst " + datumKort(u.bewijs.laatste) : "") : "geen" },
+      { label: "Zelfbeoordeling", waarde: u.zelf != null ? u.zelf + "%" : "\u2014" },
+      { label: "Docentbeoordeling", waarde: u.beoordeling ? (u.beoordeling.echt ? [u.beoordeling.niveau, u.beoordeling.score != null ? u.beoordeling.score + "%" : ""].filter(Boolean).join(" \xB7 ") : "alleen feedback") + (u.beoordeling.door ? " \u2014 " + u.beoordeling.door : "") + (u.beoordeling.op ? ", " + datumKort(u.beoordeling.op) : "") : "nog niet" },
+      ...u.beoordeling && u.beoordeling.rubric.length ? [{ label: "Rubric", waarde: u.beoordeling.rubric.map((x) => x.criterium + ": " + x.niveau).join("; ") }] : []
+    ];
+    const voeg = (soort, kandidaten) => {
+      if (punten.length >= 3) return;
+      const k = kandidaten.find((p) => p && (!p.uitdaging || !gebruiktU.has(p.uitdaging)));
+      if (!k) return;
+      if (k.uitdaging) gebruiktU.add(k.uitdaging);
+      const u = k.uitdaging ? G.uitdagingen.find((x) => x.id === k.uitdaging) : null;
+      punten.push({ soort, ...k, gegevens: k.gegevens || gegevensVan(u), uitdagingen: k.uitdagingen || (k.uitdaging ? [k.uitdaging] : []) });
     };
-    const oudste = G.wacht.slice().sort((a, b) => (a.bewijs.laatste || a.datum).localeCompare(b.bewijs.laatste || b.datum))[0];
-    const gesprek = G.beoordeeld.find((u) => u.beoordeling.vervolg === "bespreken" && !u.beoordeling.gesprekAfgerond);
-    if (gesprek) voeg("gesprek", {
-      opvalt: "Je wilde '" + gesprek.titel + "' bespreken.",
-      onderbouwing: "Bij de beoordeling op " + datumKort(gesprek.beoordeling.op) + " koos " + (gesprek.beoordeling.door || "de docent") + " voor 'bespreken'" + (gesprek.beoordeling.gesprekspunt ? ": " + zin(gesprek.beoordeling.gesprekspunt) : "."),
-      soortBron: "beoordeeld",
-      actie: gesprek.beoordeling.gesprekspunt ? "Begin het gesprek met: " + zin(gesprek.beoordeling.gesprekspunt) : "Begin het gesprek bij deze uitdaging: laat de leerling eerst vertellen hoe het ging.",
-      uitdaging: gesprek.id
-    });
-    if (oudste) {
+    const U = (id) => G.uitdagingen.find((x) => x.id === id);
+    const wachtend = G.wacht.slice().sort((a, b) => (a.bewijs.laatste || a.datum).localeCompare(b.bewijs.laatste || b.datum));
+    voeg("wacht", wachtend.slice(0, 1).map((oudste) => {
       const d = dagenTussen(oudste.bewijs.laatste || oudste.datum, G.nu);
-      voeg("wacht", {
+      return {
         opvalt: G.wacht.length === 1 ? "'" + oudste.titel + "' wacht op beoordeling." : G.wacht.length + " uitdagingen wachten op beoordeling.",
-        onderbouwing: "Bewijs aanwezig" + (d != null ? ", oudste " + mv(d, "dag", "dagen") + " geleden ingeleverd" : "") + ", nog geen docentbeoordeling.",
+        onderbouwing: (oudste.status === "Aanvulling ontvangen" ? "De leerling leverde een aanvulling in" : "Bewijs aanwezig") + (d != null ? ", " + mv(d, "dag", "dagen") + " geleden" : "") + "; nog geen docentbeoordeling daarna.",
         soortBron: "geregistreerd",
-        actie: "Beoordeel eerst '" + oudste.titel + "' en bespreek de feedback in het gesprek; feedback werkt het best kort na het werk.",
-        uitdaging: oudste.id
-      });
-    }
-    const verschil = G.beoordeeld.filter((u) => u.beoordeling.score != null && u.zelf != null && !u.beoordeling.gelijkAanZelf && Math.abs(u.beoordeling.score - u.zelf) >= 20)[0];
-    if (verschil) {
-      const hoger = verschil.zelf > verschil.beoordeling.score;
-      voeg("kalibratie", {
-        opvalt: "De leerling schat zichzelf " + (hoger ? "hoger" : "lager") + " in dan de docent.",
-        onderbouwing: "'" + verschil.titel + "': zelfbeoordeling " + verschil.zelf + "%, docent " + verschil.beoordeling.score + "%.",
+        actie: "Beoordeel eerst '" + oudste.titel + "' en bespreek de feedback; feedback werkt het best kort na het werk.",
+        uitdaging: oudste.id,
+        uitdagingen: G.wacht.map((x) => x.id),
+        gegevens: [...gegevensVan(oudste), ...G.wacht.length > 1 ? [{ label: "Ook wachtend", waarde: G.wacht.filter((x) => x.id !== oudste.id).map((x) => x.titel).join("; ") }] : []]
+      };
+    }));
+    const fb = [];
+    G.metFeedback.filter((u) => u.beoordeling.vervolg === "bespreken" && !u.beoordeling.gesprekAfgerond).forEach((g) => fb.push({
+      opvalt: "Je wilde '" + g.titel + "' bespreken.",
+      onderbouwing: "Bij de beoordeling op " + datumKort(g.beoordeling.op) + " koos " + (g.beoordeling.door || "de docent") + " voor 'bespreken'" + (g.beoordeling.gesprekspunt ? ": " + zin(g.beoordeling.gesprekspunt) : "."),
+      soortBron: "beoordeeld",
+      actie: g.beoordeling.gesprekspunt ? "Begin het gesprek met: " + zin(g.beoordeling.gesprekspunt) : "Begin het gesprek bij deze uitdaging: laat de leerling eerst vertellen hoe het ging.",
+      uitdaging: g.id
+    }));
+    G.aandachtComp.forEach((c) => fb.push({
+      opvalt: c.naam + " is bij de laatste beoordeling 'Beginnend'.",
+      onderbouwing: "Beoordeeld door " + (c.laatste.door || "een docent") + " op " + datumKort(c.laatste.op) + " bij '" + c.laatste.uitdaging + "'" + (c.ontwikkeling && c.ontwikkeling.richting === "lager" ? "; eerder " + c.ontwikkeling.van + " (" + c.metingen + " beoordelingen)" : c.metingen > 1 ? " (" + c.metingen + " beoordelingen)" : "") + ".",
+      soortBron: "beoordeeld",
+      actie: "Vraag naar \xE9\xE9n concreet moment waarop " + c.naam.toLowerCase() + " lastig was, en spreek \xE9\xE9n oefenmoment af voor de volgende uitdaging.",
+      uitdaging: c.laatste.id
+    }));
+    G.docentNog.forEach((n) => {
+      const u = G.metFeedback.find((x) => x.titel === n.uitdaging);
+      fb.push({
+        opvalt: "Open verbeterpunt: " + zin(n.tekst),
+        onderbouwing: "Genoteerd door " + (n.door || "de docent") + " bij '" + n.uitdaging + "' (" + datumKort(n.op) + ")" + (n.n > 1 ? "; genoemd bij " + n.n + " uitdagingen" : "") + ".",
         soortBron: "beoordeeld",
-        actie: "Leg samen het werk naast de succescriteria en vraag: welk criterium heb je wel en niet gehaald, en waaraan zie je dat?",
-        uitdaging: verschil.id
+        actie: "Vraag of de leerling dit punt in de volgende uitdaging heeft toegepast, en laat een voorbeeld zien.",
+        uitdaging: u ? u.id : void 0
       });
-    }
-    const begin = G.aandachtComp[0];
-    if (begin) voeg("criterium", {
-      opvalt: begin.naam + " is bij de laatste beoordeling 'Beginnend'.",
-      onderbouwing: "Beoordeeld door " + (begin.laatste.door || "een docent") + " op " + datumKort(begin.laatste.op) + " bij '" + begin.laatste.uitdaging + "'" + (begin.ontwikkeling && begin.ontwikkeling.richting === "lager" ? "; eerder " + begin.ontwikkeling.van + " (" + begin.metingen + " beoordelingen)" : begin.metingen > 1 ? " (" + begin.metingen + " beoordelingen)" : "") + ".",
-      soortBron: "beoordeeld",
-      actie: "Vraag naar \xE9\xE9n concreet moment waarop " + begin.naam.toLowerCase() + " lastig was, en spreek \xE9\xE9n oefenmoment af voor de volgende uitdaging."
     });
-    const nog = G.docentNog[0];
-    if (nog && !gebruikt.has("criterium")) voeg("verbeterpunt", {
-      opvalt: "Open verbeterpunt: " + zin(nog.tekst),
-      onderbouwing: "Genoteerd door " + (nog.door || "de docent") + " bij '" + nog.uitdaging + "' (" + datumKort(nog.op) + ").",
-      soortBron: "beoordeeld",
-      actie: "Vraag of de leerling dit punt in de volgende uitdaging heeft toegepast, en laat een voorbeeld zien."
+    voeg("feedback", fb);
+    const zonder = G.afgerond.filter((u) => !u.heeftBewijs);
+    const bw = [];
+    if (zonder.length) bw.push({
+      opvalt: mv(zonder.length, "uitdaging is", "uitdagingen zijn") + " afgerond zonder bewijs.",
+      onderbouwing: zonder.slice(0, 2).map((u) => "'" + u.titel + "'").join(", ") + (zonder.length > 2 ? " en meer" : "") + ": afgerond, niets ingeleverd. Afgerond is nog niet aangetoond.",
+      soortBron: "geregistreerd",
+      actie: "Spreek af welk bewijs past bij de volgende uitdaging, v\xF3\xF3rdat de leerling begint.",
+      uitdaging: zonder[0].id,
+      uitdagingen: zonder.map((u) => u.id)
     });
-    const stil = G.uitdagingen.filter((u) => !u.afgerond && u.stilDagen != null && u.stilDagen >= STIL_DAGEN).sort((a, b) => b.stilDagen - a.stilDagen)[0];
-    if (stil) voeg("stil", {
-      opvalt: "'" + stil.titel + "' loopt al " + stil.stilDagen + " dagen zonder nieuw werk.",
-      onderbouwing: "Gestart " + datumKort(stil.gestart) + "; geen bewijs of wijziging sindsdien.",
+    G.uitdagingen.filter((u) => u.status === "Aanvulling gevraagd").forEach((u) => bw.push({
+      opvalt: "Aanvulling gevraagd bij '" + u.titel + "', nog niet ingeleverd.",
+      onderbouwing: "Gevraagd door " + (u.beoordeling.door || "de docent") + " op " + datumKort(u.beoordeling.op) + (u.beoordeling.feedback ? ": " + zin(u.beoordeling.feedback) : "."),
+      soortBron: "beoordeeld",
+      actie: "Vraag wat de leerling nodig heeft om de aanvulling in te leveren, en spreek een dag af.",
+      uitdaging: u.id
+    }));
+    G.uitdagingen.filter((u) => !u.afgerond && u.stilDagen != null && u.stilDagen >= STIL_DAGEN).sort((a, b) => b.stilDagen - a.stilDagen).forEach((u) => bw.push({
+      opvalt: "'" + u.titel + "' loopt al " + u.stilDagen + " dagen zonder nieuw werk.",
+      onderbouwing: "Gestart " + datumKort(u.gestart) + "; geen bewijs of wijziging sindsdien.",
       soortBron: "geregistreerd",
       actie: "Vraag wat de leerling tegenhoudt. Maak de uitdaging samen kleiner, of spreek af ermee te stoppen.",
-      uitdaging: stil.id
-    });
-    const sterk = G.aangetoond[0];
-    if (sterk) voeg("sterk", {
-      opvalt: sterk.naam + " is aangetoond (" + sterk.laatste.niveau + ").",
-      onderbouwing: "Docentbeoordeling bij '" + sterk.laatste.uitdaging + "' (" + datumKort(sterk.laatste.op) + ")" + (sterk.metingen > 1 ? ", " + sterk.metingen + " beoordelingen" : "") + ".",
+      uitdaging: u.id
+    }));
+    voeg("bewijs", bw);
+    voeg("kalibratie", G.beoordeeld.filter((u) => u.beoordeling.score != null && u.zelf != null && Math.abs(u.beoordeling.score - u.zelf) >= 20).map((v) => {
+      const hoger = v.zelf > v.beoordeling.score;
+      return {
+        opvalt: "De leerling schat zichzelf " + (hoger ? "hoger" : "lager") + " in dan de docent.",
+        onderbouwing: "'" + v.titel + "': zelfbeoordeling " + v.zelf + "%, docent " + v.beoordeling.score + "%.",
+        soortBron: "beoordeeld",
+        actie: "Leg samen het werk naast de succescriteria en vraag: welk criterium heb je wel en niet gehaald, en waaraan zie je dat?",
+        uitdaging: v.id
+      };
+    }));
+    const st = [];
+    G.aangetoond.forEach((c) => st.push({
+      opvalt: c.naam + " is aangetoond (" + c.laatste.niveau + ").",
+      onderbouwing: "Docentbeoordeling bij '" + c.laatste.uitdaging + "' (" + datumKort(c.laatste.op) + ")" + (c.metingen > 1 ? ", " + c.metingen + " beoordelingen" : "") + ".",
       soortBron: "beoordeeld",
-      actie: "Benoem dit concreet, met het werk erbij, en vraag wat de leerling anders deed dan eerder."
-    });
-    const zonder = G.afgerond.filter((u) => !u.heeftBewijs);
-    if (zonder.length) voeg("zonderbewijs", {
-      opvalt: mv(zonder.length, "uitdaging is", "uitdagingen zijn") + " afgerond zonder bewijs.",
-      onderbouwing: zonder.slice(0, 2).map((u) => "'" + u.titel + "'").join(", ") + (zonder.length > 2 ? " en meer" : "") + ": afgerond, niets ingeleverd.",
-      soortBron: "geregistreerd",
-      actie: "Spreek af welk bewijs past bij de volgende uitdaging, v\xF3\xF3rdat de leerling begint."
-    });
-    const leeg = !t.gestart;
-    if (leeg) voeg("start", { opvalt: "Nog geen uitdaging gestart.", onderbouwing: "Er is nog niets geregistreerd.", soortBron: "geregistreerd", actie: "Kies samen een eerste uitdaging op Brons, bij iets wat de leerling zelf interessant vindt" + (G.interesses[0] ? " (bijv. " + G.interesses[0].toLowerCase() + ")" : "") + "." });
-    else if (!punten.length) voeg("rust", { opvalt: "Geen open punten: alles is beoordeeld en er loopt niets vast.", onderbouwing: bronRegel(G) + ".", soortBron: "geregistreerd", actie: "Vraag welke uitdaging de leerling als volgende wil kiezen, en waarom." });
+      actie: "Benoem dit concreet, met het werk erbij, en kies samen een volgende uitdaging die net iets moeilijker is.",
+      uitdaging: c.laatste.id
+    }));
+    voeg("stap", st);
+    if (!t.gestart) voeg("start", [{ opvalt: "Nog geen uitdaging gestart.", onderbouwing: "Er is nog niets geregistreerd.", soortBron: "geregistreerd", gegevens: [], actie: "Kies samen een eerste uitdaging op Brons, bij iets wat de leerling zelf interessant vindt" + (G.interesses[0] ? " (bijv. " + G.interesses[0].toLowerCase() + ")" : "") + "." }]);
+    else if (!punten.length) voeg("rust", [{ opvalt: "Geen open punten: het werk is beoordeeld en er loopt niets vast.", onderbouwing: bronRegel(G) + ".", soortBron: "geregistreerd", gegevens: [], actie: "Vraag welke uitdaging de leerling als volgende wil kiezen, en waarom." }]);
+    if (punten[0]) punten[0].hoofd = true;
+    void U;
     const ontwikkelbaar = G.competenties.filter((c) => c.ontwikkeling);
     const interpretatie = !t.afgerond ? "Er is nog geen afgerond werk; dit rapport kan alleen wijzen op een eerste stap." : t.beoordeeld < 2 ? "Er " + (t.beoordeeld === 1 ? "is \xE9\xE9n docentbeoordeling" : "zijn nog geen docentbeoordelingen") + ". Een uitspraak over ontwikkeling is nog niet mogelijk; de punten hieronder gaan over wat er nu ligt." : ontwikkelbaar.length ? "Voor " + mv(ontwikkelbaar.length, "criterium", "criteria") + " zijn genoeg beoordelingen om ontwikkeling te zien (zie Competentieprofiel)." : "Er zijn " + t.beoordeeld + " docentbeoordelingen, maar nog geen criterium is drie keer beoordeeld. Ontwikkeling is daarom nog niet vast te stellen.";
     const laatste = G.uitdagingen[0];
@@ -51735,7 +51852,14 @@ ACHTERGRONDBRON VOOR DEZE UITDAGING (verborgen, \xE9\xE9n van de bronnen; GROW b
     return {
       ...kop(G, "competentieprofiel"),
       kern: [{ label: "Beoordeeld", waarde: String(G.vastgesteld.length) }, { label: "Bewijs, niet beoordeeld", waarde: String(open.length) }, { label: "Alleen in opdracht", waarde: String(niet.length) }],
-      visual: { soort: "tabel", kolommen: ["Competentie", "Status", "Bewijs", "Beoordeling", "Ontwikkeling"], rijen, breedtes: [26, 18, 16, 22, 18] },
+      visual: {
+        soort: "tabel",
+        kolommen: ["Competentie", "Status", "Bewijs", "Beoordeling", "Ontwikkeling"],
+        rijen,
+        breedtes: [26, 18, 16, 22, 18],
+        /* v113.25: per rij de koppeling uitdaging → bewijs → werkelijk gegeven beoordeling (detailkaart) */
+        koppelingen: c.map((x) => ({ naam: x.naam, status: x.statusLang, metingen: x.metingen, ontwikkeling: x.ontwikkelingTekst, links: x.links }))
+      },
       inzichten: inzichten.slice(0, 3),
       interpretatie: "Alleen een rubricbeoordeling door een mentor of vakdocent stelt een competentie vast. Ontwikkeling staat er pas bij " + TREND_MIN_METINGEN + " beoordelingen op " + TREND_MIN_DAGEN + " of meer dagen.",
       stap,
@@ -51907,6 +52031,26 @@ ACHTERGRONDBRON VOOR DEZE UITDAGING (verborgen, \xE9\xE9n van de bronnen; GROW b
       extern: true
     };
   }
+  function portfolioInzichten(G) {
+    const t = G.tellers;
+    const intro = t.afgerond ? mv(t.afgerond, "uitdaging", "uitdagingen") + " afgerond, " + (t.beoordeeld ? mv(t.beoordeeld, "beoordeeld", "beoordeeld") + " door een docent." : "nog geen beoordeeld door een docent.") + (G.zelfAlleen.length ? " " + mv(G.zelfAlleen.length, "uitdaging heeft", "uitdagingen hebben") + " alleen een zelfbeoordeling." : "") : "Nog geen afgeronde uitdagingen.";
+    const a = G.aangetoond[0];
+    const s = G.docentSterk[0];
+    const goed = a ? { kort: G.aangetoond.slice(0, 2).map((c2) => c2.naam).join(" en "), criterium: true, waar: "'" + a.laatste.uitdaging + "'", bron: a.laatste.niveau + " volgens " + (a.laatste.door || "de docent") + " (" + datumKort(a.laatste.op) + ").", soort: "beoordeeld" } : s ? { kort: s.tekst.replace(/[.]$/, ""), waar: "'" + s.uitdaging + "'", bron: "Genoteerd door " + (s.door || "de docent") + ".", soort: "beoordeeld" } : null;
+    const b = G.aandachtComp[0];
+    const n = G.docentNog[0];
+    const aandacht = b ? { kort: b.naam, criterium: true, bron: "Beginnend volgens " + (b.laatste.door || "de docent") + " (" + datumKort(b.laatste.op) + ").", soort: "beoordeeld" } : n ? { kort: n.tekst.replace(/[.]$/, ""), bron: "Verbeterpunt van " + (n.door || "de docent") + ".", soort: "beoordeeld" } : G.wacht.length ? { kort: mv(G.wacht.length, "uitdaging wacht", "uitdagingen wachten") + " op beoordeling", bron: "Bewijs ingeleverd, nog geen docentbeoordeling.", soort: "geregistreerd" } : null;
+    const c = coachrapport(G).visual.punten[0] || null;
+    const leeg = "Nog niet vastgesteld door een docent" + (G.zelfAlleen.length ? G.zelfAlleen.length === 1 ? "; er is alleen een zelfbeoordeling" : "; er zijn alleen zelfbeoordelingen" : "") + ".";
+    return {
+      intro,
+      goed,
+      aandacht,
+      stap: c ? { kort: c.actie, soort: "advies", punt: c } : null,
+      leeg,
+      uitleg: "'Wat gaat goed' en 'Wat vraagt aandacht' komen alleen uit docentbeoordelingen en docentfeedback. Een afgeronde uitdaging of een zelfbeoordeling telt daar niet als bewijs."
+    };
+  }
   function bouwRapport2(G, type, ctx = {}) {
     if (type === "coachrapport") return coachrapport(G);
     if (type === "competentieprofiel") return competentieprofiel(G);
@@ -51916,6 +52060,7 @@ ACHTERGRONDBRON VOOR DEZE UITDAGING (verborgen, \xE9\xE9n van de bronnen; GROW b
     if (type === "lob") return lob(G, ctx);
     return cv(G);
   }
+  var REFLECTIE_WAARSCHUWING = "Bevat persoonlijke reflecties van de leerling. Alleen delen met wie de leerling begeleidt; niet doorsturen of openbaar maken.";
   function rapportPrint2(R) {
     const kort = (t, n = 160) => {
       const x = str(t);
@@ -51923,9 +52068,10 @@ ACHTERGRONDBRON VOOR DEZE UITDAGING (verborgen, \xE9\xE9n van de bronnen; GROW b
     };
     const secties = [];
     const v = R.visual || {};
+    if (R.type === "reflectierapport") secties.push({ kop: "Vertrouwelijk", blokken: [{ type: "p", items: [REFLECTIE_WAARSCHUWING] }] });
     if (R.leeg) secties.push({ kop: "Stand", blokken: [{ type: "p", items: [R.leeg] }] });
     if (R.inzichten && R.inzichten.length) secties.push({ kop: "Kerninzichten", blokken: [{ type: "lijst", items: R.inzichten.map((i) => i.tekst + "  [" + SOORT_LABEL[i.soort] + "]") }] });
-    if (v.soort === "gesprek" && v.punten.length) secties.push({ kop: "Voor het gesprek", blokken: [{ type: "tabel", kolommen: ["Wat valt op", "Onderbouwing", "Actie (advies)"], breedtes: [30, 36, 34], items: v.punten.map((p) => [p.opvalt, p.onderbouwing, p.actie]) }] });
+    if (v.soort === "gesprek" && v.punten.length) secties.push({ kop: "Voor het gesprek", blokken: [{ type: "tabel", kolommen: ["Wat valt op", "Onderbouwing", "Actie (advies)"], breedtes: [30, 36, 34], items: v.punten.map((p, i) => [(i === 0 && v.punten.length > 1 ? "Eerst: " : "") + p.opvalt, p.onderbouwing, p.actie]) }] });
     if (v.soort === "tabel" && v.rijen.length) secties.push({ kop: R.titel === "Bewijsdossier" ? "Overzicht" : R.titel === "Reflectierapport" ? "Reflecties" : R.titel === "LOB-dossier" ? "Onderbouwde richtingen" : "Matrix", blokken: [{ type: "tabel", kolommen: v.kolommen, breedtes: v.breedtes, items: v.rijen.map((r) => r.map((c) => kort(c, R.type === "reflectierapport" ? 220 : 140))) }] });
     if (v.soort === "kolommen") secties.push({ kop: "Overzicht", blokken: [{
       type: "tabel",
@@ -58073,6 +58219,10 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .rubric-uitleg-rij{display:grid;grid-template-columns:118px minmax(0,1fr);gap:10px;font-size:.8rem;line-height:1.45;color:#3A4048}
 .rubric-uitleg-niveau{display:inline-flex;align-items:center;gap:5px;font-weight:600}
 .rubric-uitleg-sluit{justify-self:start;margin-top:2px;background:none;border:none;padding:4px 0;font:inherit;font-size:.78rem;font-weight:560;color:var(--accent-diep);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.ma-ref{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;align-items:baseline;padding:10px 14px;border-radius:12px;background:var(--tegel-licht,#FAF9F6);border:1px dashed var(--lijn);font-size:.84rem;line-height:1.5;margin-bottom:10px}
+.ma-ref-kop{font-weight:700;color:var(--inkt)}
+.ma-ref-waarde{font-weight:800;color:var(--inkt)}
+.ma-ref-uitleg{grid-column:1/-1;color:var(--grijs)}
 .rubric-opmerking{position:relative;padding:12px 14px 14px;border-radius:12px;background:#FFFFFF;border:1px solid var(--lijn-fijn)}
 .rubric-opmerking .field{resize:vertical}
 .rubric-teller{position:absolute;right:24px;bottom:22px;font-size:.74rem;color:var(--grijs);pointer-events:none}
@@ -59085,6 +59235,23 @@ textarea.studio-input{resize:vertical;min-height:0}
 .rp2-punt-bron{font-size:.86rem;color:var(--inkt-zacht)}
 .rp2-punt-actie{font-size:.9rem}
 .rp2-punt-actie b{color:var(--accent-diep);margin-right:4px}
+.rp2-punt.is-hoofd{border-color:var(--accent-diep);border-width:2px;padding:11px 13px 11px 43px}
+.rp2-punt.is-hoofd::before{background:var(--accent-zacht);color:var(--accent-diep)}
+.rp2-hoofd{justify-self:start;font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--accent-diep)}
+.rp2-punt-voet{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:2px}
+.rp2-gegevens{margin:4px 0 0;display:grid;gap:3px;font-size:.84rem;line-height:1.5}
+.rp2-gegevens>div{display:grid;grid-template-columns:minmax(110px,30%) 1fr;gap:10px}
+.rp2-gegevens dt{color:var(--inkt-zacht);font-weight:700}
+.rp2-gegevens dd{margin:0;overflow-wrap:anywhere}
+.rp2-vertrouwelijk{display:flex;gap:6px;align-items:flex-start;margin:0 0 12px;font-size:.84rem;line-height:1.5;color:var(--inkt-zacht)}
+.exp-waarschuwing{display:flex;gap:8px;align-items:flex-start;margin:0 0 12px;padding:10px 12px;border-radius:10px;background:var(--accent-zacht);color:var(--inkt);font-size:.86rem;line-height:1.5}
+.exp-waarschuwing svg{margin-top:2px;color:var(--accent-diep)}
+.ub2-onbekend{font-weight:500;font-size:.78rem;color:var(--grijs)}
+.rp2-comp{max-width:680px}
+.rp2-comp-lijst{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.rp2-comp-item{border:1px solid var(--lijn);border-radius:12px;padding:12px 14px;display:grid;gap:6px}
+.rp2-comp-kop{line-height:1.4}
+@media (max-width:560px){.rp2-gegevens>div{grid-template-columns:1fr;gap:0}}
 .rp2-open{margin-left:6px;font-size:.82rem}
 .rp2-tabel-wrap{overflow-x:auto;border:1px solid var(--lijn);border-radius:12px}
 .rp2-tabel{width:100%;border-collapse:collapse;font-size:.86rem;line-height:1.4}
@@ -60248,6 +60415,30 @@ button.admin-status-tekst:hover{background:rgba(28,27,25,.04)}
 .uitd-infolabel{font-size:.8rem;font-weight:700;letter-spacing:.02em;color:var(--grijs);text-transform:uppercase}
 .uitd-infowaarde{font-size:.98rem;line-height:1.55;color:#20221E;margin-top:3px}
 .uitd-iconenrij{display:flex;justify-content:center;gap:20px;margin-top:6px;padding:0 42px}
+/* v113.25 \u2014 minimalistische iconenbalk (leerling): vier gelijke klikvlakken van 44 px, geen schaduw, geen kleurvlak */
+.ib-balk{align-items:center;gap:8px;flex-wrap:nowrap;padding:0 16px;position:relative}
+.ib-groep{display:flex;align-items:center;gap:12px}
+.ib-stopvak{display:flex}
+.ib-scheiding{width:1px;height:24px;background:var(--lijn);margin:0 8px}
+.ib-knop,.uitd-actie.ib-knop{position:relative;display:inline-grid;place-items:center;width:44px;height:44px;min-width:44px;padding:0;gap:0;border-radius:12px;border:1px solid transparent;background:none;color:var(--inkt-zacht);cursor:pointer;transition:color .15s ease,background-color .15s ease,border-color .15s ease}
+.ib-knop:hover{color:var(--inkt);background:var(--tegel);border-color:var(--lijn-fijn)}
+.ib-knop:active{background:var(--lijn-fijn)}
+.ib-knop:focus-visible,.ib-uitlegknop:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ib-knop[disabled]{opacity:.55;cursor:default}
+.ib-knop.is-stop:hover{color:var(--accent-diep)}
+.ib-uitlegknop{display:none;place-items:center;width:44px;height:44px;margin-left:4px;border-radius:12px;border:1px solid transparent;background:none;color:var(--grijs);cursor:pointer}
+.ib-uitlegknop[aria-pressed="true"]{color:var(--accent-diep);border-color:var(--lijn)}
+.ib-tip{position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);white-space:nowrap;padding:4px 8px;border-radius:8px;background:var(--inkt);color:var(--wit,#FFFFFF);font-size:.74rem;font-weight:600;line-height:1.3;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .12s ease;z-index:5}
+@media (hover:hover){.ib-knop:hover .ib-tip{opacity:1;visibility:visible}}
+.ib-knop:focus-visible .ib-tip{opacity:1;visibility:visible}
+/* touch: een uitlegknop (?) zet korte labels onder de iconen; er wordt niets uitgevoerd */
+@media (hover:none),(pointer:coarse){.ib-uitlegknop{display:inline-grid}}
+.ib-balk.is-uitleg{padding-bottom:22px}
+.ib-balk.is-uitleg .ib-tip{position:absolute;top:calc(100% + 2px);bottom:auto;opacity:1;visibility:visible;background:none;color:var(--inkt-zacht);padding:0;font-size:.68rem;white-space:normal;width:68px;text-align:center}
+.ib-melding{min-height:1.2em;margin:4px 0 0;text-align:center;font-size:.8rem;color:var(--inkt-zacht)}
+.ib-melding[data-stand="fout"]{color:var(--accent-diep);font-weight:600}
+.ib-kijk{display:block;text-align:center;margin:2px auto 0;max-width:560px;padding:0 16px}
+@media (max-width:420px){.ib-groep{gap:6px}.ib-balk{padding:0 8px}.ib-scheiding{margin:0 4px}}
 @media(max-width:640px){
   .uitd-kaart{padding:16px 14px;min-height:180px}
   .uitd-iconenrij{padding:0;gap:10px;flex-wrap:wrap}
@@ -65030,8 +65221,11 @@ VEILIGHEID: geef nooit medische diagnoses, geen gewichts- of calorie-adviezen, g
       cids.push(id++);
       pids.push(id++);
     }
+    const infoId = id++;
+    const titel = pdfEsc(pdfSan(String(opties.titel || "2scool GROW")));
     const objs = [];
-    objs.push({ id: 1, body: "<< /Type /Catalog /Pages 2 0 R >>" });
+    objs.push({ id: 1, body: `<< /Type /Catalog /Pages 2 0 R /Lang (nl-NL) /ViewerPreferences << /DisplayDocTitle true >> >>` });
+    objs.push({ id: infoId, body: `<< /Title (${titel}) /Creator (2scool GROW) /Producer (2scool GROW) >>` });
     objs.push({ id: 2, body: `<< /Type /Pages /Kids [${pids.map((p) => p + " 0 R").join(" ")}] /Count ${N} >>` });
     objs.push({ id: 3, body: "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>" });
     objs.push({ id: 4, body: "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>" });
@@ -65079,7 +65273,7 @@ endobj
 `;
     for (let i = 1; i < total; i++) out += String(offsets[i]).padStart(10, "0") + " 00000 n \n";
     out += `trailer
-<< /Size ${total} /Root 1 0 R >>
+<< /Size ${total} /Root 1 0 R /Info ${infoId} 0 R >>
 startxref
 ${xref}
 %%EOF`;
@@ -65557,7 +65751,7 @@ ${xref}
       96,
       +(96 * (PDF_LOGO_PXH / PDF_LOGO_PXW)).toFixed(1),
       pdfTekst("2scool GROW \u2014 onderdeel van Unfold Education \xB7 DISCOVER \xB7 LEARN \xB7 PERFORM"),
-      { extGState, achtergrondEerst: true, beelden: OMSLAG ? [{ naam: "Omslag", bin: OMSLAG.bin, w: OMSLAG.w, h: OMSLAG.h }] : [] }
+      { extGState, achtergrondEerst: true, titel: [M && M.titel, M && M.meta ? String(M.meta).split(" \xB7 ")[0] : ""].filter(Boolean).join(" \u2014 "), beelden: OMSLAG ? [{ naam: "Omslag", bin: OMSLAG.bin, w: OMSLAG.w, h: OMSLAG.h }] : [] }
     );
   }
   var PDF_LOGO_DATAURL = "data:image/jpeg;base64," + PDF_LOGO_JPG_B64;
@@ -66001,7 +66195,7 @@ ${xref}
     const omslag = await omslagVoorPdf(omg);
     return omslag ? { variant: "persoonlijk", omslag } : { variant: "persoonlijk" };
   }
-  function ExportKeuze({ standaard, onMaak, onSluit, wat, persoonlijkTekst, actie }) {
+  function ExportKeuze({ standaard, onMaak, onSluit, wat, persoonlijkTekst, actie, waarschuwing }) {
     const [v, setV] = (0, import_react2.useState)(standaard || "persoonlijk");
     const [bezig, setBezig] = (0, import_react2.useState)(false);
     const leerling = exportIsLeerling();
@@ -66026,6 +66220,11 @@ ${xref}
       }
     };
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(Popup, { titel: PRINT ? "Afdrukken" : "Exporteren", sub: wat, onSluit, children: [
+      waarschuwing && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "exp-waarschuwing", role: "note", "data-exp": "waarschuwing", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "lock", size: 15 }),
+        " ",
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { children: waarschuwing })
+      ] }),
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "exp-keuzes", role: "radiogroup", "aria-label": PRINT ? "Soort afdruk" : "Soort PDF", "data-exp-actie": PRINT ? "print" : "pdf", children: opties.map((o) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("label", { className: "exp-keuze" + (v === o.key ? " is-aan" : ""), "data-exp": o.key, children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("input", { type: "radio", name: "exp-variant", value: o.key, checked: v === o.key, onChange: () => setV(o.key) }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "exp-keuze-tekst", children: [
@@ -66040,12 +66239,12 @@ ${xref}
       ] })
     ] });
   }
-  function ExportKnop({ className, style, children, ariaLabel, wat, begeleider, onMaak, persoonlijkTekst, actie }) {
+  function ExportKnop({ className, style, children, ariaLabel, wat, begeleider, onMaak, persoonlijkTekst, actie, waarschuwing }) {
     const [open, setOpen] = (0, import_react2.useState)(false);
     const standaard = actie === "print" || begeleider || !exportIsLeerling() ? "print" : "persoonlijk";
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className, style, "aria-label": ariaLabel, "aria-haspopup": "dialog", onClick: () => setOpen(true), children }),
-      open && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ExportKeuze, { wat, actie, persoonlijkTekst, standaard, onMaak, onSluit: () => setOpen(false) })
+      open && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ExportKeuze, { wat, actie, persoonlijkTekst, standaard, waarschuwing, onMaak, onSluit: () => setOpen(false) })
     ] });
   }
   function portfolioPrintModel(pf, weergave, deel, samenvatting) {
@@ -66060,7 +66259,7 @@ ${xref}
       if (b.length) secties.push({ kop: kop2, blokken: b });
     };
     if (ll) sec("Mijn groeireis in het kort", [{ type: "p", items: [k.afgerond ? "Je hebt " + mvL(k.afgerond, "uitdaging", "uitdagingen") + " afgerond" + (k.themaCount ? " binnen " + mvL(k.themaCount, "thema", "thema's") : "") + ". Hieronder zie je wat je hebt laten zien en waar je nog in groeit." : "Je hebt nog geen uitdaging afgerond. Zodra je dat doet, komt hier te staan wat je hebt laten zien."] }]);
-    else if (samenvatting && samenvatting.totaal) sec("Samenvatting van de groeireis", [{ type: "p", items: [samenvatting.totaal] }]);
+    else if (samenvatting && samenvatting.totaal) sec("Samenvatting van de groeireis" + (samenvatting.bron === "ai" ? " (AI-samenvatting, geen docentoordeel)" : ""), [{ type: "p", items: [samenvatting.totaal] }]);
     if (toon("kerncijfers")) sec("Kerncijfers", [{ type: "info", items: [
       { label: "Uitdagingen", waarde: [k.afgerond + " afgerond", k.themaCount ? k.themaCount + " " + (k.themaCount === 1 ? "thema" : "thema's") : "", k.subthemaCount ? k.subthemaCount + " " + (k.subthemaCount === 1 ? "subthema" : "subthema's") : ""].filter(Boolean).join(" \xB7 ") },
       { label: "Groei", waarde: `${weergave === "ouder" ? "" : groeiNiveauVan(k.xp).huidig.naam + " \xB7 " + xpGetal(k.xp) + " XP \xB7 "}${k.prestatiesVerdiend} groei-prestaties \xB7 langste reeks ${k.streakBest} dagen` },
@@ -66074,36 +66273,60 @@ ${xref}
         const delen = NIVEAUS2.map((n) => tel[n.key] ? `${tel[n.key]} ${n.key}` : "").filter(Boolean);
         return delen.length ? [{ label: "Medailles per uitdaging", waarde: delen.join(" \xB7 ") }] : [];
       })(),
-      ...!ll && beoordeeldAantal({ challenges: [].concat(...(pf.perThema || []).map((t) => t.challenges || [])) }) >= BEOORDEELD_VOOR_PERCENTAGE ? [{ label: "Gemiddelde beheersing", waarde: k.gemMastery + "%" }] : []
+      /* v113.25: geen "gemiddelde beheersing" meer (vooral Bloom-niveau en zelfscores); wel hoeveel er door een docent is beoordeeld */
+      ...!ll ? (() => {
+        const alle = [].concat(...(pf.perThema || []).map((t) => t.challenges || []));
+        const d = alle.filter((r) => {
+          const o = docentOordeelVan(r);
+          return o && o.echt;
+        }).length;
+        const z = alle.filter((r) => {
+          const o = docentOordeelVan(r);
+          return !(o && o.echt) && zelfScoreVan(r) != null;
+        }).length;
+        return [{ label: "Beoordeling", waarde: d + " door een docent beoordeeld" + (z ? " \xB7 " + z + " alleen zelfbeoordeling" : "") }];
+      })() : []
     ] }]);
     if (ll) {
-      const ins = pfInzichten(pf, pf.perThema || []);
+      const ins = pfInzichten(pf, pf.perThema || [], null, "leerling");
       sec("Waar je staat", [{ type: "info", items: [
-        ins.sterkKort ? { label: "Hier ben je sterk in", waarde: ins.sterkKort + (ins.sterkBron ? ". Dat heb je laten zien in " + ins.sterkBron.replace(/^Aangetoond in /, "") : "") } : null,
+        /* v113.25: altijd dezelfde koppen als op het scherm, ook als er (nog) niets is vastgesteld */
+        { label: "Hier ben je sterk in", waarde: ins.sterkKort ? ins.sterkKort + (ins.sterkWaar ? ". Dat zag je docent in " + ins.sterkWaar + "." : "") : ins.beoordeeld > 0 ? "Je bent goed op weg. Zodra je iets hebt laten zien, staat het hier." : k.afgerond ? "Je docent kijkt je werk nog na. Daarna zie je hier waar je sterk in bent." : "Rond je eerste uitdaging af. Dan zie je hier waar je sterk in bent." },
         ins.ontwKort ? { label: "Hier groei je nog in", waarde: ins.ontwKort + (ins.stapThema ? ". Hier oefen je nog mee in " + ins.stapThema.themaLabel + "." : "") } : null,
         ins.stapKort ? { label: "Jouw volgende stap", waarde: ins.stapKort } : null,
         pf.patronen.leerstrategieen.length ? { label: "Leerstrategie\xEBn die je gebruikte", waarde: pf.patronen.leerstrategieen.join(", ") } : null
       ].filter(Boolean) }]);
-    } else if (toon("patronen")) sec("Sterke punten & ontwikkeling", [
-      pf.patronen.sterkePunten.length ? { type: "info", items: [{ label: "Sterke punten", waarde: pf.patronen.sterkePunten.slice(0, 6).join(" \xB7 ") }] } : null,
-      pf.patronen.ontwikkelpunten.length && weergave !== "ouder" ? { type: "info", items: [{ label: "In ontwikkeling", waarde: pf.patronen.ontwikkelpunten.slice(0, 6).join(" \xB7 ") }] } : null,
-      pf.patronen.leerstrategieen.length ? { type: "info", items: [{ label: "Leerstrategie\xEBn", waarde: pf.patronen.leerstrategieen.join(", ") }] } : null,
-      pf.patronen.interesses.length ? { type: "info", items: [{ label: "Interesses", waarde: pf.patronen.interesses.join(", ") }] } : null,
-      pf.patronen.motivatie ? { type: "info", items: [{ label: "Motivatie", waarde: pf.patronen.motivatie }] } : null
-    ]);
+    } else if (toon("patronen")) {
+      const ins = pfInzichten(pf, pf.perThema || [], null, weergave === "ouder" ? "ouder" : "mentor");
+      const intake = pf.identiteit || {};
+      const intr = [...new Set([].concat(intake.interesses || [], intake.hobby || []).map((x) => typeof x === "string" ? x : x && (x.label || x.naam) || "").filter(Boolean))];
+      const magOordeel = toon("themas") || toon("mentorfeedback");
+      sec("Sterke punten & ontwikkeling", [
+        { type: "info", items: [{ label: "Wat goed gaat (docent)", waarde: !magOordeel ? "Niet gedeeld door de leerling." : ins.sterkKort ? ins.sterkKort + ". " + (ins.sterkBron || "") : ins.sterkTekst }] },
+        weergave !== "ouder" ? { type: "info", items: [{ label: "Wat aandacht vraagt (docent)", waarde: !magOordeel ? "Niet gedeeld door de leerling." : ins.ontwKort ? ins.ontwKort + ". " + (ins.ontwBron || "") : ins.ontwLeeg || ins.ontwTekst }] } : null,
+        pf.patronen.leerstrategieen.length ? { type: "info", items: [{ label: "Leerstrategie\xEBn (geregistreerd)", waarde: pf.patronen.leerstrategieen.join(", ") }] } : null,
+        intr.length ? { type: "info", items: [{ label: "Interesses (aangegeven door de leerling)", waarde: intr.slice(0, 8).join(", ") }] } : null,
+        intake.motivatie ? { type: "info", items: [{ label: "Motivatie (aangegeven door de leerling)", waarde: intake.motivatie }] } : null,
+        { type: "p", items: [ins.uitleg || "Wat goed gaat en wat aandacht vraagt komt alleen uit docentbeoordelingen."] }
+      ]);
+    }
     if (toon("themas")) sec(ll ? "Mijn thema's" : "Ontwikkeling per thema", [{ type: "info", items: (pf.perThema || []).map((t) => {
       const st = vaardigheidStand(t);
       const sv = samenvatting && samenvatting.perThema && samenvatting.perThema[t.thema];
       const nv = Object.keys(t.niveaus).filter((n) => t.niveaus[n]).map((n) => `${n}: ${t.niveaus[n]}`).join(" \xB7 ");
       if (ll) {
         const woord = st.n > 0 ? PF_STATUS_LEERLING[st.status] : "";
-        return { label: t.themaLabel + (woord ? " \xB7 " + woord : ""), waarde: [mvL(t.aantal, "uitdaging", "uitdagingen") + " afgerond, " + (st.n ? st.n + " nagekeken." : "nog niet nagekeken."), t.competenties.length ? "Competenties: " + t.competenties.slice(0, 6).join(", ") + "." : "", nv ? "Niveaus: " + nv : ""].filter(Boolean).join(" ") };
+        return { label: t.themaLabel + (woord ? " \xB7 " + woord : ""), waarde: [mvL(t.aantal, "uitdaging", "uitdagingen") + " afgerond, " + (st.n ? st.n + " nagekeken door je docent." : "nog niet nagekeken door je docent."), t.competenties.length ? "Geoefend: " + t.competenties.slice(0, 6).join(", ") + "." : "", nv ? "Niveaus: " + nv : ""].filter(Boolean).join(" ") };
       }
-      return { label: t.themaLabel + " \xB7 " + st.status, waarde: [st.uitleg + (st.pct != null ? " Beheersing \xB1" + st.pct + "%." : ""), sv && !/te weinig/.test(sv) ? sv : "", t.competenties.length ? "Competenties: " + t.competenties.slice(0, 6).join(", ") : "", nv ? "Niveaus: " + nv : ""].filter(Boolean).join(" ") };
+      return { label: t.themaLabel + " \xB7 " + st.status, waarde: [st.uitleg + (st.pct != null ? " Gemiddelde docentscore " + st.pct + "%." : ""), sv && !/te weinig/.test(sv) ? sv : "", t.competenties.length ? "Geoefend in de opdracht: " + t.competenties.slice(0, 6).join(", ") + "." : "", nv ? "Niveaus: " + nv : ""].filter(Boolean).join(" ") };
     }) }]);
     if (toon("prestaties") && pf.prestaties.verdiend.length) sec("Verdiende groei-prestaties", [{ type: "lijst", items: pf.prestaties.verdiend.map((p) => `${p.naam} (${p.rar.label}) \u2014 ${p.beschrijving}`) }]);
-    if (toon("mentorfeedback") && pf.mentorfeedback.length) sec(ll ? "Feedback van je docent" : "Mentorfeedback", [{ type: "info", items: pf.mentorfeedback.slice(-6).reverse().map((m) => ({ label: `${themaLabel(m.thema)}${m.door ? " \xB7 " + m.door : ""}${!ll && m.rubricScore != null ? " \xB7 " + m.rubricScore + "%" : ""}`, waarde: m.feedback || "\u2014" })) }]);
-    if (toon("tijdlijn")) sec("Groeireis (tijdlijn)", [{ type: "lijst", items: pf.tijdlijn.filter((x) => x.type === "challenge").slice(-16).map((x) => `${x.datum ? datumNL(x.datum) + " \xB7 " : ""}${x.titel} (${x.niveau || "-"})${x.route && ROUTES[x.route] ? " \xB7 " + ROUTES[x.route].naam : ""}${!ll && x.mastery != null ? " \xB7 beheersing " + x.mastery + "%" : ""}`) }]);
+    if (toon("mentorfeedback") && pf.mentorfeedback.length) sec(ll ? "Feedback van je docent" : "Mentorfeedback", [{ type: "info", items: pf.mentorfeedback.slice(-6).reverse().map((m) => ({ label: `${themaLabel(m.thema)}${m.door ? " \xB7 " + m.door : ""}${!ll && m.rubricScore != null ? " \xB7 " + m.rubricScore + "%" : ""}${!ll && Array.isArray(m.rubricNiveaus) && m.rubricNiveaus.length ? " \xB7 " + m.rubricNiveaus.map((x) => x.criterium + ": " + x.niveau).join(", ") : ""}`, waarde: m.feedback || (m.rubricScore != null || (m.rubricNiveaus || []).length ? "Beoordeeld, zonder geschreven toelichting." : "\u2014") })) }]);
+    if (toon("tijdlijn")) sec("Groeireis (tijdlijn)", [{ type: "lijst", items: pf.tijdlijn.filter((x) => x.type === "challenge").slice(-16).map((x) => `${x.datum ? datumNL(x.datum) + " \xB7 " : ""}${x.titel} (${x.niveau || "-"})${x.route && ROUTES[x.route] ? " \xB7 " + ROUTES[x.route].naam : ""}${!ll ? (() => {
+      const r = [].concat(...(pf.perThema || []).map((t) => t.challenges || [])).find((c) => c && c.id === x.id);
+      const o = r && docentOordeelVan(r);
+      return o && o.echt ? " \xB7 docent: " + (o.niveau || "") + (o.score != null ? " " + o.score + "%" : "") : r && zelfScoreVan(r) != null ? " \xB7 alleen zelfbeoordeling" : " \xB7 niet beoordeeld";
+    })() : ""}`) }]);
     const pills = [`${k.afgerond} afgerond`];
     if (toon("kerncijfers") && weergave !== "ouder") pills.push(`${k.xp} XP`);
     if (k.themaCount) pills.push(`${k.themaCount} ${k.themaCount === 1 ? "thema" : "thema's"}`);
@@ -66135,79 +66358,17 @@ ${xref}
     P(`${pf.leerling.naam || ""}${pf.leerling.klas && pf.leerling.klas !== "\u2014" ? " \xB7 " + pf.leerling.klas : ""}${pf.leerling.leeftijd ? " \xB7 " + pf.leerling.leeftijd + " jaar" : ""}${pf.leerling.route ? " \xB7 route " + pf.leerling.route : ""}`);
     P(`Weergave: ${weergave} \xB7 gegenereerd ${datumNL((/* @__PURE__ */ new Date()).toISOString())}`);
     BR();
-    if (weergave === "leerling") {
-      portfolioPrintModel(pf, "leerling", deel, samenvatting).secties.forEach((s) => {
-        H(s.kop);
-        s.blokken.forEach((bl) => bl.items.forEach((it) => {
-          if (bl.type === "info") {
-            S(it.label);
-            P(it.waarde);
-          } else if (bl.type === "lijst") LI(it);
-          else P(it);
-        }));
-        BR();
-      });
-    } else {
-      if (samenvatting && samenvatting.totaal) {
-        S("Samenvatting van de groeireis");
-        P(samenvatting.totaal);
-        BR();
-      }
-      if (toon("kerncijfers")) {
-        const k = pf.kerncijfers;
-        H("Kerncijfers");
-        P(`Afgeronde uitdagingen: ${k.afgerond} \xB7 XP: ${k.xp} \xB7 Thema's: ${k.themaCount} \xB7 Subthema's: ${k.subthemaCount}`);
-        P(`Gemiddelde beheersing: ${k.gemMastery}% \xB7 Groei-prestaties: ${k.prestatiesVerdiend} \xB7 Langste reeks: ${k.streakBest} dagen`);
-        BR();
-      }
-      if (toon("patronen")) {
-        H("Sterke punten & ontwikkeling");
-        if (pf.patronen.sterkePunten.length) {
-          S("Sterke punten");
-          pf.patronen.sterkePunten.forEach(LI);
-        }
-        if (pf.patronen.ontwikkelpunten.length) {
-          S("In ontwikkeling");
-          pf.patronen.ontwikkelpunten.forEach(LI);
-        }
-        if (pf.patronen.leerstrategieen.length) {
-          S("Gebruikte leerstrategie\xEBn");
-          pf.patronen.leerstrategieen.forEach(LI);
-        }
-        if (pf.patronen.interesses.length) P("Interesses: " + pf.patronen.interesses.join(", "));
-        if (pf.patronen.motivatie) P("Motivatie: " + pf.patronen.motivatie);
-        BR();
-      }
-      if (toon("themas")) {
-        H("Ontwikkeling per thema");
-        pf.perThema.forEach((t) => {
-          S(`${t.themaLabel} \u2014 ${t.aantal} uitdaging(en), beheersing \xB1${t.mastery}%`);
-          const sv = samenvatting && samenvatting.perThema && samenvatting.perThema[t.thema];
-          if (sv) P(sv);
-          if (t.competenties.length) P("Competenties: " + t.competenties.slice(0, 6).join(", "));
-          const nv = Object.keys(t.niveaus).filter((n) => t.niveaus[n]).map((n) => `${n}: ${t.niveaus[n]}`).join(" \xB7 ");
-          if (nv) P("Niveaus: " + nv);
-          BR();
-        });
-      }
-      if (toon("prestaties") && pf.prestaties.verdiend.length) {
-        H("Verdiende groei-prestaties");
-        pf.prestaties.verdiend.forEach((p) => LI(`${p.naam} (${p.rar.label}) \u2014 ${p.beschrijving}`));
-        BR();
-      }
-      if (toon("mentorfeedback") && pf.mentorfeedback.length) {
-        H("Mentorfeedback");
-        pf.mentorfeedback.slice(0, 6).forEach((m) => {
-          S(`${themaLabel(m.thema)}${m.door ? " \xB7 " + m.door : ""}${m.rubricScore != null ? " \xB7 " + m.rubricScore + "%" : ""}`);
-          if (m.feedback) P(m.feedback);
-        });
-        BR();
-      }
-      if (toon("tijdlijn")) {
-        H("Groeireis (tijdlijn)");
-        pf.tijdlijn.filter((x) => x.type === "challenge").slice(-16).forEach((x) => LI(`${x.datum ? datumNL(x.datum) + " \xB7 " : ""}${x.titel} (${x.niveau || "-"})${x.route && ROUTES[x.route] ? " \xB7 " + ROUTES[x.route].naam : ""}${x.mastery != null ? " \xB7 beheersing " + x.mastery + "%" : ""}`));
-      }
-    }
+    portfolioPrintModel(pf, weergave, deel, samenvatting).secties.forEach((s) => {
+      H(s.kop);
+      s.blokken.forEach((bl) => bl.items.forEach((it) => {
+        if (bl.type === "info") {
+          S(it.label);
+          P(it.waarde);
+        } else if (bl.type === "lijst") LI(it);
+        else P(it);
+      }));
+      BR();
+    });
     const _footer = "2scool GROW - een onderdeel van Unfold Education. Alle rechten voorbehouden.";
     const fname = `groeiportfolio-${String(pf.leerling.naam || "leerling").replace(/\s+/g, "-").toLowerCase()}.pdf`;
     const legacy = () => {
@@ -66793,6 +66954,33 @@ ${xref}
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("rect", { x: "3.5", y: "4", width: "17", height: "16", rx: "2" }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M3.5 9h17M9 9v11" }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M12 13h5.5M12 16.5h3.5" })
+      ] }),
+      /* v113.25: vier lijniconen uit Lucide (ISC-licentie; circle-x, save, printer, file-down, mail),
+         letterlijk overgenomen, in het 24-raster en de lijndikte van GROW */
+      "lu-x-circle": /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("circle", { cx: "12", cy: "12", r: "10" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "m15 9-6 6" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "m9 9 6 6" })
+      ] }),
+      "lu-save": /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M7 3v4a1 1 0 0 0 1 1h7" })
+      ] }),
+      "lu-printer": /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("rect", { x: "6", y: "14", width: "12", height: "8", rx: "1" })
+      ] }),
+      "lu-file-down": /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M14 2v4a2 2 0 0 0 2 2h4" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "M12 18v-6" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "m9 15 3 3 3-3" })
+      ] }),
+      "lu-mail": /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("rect", { width: "20", height: "16", x: "2", y: "4", rx: "2" }),
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("path", { d: "m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" })
       ] })
     }[name] || null;
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true", style: { flexShrink: 0 }, children: p });
@@ -69658,25 +69846,31 @@ Antwoord met ALLEEN de JSON.`;
       traits: _traitSignalen(af)
     };
   }
-  var BEOORDEELD_VOOR_PERCENTAGE = 3;
   function beoordeeldAantal(bron) {
-    return (bron && bron.challenges || []).filter((r) => r && r.rubricScore != null).length;
+    return (bron && bron.challenges || []).filter((r) => {
+      const o = r && docentOordeelVan(r);
+      return !!(o && o.echt);
+    }).length;
   }
   function portfolioSamenvattingLokaal(pf) {
     const k = pf.kerncijfers;
     const beoordeeld = (pf.perThema || []).reduce((n, t) => n + beoordeeldAantal(t), 0);
-    const genoeg = beoordeeld >= BEOORDEELD_VOOR_PERCENTAGE;
-    const grond = genoeg ? `, met een gemiddelde beheersing van ${k.gemMastery}%. ` : beoordeeld ? `. Daarvan ${beoordeeld === 1 ? "is er \xE9\xE9n" : "zijn er " + beoordeeld} beoordeeld \u2014 nog te weinig voor een gemiddelde. ` : `. Er is nog geen beoordeeld werk. `;
+    const grond = beoordeeld ? `. Daarvan ${beoordeeld === 1 ? "is er \xE9\xE9n" : "zijn er " + beoordeeld} door een docent beoordeeld. ` : `. Er is nog geen werk door een docent beoordeeld. `;
+    let ins = null;
+    try {
+      ins = pfInzichten(pf, pf.perThema || [], null, "mentor");
+    } catch (e) {
+    }
     const mv2 = (n, enkel, meer) => n + " " + (n === 1 ? enkel : meer);
     const binnen = [
       k.themaCount ? mv2(k.themaCount, "thema", "thema's") : null,
       k.subthemaCount ? mv2(k.subthemaCount, "subthema", "subthema's") : null
     ].filter(Boolean).join(" en ");
-    const totaal = `${pf.leerling.naam || "De leerling"} rondde ${mv2(k.afgerond, "uitdaging", "uitdagingen")} af${binnen ? " binnen " + binnen : ""}` + grond + (pf.patronen.sterkePunten.length ? `Sterke punten: ${pf.patronen.sterkePunten.slice(0, 3).join(", ")}. ` : "") + (pf.patronen.ontwikkelpunten.length ? `In ontwikkeling: ${pf.patronen.ontwikkelpunten.slice(0, 3).join(", ")}. ` : "") + (k.prestatiesVerdiend ? `${mv2(k.prestatiesVerdiend, "groei-prestatie", "groei-prestaties")} verdiend op basis van aantoonbare ontwikkeling.` : "");
+    const totaal = `${pf.leerling.naam || "De leerling"} rondde ${mv2(k.afgerond, "uitdaging", "uitdagingen")} af${binnen ? " binnen " + binnen : ""}` + grond + (ins && ins.sterkKort ? `Volgens de docentbeoordeling gaat goed: ${ins.sterkKort}. ` : "") + (ins && ins.ontwKort ? `Aandacht volgens de docent: ${ins.ontwKort}. ` : "") + (k.prestatiesVerdiend ? `${mv2(k.prestatiesVerdiend, "groei-prestatie", "groei-prestaties")} verdiend.` : "");
     const perThema = {};
     pf.perThema.forEach((t) => {
-      const n = beoordeeldAantal(t);
-      perThema[t.thema] = `${t.themaLabel}: ${mv2(t.aantal, "uitdaging", "uitdagingen")}` + (n >= BEOORDEELD_VOOR_PERCENTAGE ? `, beheersing \xB1${t.mastery}%.` : n ? `, waarvan ${n} beoordeeld \u2014 nog te weinig voor een percentage.` : `, nog niet beoordeeld.`) + (t.competenties.length ? ` Ontwikkelde competenties: ${t.competenties.slice(0, 4).join(", ")}.` : "");
+      const st = vaardigheidStand(t);
+      perThema[t.thema] = `${t.themaLabel}: ${mv2(t.aantal, "uitdaging", "uitdagingen")}` + (st.n ? `, ${st.n} door een docent beoordeeld (${st.status}).` : `, nog niet door een docent beoordeeld.`) + (t.competenties.length ? ` Geoefend in de opdracht: ${t.competenties.slice(0, 4).join(", ")}.` : "");
     });
     return { totaal, perThema, bron: "lokaal" };
   }
@@ -69687,8 +69881,23 @@ Antwoord met ALLEEN de JSON.`;
     }
     try {
       const beoordeeld = (pf.perThema || []).reduce((n, t) => n + beoordeeldAantal(t), 0);
-      const kort = pf.perThema.slice(0, 6).map((t) => `${t.themaLabel} (${t.aantal}x, ${beoordeeldAantal(t)} beoordeeld, beheersing ${t.mastery}%, competenties: ${t.competenties.slice(0, 4).join(", ") || "-"})`).join("; ");
-      const prompt = `Je bent de portfoliocoach van 2scool GROW (Nederlands, voortgezet onderwijs). Schrijf warme, groeigerichte samenvattingen van de ontwikkeling van een leerling \u2014 evidence-based, geen aannames over persoonlijkheid of talent, nooit cijfers als oordeel. Noem GEEN masterypercentage als er minder dan 3 beoordeelde uitdagingen zijn; schrijf dan in woorden wat er wel is. Gegevens: ${pf.kerncijfers.afgerond} uitdagingen; ${beoordeeld} daarvan beoordeeld; gemiddelde beheersing ${pf.kerncijfers.gemMastery}%; sterke punten: ${pf.patronen.sterkePunten.slice(0, 5).join(", ") || "-"}; in ontwikkeling: ${pf.patronen.ontwikkelpunten.slice(0, 5).join(", ") || "-"}; thema's: ${kort}. Geef UITSLUITEND geldige JSON: {"totaal":"3-4 zinnen over de hele groeireis","perThema":{"<themaLabel>":"1-2 zinnen"}}.`;
+      const kort = pf.perThema.slice(0, 6).map((t) => {
+        const st = vaardigheidStand(t);
+        return `${t.themaLabel} (${t.aantal}x afgerond, ${st.n} door docent beoordeeld${st.n ? ", stand: " + st.status : ""}, geoefend in opdracht (niet aangetoond): ${t.competenties.slice(0, 4).join(", ") || "-"})`;
+      }).join("; ");
+      const prompt = `Je bent de portfoliocoach van 2scool GROW (Nederlands, voortgezet onderwijs). Schrijf warme, groeigerichte samenvattingen van de ontwikkeling van een leerling \u2014 evidence-based, geen aannames over persoonlijkheid of talent, nooit cijfers als oordeel. Noem GEEN percentages. Een afgeronde uitdaging is nog geen aangetoonde vaardigheid; alleen een docentbeoordeling stelt iets vast. Een reflectievraag is geen sterk punt. Gegevens: ${pf.kerncijfers.afgerond} uitdagingen; ${beoordeeld} daarvan door een docent beoordeeld; sterk volgens docent: ${(() => {
+        try {
+          return pfInzichten(pf, pf.perThema || [], null, "mentor").sterkKort || "-";
+        } catch (e) {
+          return "-";
+        }
+      })()}; aandacht volgens docent: ${(() => {
+        try {
+          return pfInzichten(pf, pf.perThema || [], null, "mentor").ontwKort || "-";
+        } catch (e) {
+          return "-";
+        }
+      })()}; thema's: ${kort}. Geef UITSLUITEND geldige JSON: {"totaal":"3-4 zinnen over de hele groeireis","perThema":{"<themaLabel>":"1-2 zinnen"}}.`;
       const res = await aiFetch({ body: JSON.stringify({ model: "claude-sonnet-4-6", max_tokens: 1200, messages: [{ role: "user", content: prompt }] }) });
       const data = JSON.parse(await res.text());
       if (!res.ok || data.error) return null;
@@ -72655,6 +72864,56 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
   function Rp2Tag({ soort }) {
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rp2-tag is-" + soort, title: SOORT_LABEL[soort], children: RP2_SOORT_KORT[soort] || soort });
   }
+  function CompetentieDetail({ k, onSluit, onOpen }) {
+    const links = k.links || [];
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Popup, { titel: k.naam, sub: k.status, onSluit, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "rp2-comp", "data-rp2": "comp-kaart", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "rp2-zacht", style: { margin: "0 0 10px" }, children: k.metingen ? k.metingen + " " + (k.metingen === 1 ? "docentbeoordeling" : "docentbeoordelingen") + " \xB7 " + k.ontwikkeling : "Nog geen docentbeoordeling van deze competentie. Een opdracht of zelfbeoordeling is geen bewijs dat hij is aangetoond." }),
+      links.length === 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "rp2-zacht", children: "Geen gekoppelde uitdagingen." }),
+      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("ul", { className: "rp2-comp-lijst", children: links.map((l) => {
+        const b = l.beoordeling;
+        const cr = l.criterium;
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("li", { className: "rp2-comp-item", "data-rp2": "comp-link", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "rp2-comp-kop", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: l.titel }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "rp2-zacht", children: [
+              " \xB7 ",
+              [l.niveauNL, datumKort(l.datum)].filter(Boolean).join(" \xB7 ")
+            ] })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("dl", { className: "rp2-gegevens", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("dt", { children: "Koppeling" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("dd", { children: [l.hoe.includes("opdracht") ? "geoefend in de opdracht" : "", l.hoe.includes("rubric") ? "beoordeeld als rubriccriterium" : ""].filter(Boolean).join(" \xB7 ") })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("dt", { children: "Bewijs" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("dd", { children: l.bewijs && l.bewijs.aantal ? l.bewijs.aantal + " " + (l.bewijs.aantal === 1 ? "stuk" : "stukken") + (l.bewijs.vormen.length ? " (" + l.bewijs.vormen.join(", ") + ")" : "") + (l.bewijs.laatste ? ", " + datumKort(l.bewijs.laatste) : "") : "Geen bewijs ingeleverd" })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("dt", { children: "Beoordeling" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("dd", { "data-rp2": "comp-beoordeling", children: cr ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: cr.niveau }),
+                b && (b.door || b.op) ? " \u2014 " + [b.door, datumKort(b.op)].filter(Boolean).join(", ") : ""
+              ] }) : b && b.echt ? "Uitdaging beoordeeld" + (b.door ? " door " + b.door : "") + (b.op ? " (" + datumKort(b.op) + ")" : "") + ", maar dit criterium niet apart" : b ? "Alleen feedback, geen beoordeling" : "Nog niet beoordeeld" })
+            ] }),
+            b && b.criteria && b.criteria.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("dt", { children: "Beoordeelde criteria" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("dd", { children: b.criteria.map((x) => x.criterium + ": " + x.niveau).join("; ") })
+            ] }),
+            l.zelf != null && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("dt", { children: "Zelfbeoordeling" }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("dd", { children: [
+                l.zelf,
+                "% ",
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rp2-zacht", children: "(referentie, geen bewijs)" })
+              ] })
+            ] })
+          ] }),
+          onOpen && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "studio-link", onClick: () => onOpen(l.id), children: "Open uitdaging" })
+        ] }, l.id);
+      }) })
+    ] }) });
+  }
   function RapportGenerator({ records, gebruiker, weergave = "leerling", onOpen }) {
     const G = (0, import_react2.useMemo)(() => {
       try {
@@ -72674,12 +72933,20 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
       }
     }, [G, type]);
     const [details, setDetails] = (0, import_react2.useState)(false);
+    const [puntOpen, setPuntOpen] = (0, import_react2.useState)(null);
+    const [compOpen, setCompOpen] = (0, import_react2.useState)(null);
     if (!G || !R) return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "muted", style: { margin: 0, fontSize: ".86rem" }, children: "Rapporten verschijnen zodra er gegevens zijn." });
     const groepen = [...new Set(lijst2.map((r) => r.groep))];
     const v = R.visual || {};
     const kies2 = (k) => {
       setType(k);
       setDetails(false);
+      setPuntOpen(null);
+      setCompOpen(null);
+    };
+    const openRec = (id) => {
+      const r = (records || []).find((x) => x && x.id === id);
+      if (r && onOpen) onOpen(r);
     };
     return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "rp2", "data-rp2": "module", "data-rp2-type": R.type, children: [
       /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "rp2-balk", children: [
@@ -72688,7 +72955,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("select", { value: type, onChange: (e) => kies2(e.target.value), "data-rp2": "kies", "aria-label": "Kies een rapport", children: groepen.map((g) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("optgroup", { label: g, children: lijst2.filter((r) => r.groep === g).map((r) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("option", { value: r.key, children: r.label }, r.key)) }, g)) }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "chevron", size: 14 })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(ExportKnop, { className: "rp2-pdf", ariaLabel: "Download " + R.titel + " als PDF", wat: R.titel, begeleider: !ouder, onMaak: (st) => downloadRapport2Pdf(R, st), children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(ExportKnop, { className: "rp2-pdf", ariaLabel: "Download " + R.titel + " als PDF", wat: R.titel, begeleider: !ouder, waarschuwing: R.type === "reflectierapport" ? REFLECTIE_WAARSCHUWING : void 0, onMaak: (st) => downloadRapport2Pdf(R, st), children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "download", size: 14 }),
           " PDF"
         ] })
@@ -72698,13 +72965,19 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { id: "rp2-titel", className: "rp2-titel", "data-rp2": "titel", children: R.titel }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "rp2-vraag", children: R.vraag })
         ] }),
+        R.type === "reflectierapport" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "rp2-vertrouwelijk", "data-rp2": "vertrouwelijk", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "lock", size: 14 }),
+          " ",
+          REFLECTIE_WAARSCHUWING
+        ] }),
         R.leeg && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "rp2-leeg", "data-rp2": "leeg", children: R.leeg }),
         !R.leeg && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("dl", { className: "rp2-kern", "data-rp2": "kern", children: (R.kern || []).map((k, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "rp2-kern-cel", children: [
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("dt", { children: k.label }),
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("dd", { children: k.waarde })
           ] }, i)) }),
-          v.soort === "gesprek" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("ol", { className: "rp2-gesprek", "data-rp2": "gesprek", children: v.punten.map((p, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("li", { className: "rp2-punt", "data-rp2-punt": p.soort, children: [
+          v.soort === "gesprek" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("ol", { className: "rp2-gesprek", "data-rp2": "gesprek", children: v.punten.map((p, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("li", { className: "rp2-punt" + (p.hoofd ? " is-hoofd" : ""), "data-rp2-punt": p.soort, "data-rp2-hoofd": p.hoofd ? "ja" : void 0, children: [
+            p.hoofd && v.punten.length > 1 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "rp2-hoofd", "data-rp2": "hoofd", children: "Belangrijkste actie" }),
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "rp2-punt-wat", children: p.opvalt }),
             /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "rp2-punt-bron", children: [
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Rp2Tag, { soort: p.soortBron }),
@@ -72714,15 +72987,16 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
             /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "rp2-punt-actie", children: [
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("b", { children: "Actie" }),
               " ",
-              p.actie,
-              p.uitdaging && onOpen && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
-                " ",
-                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "studio-link rp2-open", onClick: () => {
-                  const r = (records || []).find((x) => x && x.id === p.uitdaging);
-                  if (r) onOpen(r);
-                }, children: "Open uitdaging" })
-              ] })
-            ] })
+              p.actie
+            ] }),
+            ((p.gegevens || []).length > 0 || p.uitdaging && onOpen) && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "rp2-punt-voet", children: [
+              (p.gegevens || []).length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "studio-link", "aria-expanded": puntOpen === i, "aria-controls": "rp2-pg-" + i, "data-rp2": "gegevens-knop", onClick: () => setPuntOpen((o) => o === i ? null : i), children: puntOpen === i ? "Verberg gegevens" : "Onderliggende gegevens" }),
+              p.uitdaging && onOpen && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "studio-link rp2-open", onClick: () => openRec(p.uitdaging), children: "Open uitdaging" })
+            ] }),
+            puntOpen === i && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("dl", { className: "rp2-gegevens", id: "rp2-pg-" + i, "data-rp2": "gegevens", children: p.gegevens.map((g, j) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("dt", { children: g.label }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("dd", { children: g.waarde })
+            ] }, j)) })
           ] }, i)) }),
           v.soort === "tabel" && v.rijen.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "rp2-tabel-wrap", "data-rp2": "tabel", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("table", { className: "rp2-tabel", children: [
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("tr", { children: v.kolommen.map((k, i) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("th", { scope: "col", children: k }, i)) }) }),
@@ -72731,7 +73005,8 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
               v.ids && v.ids[ri] && onOpen && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "studio-link rp2-open", "aria-label": "Open " + c, onClick: () => {
                 const rec = (records || []).find((x) => x && x.id === v.ids[ri]);
                 if (rec) onOpen(rec);
-              }, children: "Open" })
+              }, children: "Open" }),
+              v.koppelingen && v.koppelingen[ri] && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "studio-link rp2-open", "data-rp2": "comp-detail", "aria-haspopup": "dialog", "aria-label": "Bewijs en beoordeling bij " + c, onClick: () => setCompOpen(ri), children: "Bewijs" })
             ] }, ci) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("td", { "data-kolom": v.kolommen[ci], children: c }, ci)) }, ri)) })
           ] }) }),
           v.soort === "tabel" && !v.rijen.length && R.type === "lob" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "rp2-zacht", children: "Nog geen richting met genoeg onderbouwing." }),
@@ -72784,7 +73059,11 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
           ] })
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "rp2-bron", "data-rp2": "bron", children: R.bron })
-      ] })
+      ] }),
+      compOpen != null && v.koppelingen && v.koppelingen[compOpen] && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(CompetentieDetail, { k: v.koppelingen[compOpen], onSluit: () => setCompOpen(null), onOpen: onOpen && !ouder ? (id) => {
+        setCompOpen(null);
+        openRec(id);
+      } : null })
     ] });
   }
   function bouwDashboardInzicht(profiel, xp) {
@@ -72912,31 +73191,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
     ] });
   }
   function vaardigheidStand(t) {
-    const beoordeeld = (t && t.challenges || []).filter((r) => r && r.rubricScore != null);
-    const n = beoordeeld.length;
-    const m = Number(t && t.mastery) || 0;
-    if (!n) return {
-      n: 0,
-      pct: null,
-      status: "nog te beoordelen",
-      toon: "wacht",
-      uitleg: "Er is nog geen beoordeeld werk voor dit thema."
-    };
-    const woord = m >= 70 ? "aangetoond" : m >= 40 ? "in ontwikkeling" : "in opbouw";
-    if (n < 3) return {
-      n,
-      pct: null,
-      status: woord,
-      toon: "beperkt",
-      uitleg: "Gebaseerd op " + n + " beoordeelde uitdaging" + (n === 1 ? "" : "en") + " \u2014 te weinig voor een percentage."
-    };
-    return {
-      n,
-      pct: m,
-      status: woord,
-      toon: "vol",
-      uitleg: "Gebaseerd op " + n + " beoordeelde uitdagingen."
-    };
+    return standVan(t && t.challenges || []);
   }
   function PgPortfolioBlok({ records, rol }) {
     const met = (records || []).filter((r) => r && r.hulpmiddel && r.hulpmiddel.soort && hulpmiddelRegels(r.hulpmiddel).length).sort((a, b) => String(b.hulpmiddel.op || b.datum || "").localeCompare(String(a.hulpmiddel.op || a.datum || ""))).slice(0, 6);
@@ -73002,7 +73257,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
     const k = pf.kerncijfers;
     const eigen = (records || []).filter((r) => r && r.data && r.type !== "event" && r.type !== "bonus");
     const lopendAantal = eigen.filter((r) => !r.afgerond).length;
-    const ins = (0, import_react2.useMemo)(() => pfInzichten(pf, themas), [pf, themas]);
+    const ins = (0, import_react2.useMemo)(() => pfInzichten(pf, themas, records, "leerling"), [pf, themas, records]);
     const latenZien = themas.filter((t) => vaardigheidStand(t).status === "aangetoond").length;
     const omg = (0, import_react2.useMemo)(() => gekozenOmgeving(gebruiker), [gebruiker]);
     const mv2 = (n, e, m) => n + " " + (n === 1 ? e : m);
@@ -73088,9 +73343,10 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "pf2-h3", children: "Hier ben je sterk in" }),
             ins.sterkKort ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "pf3-kern", children: ins.sterkKort }),
-              ins.sterkBron && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "pf2-tekst", children: [
-                "Dat heb je laten zien in ",
-                ins.sterkBron.replace(/^Aangetoond in /, "")
+              ins.sterkWaar && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "pf2-tekst", children: [
+                "Dat zag je docent in ",
+                ins.sterkWaar,
+                "."
               ] })
             ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "pf2-tekst", children: sterkLeeg })
           ] })
@@ -73101,7 +73357,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h3", { className: "pf2-h3", children: "Hier groei je nog in" }),
             ins.ontwKort ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "pf3-kern", children: ins.ontwKort }),
-              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "pf2-tekst", children: [
+              ins.stapThema && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "pf2-tekst", children: [
                 "Hier oefen je nog mee in ",
                 ins.stapThema.themaLabel,
                 "."
@@ -73286,27 +73542,32 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
       ] }) })
     ] });
   }
-  function pfInzichten(pf, themas) {
-    const mv2 = (n, e, m) => n + " " + (n === 1 ? e : m);
+  function pfInzichten(pf, themas, records, weergave) {
     const standen = themas.map((t) => ({ t, st: vaardigheidStand(t) }));
     const beoordeeld = standen.reduce((n, x) => n + x.st.n, 0);
-    const onvoldoende = "Nog onvoldoende informatie om dit betrouwbaar vast te stellen.";
-    const intro = pf.kerncijfers.afgerond ? mv2(pf.kerncijfers.afgerond, "uitdaging", "uitdagingen") + " afgerond, " + (beoordeeld ? mv2(beoordeeld, "beoordeeld", "beoordeeld") + " door een docent." : "nog geen beoordeeld.") : "Nog geen afgeronde uitdagingen.";
+    const recs = records || [].concat(...(pf.perThema || []).map((t) => t.challenges || []));
+    let P = null;
+    try {
+      P = portfolioInzichten(rapportGegevens(recs, { naam: pf.leerling && pf.leerling.naam, discovery: pf.identiteit || {} }, rapportCtx()));
+    } catch (e) {
+      P = null;
+    }
+    const onvoldoende = P && P.leeg || "Nog onvoldoende informatie om dit betrouwbaar vast te stellen.";
+    const intro = P ? P.intro : pf.kerncijfers.afgerond ? pf.kerncijfers.afgerond + " afgerond." : "Nog geen afgeronde uitdagingen.";
     const sterkT = standen.filter((x) => x.st.status === "aangetoond");
-    const sterk = [...new Set([].concat(...sterkT.map((x) => x.t.competenties || [])))].slice(0, 2);
-    const sterkTekst = sterkT.length ? sterk.length ? sterk.join(" en ") + " \u2014 aangetoond in " + sterkT[0].t.themaLabel + "." : "Aangetoond in " + sterkT.map((x) => x.t.themaLabel).slice(0, 2).join(" en ") + "." : onvoldoende;
     const ontwT = standen.find((x) => x.st.n > 0 && x.st.status !== "aangetoond");
-    const ontwTekst = ontwT ? ontwT.t.competenties && ontwT.t.competenties[0] ? ontwT.t.competenties[0] + " verder ontwikkelen binnen " + ontwT.t.themaLabel + "." : "Verder bouwen binnen " + ontwT.t.themaLabel + "." : onvoldoende;
-    const stap = ontwT ? "Kies een uitdaging in " + ontwT.t.themaLabel + " om dit opnieuw te oefenen." : sterkT.length ? "Kies een uitdaging op een hoger niveau binnen " + sterkT[0].t.themaLabel + "." : pf.kerncijfers.afgerond ? "Beoordeel het ingeleverde werk, zodat er een volgende stap te bepalen is." : "Laat de leerling een eerste uitdaging kiezen.";
-    const comp0 = ontwT && ontwT.t.competenties && ontwT.t.competenties[0];
-    const sterkKort = sterkT.length ? sterk.length ? sterk.join(" en ") : sterkT.map((x) => x.t.themaLabel).slice(0, 2).join(" en ") : null;
-    const sterkBron = sterkT.length && sterk.length ? "Aangetoond in " + sterkT[0].t.themaLabel + "." : null;
-    const ontwKort = ontwT ? comp0 || ontwT.t.themaLabel : null;
-    const ontwBron = ontwT ? comp0 ? "Verder ontwikkelen binnen " + ontwT.t.themaLabel + "." : "Hier valt nog te bouwen." : null;
+    const g0 = P && P.goed, a0 = P && P.aandacht;
+    const g = weergave === "leerling" ? g0 && g0.criterium ? g0 : null : g0, a = weergave === "leerling" ? a0 && a0.criterium ? a0 : null : a0;
+    const sterkKort = g ? g.kort : null, sterkBron = g ? g.bron : null, sterkWaar = g ? g.waar : null;
+    const sterkTekst = g ? g.kort + " \u2014 " + g.bron : onvoldoende;
+    const ontwKort = a ? a.kort : null, ontwBron = a ? a.bron : null;
+    const ontwTekst = a ? a.kort + " \u2014 " + a.bron : onvoldoende;
     const stapThema = ontwT ? ontwT.t : sterkT.length ? sterkT[0].t : null;
-    const stapKort = ontwT ? "Verder oefenen met " + pfLaag(comp0 || ontwT.t.themaLabel) + "." : sterkT.length ? "Een stap hoger binnen " + sterkT[0].t.themaLabel + "." : null;
-    const ontwLeeg = !ontwT && sterkT.length ? "Er is op dit moment geen ontwikkelpunt vastgesteld." : null;
-    return { intro, sterkTekst, ontwTekst, stap, beoordeeld, sterkKort, sterkBron, ontwKort, ontwBron, ontwLeeg, stapThema, stapKort };
+    const stap = ontwT ? "Kies een uitdaging in " + ontwT.t.themaLabel + " om dit opnieuw te oefenen." : sterkT.length ? "Kies een uitdaging op een hoger niveau binnen " + sterkT[0].t.themaLabel + "." : pf.kerncijfers.afgerond ? "Beoordeel het ingeleverde werk, zodat er een volgende stap te bepalen is." : "Laat de leerling een eerste uitdaging kiezen.";
+    const aComp = a && a.criterium ? a.kort : null;
+    const stapKort = aComp ? "Verder oefenen met " + pfLaag(aComp) + "." : ontwT ? "Verder oefenen met " + pfLaag(ontwT.t.competenties && ontwT.t.competenties[0] || ontwT.t.themaLabel) + "." : sterkT.length ? "Een stap hoger binnen " + sterkT[0].t.themaLabel + "." : null;
+    const ontwLeeg = !a && g ? "Er is op dit moment geen ontwikkelpunt vastgesteld." : null;
+    return { intro, sterkTekst, ontwTekst, stap, beoordeeld, sterkKort, sterkBron, sterkWaar, ontwKort, ontwBron, ontwLeeg, stapThema, stapKort, uitleg: P && P.uitleg };
   }
   function gekozenOmgeving(leerling) {
     try {
@@ -73490,20 +73751,21 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
   function OnderbouwingPaneel({ pf, themas, feedback, toon, isOuder, isMentor, magAnalyse, records, gebruiker, rol, k, dotKleur, onOpen, onSluit }) {
     const a = pfAnalyse(pf, themas, toon);
     const s0 = a.sterk[0], o0 = a.ontw[0];
+    const ins = pfInzichten(pf, themas, records, isOuder ? "ouder" : "mentor");
     const zinnen = [
       {
         soort: "Beoordelingsuitkomst",
         titel: "Sterk punt",
         icoon: "star",
         toon: "groen",
-        tekst: !a.deelt ? "Niet gedeeld door de leerling." : s0 ? a.comp(s0) ? a.comp(s0) + " is aangetoond binnen " + s0.t.themaLabel + ", volgens de beoordeling." : s0.t.themaLabel + " is als aangetoond beoordeeld." : "Nog geen vaardigheid als aangetoond beoordeeld."
+        tekst: !a.deelt ? "Niet gedeeld door de leerling." : ins.sterkKort ? ins.sterkKort + ". " + (ins.sterkBron || "") : ins.sterkTekst || "Nog geen vaardigheid als aangetoond beoordeeld."
       },
       {
         soort: "Beoordelingsuitkomst",
         titel: "Ontwikkelpunt",
         icoon: "kiem",
         toon: "oranje",
-        tekst: !a.deelt ? "Niet gedeeld door de leerling." : o0 ? a.comp(o0) ? a.comp(o0) + " binnen " + o0.t.themaLabel + " is nog in ontwikkeling." : o0.t.themaLabel + " is nog in ontwikkeling." : a.beoordeeld ? "Geen thema dat volgens de beoordeling nog aandacht vraagt." : "Nog geen beoordeeld werk om dit vast te stellen."
+        tekst: !a.deelt ? "Niet gedeeld door de leerling." : ins.ontwKort ? ins.ontwKort + ". " + (ins.ontwBron || "") : ins.ontwLeeg ? ins.ontwLeeg : o0 ? o0.t.themaLabel + " is nog in ontwikkeling." : a.beoordeeld ? "Geen thema dat volgens de beoordeling nog aandacht vraagt." : "Nog geen beoordeeld werk om dit vast te stellen."
       },
       {
         soort: "Ontwikkeladvies",
@@ -73546,7 +73808,10 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "ob-kop", children: "Waarop is dit gebaseerd?" }),
       regels.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "pf2-leeg", children: a.deelt ? "Er is nog geen beoordeeld werk." : "De leerling deelt de vaardigheden niet." }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "ob-regels", children: regels.map((x) => {
         const fb = toon("mentorfeedback") ? fbVan(x.t) : null;
-        const laatste = (x.t.challenges || []).filter((r) => r.rubricScore != null).slice(-1)[0] || (x.t.challenges || []).slice(-1)[0];
+        const laatste = (x.t.challenges || []).filter((r) => {
+          const o = docentOordeelVan(r);
+          return o && o.echt;
+        }).slice(-1)[0] || (x.t.challenges || []).slice(-1)[0];
         return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "ob-regel", disabled: !onOpen || isOuder || !laatste, onClick: () => {
           onSluit();
           onOpen && laatste && onOpen(laatste);
@@ -73595,6 +73860,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
               ] })
             }
           ),
+          (magAnalyse || isMentor && toon("analyse")) && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "ob-noot", "data-pf3": "ai-noot", children: "De onderdelen hieronder zijn AI-analyses (indicatie, geen docentoordeel). Ze rekenen ook met zelfbeoordelingen en opdrachtgegevens en kunnen daardoor afwijken van wat een docent vaststelde. Leidend zijn de docentbeoordelingen hierboven." }),
           magAnalyse && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Vouw, { id: "volgende", titel: "Volgende ontwikkelstap (AI)", kind: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(IntelligenceCoreKaart, { records, gebruiker, weergave: rol }) }),
           magAnalyse && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Vouw, { id: "coaching", titel: "Coaching-inzichten", kind: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(CoachingInzichten, { records, gebruiker, weergave: rol }) }),
           magAnalyse && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Vouw, { id: "leerprofiel", titel: "Leerprofiel (AI)", kind: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(PersonalLearningModelKaart, { records, gebruiker, weergave: rol }) }),
@@ -73619,9 +73885,16 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
     const eenvoudig = !tp || tp.schaal <= 2;
     const s0 = a.sterk[0], o0 = a.ontw[0];
     const fbOk = toon("mentorfeedback") ? feedback.filter((m) => m && (m.sterkePunten || []).length) : [];
-    const goedComp = s0 && a.comp(s0) ? pfLaag(a.comp(s0)) : null;
+    const insG = a.deelt ? (() => {
+      try {
+        return pfInzichten(pf, themas, null, "mentor");
+      } catch (e) {
+        return {};
+      }
+    })() : {};
+    const goedComp = insG.sterkKort ? pfLaag(insG.sterkKort) : null;
     const fbSterk = !goedComp && fbOk.length ? pfLaag(fbOk[fbOk.length - 1].sterkePunten[0]) : null;
-    const beterComp = o0 && a.comp(o0) ? pfLaag(a.comp(o0)) : null;
+    const beterComp = insG.ontwKort ? pfLaag(insG.ontwKort) : null;
     const heeftWerk2 = pf.kerncijfers.afgerond > 0;
     const focus = !heeftWerk2 ? "Verken samen waar " + voornaam + " aan wil werken en wat een goede eerste stap is." : !a.beoordeeld ? "Bespreek hoe het werk ging en wat " + voornaam + " ervan heeft geleerd." : o0 ? "Verder groeien in " + (beterComp ? beterComp + " binnen " : "") + o0.t.themaLabel + ": wat lukt al, en wat is de volgende oefening?" : s0 ? "Verder bouwen op " + s0.t.themaLabel + ", waar het werk als aangetoond is beoordeeld." : "Bespreek wat goed ging en wat " + voornaam + " als volgende wil oefenen.";
     const vragen = [
@@ -73713,7 +73986,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
     const [paneel, setPaneel] = (0, import_react2.useState)(null);
     const [privacyUitleg, setPrivacyUitleg] = (0, import_react2.useState)(false);
     const sluit = () => setPaneel(null);
-    const ins = (0, import_react2.useMemo)(() => pfInzichten(pf, themas), [pf, themas]);
+    const ins = (0, import_react2.useMemo)(() => pfInzichten(pf, themas, records, isOuder ? "ouder" : "mentor"), [pf, themas, records, isOuder]);
     const lopend = (records || []).filter((r) => r && !r.afgerond && r.data && r.type !== "event" && r.type !== "bonus").length;
     const aangetoond = themas.filter((t) => vaardigheidStand(t).status === "aangetoond").length;
     const afgerondeRecs = themas.reduce((a, t) => a.concat(t.challenges || []), []);
@@ -74005,8 +74278,9 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
             /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-rij-wie", children: [
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-kaart-titel", children: t.themaLabel }),
               /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-kaart-sub", title: st.uitleg, children: st.n ? st.n + " " + (st.n === 1 ? "uitdaging" : "uitdagingen") + " beoordeeld" : "Nog niet beoordeeld" }),
-              st.pct == null && st.n > 0 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-kaart-sub pf3-weinig", "data-pf3": "weinig", children: "Nog te weinig beoordeeld om groei te laten zien." }),
-              st.pct != null && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "vaardig-balk pf2-balk", role: "img", "aria-label": "beheersing " + st.pct + " procent, gebaseerd op " + st.n + " beoordeelde uitdagingen", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { width: st.pct + "%" } }) })
+              st.pct == null && st.n > 0 && st.n < 3 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-kaart-sub pf3-weinig", "data-pf3": "weinig", children: "Nog te weinig beoordeeld om groei te laten zien." }),
+              st.pct == null && st.n >= 3 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-kaart-sub", "data-pf3": "stand-woorden", children: st.uitleg }),
+              st.pct != null && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "vaardig-balk pf2-balk", role: "img", "aria-label": "gemiddelde docentscore " + st.pct + " procent, gebaseerd op " + st.n + " docentbeoordelingen", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { style: { width: st.pct + "%" } }) })
             ] }),
             /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "pf2-labels pf2-rij-labels", children: [
               comps.slice(0, 3).map((c) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "pf2-label", children: c }, c)),
@@ -74062,7 +74336,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
       paneel && paneel.soort === "thema" && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(PfPaneel, { titel: paneel.thema.themaLabel, sub: vaardigheidStand(paneel.thema).status.charAt(0).toUpperCase() + vaardigheidStand(paneel.thema).status.slice(1), icoon: "kiem", toon: "groen", onSluit: sluit, children: [
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("p", { className: "muted", style: { margin: "0 0 10px", fontSize: ".84rem" }, children: [
           vaardigheidStand(paneel.thema).uitleg,
-          vaardigheidStand(paneel.thema).pct != null ? " \xB7 beheersing \xB1" + vaardigheidStand(paneel.thema).pct + "%" : ""
+          vaardigheidStand(paneel.thema).pct != null ? " \xB7 gemiddelde docentscore " + vaardigheidStand(paneel.thema).pct + "%" : ""
         ] }),
         werkLijst((paneel.thema.challenges || []).slice(-6)),
         /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { style: { display: "flex", gap: 6, flexWrap: "wrap", marginTop: 10 }, children: [
@@ -83141,6 +83415,9 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const startScherm = reedsAf ? doeModus ? 0 : Math.max(0, schermen.findIndex((x) => x.type === "situatie")) : doeModus && schermen[startStap || 0] && DOE_OVERSLAAN[schermen[startStap || 0].type] ? 0 : startStap || 0;
     const [i, setI] = (0, import_react2.useState)(() => Math.min(Math.max(startScherm, 0), totaal - 1));
     const [mail, setMail] = (0, import_react2.useState)(false);
+    const [ibStand, setIbStand] = (0, import_react2.useState)(null);
+    const [ibUitleg, setIbUitleg] = (0, import_react2.useState)(false);
+    const ibBezig = (0, import_react2.useRef)(false);
     const [antwoorden, setAntwoorden] = (0, import_react2.useState)(() => {
       const c = rec && Array.isArray(rec.reflectieConcept) ? rec.reflectieConcept : null;
       return c && c.length === vragen.length && !reedsAf ? c.slice() : Array(vragen.length).fill(null);
@@ -83863,28 +84140,84 @@ ${String(stapTekst).slice(0, 900)}` : ""
       ] }),
       notitiesOpen && !bijReflectie && notitieVariant !== "kolom" && onWerk && !reedsAf && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(ModalLaag, { onSluit: () => setNotitiesOpen(false), label: "Mijn notities", pad: 0, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(MijnNotities, { variant: notitieVariant, rec, onWerk, tp: tprofUitd, onSluit: () => setNotitiesOpen(false) }) }),
       i >= totaal - 1 && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { display: "flex", justifyContent: "center", marginTop: 14 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { className: "btn btn-licht", onClick: () => onNieuw(), style: { width: "auto", padding: "0.7rem 1.4rem" }, children: "Nog een uitdaging" }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "uitd-iconenrij uitd-acties", role: "group", "aria-label": "Acties", "data-uitd": "acties", children: [
-        !reedsAf && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "uitd-actie", onClick: () => onBewaar && onBewaar(i), "aria-label": "Bewaar", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "bewaar", size: 16 }),
-          " Bewaar"
+      !begeleiderWeergave ? (() => {
+        const kanStoppen = doeModus && !reedsAf && afrond.stand === "open" && (voorvertoning ? !!onAnders : !!onStop);
+        const titel = rec.data && rec.data.titel || themaLabel(rec.thema);
+        const opslaan = async () => {
+          if (ibBezig.current || !onBewaar) return;
+          ibBezig.current = true;
+          setIbStand("bezig");
+          let uit = null;
+          try {
+            uit = await onBewaar(i);
+          } catch (e) {
+            uit = { ok: false };
+          }
+          ibBezig.current = false;
+          if (uit && uit.ok === false) {
+            setIbStand("fout");
+            return;
+          }
+          setIbStand("gelukt");
+        };
+        const Tip = ({ t }) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "ib-tip", "aria-hidden": "true", children: t });
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "uitd-iconenrij uitd-acties ib-balk" + (ibUitleg ? " is-uitleg" : ""), role: "group", "aria-label": "Acties bij deze uitdaging", "data-uitd": "acties", "data-ib": "balk", children: [
+            kanStoppen && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "ib-stopvak", "data-uitd": "stop-zone", "data-stand": voorvertoning ? "bekijken" : "begonnen", children: voorvertoning ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "ib-knop is-stop", "data-uitd": "anders", "data-ib": "stoppen", "aria-label": "Stoppen zonder bewaren: kies iets anders. Er is nog niets bewaard.", onClick: () => onAnders(), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "lu-x-circle", size: 22 }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Tip, { t: "Stoppen zonder bewaren" })
+            ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "ib-knop is-stop", "data-uitd": "stop", "data-ib": "stoppen", "aria-haspopup": "dialog", "aria-label": "Stoppen zonder bewaren", onClick: () => setStopStand("vraag"), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "lu-x-circle", size: 22 }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Tip, { t: "Stoppen zonder bewaren" })
+            ] }) }),
+            kanStoppen && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "ib-scheiding", "aria-hidden": "true" }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "ib-groep", children: [
+              !reedsAf && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "uitd-actie ib-knop", "data-ib": "opslaan", "aria-label": ibStand === "bezig" ? "Opslaan, bezig" : "Opslaan", "aria-busy": ibStand === "bezig" ? "true" : void 0, disabled: ibStand === "bezig" || ibStand === "gelukt", onClick: opslaan, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "lu-save", size: 22 }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Tip, { t: ibStand === "bezig" ? "Bezig met opslaan\u2026" : "Opslaan (later verder)" })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(ExportKnop, { className: "uitd-actie ib-knop", ariaLabel: "Printen", actie: "print", wat: titel, begeleider: false, onMaak: (st) => printNu(rec, { begeleider: false, ...st }), children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "lu-printer", size: 22 }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Tip, { t: "Printen" })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(ExportKnop, { className: "uitd-actie ib-knop", ariaLabel: "PDF downloaden", wat: titel, begeleider: false, onMaak: (st) => downloadPdf(rec, { begeleider: false, ...st }), children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "lu-file-down", size: 22 }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Tip, { t: "PDF downloaden" })
+              ] }),
+              /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "uitd-actie ib-knop", "data-ib": "mail", "aria-haspopup": "dialog", "aria-expanded": mail ? "true" : "false", onClick: () => setMail(true), "aria-label": "Mailen", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "lu-mail", size: 22 }),
+                /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Tip, { t: "Mailen" })
+              ] })
+            ] }),
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "ib-uitlegknop", "data-ib": "uitleg", "aria-pressed": ibUitleg ? "true" : "false", "aria-label": ibUitleg ? "Verberg wat de knoppen doen" : "Toon wat de knoppen doen", onClick: () => setIbUitleg((u) => !u), children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "vraag", size: 18 }) })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "ib-melding", role: "status", "aria-live": "polite", "data-ib": "melding", "data-stand": ibStand || "", children: ibStand === "bezig" ? "Bezig met opslaan\u2026" : ibStand === "gelukt" ? "Opgeslagen. Je kunt later verder." : ibStand === "fout" ? "Opslaan lukte niet. Je werk staat er nog; probeer het opnieuw." : "" }),
+          kanStoppen && voorvertoning && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "uitd-stop-uitleg ib-kijk", "data-uitd": "kijk", children: "Lees eerst rustig. Je uitdaging wordt pas bewaard als je op Aan de slag of Opslaan klikt." })
+        ] });
+      })() : /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "uitd-iconenrij uitd-acties", role: "group", "aria-label": "Acties", "data-uitd": "acties", children: [
+          !reedsAf && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "uitd-actie", onClick: () => onBewaar && onBewaar(i), "aria-label": "Bewaar", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "bewaar", size: 16 }),
+            " Bewaar"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(ExportKnop, { className: "uitd-actie", ariaLabel: "Print", actie: "print", wat: rec.data && rec.data.titel || themaLabel(rec.thema), begeleider: !!begeleiderWeergave, onMaak: (st) => printNu(rec, { begeleider: begeleiderWeergave, ...st }), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "print", size: 16 }),
+            " Print"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(ExportKnop, { className: "uitd-actie", ariaLabel: "PDF", wat: rec.data && rec.data.titel || themaLabel(rec.thema), begeleider: !!begeleiderWeergave, onMaak: (st) => downloadPdf(rec, { begeleider: begeleiderWeergave, ...st }), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "pdf", size: 16 }),
+            " Pdf"
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "uitd-actie", "aria-haspopup": "dialog", "aria-expanded": mail ? "true" : "false", onClick: () => setMail(true), "aria-label": "Mail", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "mail", size: 16 }),
+            " Mail"
+          ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(ExportKnop, { className: "uitd-actie", ariaLabel: "Print", actie: "print", wat: rec.data && rec.data.titel || themaLabel(rec.thema), begeleider: !!begeleiderWeergave, onMaak: (st) => printNu(rec, { begeleider: begeleiderWeergave, ...st }), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "print", size: 16 }),
-          " Print"
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(ExportKnop, { className: "uitd-actie", ariaLabel: "PDF", wat: rec.data && rec.data.titel || themaLabel(rec.thema), begeleider: !!begeleiderWeergave, onMaak: (st) => downloadPdf(rec, { begeleider: begeleiderWeergave, ...st }), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "pdf", size: 16 }),
-          " Pdf"
-        ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("button", { type: "button", className: "uitd-actie", "aria-haspopup": "dialog", "aria-expanded": mail ? "true" : "false", onClick: () => setMail(true), "aria-label": "Mail", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Icon, { name: "mail", size: 16 }),
-          " Mail"
-        ] })
+        doeModus && !reedsAf && afrond.stand === "open" && (voorvertoning ? !!onAnders : !!onStop) && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "uitd-stop", "data-uitd": "stop-zone", "data-stand": voorvertoning ? "bekijken" : "begonnen", children: voorvertoning ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "uitd-stop-uitleg", "data-uitd": "kijk", children: "Lees eerst rustig. Je uitdaging wordt pas bewaard als je op Aan de slag of Bewaar klikt." }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "uitd-stoplink", "data-uitd": "anders", onClick: () => onAnders(), children: "Kies iets anders" })
+        ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "uitd-stoplink", "data-uitd": "stop", "aria-haspopup": "dialog", onClick: () => setStopStand("vraag"), children: "Stoppen zonder bewaren" }) })
       ] }),
-      doeModus && !reedsAf && afrond.stand === "open" && (voorvertoning ? !!onAnders : !!onStop) && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "uitd-stop", "data-uitd": "stop-zone", "data-stand": voorvertoning ? "bekijken" : "begonnen", children: voorvertoning ? /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "uitd-stop-uitleg", "data-uitd": "kijk", children: "Lees eerst rustig. Je uitdaging wordt pas bewaard als je op Aan de slag of Bewaar klikt." }),
-        /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "uitd-stoplink", "data-uitd": "anders", onClick: () => onAnders(), children: "Kies iets anders" })
-      ] }) : /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "uitd-stoplink", "data-uitd": "stop", "aria-haspopup": "dialog", onClick: () => setStopStand("vraag"), children: "Stoppen zonder bewaren" }) }),
       stopStand && onStop && (() => {
         const t = stopTeksten(rec);
         const bezig = stopStand === "bezig";
@@ -83893,7 +84226,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
         }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "stop-venster", "data-stop": "venster", children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { "data-stop": "uitleg", children: t.uitleg }),
           t.verlies && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "stop-verlies", "data-stop": "verlies", children: t.verlies }),
-          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "stop-tip", "data-stop": "tip", children: "Later verder werken? Ga terug en kies Bewaar. Dan blijft alles staan." }),
+          /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "stop-tip", "data-stop": "tip", children: "Later verder werken? Ga terug en kies Opslaan. Dan blijft alles staan." }),
           stopStand === "fout" && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("p", { className: "stop-verlies", role: "alert", "data-stop": "fout", children: "Stoppen lukte nu niet. Je uitdaging staat er nog. Probeer het opnieuw." }),
           /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "stop-knoppen", children: [
             /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("button", { type: "button", className: "btn btn-accent", "data-stop": "terug", disabled: bezig, onClick: () => setStopStand(null), children: t.terug }),
@@ -84139,7 +84472,8 @@ ${String(stapTekst).slice(0, 900)}` : ""
       sterk: deel("goed"),
       beter: deel("beter"),
       volgende,
-      zelfPct: typeof r.rubricScore === "number" && isFinite(r.rubricScore) ? Math.round(r.rubricScore) : null,
+      zelfPct: zelfScoreVan(r),
+      /* v113.25: nooit de docentscore (rubricScore wordt bij beoordeling overschreven) */
       refl,
       bewijzen,
       inl,
@@ -84159,6 +84493,45 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const eigen = studioBeeldSchoon(d.themaBeeld);
     return eigen || (THEMA_ACHTERGROND[rec.thema] ? { soort: "grow", ref: rec.thema } : { soort: "sport", ref: sportBeeldVoor(d.titel || rec.thema || "").key });
   }
+  function ubMarkdownSecties(md) {
+    const regels = String(md || "").replace(/\r/g, "").split("\n");
+    const uit = [];
+    let cur = null;
+    const nieuw = (kop2) => {
+      cur = { kop: kop2, blokken: [] };
+      uit.push(cur);
+    };
+    const blok = (type, item) => {
+      if (!cur) nieuw("Inleiding");
+      const laatste = cur.blokken[cur.blokken.length - 1];
+      if (laatste && laatste.type === type && type !== "p") laatste.items.push(item);
+      else cur.blokken.push({ type, items: [item] });
+    };
+    regels.forEach((r) => {
+      const t = r.trim();
+      if (!t) return;
+      const h = t.match(/^#{1,6}\s+(.+)$/) || t.match(/^\*\*([^*]{2,80})\*\*:?$/);
+      if (h) {
+        nieuw(h[1].replace(/[*_`]/g, "").trim());
+        return;
+      }
+      const st = t.match(/^(\d+)[.)]\s+(.+)$/);
+      if (st) {
+        if (!cur) nieuw("Inleiding");
+        const l = cur.blokken[cur.blokken.length - 1];
+        if (l && l.type === "stappen") l.items.push({ nr: st[1], titel: "", uitleg: st[2] });
+        else cur.blokken.push({ type: "stappen", items: [{ nr: st[1], titel: "", uitleg: st[2] }] });
+        return;
+      }
+      const li = t.match(/^[-*•]\s+(.+)$/);
+      if (li) {
+        blok("lijst", li[1]);
+        return;
+      }
+      blok("p", t.replace(/\*\*/g, ""));
+    });
+    return uit.filter((x) => x.blokken.length);
+  }
   function ubKaarten(rec, tp) {
     const d = rec.data || {};
     let pm = { secties: [] };
@@ -84167,17 +84540,31 @@ ${String(stapTekst).slice(0, 900)}` : ""
     } catch {
     }
     const K2 = { overzicht: [], slag: [], stappen: [], afronden: [] };
+    const KOP_AFRONDEN = /bewijs|reflect|terugblik|terugkijk|succescriteri|niveau behaald|rubric|transfer|doorstroom|mentor-?check|lever|afslui|afrond|eindproduct|presentatie|evaluat|beoordel|check ?list|wanneer ben je klaar|klaar als/;
+    const KOP_STAPPEN = /extra uitdaging|stap|werkwijze|aanpak|plan van|planning|fase|ronde|oefening|uitvoer|zo doe je|hoe pak/;
+    const KOP_OVERZICHT = /leerdoel|^doel|doelen|ontwikkeling|competentie|wat leer|waarom|in het kort|samenvatting|over deze|kern|thema/;
+    const KOP_SLAG = /situatie|context|scenario|opdracht|wat (ga )?je (gaat )?doen|aan de slag|benodigd|nodig|materiaal|met wie|samenwerk|tijd|werkvorm|voorbereid|introductie|uitleg|achtergrond|tip|let op|veilig|start/;
+    let vorige = "overzicht";
     const wie = (kop2, s) => {
-      const k = String(kop2 || "").toLowerCase();
-      if (s && (s.stappen || (s.blokken || []).some((b) => b.type === "stappen"))) return "stappen";
-      if (/extra uitdaging/.test(k)) return "stappen";
-      if (/bewijs|reflectie|succescriteria|niveau behaald|rubric|transfer|doorstroom|mentor-check|lever/.test(k)) return "afronden";
-      if (/leerdoel|^doel|ontwikkeling|competentie|wat leer/.test(k)) return "overzicht";
-      return "slag";
+      const k = String(kop2 || "").toLowerCase().trim();
+      if (s && (s.stappen || (s.blokken || []).some((b) => b.type === "stappen"))) return { kaart: "stappen" };
+      if (KOP_AFRONDEN.test(k)) return { kaart: "afronden" };
+      if (KOP_STAPPEN.test(k)) return { kaart: "stappen" };
+      if (KOP_OVERZICHT.test(k)) return { kaart: "overzicht" };
+      if (KOP_SLAG.test(k)) return { kaart: "slag" };
+      return { kaart: vorige, onbekend: true };
     };
-    (pm.secties || []).forEach((s) => K2[wie(s.kop, s)].push(s));
+    const plaats = (s) => {
+      const w = wie(s.kop, s);
+      vorige = w.kaart;
+      K2[w.kaart].push(w.onbekend ? { ...s, onbekend: true } : s);
+    };
+    (pm.secties || []).forEach(plaats);
+    if (!(pm.secties || []).length && !rec.data && rec.markdown) {
+      ubMarkdownSecties(rec.markdown).forEach(plaats);
+    }
     const arr2 = (v) => Array.isArray(v) ? v.filter(Boolean) : [];
-    if (!(pm.secties || []).length) {
+    if (!(pm.secties || []).length && rec.data) {
       if (arr2(d.leerdoelen).length) K2.overzicht.push({ kop: "Leerdoelen", blokken: [{ type: "lijst", items: arr2(d.leerdoelen).map(String) }] });
       if (d.situatie) K2.slag.push({ kop: "Situatie", blokken: [{ type: "p", items: [String(d.situatie)] }] });
       const st = arr2(d.stappen).map((x, i) => typeof x === "string" ? { nr: String(i + 1), titel: "", uitleg: x } : { nr: String(i + 1), titel: x.titel || "", uitleg: x.uitleg || "" });
@@ -84217,7 +84604,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
   }
   function UbBlokken({ secties }) {
     return (secties || []).map((sec, si) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "ub2-sectie", children: [
-      sec.kop && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("h4", { className: "ub2-h4", children: sec.kop }),
+      sec.kop && /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("h4", { className: "ub2-h4", children: [
+        sec.kop,
+        sec.onbekend && /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "ub2-onbekend", "data-ub": "onbekend-kop", title: "Dit kopje is niet herkend. Het staat op deze kaart omdat het in de opgeslagen opdracht na het vorige onderdeel komt.", children: " \xB7 indeling volgens de volgorde in de opdracht" })
+      ] }),
       sec.blokken.map((b, bi) => {
         if (b.type === "stappen") return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("ol", { className: "ub2-stappen", children: b.items.map((it, ii) => /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("li", { children: [
           /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "ub2-stapnr", "aria-hidden": "true", children: it.nr || ii + 1 }),
@@ -91243,7 +91633,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
     };
     const openMentorForm = (r) => {
       const mf = r.alpe && r.alpe.mentorfeedback || null;
-      setMfForm({ feedback: mf && mf.feedback || "", observatie: mf && mf.observatie || "", rubric: mf && mf.rubricScore != null ? String(mf.rubricScore) : r.rubricScore != null ? String(r.rubricScore) : "", sterke: mf && (mf.sterkePunten || []).join("\n") || "", nog: mf && (mf.nogOntwikkelen || []).join("\n") || "", rubricNiveaus: mf && mf.rubricKeuzes || {} });
+      setMfForm({ feedback: mf && mf.feedback || "", observatie: mf && mf.observatie || "", rubric: mf && mf.rubricScore != null ? String(mf.rubricScore) : "", sterke: mf && (mf.sterkePunten || []).join("\n") || "", nog: mf && (mf.nogOntwikkelen || []).join("\n") || "", rubricNiveaus: mf && mf.rubricKeuzes || {} });
       setMfFout("");
       setMfMeer(!!(mf && (mf.observatie || (mf.sterkePunten || []).length || (mf.nogOntwikkelen || []).length)));
       setMfOpenOp((/* @__PURE__ */ new Date()).toISOString());
@@ -91256,6 +91646,14 @@ ${String(stapTekst).slice(0, 900)}` : ""
       if (vervolg === "aanvullen" && !mfForm.feedback.trim()) {
         setMfFout("Schrijf kort wat de leerling kan aanvullen. Die vraag ziet de leerling bij zijn uitdaging.");
         return;
+      }
+      if (vervolg === "afronden") {
+        const gekozen = Object.values(mfForm.rubricNiveaus || {}).filter((v) => v != null).length;
+        const eigenScore = String(mfForm.rubric || "").trim() !== "" && Number.isFinite(parseInt(mfForm.rubric, 10));
+        if (!gekozen && !eigenScore) {
+          setMfFout("Kies eerst per criterium een niveau (of vul onder 'Meer velden' een eigen score in). De zelfbeoordeling van de leerling wordt nooit vanzelf jouw beoordeling.");
+          return;
+        }
       }
       const vers = (alle || []).find((x) => x && x.id === mfRec.id) || mfRec;
       const vmf = vers && vers.alpe && vers.alpe.mentorfeedback;
@@ -92293,6 +92691,18 @@ ${String(stapTekst).slice(0, 900)}` : ""
                       mf.op ? " \xB7 " + datumNL(mf.op) : "",
                       mf.door ? " \xB7 " + mf.door : "",
                       /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { style: { marginTop: 3, color: "var(--inkt)" }, children: String(mf.feedback).length > 220 ? String(mf.feedback).slice(0, 220).trim() + "\u2026" : mf.feedback })
+                    ] });
+                  })(),
+                  (() => {
+                    const z = zelfScoreVan(r);
+                    const eerder = r.alpe && r.alpe.mentorfeedback;
+                    return /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("div", { className: "ma-ref", "data-ma": "zelf-ref", role: "note", children: [
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "ma-ref-kop", children: "Zelfbeoordeling leerling" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("span", { className: "ma-ref-waarde", children: z != null ? z + "%" : "niet ingevuld" }),
+                      /* @__PURE__ */ (0, import_jsx_runtime2.jsxs)("span", { className: "ma-ref-uitleg", children: [
+                        "Alleen ter referentie: dit telt niet als jouw beoordeling. ",
+                        eerder ? "Je bewerkt de beoordeling van " + (eerder.door || "een docent") + (eerder.op ? " (" + datumNL(eerder.op) + ")" : "") + "." : "Kies hieronder zelf per criterium een niveau."
+                      ] })
                     ] });
                   })(),
                   /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(RubricScorer, { rec: r, waarden: mfForm.rubricNiveaus, onKies: (k, i) => setMfForm((f) => ({ ...f, rubricNiveaus: { ...f.rubricNiveaus, [k]: i } })) }),
@@ -99487,8 +99897,10 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
                 onBewaar: async (stap) => {
                   const r = { ...actief, voortgang: stap, afgerond: false };
                   setActief(r);
-                  await bewaarUitdaging(r);
-                  go("profiel");
+                  const uitB = await bewaarUitdaging(r);
+                  if (uitB && uitB.ok === false) return uitB;
+                  setTimeout(() => go("profiel"), 700);
+                  return { ok: true };
                 },
                 onStap: async (stap) => {
                   const a = actiefRef.current;
@@ -99972,6 +100384,10 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
                     }
                   }
                   if (r.alpe) r.alpe = pasMentorFeedbackToe(r.alpe, mf);
+                  if (r.zelfRubricScore == null) {
+                    const z = zelfScoreVan(rec);
+                    if (z != null) r.zelfRubricScore = z;
+                  }
                   if (typeof mf.rubricScore === "number" && isFinite(mf.rubricScore)) r.rubricScore = Math.max(0, Math.min(100, Math.round(mf.rubricScore)));
                   if (r.inlevering) r.inlevering = { ...r.inlevering, status: "beoordeeld", beoordeeldOp: (/* @__PURE__ */ new Date()).toISOString() };
                   const uitB = await bewaarUitdaging(r);
