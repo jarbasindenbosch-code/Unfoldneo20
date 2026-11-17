@@ -49667,18 +49667,19 @@ INSTRUCTIES (stappen, opdracht): je-vorm of gebiedende wijs ("Maak een plan voor
           werkvorm: "Eigen methode",
           categorie: "creatief",
           doelType: "transfer",
-          hoofdopdracht: `Maak je eigen aanpak voor ${c.ding}. Test hem in een andere situatie.`,
+          hoofdopdracht: `Maak je eigen stappenplan voor ${c.ding}. Test het ergens anders en leg het uit aan een ander.`,
+          /* v113.29: concreet + overdragen (Platina); twee korte zinnen (schrijfregel v113.18) */
           leerwinst: "Zo maak je een eigen aanpak voor @O die ook elders werkt.",
           leerdoel: `Ik kan wat ik over ${ik(c)} heb geleerd combineren tot een eigen aanpak. Ik kan die aanpak in een nieuwe situatie gebruiken en uitleggen wanneer hij niet werkt.`,
           stappen: [
-            { titel: "Kies je doel en verbind twee inzichten", uitleg: `${c.doel ? `Kies \xE9\xE9n concreet doel bij ${c.ding}, bijvoorbeeld: ${pt(c.doel)} ` : ""}Kies twee dingen die je weet over ${c.ding}: uit een eerdere opdracht, een gesprek, een voorbeeld of een bron. ${c.soort === "maak" || c.soort === "kennis" || c.soort === "vaardig" || c.soort === "digitaal" || c.soort === "zakelijk" || c.soort === "maatschappij" ? "Bijvoorbeeld iets wat je bij een sterk voorbeeld zag, en een tip van iemand die er veel van weet." : `Bijvoorbeeld: ${pt(c.aanpak[0])} En: ${pt(c.aanpak[1])}`} Maak er \xE9\xE9n eigen aanpak van in hoogstens drie stappen.` },
-            { titel: "Gebruik hem ergens anders", uitleg: `Probeer je aanpak in een andere situatie dan waar je hem bedacht, bijvoorbeeld ${c.elders}. Schrijf op wat er gebeurde.${c.veilig ? " " + c.veilig : ""}` },
-            { titel: "Zoek de grens", uitleg: "Wanneer werkt je aanpak niet of minder? Zoek of bedenk \xE9\xE9n situatie waarin hij tekortschiet. Wat zou je dan aanpassen?" },
-            { titel: "Verantwoord je aanpak", uitleg: "Schrijf in vijf zinnen: voor wie past hij, waarom werkt hij, en wat is de grens? Je mag hem ook uitleggen aan iemand die hem wil gebruiken." }
+            { titel: "Kies je doel en verbind twee inzichten", uitleg: `${c.doel ? `Kies \xE9\xE9n concreet doel bij ${c.ding}, bijvoorbeeld: ${pt(c.doel)} ` : ""}Kies twee dingen die je weet over ${c.ding}: uit een eerdere opdracht, een gesprek, een voorbeeld of een bron. ${c.soort === "maak" || c.soort === "kennis" || c.soort === "vaardig" || c.soort === "digitaal" || c.soort === "zakelijk" || c.soort === "maatschappij" ? "Bijvoorbeeld iets wat je bij een sterk voorbeeld zag, en een tip van iemand die er veel van weet." : `Bijvoorbeeld: ${pt(c.aanpak[0])} En: ${pt(c.aanpak[1])}`} Maak er \xE9\xE9n eigen stappenplan van, in hoogstens drie stappen.` },
+            { titel: "Gebruik het ergens anders", uitleg: `Probeer je stappenplan in een andere situatie dan waar je het bedacht, bijvoorbeeld ${c.elders}. Schrijf op wat er gebeurde.${c.veilig ? " " + c.veilig : ""}` },
+            { titel: "Zoek de grens", uitleg: "Wanneer werkt je stappenplan niet of minder goed? Zoek of bedenk \xE9\xE9n situatie waarin het tekortschiet. Wat zou je dan aanpassen?" },
+            { titel: "Leg het uit aan een ander", uitleg: "Leg je stappenplan uit aan iemand die het wil gebruiken. Zeg voor wie het past, waarom het werkt en wat de grens is. Schrijf dat ook in vijf zinnen op." }
           ],
-          product: "je eigen aanpak in drie stappen, de test in een andere situatie en de grens",
-          bewijs: "Laat je aanpak in drie stappen zien, wat er in de andere situatie gebeurde en de grens die je vond.",
-          criteria: ["Je aanpak verbindt twee inzichten tot iets eigens.", "Je testte hem in een andere situatie dan waar je hem bedacht.", "Je noemt eerlijk waar hij niet werkt en wat je dan aanpast."],
+          product: "je eigen stappenplan in drie stappen, de test in een andere situatie en de grens",
+          bewijs: "Laat je stappenplan in drie stappen zien, wat er in de andere situatie gebeurde, de grens die je vond en je uitleg aan de ander.",
+          criteria: ["Je stappenplan verbindt twee dingen die je weet tot iets eigens.", "Je testte het in een andere situatie dan waar je het bedacht.", "Je noemt eerlijk waar het niet werkt en wat je dan aanpast."],
           tijd: MEERDAAGS,
           samen: "Alleen te doen. Uitleggen aan iemand mag, maar hoeft niet.",
           reflectie: ["Wat heb je nu begrepen wat je eerst niet zag?"]
@@ -49727,7 +49728,7 @@ INSTRUCTIES (stappen, opdracht): je-vorm of gebiedende wijs ("Maak een plan voor
   var ZAKELIJK = /eigen bedrijf|webshop|marketing|verkoop|branding|contentstrategie|ondernemer|sponsor|sales|contracten/i;
   var MAATSCHAPPIJ = /vrijwilliger|klimaat|duurzaam|mensenrechten|politiek|burgerschap|internationale|sociale impact|innovatie|doping|wada|supplement|mag en niet mag|melden/i;
   function algemeneContext(thema, sub, soortCode, route) {
-    const o = String(sub || "").toLowerCase().replace(/ & /g, " en ");
+    const o = String(sub || "").split(/(\s+)/).map((w) => /^[A-Z0-9]{2,4}$/.test(w) ? w : w.toLowerCase()).join("").replace(/ & /g, " en ");
     const uit = UITVOEREN.test(o), dig = DIGITAAL.test(o), zak = ZAKELIJK.test(o), maat = MAATSCHAPPIJ.test(o);
     const maak2 = !zak && !maat && (/^(C)$/.test(String(soortCode || "")) || uit || dig);
     const top = route === "topsport";
@@ -49907,22 +49908,23 @@ INSTRUCTIES (stappen, opdracht): je-vorm of gebiedende wijs ("Maak een plan voor
           werkvorm: "Vergelijking maken",
           categorie: "creatief",
           doelType: "evalueren",
-          hoofdopdracht: "Vergelijk twee sterke voorbeelden en maak drie kijkpunten. Gebruik ze voor je eigen werk.",
+          hoofdopdracht: `Zoek twee goede voorbeelden van ${c.ding}. Maak daarna je eigen versie en verbeter die.`,
+          /* v113.29: geen 'kijkpunten'; het onderwerp staat erin; twee zinnen */
           leerwinst: "Zo leer je zien wat goed werk bij @O goed maakt.",
           leerdoel: `Ik kan uit twee voorbeelden halen waaraan goed werk bij ${ik(c)} voldoet. Daarna kan ik mijn eigen werk daarmee beoordelen en verbeteren.`,
           stappen: [
             { titel: "Bekijk twee sterke voorbeelden", uitleg: `${c.situatie ? `Stel: ${c.situatie[0]} ` : ""}Zoek twee voorbeelden bij ${c.ding}: ${c.bron || "online, op school of in je omgeving"}. Kies voorbeelden die van elkaar verschillen.` },
-            { titel: "Maak drie kijkpunten", uitleg: `Zet ze naast elkaar. Wat maakt ze allebei sterk? Schrijf drie kijkpunten op, bijvoorbeeld over begin, tempo of afwerking.${vraag(c)}` },
-            { titel: "Maak of doe je eigen versie", uitleg: `Maak of doe zelf een korte versie. Werk bewust aan \xE9\xE9n van je kijkpunten.${c.veilig ? " " + c.veilig : ""}` },
-            { titel: "Laat het beoordelen", uitleg: "Laat iemand je versie bekijken met je drie kijkpunten. Welk punt lukt al, welk nog niet?" },
+            { titel: "Schrijf op wat goed werkt", uitleg: `Zet ze naast elkaar. Wat maakt ze allebei goed? Schrijf drie punten op, bijvoorbeeld over het begin, het tempo of de afwerking.${vraag(c)}` },
+            { titel: "Maak of doe je eigen versie", uitleg: `Maak of doe zelf een korte versie. Werk bewust aan \xE9\xE9n van je drie punten.${c.veilig ? " " + c.veilig : ""}` },
+            { titel: "Laat het beoordelen", uitleg: "Laat iemand je versie bekijken. Gebruik je drie punten: welk punt lukt al, welk nog niet?" },
             { titel: "Verbeter en leg uit", uitleg: "Verbeter het zwakste punt. Leg in drie zinnen uit wat je veranderde en waarom het nu beter is." }
           ],
-          product: "drie kijkpunten, je eigen versie voor en na",
-          bewijs: "Laat je kijkpunten zien, je versie voor en na (of een opname) en je uitleg.",
-          criteria: ["Je kijkpunten volgen uit de twee voorbeelden.", "Je versie is beoordeeld met de kijkpunten.", "Je verbetering richt zich op het zwakste punt en je legt uit waarom."],
+          product: "je drie punten en je eigen versie voor en na",
+          bewijs: "Laat je drie punten zien, je versie voor en na (of een opname) en je uitleg.",
+          criteria: ["Je drie punten komen uit de twee voorbeelden.", "Je versie is bekeken met die drie punten.", "Je verbetering richt zich op het zwakste punt en je legt uit waarom."],
           tijd: LESSEN,
           samen: "Je werkt alleen; voor de beoordeling heb je \xE9\xE9n iemand nodig.",
-          reflectie: ["Welk kijkpunt ga je altijd gebruiken?"]
+          reflectie: ["Welk van je drie punten ga je vaker gebruiken?"]
         })
       },
       {
@@ -49970,18 +49972,19 @@ INSTRUCTIES (stappen, opdracht): je-vorm of gebiedende wijs ("Maak een plan voor
   var vervang = (st, i, s) => st.map((x, j) => j === i ? { ...x, ...s } : x);
   var VARIANTEN = {
     criteria: [
-      { werkvorm: "Test wat werkt", categorie: "creatief", kern: 3, pas: (p) => ({
+      /* v113.29: 'Test wat werkt' zegt nu wát je test, hóe en wat je met de uitkomst doet (JB: geen werkvorm als losse naam) */
+      { werkvorm: "Test wat werkt", categorie: "creatief", kern: 3, pas: (p, c) => ({
         ...p,
         werkvorm: "Test wat werkt",
-        hoofdopdracht: "Maak drie kijkpunten uit twee sterke voorbeelden. Test daarna twee versies bij drie mensen.",
-        stappen: vervang(p.stappen, 3, { titel: "Test bij drie mensen", uitleg: "Maak versie A en versie B. Verander maar \xE9\xE9n ding: \xE9\xE9n van je kijkpunten. Laat drie mensen kiezen welke beter is, en waarom. Gelukt als je weet welke versie won." }),
-        bewijs: "Laat je kijkpunten zien, je twee versies, de keuzes van drie mensen en je uitleg.",
+        hoofdopdracht: `Zoek twee goede voorbeelden van ${c.ding}. Maak twee versies en vraag drie mensen welke beter is.`,
+        stappen: vervang(p.stappen, 3, { titel: "Test bij drie mensen", uitleg: "Maak versie A en versie B. Verander maar \xE9\xE9n ding, bijvoorbeeld het begin. Laat drie mensen beide versies zien en vraag welke beter werkt en waarom. Schrijf hun antwoorden op en verbeter daarna je beste versie. Gelukt als je weet welke versie won, en waarom." }),
+        bewijs: "Laat je drie punten zien, je twee versies, wat de drie mensen zeiden en wat je daarna verbeterde.",
         samen: "Je werkt alleen; voor de test heb je drie mensen nodig."
       }) },
       { werkvorm: "Peer feedback", categorie: "sociaal", kern: 3, pas: (p) => ({
         ...p,
         werkvorm: "Peer feedback",
-        stappen: vervang(p.stappen, 3, { titel: "Vraag om feedback", uitleg: "Laat een klasgenoot je versie beoordelen met je drie kijkpunten. Beoordeel daarna ook het werk van die klasgenoot." })
+        stappen: vervang(p.stappen, 3, { titel: "Vraag om feedback", uitleg: "Laat een klasgenoot je versie bekijken met je drie punten. Bekijk daarna ook het werk van die klasgenoot met dezelfde punten." })
       }) }
     ],
     bronnen: [
@@ -50359,6 +50362,12 @@ INSTRUCTIES (stappen, opdracht): je-vorm of gebiedende wijs ("Maak een plan voor
     const k = kandidaten[hash(`${a.thema}|${a.sub}|${niv}|${a.zaad || ""}|${recent.length}|${recent[0] || ""}`) % kandidaten.length];
     const plan = k.o.maak();
     plan.kern = k.o.kern;
+    if (c.ding && plan.hoofdopdracht && plan.stappen && plan.stappen[0]) {
+      const sleutel = c.ding.toLowerCase().slice(0, 14);
+      const st0 = plan.stappen[0];
+      if (!plan.hoofdopdracht.toLowerCase().includes(sleutel) && !(st0.titel + " " + st0.uitleg).toLowerCase().includes(sleutel))
+        plan.stappen = plan.stappen.map((x, j) => j === 0 ? { ...x, uitleg: String(x.uitleg || "").replace(/\s*$/, "") + ` Het gaat hier om ${c.ding}.` } : x);
+    }
     const volledig = plan.stappen.map((s) => s.titel + " " + s.uitleg).join(" ");
     const zonderVoorbeeld = volledig.split(c.aanpak[0]).join(" ").split(c.aanpak[1]).join(" ").split(c.merk).join(" ");
     const meerdaags = /\b(deze week|een week|drie dagen|vijf dagen|de dag erna|het volgende moment|twee situaties|andere situatie|één keer zonder)\b/i.test(volledig) || /\b(twee keer|drie keer|minstens één keer)\b/i.test(zonderVoorbeeld);
@@ -52934,6 +52943,8 @@ INSTRUCTIES (stappen, opdracht): je-vorm of gebiedende wijs ("Maak een plan voor
         afgerondOp: str(r.afgerondOp),
         datum: str(r.afgerondOp || r.datum),
         opdrachtCompetenties: arr2(d.competenties).map(str).filter(Boolean),
+        leerdoelen: arr2(d.leerdoelen).map((x) => str(typeof x === "string" ? x : x && (x.tekst || x.doel))).filter(Boolean),
+        /* v113.29: doel, nooit bewijs */
         bewijs: { aantal: bewijzen.length + (inl ? 1 : 0), vormen, laatste: laatsteBewijs, bijlagen: bestanden },
         heeftBewijs,
         beoordeling,
@@ -53487,6 +53498,150 @@ INSTRUCTIES (stappen, opdracht): je-vorm of gebiedende wijs ("Maak een plan voor
       meta: [R.naam, R.meta, "gegenereerd " + R.datum].filter(Boolean).join(" \xB7 "),
       pills: (R.kern || []).map((k) => k.label + ": " + k.waarde),
       secties
+    };
+  }
+  var GK_ONVOLDOENDE = "Nog onvoldoende informatie om ontwikkeling vast te stellen.";
+  var NIVEAU_VOLGEND = { Bronze: "Zilver", Silver: "Goud", Gold: "Platina" };
+  var eersteZin = (t, max = 110) => {
+    let x = str(t);
+    if (!x) return "";
+    x = (x.match(/^[^.!?]+[.!?]?/) || [x])[0].trim();
+    if (x.length > max) x = x.slice(0, max).replace(/\s+\S*$/, "") + "\u2026";
+    x = x.charAt(0).toUpperCase() + x.slice(1);
+    return zin(x);
+  };
+  var lijktOp = (a, b) => {
+    const x = laag(a).replace(/[^a-z0-9à-ÿ ]/g, ""), y = laag(b).replace(/[^a-z0-9à-ÿ ]/g, "");
+    return !!x && !!y && (x === y || x.length > 12 && y.includes(x) || y.length > 12 && x.includes(y));
+  };
+  var kl = (t) => {
+    const x = str(t);
+    return x ? x.charAt(0).toLowerCase() + x.slice(1) : x;
+  };
+  var groot = (t) => {
+    const x = str(t);
+    return x ? x.charAt(0).toUpperCase() + x.slice(1) : x;
+  };
+  var zelfIdx = (p) => p >= 70 ? 2 : p >= 40 ? 1 : 0;
+  function tegenstrijdigVan(u) {
+    if (!u || u.zelf == null || !u.beoordeling || !u.beoordeling.echt) return null;
+    const b = u.beoordeling;
+    const dIdx = b.niveauIndex != null ? Math.min(2, b.niveauIndex) : null;
+    const verschilPunten = b.score != null ? u.zelf - b.score : null;
+    const ver = verschilPunten != null && Math.abs(verschilPunten) >= 35 || dIdx != null && Math.abs(zelfIdx(u.zelf) - dIdx) >= 2;
+    if (!ver) return null;
+    const hoger = verschilPunten != null ? verschilPunten > 0 : zelfIdx(u.zelf) > dIdx;
+    return { hoger, zelf: u.zelf, docent: b.score != null ? b.score + "%" : b.niveau.toLowerCase(), door: b.door, op: b.op };
+  }
+  function gesprekskaart(G, opties = {}) {
+    const t = G.tellers;
+    const wie = str(opties.voornaam) || "de leerling";
+    const bron = (soort, tekst3, u) => ({ soort, label: SOORT_LABEL[soort], tekst: tekst3, uitdaging: u ? u.id : null, titel: u ? u.titel : "" });
+    const door = (b) => b && b.door ? b.door : "de docent";
+    const beoordeeld = G.beoordeeld;
+    const genoeg = beoordeeld.length > 0;
+    const trend = G.competenties.filter((c) => c.ontwikkeling);
+    const omhoog = trend.filter((c) => c.ontwikkeling.richting === "hoger");
+    const tegen = beoordeeld.map((u) => ({ u, x: tegenstrijdigVan(u) })).filter((p) => p.x);
+    const U = (id) => G.uitdagingen.find((x) => x.id === id);
+    const metingU = (m) => m ? U(m.id) : null;
+    let sterk = null, aandacht = null, vraag2 = null, stap = null;
+    if (genoeg) {
+      if (omhoog.length) {
+        const c = omhoog[0];
+        const m = c.ontwikkeling;
+        sterk = {
+          tekst: groot(c.naam) + " ging van " + m.van.toLowerCase() + " naar " + m.naar.toLowerCase() + ".",
+          bron: bron("beoordeeld", mv(m.metingen, "docentbeoordeling", "docentbeoordelingen") + " van dit criterium, op meer dagen.", metingU(c.laatste)),
+          soort: "ontwikkeling"
+        };
+      }
+      if (!sterk) {
+        const k = G.docentSterk.find((p) => {
+          const u = G.uitdagingen.find((x) => x.titel === p.uitdaging);
+          return !(u && (u.leerdoelen.some((l) => lijktOp(l, p.tekst)) || u.opdrachtCompetenties.some((l) => lijktOp(l, p.tekst))));
+        });
+        if (k) {
+          const u = G.uitdagingen.find((x) => x.titel === k.uitdaging);
+          sterk = { tekst: eersteZin(k.tekst), bron: bron("beoordeeld", "Geschreven door " + (k.door || "de docent") + " bij '" + k.uitdaging + "'" + (k.op ? ", " + datumKort(k.op) : "") + ".", u), soort: "docenttekst" };
+        }
+      }
+      if (!sterk && G.aangetoond.length) {
+        const c = G.aangetoond.slice().sort((a, b) => b.laatste.index - a.laatste.index)[0];
+        const u = metingU(c.laatste);
+        sterk = {
+          tekst: groot(c.naam) + " is " + c.laatste.niveau.toLowerCase() + " beoordeeld.",
+          bron: bron("beoordeeld", "Beoordeling van " + (c.laatste.door || "de docent") + " bij '" + c.laatste.uitdaging + "'" + (c.laatste.op ? ", " + datumKort(c.laatste.op) : "") + ".", u),
+          soort: "rubric"
+        };
+      }
+      if (tegen.length) {
+        const { u, x } = tegen[0];
+        aandacht = {
+          tekst: x.hoger ? groot(wie) + " schat '" + u.titel + "' hoger in dan " + door(u.beoordeling) + "." : groot(wie) + " schat '" + u.titel + "' lager in dan " + door(u.beoordeling) + ".",
+          bron: bron("beoordeeld", "Zelfbeoordeling " + x.zelf + "% \xB7 docentbeoordeling " + x.docent + (x.op ? " (" + datumKort(x.op) + ")" : "") + ".", u),
+          soort: "tegenstrijdig",
+          tegenstrijdig: x
+        };
+      }
+      if (!aandacht && G.aandachtComp.length) {
+        const c = G.aandachtComp[0];
+        const u = metingU(c.laatste);
+        aandacht = { tekst: groot(c.naam) + " is nog beginnend beoordeeld.", bron: bron("beoordeeld", "Beoordeling van " + (c.laatste.door || "de docent") + " bij '" + c.laatste.uitdaging + "'.", u), soort: "rubric", criterium: c.naam, u };
+      }
+      if (!aandacht) {
+        const k = G.docentNog[0];
+        if (k) {
+          const u = G.uitdagingen.find((x) => x.titel === k.uitdaging);
+          aandacht = { tekst: eersteZin(k.tekst), bron: bron("beoordeeld", "Geschreven door " + (k.door || "de docent") + " bij '" + k.uitdaging + "'.", u), soort: "docenttekst", u };
+        }
+      }
+      if (!aandacht) {
+        const c = G.vastgesteld.filter((c2) => c2.laatste.index === 1)[0];
+        if (c) {
+          const u = metingU(c.laatste);
+          aandacht = { tekst: groot(c.naam) + " is nog in ontwikkeling.", bron: bron("beoordeeld", "Beoordeling van " + (c.laatste.door || "de docent") + " bij '" + c.laatste.uitdaging + "'.", u), soort: "rubric", criterium: c.naam, u };
+        }
+      }
+      if (aandacht && aandacht.soort === "tegenstrijdig") {
+        const u = U(aandacht.bron.uitdaging);
+        vraag2 = { tekst: aandacht.tegenstrijdig.hoger ? "Wat zie jij in '" + u.titel + "' dat nog niet in de beoordeling terugkomt?" : "Wat vond je zelf minder goed aan '" + u.titel + "'?", bron: aandacht.bron };
+      } else if (aandacht && aandacht.criterium) vraag2 = { tekst: "Wat was lastig aan " + kl(aandacht.criterium) + " bij '" + aandacht.u.titel + "'?", bron: aandacht.bron };
+      else if (sterk && sterk.soort === "ontwikkeling") {
+        const c = omhoog[0];
+        vraag2 = { tekst: "Wat doe je nu anders bij " + kl(c.naam) + " dan in het begin?", bron: sterk.bron };
+      } else if (aandacht && aandacht.u) vraag2 = { tekst: "Wat ga je bij een volgende uitdaging anders doen dan bij '" + aandacht.u.titel + "'?", bron: aandacht.bron };
+      else if (sterk && sterk.bron.titel) vraag2 = { tekst: "Hoe pakte je '" + sterk.bron.titel + "' aan?", bron: sterk.bron };
+      if (aandacht && aandacht.soort === "tegenstrijdig") stap = { tekst: "Loop samen de rubric van '" + U(aandacht.bron.uitdaging).titel + "' door, criterium voor criterium.", bron: bron("advies", "Omdat zelfbeoordeling en docentbeoordeling ver uiteen liggen.") };
+      else if (aandacht && aandacht.criterium) stap = { tekst: "Kies samen een uitdaging waarin " + kl(aandacht.criterium) + " terugkomt.", bron: bron("advies", "Omdat dit criterium bij de laatste beoordeling nog niet bekwaam was.") };
+      else if (G.wacht.length) stap = { tekst: "Beoordeel '" + G.wacht[0].titel + "'" + (G.wacht.length > 1 ? " en nog " + mv(G.wacht.length - 1, "uitdaging", "uitdagingen") : "") + ".", bron: bron("geregistreerd", mv(G.wacht.length, "uitdaging wacht", "uitdagingen wachten") + " op beoordeling.", G.wacht[0]) };
+      else if (sterk) {
+        const laatste = beoordeeld[0];
+        const volgend = laatste && NIVEAU_VOLGEND[laatste.niveau];
+        if (volgend && laatste.beoordeling.niveauIndex >= 2) stap = { tekst: "Probeer een " + volgend + "-uitdaging in " + laatste.themaLabel + ".", bron: bron("advies", "Omdat '" + laatste.titel + "' (" + laatste.niveauNL + ") als " + laatste.beoordeling.niveau.toLowerCase() + " is beoordeeld.", laatste) };
+      }
+    } else {
+      const laatste = G.afgerond[0];
+      const lopend = G.uitdagingen.find((u) => !u.afgerond);
+      if (laatste) vraag2 = { tekst: "Wat heb je bij '" + laatste.titel + "' gemaakt, en wat ging goed?", bron: bron("geregistreerd", "Afgerond" + (laatste.afgerondOp ? " op " + datumKort(laatste.afgerondOp) : "") + ", nog niet beoordeeld.", laatste), verkennend: true };
+      else if (lopend) vraag2 = { tekst: "Hoe gaat het met '" + lopend.titel + "', en waar loop je vast?", bron: bron("geregistreerd", "Gestart" + (lopend.gestart ? " op " + datumKort(lopend.gestart) : "") + ", nog niet afgerond.", lopend), verkennend: true };
+      else vraag2 = { tekst: G.interesses.length ? "Je noemde " + G.interesses[0].toLowerCase() + " als interesse. Wat wil je daarover leren?" : "Waar wil je dit jaar beter in worden?", bron: G.interesses.length ? bron("aangegeven", "Uit de intake.") : bron("advies", "Er is nog geen werk."), verkennend: true };
+      if (G.wacht.length) stap = { tekst: "Beoordeel '" + G.wacht[0].titel + "'" + (G.wacht.length > 1 ? " en nog " + mv(G.wacht.length - 1, "uitdaging", "uitdagingen") : "") + ".", bron: bron("geregistreerd", mv(G.wacht.length, "uitdaging wacht", "uitdagingen wachten") + " op beoordeling.", G.wacht[0]) };
+      else if (G.afgerond.length) stap = { tekst: "Beoordeel het afgeronde werk, dan ontstaat een eerste beeld.", bron: bron("geregistreerd", mv(G.afgerond.length, "uitdaging is", "uitdagingen zijn") + " afgerond, zonder docentbeoordeling.") };
+      else if (lopend) stap = { tekst: "Spreek af wanneer '" + lopend.titel + "' af is.", bron: bron("geregistreerd", "Er loopt een uitdaging.", lopend) };
+    }
+    const ontwikkelingVastgesteld = trend.length > 0;
+    const noot = !genoeg ? GK_ONVOLDOENDE : !ontwikkelingVastgesteld ? beoordeeld.length === 1 ? "E\xE9n beoordeling: nog geen ontwikkeling over tijd vast te stellen." : "Nog te weinig beoordelingen van hetzelfde criterium om ontwikkeling vast te stellen." : "";
+    return {
+      genoeg,
+      ontwikkelingVastgesteld,
+      noot,
+      tellers: { afgerond: t.afgerond, beoordeeld: t.beoordeeld, wacht: t.wacht, metBewijs: t.metBewijs, gestart: t.gestart },
+      sterk,
+      aandacht,
+      vraag: vraag2,
+      stap,
+      tegenstrijdig: tegen.map((p) => ({ id: p.u.id, titel: p.u.titel, ...p.x }))
     };
   }
 
@@ -54731,7 +54886,7 @@ Stijlvoorbeelden (de stijl, geen vaste teksten):
           doen: "Kijk mee bij een oefening van een klasgenoot. Noem steeds wat goed gaat.",
           stappen: ["Kies waar je op let", "Kijk mee en moedig aan"],
           uitleg: ["Spreek met een klasgenoot een oefening af bij {focus}. Kies samen \xE9\xE9n ding waar jij op let, bijvoorbeeld tempo of houding.", "Kijk mee terwijl hij de oefening drie keer doet. Zeg na elke keer \xE9\xE9n ding dat goed ging, zo concreet mogelijk."],
-          bewijs: "Je kijkpunt en de drie opmerkingen die je gaf.",
+          bewijs: "Het punt waar je op lette en de drie opmerkingen die je gaf.",
           criteria: ["Je let op \xE9\xE9n afgesproken punt.", "Je opmerkingen noemen iets wat je echt zag, niet alleen 'goed zo'."],
           reflectie: "Welke opmerking deed het meest met je klasgenoot?",
           transfer: "Hoe moedig je een klasgenoot aan tijdens een spel in de gymles?"
@@ -55254,6 +55409,7 @@ ${subRegels}
     const sub = bsmSubthemaVan(t, opties.subs);
     const info = BSM_SUB_INFO[t + "|" + sub] || { focus: sub.toLowerCase(), werkvormen: ["oefenen"] };
     const n = NIV3(opties.niveau);
+    const plat2 = opties.niveau === "Platinum" || !!opties.platina;
     const teller = opties.teller || 0;
     const voorkeur = bsmVoorkeurWerkvormen(opties.profiel);
     const wv = bsmKiesWerkvorm(t, sub, opties.vermijdWerkvormen, teller, voorkeur);
@@ -55271,12 +55427,12 @@ ${subRegels}
       /* v113.18: korte hoofdopdracht; de situatie hieronder geeft de context */
       /* v113.18: de korte hoofdopdracht staat apart; de situatie geeft de context erbij */
       situatie: f(x.intro) + (context ? ` Je kunt dit bijvoorbeeld doen bij ${context}.` : "") + (wv.privacy ? " " + wv.privacy : ""),
-      leerdoelen: [x.leerdoel],
+      leerdoelen: [x.leerdoel + (plat2 ? " Ik kan het daarna uitleggen aan een ander, zodat die het zelf kan proberen." : "")],
       competenties: (BSM_COMPETENTIES[t] || []).slice(0, 3),
-      stappen: [{ titel: x.stappen[0], uitleg: f(x.uitleg[0]) }, { titel: x.stappen[1], uitleg: f(x.uitleg[1]) }],
-      bewijs: x.bewijs,
+      stappen: [{ titel: x.stappen[0], uitleg: f(x.uitleg[0]) }, { titel: x.stappen[1], uitleg: f(x.uitleg[1]) }, ...plat2 ? [{ titel: "Leer het een ander", uitleg: "Leg wat je ontdekte uit aan een klasgenoot die hetzelfde wil leren. Laat hem het \xE9\xE9n keer zelf proberen en geef \xE9\xE9n tip. Schrijf op wat hij ervan leerde." }] : []],
+      bewijs: x.bewijs + (plat2 ? " En wat je klasgenoot ervan leerde." : ""),
       bewijsvormen: wv.bewijsvormen.slice(),
-      succescriteria: x.criteria.slice(),
+      succescriteria: [...x.criteria, ...plat2 ? ["Je legt het uit aan een ander, en die kan het daarna zelf proberen."] : []],
       reflectie: [x.reflectie],
       transfer: x.transfer,
       werkvorm: { naam: wv.naam, beschrijving: f(x.intro), categorie: wv.categorie },
@@ -58879,8 +59035,10 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .vaardig-kop{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
 .vaardig-naam{font-weight:800;font-size:.98rem}
 .vaardig-status{font-size:.78rem;font-weight:700;padding:.14rem .6rem;border-radius:999px;white-space:nowrap}
-.vaardig-status.is-vol{background:#EDF3EA;color:#3E6633}
-.vaardig-status.is-beperkt{background:var(--accent-zacht);color:var(--accent-diep)}
+/* v113.29: groen alleen bij 'aangetoond' (.is-aangetoond); 'in ontwikkeling' en 'in opbouw' neutraal, zonder waarschuwingskleur */
+.vaardig-status.is-vol{background:var(--tegel-licht);color:var(--inkt-zacht);border:1px solid var(--lijn-fijn)}
+.vaardig-status.is-beperkt{background:var(--tegel-licht);color:var(--inkt-zacht);border:1px solid var(--lijn-fijn)}
+.vaardig-status.is-aangetoond{background:var(--salie-zacht);color:var(--salie-diep);border-color:var(--salie-licht)}
 .vaardig-status.is-wacht{background:var(--tegel);color:var(--grijs)}
 .vaardig-balk{height:7px;border-radius:99px;background:#EEE;overflow:hidden;margin:9px 0 6px}
 .vaardig-balk>span{display:block;height:100%;background:var(--accent);border-radius:99px}
@@ -59107,7 +59265,7 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .lp-eerder{margin-top:10px}
 .lp-tweede{margin-top:8px}
 .lp-eerderlijst{display:grid;gap:8px;margin-top:10px}
-.lp-eerderrij{display:grid;gap:3px;padding:10px 12px;border-radius:10px;background:var(--tegel-licht);border-left:3px solid var(--lijn)}
+.lp-eerderrij{display:grid;gap:3px;padding:10px 12px;border-radius:12px;background:var(--kaart);border:1px solid var(--lijn-fijn)}
 .lp-eerderrij-meta{font-size:.76rem;color:var(--grijs)}
 .lp-eerderrij-tekst{font-size:.86rem;line-height:1.45;color:var(--inkt)}
 @media (max-width:900px){
@@ -59183,6 +59341,44 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .bo-label{font-size:.76rem;font-weight:700;letter-spacing:.02em;color:var(--inkt-zacht)}
 .bo-zin{font-size:.92rem;line-height:1.5;color:var(--inkt)}
 .bo-onderbouwing{justify-self:start;margin-top:4px}
+/* v113.29: gesprekskaart */
+.bo-rij{display:flex;align-items:center;justify-content:space-between;gap:10px 16px;flex-wrap:wrap;padding:12px 14px;border-radius:12px;border:1px solid var(--lijn-fijn);background:var(--kaart)}
+.bo-tellers{font-size:.88rem;color:var(--inkt-zacht)}
+.bo-open{flex:0 0 auto;width:auto}
+.gk{display:grid;gap:12px}
+.gk-tellers{margin:0;font-size:.82rem;color:var(--grijs)}
+.gk-noot{margin:0;font-size:.84rem;line-height:1.5;color:var(--inkt-zacht)}
+.gk-noot.is-leeg{padding:10px 12px;border-radius:12px;background:var(--tegel-licht);color:var(--inkt);font-size:.9rem}
+.gk-lijst{margin:0;display:grid;gap:0}
+.gk-rij{display:grid;gap:3px;padding:10px 0;border-top:1px solid var(--lijn-fijn)}
+.gk-rij:first-child{border-top:0;padding-top:0}
+.gk-label{font-size:.74rem;font-weight:700;letter-spacing:.02em;color:var(--grijs);display:flex;align-items:center;gap:5px}
+.gk-tekst{margin:0;font-size:.95rem;line-height:1.5;color:var(--inkt);display:grid;gap:3px}
+.gk-groei{display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;background:var(--salie-zacht);color:var(--salie-diep)}
+.gk-bron{font-size:.76rem;line-height:1.45;color:var(--grijs)}
+.gk-soort{display:inline-block;margin-right:6px;padding:0 7px;border-radius:999px;border:1px solid var(--lijn-fijn);background:var(--tegel-licht);font-size:.7rem;font-weight:650;color:var(--inkt-zacht)}
+.gk-details{justify-self:start}
+.gk-tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin:0 0 12px;border-bottom:1px solid var(--lijn-fijn)}
+.gk-tabs::-webkit-scrollbar{display:none}
+.gk-tab{appearance:none;border:0;background:none;font:inherit;font-size:.84rem;font-weight:650;color:var(--grijs);padding:8px 10px;border-bottom:2px solid transparent;white-space:nowrap;cursor:pointer}
+.gk-tab.is-aan{color:var(--inkt);border-bottom-color:var(--accent)}
+.gk-tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:6px}
+.gk-paneel{display:grid;gap:10px}
+.gk-paneel:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:8px}
+.gk-items{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.gk-item{display:grid;gap:3px;padding:10px 12px;border-radius:12px;border:1px solid var(--lijn-fijn);background:var(--kaart)}
+.gk-item-kop{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 10px}
+.gk-item-titel{font-size:.88rem;font-weight:700;color:var(--inkt)}
+.gk-open{margin-left:auto;font-size:.8rem}
+.gk-item-regel{margin:0;font-size:.86rem;line-height:1.45;color:var(--inkt)}
+.gk-item-regel.is-zacht{color:var(--inkt-zacht)}
+.gk-antwoord{display:block;margin-top:2px;color:var(--inkt)}
+.gk-zelf{margin:6px 2px 0;font-size:.8rem;color:var(--inkt-zacht)}
+.gk-sub{margin:6px 0 0;font-size:.78rem;font-weight:700;color:var(--grijs)}
+.gk-soorten{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:.82rem;line-height:1.45}
+.gk-soorten dt{font-weight:700;color:var(--inkt-zacht)}
+.gk-soorten dd{margin:0;color:var(--inkt)}
+@media(max-width:560px){.gk-soorten{grid-template-columns:minmax(0,1fr)}.gk-soorten dd{margin-bottom:4px}.bo-open{width:100%}}
 .bo-onderbouwing-paneel{padding:12px 14px;border-radius:12px;border:1px solid var(--lijn-fijn);background:var(--tegel-licht)}
 .bo-onderbouwing-kop{margin:0 0 6px;font-size:.78rem;font-weight:700;color:var(--grijs)}
 .bo-onderbouwing-lijst{margin:0 0 10px;padding-left:18px;font-size:.86rem;line-height:1.5;color:var(--inkt);display:grid;gap:4px}
@@ -59874,6 +60070,21 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .pf2-paneel-wie{flex:1;min-width:0}
 .pf2-paneel-sub{margin:2px 0 0;font-size:.82rem;color:var(--grijs)}
 .pf2-paneel-inhoud{display:grid;gap:12px}
+/* v113.29: \xE9\xE9n feedbackbericht \u2014 neutrale kaart, de tekst centraal */
+.fbb-lijst{display:grid;gap:12px}
+.fbb{display:grid;gap:6px;padding:14px 16px;border-radius:14px;border:1px solid var(--lijn-fijn);background:var(--kaart)}
+.fbb-kop{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px}
+.fbb-titel{font-size:.86rem;font-weight:700;color:var(--inkt-zacht)}
+.fbb-meta{font-size:.76rem;color:var(--grijs)}
+.fbb-oordeel{margin:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.fbb-status{display:inline-flex;align-items:center;gap:4px;font-size:.74rem;font-weight:650;padding:2px 9px;border-radius:999px;background:var(--tegel-licht);color:var(--inkt-zacht);border:1px solid var(--lijn-fijn)}
+.fbb-status.is-behaald{background:var(--salie-zacht);color:var(--salie-diep);border-color:var(--salie-licht)}
+.fbb-tekst{margin:2px 0 0;font-size:.95rem;line-height:1.55;color:var(--inkt);white-space:pre-wrap;overflow-wrap:anywhere}
+.fbb-leeg{margin:0;font-size:.86rem;color:var(--grijs)}
+.fbb-werk{margin:0;font-size:.86rem;line-height:1.5;color:var(--inkt-zacht)}
+.fbb-werk b{font-weight:700;margin-right:4px}
+.fbb-ingebed{padding:9px 12px;border-radius:12px;border:1px solid var(--lijn-fijn);background:var(--kaart)}
+@media(max-width:560px){.fbb{padding:12px 14px}.fbb-tekst{font-size:.93rem}}
 .ob-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
 .ob-stat{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center;border:1px solid var(--lijn-fijn);border-radius:14px;background:var(--kaart);padding:10px 12px}
 .ob-stat-icoon{grid-row:1 / 3;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--tegel-licht);color:var(--inkt-zacht)}
@@ -60423,7 +60634,8 @@ textarea.studio-input{resize:vertical;min-height:0}
 /* v112.7.3: smalle beeldstrook bovenaan i.p.v. het grote vierkant; opdracht links, 'Aan de slag' rechts */
 .doe-strook{display:grid}
 /* v113.26: minder extreme uitsnede (was 96\u2013120 px hoog \u2248 8:1 op desktop; nu \u2248 5:1 desktop, \u2248 2,8:1 mobiel). De uitsnede per beeld staat inline (object-position). */
-.doe-strook .studio-beeld.is-doe-strook{height:clamp(140px,calc(80px + 11vw),196px);border-radius:16px;overflow:hidden;background:var(--tegel)}
+/* v113.29 (JB): de strook is weer compact \u2014 desktop 100\u2013120 px, mobiel 80\u2013100 px. De foto ondersteunt, de opdracht staat voorop. */
+.doe-strook .studio-beeld.is-doe-strook{height:clamp(100px,calc(60px + 4vw),120px);border-radius:16px;overflow:hidden;background:var(--tegel)}
 .doe-strook .studio-beeld.is-doe-strook img{width:100%;height:100%;object-fit:cover;object-position:center 42%;display:block}
 /* v112.7.3.2: \xE9\xE9n kolom \u2014 opdracht, kenmerken, en daaronder 'Aan de slag' met 'Meer uitleg' ernaast */
 .doe-kop{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
@@ -60799,6 +61011,73 @@ textarea.studio-input{resize:vertical;min-height:0}
 .id-mp-punt{width:10px;height:10px;border-radius:50%;background:var(--kaart);box-shadow:0 0 0 2px var(--salie)}
 .id-mp-datum{font-size:.78rem;white-space:nowrap}
 @media (max-width:560px){ .id-avatar-kaart{grid-template-columns:1fr;justify-items:start} .id-mijlpalen li{grid-template-columns:36px minmax(0,1fr)} .id-mp-datum{grid-column:2} }
+.id-verhaal{display:grid;gap:14px}
+.id-verhaal-kop{display:flex;align-items:center;gap:10px}
+.id-blok{border-top:1px solid var(--lijn);padding-top:12px;display:grid;gap:6px}
+.id-blok h3{margin:0;font-size:.95rem;font-weight:750}
+.id-blok p{margin:0;line-height:1.5}
+.id-chips{display:flex;flex-wrap:wrap;gap:6px}.id-chip{padding:4px 10px;border-radius:999px;background:var(--salie-zacht);color:var(--salie-diep);font-size:.84rem;font-weight:650}
+.id-bron{font-size:.76rem!important;color:var(--grijs)}.id-bron.is-inline{font-size:.74rem}
+.id-gedaan,.id-punten{margin:0;padding-left:18px;display:grid;gap:6px;line-height:1.45}
+.id-gedaan{list-style:none;padding-left:0}
+.id-eigen{display:block;font-size:.86rem;color:var(--inkt-zacht);font-style:italic;margin-top:2px}
+.mi-lijst{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.mi-rij{display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;min-height:60px;padding:10px 12px;border-radius:14px;border:1px solid var(--lijn);background:var(--kaart);color:var(--inkt);font:inherit;text-align:left;cursor:pointer}
+.mi-rij:hover{background:var(--tegel-licht)}
+.mi-rij:focus-visible,.mi-keuze:focus-visible,.mi-tegel:focus-visible,.mi-switch:focus-visible,.mi-link:focus-visible,.popup-terug:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mi-icoon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--tegel);color:var(--inkt-zacht);overflow:hidden}
+.mi-icoon img{width:40px;height:40px;object-fit:cover}
+.mi-tekst{display:grid;gap:2px;min-width:0}
+.mi-titel{font-weight:750;font-size:.98rem}
+.mi-sub{font-size:.84rem;color:var(--inkt-zacht);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mi-voet{margin:12px 2px 0;font-size:.8rem;color:var(--inkt-zacht);line-height:1.5}
+.mi-link{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:6px 8px;border-radius:10px;background:none;border:0;color:var(--inkt);font:inherit;font-size:.86rem;cursor:pointer}
+.mi-link:hover{background:var(--tegel-licht)}
+#mi-detail-kop:focus{outline:none}
+.mi-detail{display:grid;gap:14px}
+.mi-velden{display:grid;gap:12px}
+.mi-label{display:block;font-size:.8rem;font-weight:700;color:var(--grijs)}
+.mi-vast{margin:4px 0 0;display:flex;align-items:center;gap:8px}
+.mi-uitleg{margin:4px 0 0;font-size:.8rem;color:var(--inkt-zacht);line-height:1.5}
+.mi-fout{margin:0;color:#B71C1C;font-size:.86rem}
+.mi-acties{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.mi-acties .btn{width:auto}
+.mi-acties.is-stapel{display:grid;justify-items:start}
+.mi-status{font-size:.84rem;display:inline-flex;align-items:center;gap:6px;min-height:1.2em;color:var(--inkt-zacht)}
+.mi-status.is-ok{color:var(--st-sterk)}
+.mi-status.is-fout{color:#B71C1C}
+.mi-status.is-let{color:var(--st-midden-tekst)}
+.mi-blok{border-top:1px solid var(--lijn);padding-top:14px}
+.mi-keuzes{display:grid;gap:8px}
+.mi-keuzes.is-rij{grid-template-columns:1fr 1fr}
+.mi-keuze{display:grid;gap:2px;text-align:left;padding:12px 14px;border-radius:14px;border:1px solid var(--lijn);background:var(--kaart);color:var(--inkt);font:inherit;cursor:pointer;min-height:48px}
+.mi-keuze.is-aan{border-color:var(--accent-diep);box-shadow:0 0 0 1.5px var(--accent-diep);background:var(--accent-zacht)}
+.mi-keuze-titel{font-weight:700}
+.mi-keuze-sub{font-size:.84rem;color:var(--inkt-zacht)}
+.mi-preview{margin:0;display:grid;gap:6px}
+.mi-preview img{width:100%;height:auto;max-height:240px;object-fit:cover;border-radius:14px;display:block}
+.mi-preview figcaption{font-size:.86rem;font-weight:650}
+.mi-knop{justify-self:start;width:auto}
+.mi-galerij{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mi-tegel{position:relative;display:grid;gap:4px;padding:4px 4px 6px;border-radius:12px;border:1px solid var(--lijn);background:var(--kaart);font:inherit;color:var(--inkt);cursor:pointer;text-align:left}
+.mi-tegel img{width:100%;aspect-ratio:16/10;height:auto;object-fit:cover;border-radius:9px;display:block}
+.mi-tegel-naam{font-size:.74rem;font-weight:600;line-height:1.2;padding:0 2px}
+.mi-tegel.is-aan{border-color:var(--accent-diep);box-shadow:0 0 0 2px var(--accent-diep)}
+.mi-tegel.is-aan::after{content:"";position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;background:var(--accent-diep) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center/12px no-repeat}
+.mi-schakel{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.mi-switch{display:inline-flex;align-items:center;gap:8px;padding:4px 10px 4px 4px;border-radius:999px;border:1px solid var(--lijn);background:var(--tegel);font:inherit;font-weight:700;cursor:pointer;min-height:40px;color:var(--inkt)}
+.mi-switch-knop{width:28px;height:28px;border-radius:50%;background:var(--kaart);box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.mi-switch.is-aan{background:var(--salie-zacht);border-color:var(--salie-diep);flex-direction:row-reverse;padding:4px 4px 4px 10px}
+.mi-switch.is-aan .mi-switch-knop{background:var(--salie-diep)}
+.mi-tekst-blok{margin:0;line-height:1.55}
+.mi-overzicht{margin:0;display:grid;gap:6px}
+.mi-overzicht div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--lijn);font-size:.9rem}
+.mi-overzicht dt{color:var(--inkt-zacht)}.mi-overzicht dd{margin:0;font-weight:650;text-align:right}
+.mi-gevaar{color:#B71C1C!important;border-color:#E4C4C4!important}
+.mi-gevaar-vol{background:#B71C1C!important}
+.mi-bevestig{border:1px solid #E4C4C4;border-radius:14px;padding:12px 14px;display:grid;gap:10px}.mi-bevestig p{margin:0}
+.mi-waarschuwing{border:1px solid var(--st-midden);background:#FFF8E6;border-radius:14px;padding:12px 14px;margin-bottom:14px;display:grid;gap:10px}.mi-waarschuwing p{margin:0;font-weight:650}
+@media (max-width:560px){ .mi-galerij{grid-template-columns:repeat(2,minmax(0,1fr))} .mi-keuzes.is-rij{grid-template-columns:1fr} .mi-acties .btn{flex:1 1 auto} }
 .avatar-kiezer{display:grid;gap:16px}
 .ak-kop h2{margin:0;font-size:1.3rem;font-weight:800}.ak-kop p{margin:4px 0 0;color:var(--inkt-zacht);font-size:.92rem;line-height:1.5}
 .ak-grid{display:grid;grid-template-columns:220px minmax(0,1fr);gap:22px;align-items:start}
@@ -60938,7 +61217,7 @@ textarea.studio-input{resize:vertical;min-height:0}
 .doe-schema td.is-wed{background:var(--accent-zacht);color:var(--accent-diep);font-weight:700}
 @media (prefers-reduced-motion:reduce){ .doe-reeks li{animation:none} }
 @media (max-width:900px){ .doe-midden{grid-template-columns:1fr} }
-@media (max-width:640px){ .doe-kop{gap:12px} .doe-strook .studio-beeld.is-doe-strook{height:140px} .doe-start{width:100%} .doe-neo-figuur{display:none} .doe-voet{grid-template-columns:1fr} }
+@media (max-width:640px){ .doe-kop{gap:12px} .doe-strook .studio-beeld.is-doe-strook{height:clamp(80px,calc(64px + 6vw),100px)} .doe-start{width:100%} .doe-neo-figuur{display:none} .doe-voet{grid-template-columns:1fr} }
 @media (max-width:820px){ .afrond-neo-beeld{width:76px} }
 @media (max-width:640px){
   .afrond-hero{margin:-16px -14px 0;padding:20px 14px 16px}
@@ -62423,7 +62702,7 @@ button.admin-status-tekst:hover{background:rgba(28,27,25,.04)}
     const m = String(k || "").match(/(?:^|[^0-9])([1-6])(?:[^0-9]|$)/);
     return m ? Number(m[1]) : null;
   }
-  var TAALVOORKEUREN = { eenvoudig: -1, standaard: 0, uitgebreid: 1 };
+  var TAALVOORKEUREN = { eenvoudig: -1, standaard: 0, uitgebreid: 0 };
   function taalprofiel(leeftijd, klas, extra) {
     const k = (klas || "").toLowerCase();
     const exp = extra || {};
@@ -62454,6 +62733,7 @@ button.admin-status-tekst:hover{background:rgba(28,27,25,.04)}
     if (onbekend && lt && lt <= 13) schaal = 1;
     const voorkeur = String(exp.taalvoorkeur || "standaard").toLowerCase();
     const schuif = TAALVOORKEUREN[voorkeur] != null ? TAALVOORKEUREN[voorkeur] : 0;
+    const schaalInhoud = schaal;
     schaal = Math.min(5, Math.max(1, schaal + schuif));
     const taal = { 1: "B1-", 2: "B1", 3: "B1+", 4: "B2", 5: "C1" }[schaal];
     const legacy = {
@@ -62475,8 +62755,9 @@ button.admin-status-tekst:hover{background:rgba(28,27,25,.04)}
       geen: "havo",
       anders: "havo"
     };
-    const onderwijs = legacy[label] || (schaal <= 2 ? "vmbo" : schaal >= 4 ? "vwo" : "havo");
-    const niveau = schaal <= 2 ? 1 : schaal >= 4 ? 3 : 2;
+    const onderwijs = legacy[label] || (schaalInhoud <= 2 ? "vmbo" : schaalInhoud >= 4 ? "vwo" : "havo");
+    const niveau = schaalInhoud <= 2 ? 1 : schaalInhoud >= 4 ? 3 : 2;
+    const meerUitleg = voorkeur === "uitgebreid";
     return {
       onderwijs,
       leeftijd: lt || 14,
@@ -62495,7 +62776,8 @@ button.admin-status-tekst:hover{background:rgba(28,27,25,.04)}
       zinslengte: { 1: 10, 2: 14, 3: 18, 4: 22, 5: 24 }[schaal],
       opdrachtenPerZin: schaal <= 2 ? 1 : 2,
       abstractie: { 1: "zeer concreet", 2: "concreet", 3: "concreet met enige abstractie", 4: "abstract waar nodig", 5: "abstract en conceptueel" }[schaal],
-      uitlegdiepte: { 1: "veel", 2: "ruim", 3: "normaal", 4: "beperkt", 5: "beknopt" }[schaal],
+      uitlegdiepte: meerUitleg ? "veel, met een korte toelichting en een voorbeeld bij elke lastige stap" : { 1: "veel", 2: "ruim", 3: "normaal", 4: "beperkt", 5: "beknopt" }[schaal],
+      meerUitleg,
       /* v104: wie zélf "Eenvoudig" kiest, krijgt de jargonregels ook op havo/vwo.
          Dat was de klacht: de knop stond op eenvoudig en de tekst bleef gelijk. */
       vermijdJargon: schaal <= 2 || voorkeur === "eenvoudig",
@@ -62551,7 +62833,9 @@ button.admin-status-tekst:hover{background:rgba(28,27,25,.04)}
       onderwijsniveau: g.onderwijsniveau || d.onderwijsniveau,
       leerjaar: g.leerjaar != null ? g.leerjaar : d.leerjaar,
       hoogsteOpleiding: g.hoogsteOpleiding || d.hoogsteOpleiding,
-      taalvoorkeur: g.taalvoorkeur || d.taalvoorkeur,
+      /* v113.29: één centrale bron — de voorkeur in het groeiprofiel (gaat mee tussen apparaten) gaat vóór
+         een oudere kopie in de sessie. */
+      taalvoorkeur: d.taalvoorkeur || g.taalvoorkeur,
       leeftijd: g.leeftijd
     });
   }
@@ -62563,7 +62847,9 @@ ${wie}
 ${DOELGROEP_RICHTLIJN[t.doelgroep] || DOELGROEP_RICHTLIJN.neutraal}
 - Schrijf op taalniveau ${t.taalcomplexiteit}. Gemiddeld maximaal ${t.zinslengte} woorden per zin.
 - Maximaal ${t.opdrachtenPerZin} opdracht of handeling per zin. Gebruik actieve zinnen en concrete werkwoorden.
-- Abstractieniveau: ${t.abstractie}. Hoeveelheid uitleg: ${t.uitlegdiepte}.
+- Abstractieniveau: ${t.abstractie}. Hoeveelheid uitleg: ${t.uitlegdiepte}.${t.meerUitleg ? `
+- Deze gebruiker heeft ZELF om meer uitleg gevraagd. Geef bij lastige stappen een korte toelichting en een concreet voorbeeld. Gebruik geen moeilijkere woorden en geen langere zinnen dan normaal.` : ""}
+- De schrijfstijl verandert alleen de formulering en de hoeveelheid ondersteuning. Het leerdoel, het denkniveau, het niveau (Brons, Zilver, Goud, Platina), de succescriteria en de beoordelingsrubric blijven precies gelijk.
 - Voorbeelden: ${t.voorbeeldstijl}.
 ${t.vermijdJargon ? `- VERMIJD onderwijs- en vakjargon. Verboden woorden (gebruik gewone taal): casus, verdiep je, verwerken (in de zin van 'omgaan met'), ori\xEBntatie, onderbouwen, beargumenteren, werkvorm, zichtbaar resultaat, een succesvolle leerling, evalueren, analyseren, implementeren, concretiseren, formuleren, defini\xEBren, identificeren, inventariseren, prioriteren, in kaart brengen, criteria, competenties, leerdoel, rubric, strategie, factoren, aspecten, context, transfer, executieve functies, metacognitie, reflecteren (gebruik: terugkijken).
 - Vervang ze zo: "casus" \u2192 "voorbeeld uit het echte leven"; "verdiep je in" \u2192 "zoek uit"; "onderbouwen" \u2192 "uitleggen waarom"; "ori\xEBntatie" \u2192 "eerst rondkijken"; "criteria" \u2192 "eisen"; "formuleer" \u2192 "schrijf op"; "strategie" \u2192 "manier"; "een succesvolle leerling:" \u2192 "dit heb je aan het einde gedaan:".${t.eenvoudigGevraagd ? `
@@ -63830,27 +64116,29 @@ ${t.vermijdJargon ? `- VERMIJD onderwijs- en vakjargon. Verboden woorden (gebrui
       const goudNa = wvNaam === "Vergelijk en adviseer" ? [goud.helpen[1], { titel: "Kijk of je advies werkt", uitleg: "Vraag na een paar dagen of je advies hielp. Wat zou je nu anders adviseren, en waarom?" }] : goud[fn] || (groep === "product" ? goud.product : groep === "denk" ? goud.onderzoeken : groep === "gesprek" ? goud.gesprek : groep === "proef" ? goud.proberen : goud.doe);
       const ander2 = { titel: "Vraag hoe een ander het ziet", uitleg: `Vraag iemand hoe die hiernaar kijkt. Wat is anders dan bij jou?` };
       const conclusie = { titel: "Trek je conclusie", uitleg: `Wat werkt het best, en waarom? Schrijf het in drie zinnen op.` };
+      const PLATINA_PROBEER = { titel: "Probeer het drie keer", uitleg: `Probeer het op drie verschillende momenten. Schrijf na elke keer op wat er gebeurde en wat je de volgende keer anders doet.` };
+      const PLATINA_OVERDRACHT = { titel: "Leer het een ander", uitleg: `Leg aan een klasgenoot uit hoe jij het aanpakt en waarom. Laat hem \xE9\xE9n ding zelf proberen. Schrijf op wat hij ervan leerde.` };
       const platina = {
         product: [
           { titel: "Zoek uit hoe het werkt", uitleg: `Zoek uit hoe ${o} echt werkt. Wat hebben mensen die er goed in zijn gemeen?` },
           { titel: "Ontwerp je opzet", uitleg: `Bedenk hoe ${V.ref} eruitziet. Welke onderdelen, regels of vragen horen erbij?` },
           maakStap,
-          { titel: "Test en verzamel bewijs", uitleg: `Voer het een paar keer uit. Schrijf elke keer op wat het oplevert.` },
-          { titel: "Deel en verwerk feedback", uitleg: `Laat het zien aan een klasgenoot of mentor en vraag om feedback. Verwerk \xE9\xE9n verbetering.` }
+          PLATINA_PROBEER,
+          PLATINA_OVERDRACHT
         ],
         doen: [
           { titel: "Zoek uit hoe het werkt", uitleg: `Zoek uit hoe ${o} echt werkt. Wat hebben mensen die er goed in zijn gemeen?` },
-          { titel: "Maak een plan", uitleg: `Bedenk hoe je ${V.ref} aanpakt en wat je nodig hebt.` },
+          { titel: "Maak een plan", uitleg: `Schrijf op wat je gaat doen, wanneer je het doet en wat je nodig hebt.` },
           maakStap,
-          { titel: "Test en verzamel bewijs", uitleg: `Voer het een paar keer uit. Schrijf elke keer op wat het oplevert.` },
-          { titel: "Deel en verwerk feedback", uitleg: `Laat het zien aan een klasgenoot of mentor en vraag om feedback. Verwerk \xE9\xE9n verbetering.` }
+          PLATINA_PROBEER,
+          PLATINA_OVERDRACHT
         ],
         denken: [
           { titel: "Zoek uit hoe het werkt", uitleg: `Zoek uit hoe ${o} echt werkt. Wat hebben mensen die er goed in zijn gemeen?` },
           maakStap,
           ander2,
           conclusie,
-          { titel: "Deel en verwerk feedback", uitleg: `Laat het zien aan een klasgenoot of mentor en vraag om feedback. Verwerk \xE9\xE9n verbetering.` }
+          PLATINA_OVERDRACHT
         ]
       };
       if (niveau === "Platinum") stappen = platina[fam === "product" ? "product" : fam === "denken" ? "denken" : "doen"];
@@ -64025,7 +64313,12 @@ ${t.vermijdJargon ? `- VERMIJD onderwijs- en vakjargon. Verboden woorden (gebrui
       const sub = pgSubthemaVan(kiesSubthema(subs, situatie, themaLabel2)) || pgSubthemaVan((subs || [])[0]) || PG_SUBTHEMAS[0];
       const niv = ["Bronze", "Silver", "Gold"].includes(niveau) ? niveau : niveau === "Platinum" ? "Gold" : "Bronze";
       const basis = genereerMissie({ ...args, niveau: niv, subs: [sub.label] });
-      return bouwPrestatieUitdaging(basis, { subthema: sub.label, niveau: niv, sport });
+      const pg = bouwPrestatieUitdaging(basis, { subthema: sub.label, niveau: niv, sport });
+      if (niveau === "Platinum" && pg && Array.isArray(pg.stappen)) {
+        pg.stappen = [...pg.stappen, { titel: "Leer het een ander", uitleg: "Leg aan een teamgenoot of klasgenoot uit wat voor jou werkte en waarom. Laat hem het \xE9\xE9n keer zelf proberen en geef \xE9\xE9n tip. Schrijf op wat hij ervan leerde." }];
+        pg.succescriteria = [...Array.isArray(pg.succescriteria) ? pg.succescriteria : [], "Je legt het uit aan een ander, en die kan het daarna zelf proberen."];
+      }
+      return pg;
     }
     if (isBsmThema(thema)) {
       const niv = ["Bronze", "Silver", "Gold"].includes(niveau) ? niveau : niveau === "Platinum" ? "Gold" : "Bronze";
@@ -64033,7 +64326,7 @@ ${t.vermijdJargon ? `- VERMIJD onderwijs- en vakjargon. Verboden woorden (gebrui
       const sub = bsmSubthemaVan(thema, [gekozen, ...subs || []]);
       const basis = genereerMissie({ ...args, route: "bsm", sport: "", niveau: niv, subs: [sub] });
       const teller = (Array.isArray(recenteTypes) ? recenteTypes.length : 0) + (Array.isArray(vermijdWerkvormen2) ? vermijdWerkvormen2.length : 0);
-      const bl = bsmLokaal(basis, { thema, subs: [sub], niveau: niv, vermijdWerkvormen: vermijdWerkvormen2, teller, profiel: args.bsmProfiel });
+      const bl = bsmLokaal(basis, { thema, subs: [sub], niveau: niv, platina: niveau === "Platinum", vermijdWerkvormen: vermijdWerkvormen2, teller, profiel: args.bsmProfiel });
       if (bsmProfielIngevuld(args.bsmProfiel)) bl.bsm = { ...bl.bsm, intake: bsmNeoProfiel(args.bsmProfiel) };
       return { ...bl, niveau: niveau || niv };
     }
@@ -64577,7 +64870,7 @@ ${t.vermijdJargon ? `- VERMIJD onderwijs- en vakjargon. Verboden woorden (gebrui
       bron: "lokaal"
     };
   }
-  function aiFeedbackPrompt({ record, prof, profiel }) {
+  function aiFeedbackPrompt({ record, prof, profiel, tp: leerlingTp }) {
     const d = record && record.data || {};
     const arr3 = (v) => Array.isArray(v) ? v : v ? [v] : [];
     const refl = arr3(record.reflectie).map((x) => `${x.vraag} \u2192 ${["nog niet", "begin", "goed", "uitstekend"][(x.waarde || 1) - 1] || "?"}`).join("; ") || "geen zelfreflectie";
@@ -64627,7 +64920,7 @@ REGELS:
 - Geen complimenten zonder onderbouwing. Is er geen bewijs, zet strongPoint op null en evidenceStatus op "missing".
 - Eenvoudige leerlingtaal, geen jargon (geen Bloom, mastery, leerfase). Per onderdeel \xE9\xE9n \xE0 twee korte zinnen; samen minder dan 80 woorden.
 
-GEGEVENS:
+${leerlingTp ? taalInstructie(leerlingTp) + "\n\n" : ""}GEGEVENS:
 ${ctx}
 ${extra}
 
@@ -64652,14 +64945,14 @@ Geef UITSLUITEND geldige JSON terug (geen markdown, geen uitleg):
   "masteryScore": <intern: geheel getal 0-100, een schatting>
 }`;
   }
-  async function genereerAIFeedbackAI({ record, prof, profiel }) {
+  async function genereerAIFeedbackAI({ record, prof, profiel, tp }) {
     try {
       coreBeslis("feedback", { gebruiker: record && record.leerling ? { naam: record.leerling.naam, klas: record.leerling.klas, leeftijd: record.leerling.leeftijd } : null, uitleg: "AI-feedback op een afgeronde challenge" });
     } catch {
     }
     try {
       const res = await aiFetch({
-        body: JSON.stringify({ model: "claude-sonnet-4-6", max_tokens: 1100, messages: [{ role: "user", content: aiFeedbackPrompt({ record, prof, profiel }) }] })
+        body: JSON.stringify({ model: "claude-sonnet-4-6", max_tokens: 1100, messages: [{ role: "user", content: aiFeedbackPrompt({ record, prof, profiel, tp }) }] })
       });
       const raw = await res.text();
       const data = JSON.parse(raw);
@@ -66072,12 +66365,19 @@ VEILIGHEID: geef nooit medische diagnoses, geen gewichts- of calorie-adviezen, g
       const m = await this.map();
       return m[slug] || null;
     },
+    /* v113.29: geeft het resultaat van de opslaglaag terug ({ok, stand}), zodat de app pas 'Opgeslagen' toont na bevestiging.
+       Bestaande aanroepen negeren de terugkeerwaarde en werken ongewijzigd. */
     async set(slug, profiel) {
       try {
         const m = await this.map();
         m[slug] = profiel;
-        if (typeof window !== "undefined" && window.storage) await window.storage.set(DISCOVERY_KEY, JSON.stringify(m), false);
-      } catch {
+        if (typeof window !== "undefined" && window.storage) {
+          const r = await window.storage.set(DISCOVERY_KEY, JSON.stringify(m), false);
+          return r && typeof r === "object" ? { ok: r.ok !== false, stand: r.stand || null, reden: r.reden || null } : { ok: true, stand: null };
+        }
+        return { ok: false, reden: "geen-opslag" };
+      } catch (e) {
+        return { ok: false, reden: "fout" };
       }
     }
   };
@@ -70618,14 +70918,14 @@ Antwoord met ALLEEN de JSON.`;
             vib.stop(t + sec + 0.1);
           }
         },
-        knal(x, groot = 1) {
+        knal(x, groot2 = 1) {
           if (ac.state !== "running") return;
           const t = ac.currentTime, uit = pan(x);
           const n = bron(), lp = ac.createBiquadFilter(), g = ac.createGain();
           lp.type = "lowpass";
           lp.frequency.setValueAtTime(2400, t);
           lp.frequency.exponentialRampToValueAtTime(180, t + 0.9);
-          g.gain.setValueAtTime(0.95 * groot, t);
+          g.gain.setValueAtTime(0.95 * groot2, t);
           g.gain.exponentialRampToValueAtTime(1e-3, t + 1.1);
           n.connect(lp).connect(g).connect(uit);
           g.connect(galm);
@@ -70635,7 +70935,7 @@ Antwoord met ALLEEN de JSON.`;
           o.type = "sine";
           o.frequency.setValueAtTime(120, t);
           o.frequency.exponentialRampToValueAtTime(40, t + 0.35);
-          go.gain.setValueAtTime(0.6 * groot, t);
+          go.gain.setValueAtTime(0.6 * groot2, t);
           go.gain.exponentialRampToValueAtTime(1e-3, t + 0.4);
           o.connect(go).connect(uit);
           o.start(t);
@@ -71341,7 +71641,7 @@ Antwoord met ALLEEN de JSON.`;
     const motivatie = d && d.motivatie || (st.best >= 5 ? "Toont doorzettingsvermogen en werkt consistent aan groei." : "Bouwt stap voor stap aan betrokkenheid.");
     const groeiOverTijd = af.filter((r) => r.rubricScore != null || r.alpe && r.alpe.masteryScore != null).map((r) => ({ datum: r.afgerondOp || r.datum, waarde: r.alpe && r.alpe.masteryScore != null ? r.alpe.masteryScore : r.rubricScore }));
     const reflecties = af.filter((r) => Array.isArray(r.reflectie) && r.reflectie.length).map((r) => ({ thema: r.thema, datum: r.afgerondOp || r.datum, items: r.reflectie }));
-    const mentorfeedback = af.filter((r) => r.alpe && r.alpe.mentorfeedback).map((r) => ({ thema: r.thema, datum: r.afgerondOp, ...r.alpe.mentorfeedback }));
+    const mentorfeedback = af.filter((r) => r.alpe && r.alpe.mentorfeedback).map((r) => ({ thema: r.thema, datum: r.afgerondOp, titel: r.data && r.data.titel || null, ...r.alpe.mentorfeedback }));
     return {
       leerling: { naam: gebruiker && gebruiker.naam, klas: gebruiker && gebruiker.klas, leeftijd: gebruiker && gebruiker.leeftijd, avatar: d && d.avatar || null, route: d && d.route || null, profielNaam: d && d.profielNaam || null },
       kerncijfers: { afgerond: af.length, xp, subthemaCount: subs.length, themaCount: themas.length, gemMastery, prestatiesVerdiend: prestaties.verdiend.length, streakBest: st.best },
@@ -73330,16 +73630,16 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
         top.map((e, i) => {
           const ang = i / top.length * 2 * Math.PI - Math.PI / 2;
           const x = cx + Math.cos(ang) * R, y = cy + Math.sin(ang) * R;
-          const kl = TYPE_KLEUR[e.type] || "#999";
-          return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("line", { x1: cx, y1: cy, x2: x, y2: y, stroke: kl, strokeWidth: 1 + e.gewicht / 100 * 2.5, opacity: 0.5 }, "l" + i);
+          const kl2 = TYPE_KLEUR[e.type] || "#999";
+          return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("line", { x1: cx, y1: cy, x2: x, y2: y, stroke: kl2, strokeWidth: 1 + e.gewicht / 100 * 2.5, opacity: 0.5 }, "l" + i);
         }),
         top.map((e, i) => {
           const ang = i / top.length * 2 * Math.PI - Math.PI / 2;
           const x = cx + Math.cos(ang) * R, y = cy + Math.sin(ang) * R;
-          const kl = TYPE_KLEUR[e.type] || "#999";
+          const kl2 = TYPE_KLEUR[e.type] || "#999";
           const rr = 6 + e.gewicht / 100 * 6;
           return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("g", { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("circle", { cx: x, cy: y, r: rr, fill: kl, opacity: 0.9 }),
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("circle", { cx: x, cy: y, r: rr, fill: kl2, opacity: 0.9 }),
             /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("text", { x, y: y - rr - 3, textAnchor: "middle", fontSize: "8.5", fill: "#555", children: String(e.label).slice(0, 14) })
           ] }, "n" + i);
         }),
@@ -74260,7 +74560,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
                   /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { style: { fontSize: ".76rem", textTransform: "uppercase", letterSpacing: ".04em", color: "var(--grijs)" }, children: "AI-signalen hieronder" }),
                   /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { style: { margin: "4px 0 0", paddingLeft: 18 }, children: e.aiSignalen.map((a, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("li", { style: { fontSize: ".8rem" }, children: a }, i)) })
                 ] }),
-                e.mentorfeedback && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { borderLeft: "3px solid #4C7A3F", paddingLeft: 10 }, children: [
+                e.mentorfeedback && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "fbb-ingebed", children: [
                   /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { style: { fontSize: ".76rem", textTransform: "uppercase", letterSpacing: ".04em", color: "var(--grijs)" }, children: "Mentorfeedback" }),
                   /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { children: e.mentorfeedback })
                 ] }),
@@ -74983,15 +75283,8 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
         ] })
       ] }),
       paneel && paneel.soort === "prestaties" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PfPaneel, { titel: "Groei-prestaties", sub: pf.prestaties.verdiend.length + " verdiend", icoon: "medal", breed: true, onSluit: sluit, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PrestatieGalerij, { records, gebruiker }) }),
-      paneel && paneel.soort === "feedback" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PfPaneel, { titel: "Feedback van je docent", sub: mv2(feedback.length, "bericht", "berichten"), icoon: "mail", onSluit: sluit, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: { display: "grid", gap: 8 }, children: feedback.slice().reverse().map((m, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "card", style: { padding: 14 }, "data-pf4": "feedback-item", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "muted", style: { fontSize: ".76rem", marginBottom: 3 }, children: [
-          themaLabel(m.thema),
-          m.door ? " \xB7 " + m.door : "",
-          m.op || m.datum ? " \xB7 " + datumNL(m.op || m.datum) : ""
-        ] }),
-        m.feedback && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { style: { margin: 0, fontSize: ".9rem", lineHeight: 1.5 }, children: m.feedback })
-      ] }, i)) }) }),
-      paneel && paneel.soort === "reflecties" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PfPaneel, { titel: "Mijn reflecties", sub: mv2(reflAlle.length, "reflectiemoment", "reflectiemomenten"), icoon: "kiem", toon: "groen", onSluit: sluit, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: { display: "grid", gap: 8 }, children: reflAlle.map((m, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "card", style: { padding: 14 }, "data-pf3": "reflectie", children: [
+      paneel && paneel.soort === "feedback" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PfPaneel, { titel: "Feedback van je docent", sub: mv2(feedback.length, "bericht", "berichten"), icoon: "mail", onSluit: sluit, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "fbb-lijst", children: feedback.slice().reverse().map((m, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(FeedbackBericht, { m, toonOordeel: false, data: "feedback-item" }, i)) }) }),
+      paneel && paneel.soort === "reflecties" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PfPaneel, { titel: "Mijn reflecties", sub: mv2(reflAlle.length, "reflectiemoment", "reflectiemomenten"), icoon: "kiem", onSluit: sluit, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: { display: "grid", gap: 8 }, children: reflAlle.map((m, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "card", style: { padding: 14 }, "data-pf3": "reflectie", children: [
         /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "muted", style: { fontSize: ".76rem", marginBottom: 4 }, children: [
           themaLabel(m.thema),
           m.datum ? " \xB7 " + datumNL(m.datum) : ""
@@ -75205,6 +75498,37 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
       ] })
     ] });
   }
+  function FeedbackBericht({ m, titel, toonOordeel = true, toonScore = true, data }) {
+    const mf = m || {};
+    const o = toonOordeel ? docentOordeelVan({ alpe: { mentorfeedback: mf } }) : null;
+    const kop2 = titel || mf.titel || (mf.thema ? themaLabel(mf.thema) : "") || "Uitdaging";
+    const sub = [mf.titel && mf.thema && !titel ? themaLabel(mf.thema) : "", mf.door, mf.op || mf.datum ? datumNL(mf.op || mf.datum) : ""].filter(Boolean).join(" \xB7 ");
+    const behaald = !!(o && o.echt && o.niveauIndex >= 2);
+    const werk = toonOordeel ? (Array.isArray(mf.nogOntwikkelen) ? mf.nogOntwikkelen : []).map((x) => String(x || "").trim()).filter((x) => x && !/\?\s*$/.test(x))[0] : null;
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("article", { className: "fbb", "data-pf4": data || void 0, "data-fbb": "bericht", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("header", { className: "fbb-kop", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "fbb-titel", children: kop2 }),
+        sub && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "fbb-meta", children: sub })
+      ] }),
+      o && o.echt && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "fbb-oordeel", "data-fbb": "oordeel", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "fbb-status" + (behaald ? " is-behaald" : ""), children: [
+          behaald && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "check", size: 12 }),
+          "Beoordeeld: " + String(o.niveau || "").toLowerCase()
+        ] }),
+        toonScore && o.score != null && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "fbb-meta", children: [
+          o.score,
+          "%"
+        ] })
+      ] }),
+      o && !o.echt && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "fbb-oordeel", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "fbb-status", children: "Feedback, geen beoordeling" }) }),
+      mf.feedback ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "fbb-tekst", "data-fbb": "tekst", children: mf.feedback }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "fbb-leeg", children: "Er staat geen geschreven toelichting bij." }),
+      werk && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "fbb-werk", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: "Werkpunt" }),
+        " ",
+        werk
+      ] })
+    ] });
+  }
   function PfPaneel({ titel, sub, icoon, toon = "oranje", breed, onSluit, children }) {
     return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ModalLaag, { onSluit, label: titel, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "pf2-paneel", style: breed ? { width: "min(" + breed + "px,calc(100vw - 32px))" } : void 0, children: [
       /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "pf2-paneel-kop", children: [
@@ -75272,7 +75596,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
       ...toon("prestaties") ? [{ w: pf.kerncijfers.prestatiesVerdiend, l: "Groei-prestaties", icoon: "medal", toon: "oranje" }] : [],
       ...!isOuder && toon("kerncijfers") ? [{ w: xpGetal(pf.kerncijfers.xp), l: "Totaal XP", icoon: "chart", toon: "grijs" }] : []
     ];
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(PfPaneel, { titel: "Onderbouwing van groei", sub: pf.leerling.naam + " \xB7 Portfolio-overzicht", icoon: "rubric", toon: "groen", breed: 920, onSluit, children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(PfPaneel, { titel: "Onderbouwing van groei", sub: pf.leerling.naam + " \xB7 Portfolio-overzicht", icoon: "rubric", breed: 920, onSluit, children: [
       /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "ob-stats", children: stats.map((x) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "ob-stat is-" + x.toon, children: [
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "ob-stat-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: x.icoon, size: 16 }) }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: x.w }),
@@ -75805,7 +76129,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
         werkLijst(afgerondeRecs.slice().reverse())
       ] }),
       paneel && paneel.soort === "passend" && ins.stapThema && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PassendeUitdagingenPaneel, { thema: ins.stapThema, reden: ins.ontwKort || ins.sterkKort, isOntwikkelpunt: !!ins.ontwKort, records, leerling: gebruiker, voornaam, onOpen, onStudio, onSluit: sluit }),
-      paneel && paneel.soort === "reflecties" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PfPaneel, { titel: "Alle reflecties", sub: pf.reflecties.length + " " + (pf.reflecties.length === 1 ? "reflectiemoment" : "reflectiemomenten"), icoon: "kiem", toon: "groen", onSluit: sluit, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: { display: "grid", gap: 8 }, children: (pf.reflecties || []).slice().sort((a, b) => String(b.datum || "").localeCompare(String(a.datum || ""))).map((m, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "card", style: { padding: 14 }, "data-pf3": "reflectie", children: [
+      paneel && paneel.soort === "reflecties" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PfPaneel, { titel: "Alle reflecties", sub: pf.reflecties.length + " " + (pf.reflecties.length === 1 ? "reflectiemoment" : "reflectiemomenten"), icoon: "kiem", onSluit: sluit, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: { display: "grid", gap: 8 }, children: (pf.reflecties || []).slice().sort((a, b) => String(b.datum || "").localeCompare(String(a.datum || ""))).map((m, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "card", style: { padding: 14 }, "data-pf3": "reflectie", children: [
         /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "muted", style: { fontSize: ".76rem", marginBottom: 4 }, children: [
           themaLabel(m.thema),
           m.datum ? " \xB7 " + datumNL(m.datum) : ""
@@ -75818,7 +76142,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
           ] }) : null
         ] }, j)) })
       ] }, i)) }) }),
-      paneel && paneel.soort === "thema" && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(PfPaneel, { titel: paneel.thema.themaLabel, sub: vaardigheidStand(paneel.thema).status.charAt(0).toUpperCase() + vaardigheidStand(paneel.thema).status.slice(1), icoon: "kiem", toon: "groen", onSluit: sluit, children: [
+      paneel && paneel.soort === "thema" && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(PfPaneel, { titel: paneel.thema.themaLabel, sub: vaardigheidStand(paneel.thema).status.charAt(0).toUpperCase() + vaardigheidStand(paneel.thema).status.slice(1), icoon: "kiem", toon: vaardigheidStand(paneel.thema).status === "aangetoond" ? "groen" : "oranje", onSluit: sluit, children: [
         /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "muted", style: { margin: "0 0 10px", fontSize: ".84rem" }, children: [
           vaardigheidStand(paneel.thema).uitleg,
           vaardigheidStand(paneel.thema).pct != null ? " \xB7 gemiddelde docentscore " + vaardigheidStand(paneel.thema).pct + "%" : ""
@@ -75845,14 +76169,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(RapportGenerator, { records, gebruiker, weergave: rol, onOpen })
       ] }),
-      paneel && paneel.soort === "feedback" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PfPaneel, { titel: "Alle feedback", sub: feedback.length + " " + (feedback.length === 1 ? "bericht" : "berichten"), icoon: "mail", onSluit: sluit, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: { display: "grid", gap: 8 }, children: feedback.slice().reverse().map((m, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "card", style: { padding: 14, borderLeft: "3px solid var(--st-sterk)" }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "muted", style: { fontSize: ".76rem", marginBottom: 3 }, children: [
-          themaLabel(m.thema),
-          m.door ? " \xB7 " + m.door : "",
-          m.rubricScore != null ? " \xB7 " + m.rubricScore + "%" : ""
-        ] }),
-        m.feedback && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { style: { margin: 0, fontSize: ".88rem", lineHeight: 1.45 }, children: m.feedback })
-      ] }, i)) }) }),
+      paneel && paneel.soort === "feedback" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PfPaneel, { titel: "Alle feedback", sub: feedback.length + " " + (feedback.length === 1 ? "bericht" : "berichten"), icoon: "mail", onSluit: sluit, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "fbb-lijst", children: feedback.slice().reverse().map((m, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(FeedbackBericht, { m }, i)) }) }),
       paneel && paneel.soort === "onderbouwing" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(OnderbouwingPaneel, { ...{ pf, themas, feedback, toon, isOuder, isMentor, magAnalyse, records, gebruiker, rol, k, dotKleur, onOpen }, onSluit: sluit })
     ] });
   }
@@ -82246,38 +82563,6 @@ Antwoord UITSLUITEND met geldige JSON: dezelfde sleutels, de herschreven tekst a
     }, [min]);
     return breed;
   }
-  function BewegingInstelling({ gebruiker, onProfiel }) {
-    const d = gebruiker && gebruiker.discovery || {};
-    const aan = d.bewegendeAchtergrond !== false;
-    const stil = useGeenBeweging();
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { borderTop: "1px solid var(--lijn)", marginTop: 16, paddingTop: 14 }, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "eyebrow", style: { margin: 0 }, children: "Bewegende achtergronden" }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "muted", style: { fontSize: ".82rem", margin: "8px 0 0", lineHeight: 1.5 }, children: "Bij water en licht beweegt de achtergrond heel zacht. Zet het uit als je liever een stil scherm hebt." }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "keuze-rij", style: { marginTop: 12 }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-          "button",
-          {
-            type: "button",
-            className: aan ? "is-aan" : "",
-            "aria-pressed": aan ? "true" : "false",
-            onClick: () => onProfiel({ bewegendeAchtergrond: true }),
-            children: "Aan"
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-          "button",
-          {
-            type: "button",
-            className: !aan ? "is-aan" : "",
-            "aria-pressed": !aan ? "true" : "false",
-            onClick: () => onProfiel({ bewegendeAchtergrond: false }),
-            children: "Uit"
-          }
-        )
-      ] }),
-      stil && aan && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "muted", style: { fontSize: ".78rem", margin: "8px 0 0", lineHeight: 1.5 }, children: "Je apparaat staat op minder beweging. De achtergrond staat daarom nu stil." })
-    ] });
-  }
   var OMG_SESSIE = "grow:omgeving:sessie:v1";
   var omgLokaal = (h) => "grow:achtergrond:v1:" + h.toString(36);
   var _omgSessie = null;
@@ -82413,125 +82698,6 @@ Antwoord UITSLUITEND met geldige JSON: dezelfde sleutels, de herschreven tekst a
     const o = omgevingVoor(gebruiker);
     if (!o) return null;
     return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(GrowOmgevingBeeld, { o, scene, beweegt }, o.key);
-  }
-  function AchtergrondInstelling({ gebruiker, onProfiel }) {
-    const vk = achtergrondVoorkeur(gebruiker);
-    const [open, setOpen] = (0, import_react3.useState)(vk.modus === "zelf");
-    const bewaar = (v) => {
-      try {
-        localStorage.setItem(omgLokaal(omgSleutel(gebruiker)), JSON.stringify(v));
-      } catch {
-      }
-      onProfiel({ achtergrond: v });
-    };
-    const huidig = omgevingVoor(gebruiker);
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "omg-instelling", "data-omg": "instelling", style: { borderTop: "1px solid var(--lijn)", marginTop: 16, paddingTop: 14 }, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "eyebrow", style: { margin: 0 }, children: "Weergave \xB7 Mijn achtergrond" }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "muted", style: { fontSize: ".82rem", margin: "8px 0 0", lineHeight: 1.5 }, children: "Elke dag een andere omgeving, of kies er zelf \xE9\xE9n." }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "keuze-rij", style: { marginTop: 12 }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-          "button",
-          {
-            type: "button",
-            "data-omg": "dag",
-            className: vk.modus === "dag" ? "is-aan" : "",
-            "aria-pressed": vk.modus === "dag" ? "true" : "false",
-            onClick: () => {
-              setOpen(false);
-              bewaar({ modus: "dag" });
-            },
-            children: "Elke dag een andere achtergrond"
-          }
-        ),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-          "button",
-          {
-            type: "button",
-            "data-omg": "zelf",
-            className: vk.modus === "zelf" ? "is-aan" : "",
-            "aria-pressed": vk.modus === "zelf" ? "true" : "false",
-            "aria-expanded": open ? "true" : "false",
-            onClick: () => {
-              setOpen(true);
-              if (vk.modus !== "zelf" && huidig) bewaar({ modus: "zelf", keuze: huidig.key });
-            },
-            children: "Zelf een achtergrond kiezen"
-          }
-        )
-      ] }),
-      vk.modus === "dag" && huidig && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "muted", style: { fontSize: ".78rem", margin: "8px 0 0" }, children: [
-        "Vandaag: ",
-        huidig.naam
-      ] }),
-      open && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "omg-raster", role: "group", "aria-label": "Kies een achtergrond", "data-omg": "galerij", children: OMGEVINGEN.map((o) => {
-        const aan = vk.modus === "zelf" && vk.keuze === o.key;
-        return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
-          "button",
-          {
-            type: "button",
-            className: "eth-tegel" + (aan ? " is-aan" : ""),
-            "aria-pressed": aan ? "true" : "false",
-            "data-omg-key": o.key,
-            onClick: () => bewaar({ modus: "zelf", keuze: o.key }),
-            children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("img", { src: o.mini, alt: "", loading: "lazy", decoding: "async", width: 320, height: Math.round(320 * o.hoogte / o.breedte) }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "eth-tegel-naam", children: o.naam })
-            ]
-          },
-          o.key
-        );
-      }) })
-    ] });
-  }
-  function TaalInstelling({ gebruiker, onProfiel }) {
-    const tp = getLearnerLanguageProfile(gebruiker);
-    const g = gebruiker || {};
-    const d = g.discovery || {};
-    const niveau = g.onderwijsniveau || d.onderwijsniveau || "";
-    const jaar = g.leerjaar != null && g.leerjaar !== "" ? String(g.leerjaar) : d.leerjaar != null && d.leerjaar !== "" ? String(d.leerjaar) : "";
-    const jaren = leerjarenVoor(niveau);
-    const voorkeur = tp.taalvoorkeur || "standaard";
-    const VOORKEUR = [
-      ["eenvoudig", "Eenvoudig", "kortere zinnen, alledaagse woorden"],
-      ["standaard", "Standaard", "past bij jouw leerjaar"],
-      ["uitgebreid", "Uitgebreid", "langere zinnen, meer vakwoorden"]
-    ];
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { borderTop: "1px solid var(--lijn)", marginTop: 16, paddingTop: 14 }, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "eyebrow", style: { margin: 0 }, children: "Taal en uitleg" }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "muted", style: { fontSize: ".82rem", margin: "8px 0 0", lineHeight: 1.5 }, children: "Hiermee bepaal je hoe Neo schrijft. Je uitdaging zelf wordt niet makkelijker: alleen de uitleg past zich aan." }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { display: "grid", gap: 10, marginTop: 12 }, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Veld, { label: "Opleiding", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("select", { className: "field", value: niveau, onChange: (e) => onProfiel({ onderwijsniveau: e.target.value, leerjaar: "" }), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "", children: "Niet ingevuld" }),
-          ONDERWIJS_NIVEAUS.map((grp) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("optgroup", { label: grp.groep, children: grp.opties.map((op) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: op.key, children: op.naam }, op.key)) }, grp.groep))
-        ] }) }),
-        jaren.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Veld, { label: "Leerjaar", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("select", { className: "field", value: jaar, onChange: (e) => onProfiel({ leerjaar: e.target.value }), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "", children: "Niet ingevuld" }),
-          jaren.map((j) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: String(j), children: j === "hoger" ? "Jaar 6 of hoger" : "Leerjaar " + j }, String(j)))
-        ] }) }),
-        ["afgerond", "geen"].includes(niveau) && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Veld, { label: "Laatst afgeronde opleiding", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("select", { className: "field", value: g.hoogsteOpleiding || d.hoogsteOpleiding || "", onChange: (e) => onProfiel({ hoogsteOpleiding: e.target.value }), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "", children: "Niet ingevuld" }),
-          ONDERWIJS_NIVEAUS.map((grp) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("optgroup", { label: grp.groep, children: grp.opties.filter((op) => !["afgerond", "geen", "anders"].includes(op.key)).map((op) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: op.key, children: op.naam }, op.key)) }, grp.groep))
-        ] }) }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { style: { display: "block", fontSize: ".78rem", fontWeight: 700, color: "var(--grijs)", marginBottom: 4 }, children: "Hoe uitgebreid mag Neo schrijven?" }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "taalkeuze", role: "radiogroup", "aria-label": "Hoe uitgebreid mag Neo schrijven?", children: VOORKEUR.map(([k, label, uitleg]) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-            "button",
-            {
-              type: "button",
-              role: "radio",
-              "aria-checked": voorkeur === k ? "true" : "false",
-              title: uitleg,
-              className: voorkeur === k ? "is-aan" : "",
-              onClick: () => onProfiel({ taalvoorkeur: k }),
-              children: label
-            },
-            k
-          )) }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "muted", style: { fontSize: ".78rem", margin: "8px 0 0", lineHeight: 1.5 }, children: tp.onbekend ? "Vul je opleiding in, dan schrijft Neo precies op jouw niveau. Nu schrijft hij neutraal en begrijpelijk." : `Neo schrijft nu voor ${tp.niveauNaam}${tp.leerjaar ? ` leerjaar ${tp.leerjaar}` : ""}, ongeveer ${Math.round(tp.zinslengte)} woorden per zin.` }),
-          tp.eenvoudigGevraagd && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "muted", style: { fontSize: ".78rem", margin: "6px 0 0", lineHeight: 1.5 }, children: "Ook schooltaal in bestaande uitdagingen wordt voor jou in gewone woorden gezet, en lange zinnen worden opgesplitst." })
-        ] })
-      ] })
-    ] });
   }
   function MijnNotitiesKnop({ open, onToggle }) {
     return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
@@ -85075,7 +85241,8 @@ ${String(stapTekst).slice(0, 900)}` : ""
       uitslag: "Uitslag"
     };
     const stapSleutelLabel = huidig.type === "stap" ? `Stap ${huidig.index + 1}: ${huidig.stap && (huidig.stap.titel || huidig.stap.naam) || ""}`.trim() : SCHERMNAAM[huidig.type] || d.titel || "Deze uitdaging";
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: { position: "relative", zIndex: 1 }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(Section, { eyebrow: `${themaLabel(rec.thema)} \xB7 ${rec.niveau}`, titel: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LTplat, { tekst: d.titel || "Jouw uitdaging", tp: tprofUitd }), sub: "Stap voor stap", children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: { position: "relative", zIndex: 1 }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(Section, { eyebrow: `${themaLabel(rec.thema)} \xB7 ${rec.niveau}`, titel: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LTplat, { tekst: d.titel || "Jouw uitdaging", tp: tprofUitd }), children: [
+      "   ",
       "   ",
       rec.alpe && rec.alpe.ontwikkelnotitie && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(OntwikkelnotitieKaart, { n: rec.alpe.ontwikkelnotitie, weergave: begeleiderWeergaveVroeg ? "mentor" : "leerling" }),
       reedsAf && afrond.stand !== "klaar" ? (() => {
@@ -87470,7 +87637,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
       }
       setBezig(false);
       if (!klas) {
-        setFout("Deze code kennen we niet. Controleer hem bij je mentor.");
+        setFout("Deze code werkt niet. Kijk of je hem goed hebt overgenomen, of vraag je mentor om de juiste code.");
         return;
       }
       setGevonden(klas);
@@ -87490,7 +87657,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
       }
     };
     return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { borderTop: "1px solid var(--lijn)", marginTop: 16, paddingTop: 16 }, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { style: { display: "block", fontSize: ".78rem", fontWeight: 700, color: "var(--grijs)", marginBottom: 6 }, children: "School & klas" }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { style: { display: "block", fontSize: ".78rem", fontWeight: 700, color: "var(--grijs)", marginBottom: 6 }, children: "School en klas" }),
       gekoppeld ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
         gebruiker.schoolnaam && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { style: { margin: 0, fontWeight: 700 }, children: gebruiker.schoolnaam }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { style: { margin: "2px 0 0", fontWeight: 800, fontSize: "1.02rem" }, children: gebruiker.klas }),
@@ -87500,7 +87667,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
         ] }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "muted", style: { margin: "8px 0 0", fontSize: ".8rem", lineHeight: 1.5 }, children: "Klopt je klas niet? Je mentor of de schoolbeheerder past dit voor je aan." })
       ] }) : !open ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { style: { margin: 0, lineHeight: 1.5 }, children: "Je bent nog niet gekoppeld aan een klas." }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { style: { margin: 0, lineHeight: 1.5 }, children: "Je zit nog niet in een klas. Heb je een koppelcode van je mentor? Vul hem hier in." }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { className: "admin-btn-sec", style: { marginTop: 10, padding: "8px 14px", minHeight: 0 }, onClick: () => {
           setOpen(true);
           setFout("");
@@ -87544,6 +87711,485 @@ ${String(stapTekst).slice(0, 900)}` : ""
           setFout("");
         }, children: "Annuleren" })
       ] })
+    ] });
+  }
+  var NEO_STIJLEN = [
+    ["eenvoudig", "Kort en simpel", "Korte zinnen en makkelijke woorden."],
+    ["standaard", "Normaal", "Duidelijke uitleg, niet te lang."],
+    ["uitgebreid", "Meer uitleg", "Extra uitleg en voorbeelden."]
+  ];
+  var neoStijlNaam = (k) => (NEO_STIJLEN.find((x) => x[0] === k) || NEO_STIJLEN[1])[1];
+  function OpslagStatus({ st }) {
+    if (!st) return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-status", role: "status", "aria-live": "polite" });
+    if (st.bezig) return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-status", role: "status", "aria-live": "polite", children: "Bezig met opslaan\u2026" });
+    if (st.fout) return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "mi-status is-fout", role: "status", "aria-live": "polite", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "waarschuwing", size: 14 }),
+      " Opslaan lukte niet. Probeer het opnieuw."
+    ] });
+    if (st.stand === "mislukt" || st.stand === "offline") return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "mi-status is-let", role: "status", "aria-live": "polite", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "clock", size: 14 }),
+      " Bewaard op dit apparaat. Online opslaan lukt nu niet; we proberen het later opnieuw."
+    ] });
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "mi-status is-ok", role: "status", "aria-live": "polite", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "check", size: 14 }),
+      " Opgeslagen"
+    ] });
+  }
+  function useVoorkeurOpslaan(onProfiel) {
+    const [st, setSt] = (0, import_react3.useState)(null);
+    const bezig = (0, import_react3.useRef)(false);
+    const timer = (0, import_react3.useRef)(null);
+    (0, import_react3.useEffect)(() => () => clearTimeout(timer.current), []);
+    const bewaar = async (patch) => {
+      if (bezig.current) return false;
+      bezig.current = true;
+      setSt({ bezig: true });
+      let r = null;
+      try {
+        r = await onProfiel(patch);
+      } catch {
+        r = { ok: false };
+      }
+      bezig.current = false;
+      const goed = !!(r && r.ok !== false);
+      setSt(goed ? { ok: true, stand: r && r.stand } : { fout: true });
+      clearTimeout(timer.current);
+      if (goed && !(r && (r.stand === "mislukt" || r.stand === "offline"))) timer.current = setTimeout(() => setSt(null), 2600);
+      return goed;
+    };
+    return [st, bewaar];
+  }
+  function MiRij({ icoon, titel, sub, onClick, id, beeld }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { type: "button", className: "mi-rij", onClick, "data-mi": id, id: "mi-rij-" + id, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-icoon", "aria-hidden": "true", children: beeld || /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: icoon, size: 18 }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "mi-tekst", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-titel", children: titel }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-sub", children: sub })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "chevron", size: 16 })
+    ] }) });
+  }
+  function MiGegevens({ gebruiker, onProfiel, klassen, onKoppelKlas, naamVast, naamReden, setVuil, registreerOpslaan }) {
+    const g = gebruiker;
+    const d = g.discovery || {};
+    const begin = {
+      naam: g.naam || "",
+      geboortedatum: g.geboortedatum || "",
+      onderwijsniveau: g.onderwijsniveau || d.onderwijsniveau || "",
+      leerjaar: g.leerjaar != null && g.leerjaar !== "" ? String(g.leerjaar) : d.leerjaar != null && d.leerjaar !== "" ? String(d.leerjaar) : "",
+      hoogsteOpleiding: g.hoogsteOpleiding || d.hoogsteOpleiding || ""
+    };
+    const [f, setF] = (0, import_react3.useState)(begin);
+    const [st, setSt] = (0, import_react3.useState)(null);
+    const [fout, setFout] = (0, import_react3.useState)("");
+    const vuil = Object.keys(begin).some((k) => String(f[k] || "") !== String(begin[k] || ""));
+    (0, import_react3.useEffect)(() => {
+      setVuil(vuil);
+    }, [vuil]);
+    const datumVast = geboortedatumVast(g);
+    const jaren = leerjarenVoor(f.onderwijsniveau);
+    const zet = (k, v) => setF((x) => ({ ...x, [k]: v, ...k === "onderwijsniveau" ? { leerjaar: "" } : {} }));
+    const opslaan = async () => {
+      if (st && st.bezig) return false;
+      const naam = String(f.naam || "").trim();
+      if (!naamVast && !naam) {
+        setFout("Vul je naam in.");
+        return false;
+      }
+      if (!datumVast && f.geboortedatum && !geldigeGeboortedatum(f.geboortedatum)) {
+        setFout("Deze geboortedatum klopt niet. Kies een datum in het verleden.");
+        return false;
+      }
+      setFout("");
+      const patch = {};
+      if (!naamVast && naam !== begin.naam) patch.naam = naam;
+      if (!datumVast && f.geboortedatum !== begin.geboortedatum && f.geboortedatum) patch.geboortedatum = f.geboortedatum;
+      for (const k of ["onderwijsniveau", "leerjaar", "hoogsteOpleiding"]) if (String(f[k] || "") !== String(begin[k] || "")) patch[k] = f[k];
+      if (!Object.keys(patch).length) {
+        setVuil(false);
+        return true;
+      }
+      setSt({ bezig: true });
+      let r = null;
+      try {
+        r = await onProfiel(patch);
+      } catch {
+        r = { ok: false };
+      }
+      const goed = !!(r && r.ok !== false);
+      setSt(goed ? { ok: true, stand: r && r.stand } : { fout: true });
+      if (goed) setVuil(false);
+      return goed;
+    };
+    (0, import_react3.useEffect)(() => {
+      registreerOpslaan(() => opslaan);
+    });
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-detail", "data-mi-detail": "gegevens", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-velden", children: [
+        naamVast ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-veld", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-label", children: "Naam" }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "mi-vast", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: g.naam }),
+            " ",
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "lock", size: 14 })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "mi-uitleg", children: naamReden })
+        ] }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Veld, { label: "Naam", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("input", { className: "field", value: f.naam, onChange: (e) => zet("naam", e.target.value), autoComplete: "name" }) }),
+        datumVast ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-veld", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-label", children: "Geboortedatum" }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "mi-vast", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: datumNL(g.geboortedatum) }),
+            " ",
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "lock", size: 14 })
+          ] }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "mi-uitleg", children: "Klopt je geboortedatum niet? Je mentor kan hem aanpassen." })
+        ] }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-veld", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Veld, { label: "Geboortedatum", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("input", { className: "field", type: "date", max: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10), value: f.geboortedatum, onChange: (e) => zet("geboortedatum", e.target.value) }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "mi-uitleg", children: "Kijk hem goed na. Daarna kan alleen je mentor hem nog aanpassen." })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Veld, { label: "Opleiding", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("select", { className: "field", value: f.onderwijsniveau, onChange: (e) => zet("onderwijsniveau", e.target.value), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "", children: "Niet ingevuld" }),
+          ONDERWIJS_NIVEAUS.map((grp) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("optgroup", { label: grp.groep, children: grp.opties.map((op) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: op.key, children: op.naam }, op.key)) }, grp.groep))
+        ] }) }),
+        jaren.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Veld, { label: "Leerjaar", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("select", { className: "field", value: f.leerjaar, onChange: (e) => zet("leerjaar", e.target.value), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "", children: "Niet ingevuld" }),
+          jaren.map((j) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: String(j), children: j === "hoger" ? "Jaar 6 of hoger" : "Leerjaar " + j }, String(j)))
+        ] }) }),
+        ["afgerond", "geen"].includes(f.onderwijsniveau) && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Veld, { label: "Laatst afgeronde opleiding", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("select", { className: "field", value: f.hoogsteOpleiding, onChange: (e) => zet("hoogsteOpleiding", e.target.value), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: "", children: "Niet ingevuld" }),
+          ONDERWIJS_NIVEAUS.map((grp) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("optgroup", { label: grp.groep, children: grp.opties.filter((op) => !["afgerond", "geen", "anders"].includes(op.key)).map((op) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: op.key, children: op.naam }, op.key)) }, grp.groep))
+        ] }) })
+      ] }),
+      fout && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "mi-fout", role: "alert", children: fout }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-acties", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "btn btn-accent", "data-mi": "opslaan", disabled: !vuil || st && st.bezig, onClick: opslaan, children: "Opslaan" }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(OpslagStatus, { st })
+      ] }),
+      onKoppelKlas ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(SchoolKlasBlok, { gebruiker, klassen: klassen || [], onKoppel: onKoppelKlas }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-blok", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-label", children: "School en klas" }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "mi-vast", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: g.klas && g.klas !== "\u2014" ? g.klas : "Nog geen klas" }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "mi-uitleg", children: "Je school beheert je klas." })
+      ] })
+    ] });
+  }
+  function MiNeo({ gebruiker, onProfiel }) {
+    const tp = getLearnerLanguageProfile(gebruiker);
+    const nu = tp.taalvoorkeur || "standaard";
+    const [st, bewaar] = useVoorkeurOpslaan(onProfiel);
+    const refs = (0, import_react3.useRef)([]);
+    const kies2 = (k) => {
+      if (k !== nu) bewaar({ taalvoorkeur: k });
+    };
+    const toets = (e, i) => {
+      let j = -1;
+      if (e.key === "ArrowDown" || e.key === "ArrowRight") j = (i + 1) % 3;
+      else if (e.key === "ArrowUp" || e.key === "ArrowLeft") j = (i + 2) % 3;
+      if (j >= 0) {
+        e.preventDefault();
+        kies2(NEO_STIJLEN[j][0]);
+        refs.current[j] && refs.current[j].focus();
+      }
+    };
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-detail", "data-mi-detail": "neo", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "mi-label", id: "mi-neo-kop", children: "Hoeveel uitleg wil je?" }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "mi-keuzes", role: "radiogroup", "aria-labelledby": "mi-neo-kop", children: NEO_STIJLEN.map(([k, naam, uitleg], i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+        "button",
+        {
+          ref: (el2) => {
+            refs.current[i] = el2;
+          },
+          type: "button",
+          role: "radio",
+          "aria-checked": nu === k,
+          tabIndex: nu === k ? 0 : -1,
+          "data-neo": k,
+          className: "mi-keuze" + (nu === k ? " is-aan" : ""),
+          onClick: () => kies2(k),
+          onKeyDown: (e) => toets(e, i),
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-keuze-titel", children: naam }),
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-keuze-sub", children: uitleg })
+          ]
+        },
+        k
+      )) }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "mi-uitleg", children: "Je uitdaging blijft even moeilijk. Alleen de uitleg verandert." }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(OpslagStatus, { st })
+    ] });
+  }
+  function MiAchtergrond({ gebruiker, onProfiel }) {
+    const vk = achtergrondVoorkeur(gebruiker);
+    const [galerij, setGalerij] = (0, import_react3.useState)(false);
+    const [st, bewaar] = useVoorkeurOpslaan(onProfiel);
+    const huidig = omgevingVoor(gebruiker);
+    const zet = (v) => {
+      try {
+        localStorage.setItem(omgLokaal(omgSleutel(gebruiker)), JSON.stringify(v));
+      } catch {
+      }
+      return bewaar({ achtergrond: v });
+    };
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-detail", "data-mi-detail": "achtergrond", children: [
+      huidig && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("figure", { className: "mi-preview", "data-omg": "preview", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("img", { src: huidig.mini, alt: "Je achtergrond: " + huidig.naam, width: 640, height: Math.round(640 * huidig.hoogte / huidig.breedte) }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("figcaption", { children: [
+          huidig.naam,
+          vk.modus === "dag" ? " \xB7 vandaag" : ""
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-keuzes is-rij", role: "radiogroup", "aria-label": "Hoe kies je je achtergrond?", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+          "button",
+          {
+            type: "button",
+            role: "radio",
+            "aria-checked": vk.modus === "dag",
+            "data-omg": "dag",
+            className: "mi-keuze" + (vk.modus === "dag" ? " is-aan" : ""),
+            onClick: () => {
+              setGalerij(false);
+              if (vk.modus !== "dag") zet({ modus: "dag" });
+            },
+            children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-keuze-titel", children: "Elke dag een andere" })
+          }
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+          "button",
+          {
+            type: "button",
+            role: "radio",
+            "aria-checked": vk.modus === "zelf",
+            "data-omg": "zelf",
+            className: "mi-keuze" + (vk.modus === "zelf" ? " is-aan" : ""),
+            onClick: () => {
+              if (vk.modus !== "zelf" && huidig) zet({ modus: "zelf", keuze: huidig.key });
+              setGalerij(true);
+            },
+            children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-keuze-titel", children: "Zelf kiezen" })
+          }
+        )
+      ] }),
+      !galerij && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "btn btn-licht mi-knop", "data-omg": "veranderen", onClick: () => setGalerij(true), "aria-expanded": "false", children: "Veranderen" }),
+      galerij && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "mi-galerij", role: "radiogroup", "aria-label": "Kies een achtergrond", "data-omg": "galerij", children: OMGEVINGEN.map((o) => {
+        const aan = vk.modus === "zelf" && vk.keuze === o.key;
+        return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+          "button",
+          {
+            type: "button",
+            role: "radio",
+            "aria-checked": aan,
+            className: "mi-tegel" + (aan ? " is-aan" : ""),
+            "data-omg-key": o.key,
+            "aria-label": o.naam,
+            onClick: () => {
+              if (!aan) zet({ modus: "zelf", keuze: o.key });
+            },
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("img", { src: o.mini, alt: "", loading: "lazy", decoding: "async", width: 320, height: Math.round(320 * o.hoogte / o.breedte) }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-tegel-naam", children: o.naam })
+            ]
+          },
+          o.key
+        );
+      }) }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(OpslagStatus, { st })
+    ] });
+  }
+  function MiWeergave({ gebruiker, onProfiel }) {
+    const d = gebruiker.discovery || {};
+    const aan = d.bewegendeAchtergrond !== false;
+    const stil = useGeenBeweging();
+    const [st, bewaar] = useVoorkeurOpslaan(onProfiel);
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-detail", "data-mi-detail": "weergave", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-schakel", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "mi-schakel-tekst", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-label", id: "mi-beweging", children: "Beweging in mijn achtergrond" }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-uitleg", children: "Water en licht bewegen heel zacht." })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+          "button",
+          {
+            type: "button",
+            role: "switch",
+            "aria-checked": aan,
+            "aria-labelledby": "mi-beweging",
+            "data-mi": "beweging",
+            className: "mi-switch" + (aan ? " is-aan" : ""),
+            onClick: () => bewaar({ bewegendeAchtergrond: !aan }),
+            children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-switch-knop" }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mi-switch-tekst", children: aan ? "Aan" : "Uit" })
+            ]
+          }
+        )
+      ] }),
+      stil && aan && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "mi-uitleg", children: "Je apparaat staat op minder beweging. Daarom staat de achtergrond nu stil." }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(OpslagStatus, { st })
+    ] });
+  }
+  function MiPrivacy({ gebruiker, records, onExport, onWisData }) {
+    const [wis, setWis] = (0, import_react3.useState)(false);
+    const n = (records || []).length;
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-detail", "data-mi-detail": "privacy", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "mi-tekst-blok", children: "Je gegevens zijn van jou. GROW gebruikt ze alleen om je te begeleiden. Ze worden nooit verkocht." }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("dl", { className: "mi-overzicht", "aria-label": "Wat GROW van je bewaart", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("dt", { children: "Naam en klas" }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("dd", { children: [
+            gebruiker.naam,
+            gebruiker.klas && gebruiker.klas !== "\u2014" ? " \xB7 " + gebruiker.klas : ""
+          ] })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("dt", { children: "Uitdagingen" }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("dd", { children: n })
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("dt", { children: "Groeiprofiel" }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("dd", { children: gebruiker.discovery ? "Ja: je intake, avatar en voorkeuren" : "Nog niet" })
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-acties is-stapel", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { type: "button", className: "btn btn-licht", "data-mi": "download", onClick: onExport, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "download", size: 15 }),
+          " Download mijn gegevens"
+        ] }),
+        onWisData && (!wis ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "btn btn-licht mi-gevaar", "data-mi": "verwijder", onClick: () => setWis(true), children: "Mijn gegevens verwijderen" }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-bevestig", role: "group", "aria-label": "Verwijderen bevestigen", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { children: "Weet je het zeker? Je profiel en je voortgang worden verwijderd." }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-acties", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "btn btn-accent mi-gevaar-vol", "data-mi": "verwijder-ja", onClick: () => {
+              setWis(false);
+              onWisData();
+            }, children: "Ja, verwijder" }),
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "btn btn-licht", onClick: () => setWis(false), children: "Annuleren" })
+          ] })
+        ] }))
+      ] })
+    ] });
+  }
+  var MI_ONDERDELEN = [["gegevens", "Mijn gegevens", "doc"], ["neo", "Hoe Neo met mij praat", "gesprek"], ["achtergrond", "Mijn achtergrond", "layers"], ["weergave", "Weergave", "eye"], ["privacy", "Privacy en account", "shield"]];
+  function MijnInstellingen({ gebruiker, records, onProfiel, klassen, onKoppelKlas, onExport, onWisData, onNaarAvatar, onSluit, start }) {
+    const [deel, setDeel] = (0, import_react3.useState)(start || null);
+    const [vuil, setVuil] = (0, import_react3.useState)(false);
+    const [waarschuw, setWaarschuw] = (0, import_react3.useState)(null);
+    const opslaanRef = (0, import_react3.useRef)(null);
+    const scrollRef = (0, import_react3.useRef)(0);
+    const vorigeRij = (0, import_react3.useRef)(null);
+    const vak = () => document.querySelector(".popup-vak.mi-vak");
+    const d = gebruiker.discovery || {};
+    const heeftData = !!(d && Object.keys(d).length) || (records || []).length > 0;
+    const naamVast = platformOpslagActief() || !!gebruiker.viaSSO || heeftData;
+    const naamReden = platformOpslagActief() || gebruiker.viaSSO ? "Je naam komt van je schoolaccount. Klopt hij niet? Vraag je mentor." : "Je naam hoort bij je uitdagingen en je voortgang. Klopt hij niet? Vraag je mentor.";
+    const open = (k) => {
+      const v = vak();
+      scrollRef.current = v ? v.scrollTop : 0;
+      vorigeRij.current = k;
+      setDeel(k);
+      setWaarschuw(null);
+      setTimeout(() => {
+        const v2 = vak();
+        if (v2) v2.scrollTop = 0;
+        const h = document.getElementById("mi-detail-kop");
+        if (h) h.focus();
+      }, 30);
+    };
+    const naarLijst = () => {
+      setDeel(null);
+      setVuil(false);
+      setWaarschuw(null);
+      setTimeout(() => {
+        const v = vak();
+        if (v) v.scrollTop = scrollRef.current;
+        const r = document.getElementById("mi-rij-" + vorigeRij.current);
+        if (r) r.focus();
+      }, 30);
+    };
+    const terug = () => {
+      if (deel === "gegevens" && vuil) {
+        setWaarschuw("terug");
+        return;
+      }
+      naarLijst();
+    };
+    const sluit = () => {
+      if (deel === "gegevens" && vuil) {
+        setWaarschuw("sluiten");
+        return;
+      }
+      onSluit();
+    };
+    const esc = () => {
+      if (waarschuw) {
+        setWaarschuw(null);
+        return;
+      }
+      if (deel) terug();
+      else sluit();
+    };
+    const naWaarschuwing = async (opslaan) => {
+      const doel = waarschuw;
+      if (opslaan) {
+        const ok = opslaanRef.current ? await opslaanRef.current() : true;
+        if (!ok) {
+          setWaarschuw(null);
+          return;
+        }
+      }
+      setVuil(false);
+      setWaarschuw(null);
+      if (doel === "sluiten") onSluit();
+      else naarLijst();
+    };
+    const vk = achtergrondVoorkeur(gebruiker);
+    const omg = omgevingVoor(gebruiker);
+    const tp = getLearnerLanguageProfile(gebruiker);
+    const gekoppeld = !!(gebruiker.klas && gebruiker.klas !== "\u2014");
+    const subVan = {
+      gegevens: (gebruiker.naam || "") + " \xB7 " + (gekoppeld ? gebruiker.klas : "nog geen klas"),
+      neo: neoStijlNaam(tp.taalvoorkeur || "standaard"),
+      achtergrond: vk.modus === "dag" ? "Elke dag een andere" : omg ? omg.naam : "Zelf gekozen",
+      weergave: "Beweging " + (d.bewegendeAchtergrond === false ? "uit" : "aan"),
+      privacy: "Bekijken, downloaden of verwijderen"
+    };
+    const titel = deel ? (MI_ONDERDELEN.find((x) => x[0] === deel) || [])[1] : "Mijn instellingen";
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(Popup, { titel: deel ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { id: "mi-detail-kop", tabIndex: -1, children: titel }) : "Mijn instellingen", breed: true, onSluit: sluit, onEscape: esc, onTerug: deel ? terug : null, terugLabel: "Alle instellingen", vakKlasse: "mi-vak", children: [
+      waarschuw && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-waarschuwing", role: "alertdialog", "aria-labelledby": "mi-ws-tekst", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { id: "mi-ws-tekst", children: "Je wijzigingen zijn nog niet opgeslagen." }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mi-acties", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "btn btn-accent", "data-mi": "ws-opslaan", onClick: () => naWaarschuwing(true), children: "Opslaan" }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "btn btn-licht", "data-mi": "ws-weg", onClick: () => naWaarschuwing(false), children: "Niet opslaan" }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "btn btn-licht", "data-mi": "ws-blijf", onClick: () => setWaarschuw(null), children: "Verder bewerken" })
+        ] })
+      ] }),
+      !deel && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "mi-lijst", "aria-label": "Onderdelen", children: MI_ONDERDELEN.map(([k, t, ic]) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+          MiRij,
+          {
+            id: k,
+            titel: t,
+            icoon: ic,
+            sub: subVan[k],
+            onClick: () => open(k),
+            beeld: k === "achtergrond" && omg ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("img", { src: omg.mini, alt: "", width: 40, height: 40 }) : null
+          },
+          k
+        )) }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "mi-voet", children: "Je voorkeuren worden direct bewaard. Je gegevens bewaar je met de knop Opslaan." }),
+        onNaarAvatar && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { type: "button", className: "mi-link", "data-mi": "avatar", onClick: onNaarAvatar, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LeerlingAvatar, { avatar: d.avatar, size: 28, naam: gebruiker.naam, titel: "" }),
+          " Je avatar pas je aan in ",
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: "Mijn identiteit" }),
+          " ",
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "chevron", size: 14 })
+        ] })
+      ] }),
+      deel === "gegevens" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(MiGegevens, { gebruiker, onProfiel, klassen, onKoppelKlas, naamVast, naamReden, setVuil, registreerOpslaan: (f) => {
+        opslaanRef.current = f();
+      } }),
+      deel === "neo" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(MiNeo, { gebruiker, onProfiel }),
+      deel === "achtergrond" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(MiAchtergrond, { gebruiker, onProfiel }),
+      deel === "weergave" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(MiWeergave, { gebruiker, onProfiel }),
+      deel === "privacy" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(MiPrivacy, { gebruiker, records, onExport, onWisData })
     ] });
   }
   function HubTegel({ titel, icoon, onClick, children }) {
@@ -87611,87 +88257,26 @@ ${String(stapTekst).slice(0, 900)}` : ""
           ),
           children: [
             /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(XpGroeiKaart, { xp }),
-            (profEdit || detail === "gegevens") && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Popup, { titel: "Mijn gegevens", sub: "Privacy en account", breed: true, onSluit: () => {
-              setProfEdit(null);
-              setDetail(null);
-            }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { padding: 0 }, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: { fontWeight: 800, marginBottom: 10 }, children: "Profiel bewerken" }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Avatar, { foto: gebruiker.foto, naam: gebruiker.naam, size: 44, ring: true }),
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { type: "button", className: "btn btn-licht", onClick: () => setEditor(true), children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "camera", size: 14 }),
-                  " ",
-                  gebruiker.foto ? "Foto bewerken" : "Foto uploaden"
-                ] })
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { display: "grid", gap: 10 }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Veld, { label: "Naam", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("input", { className: "field", value: (profEdit || {}).naam || "", onChange: (e) => setProfEdit((p) => ({ naam: "", geboortedatum: "", ...p || {}, naam: e.target.value })) }) }),
-                geboortedatumVast(gebruiker) ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { style: { display: "block", fontSize: ".78rem", fontWeight: 700, color: "var(--grijs)", marginBottom: 4 }, children: "Geboortedatum" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { style: { margin: 0, display: "flex", alignItems: "center", gap: 8, fontWeight: 700, fontSize: "1rem" }, children: [
-                    datumNL(gebruiker.geboortedatum),
-                    " ",
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "lock", size: 15 })
-                  ] }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "muted", style: { margin: "6px 0 0", fontSize: ".8rem", lineHeight: 1.5 }, children: "Wil je je geboortedatum corrigeren? Neem contact op met je mentor." })
-                ] }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Veld, { label: "Geboortedatum", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-                    "input",
-                    {
-                      className: "field",
-                      type: "date",
-                      max: (/* @__PURE__ */ new Date()).toISOString().slice(0, 10),
-                      value: (profEdit || {}).geboortedatum || "",
-                      onChange: (e) => setProfEdit((p) => ({ naam: "", geboortedatum: "", ...p || {}, geboortedatum: e.target.value }))
-                    }
-                  ) }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "muted", style: { margin: "6px 0 0", fontSize: ".8rem", lineHeight: 1.5 }, children: "Controleer deze goed. Na het opslaan kun je je geboortedatum niet zelf meer wijzigen." })
-                ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "eyebrow", children: "Klas" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { marginTop: 6, display: "flex", alignItems: "center", gap: 8 }, children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "pill", style: { background: "#EEE", color: "var(--grijs)" }, children: gebruiker.klas && gebruiker.klas !== "\u2014" ? gebruiker.klas : "Geen klas" }),
-                    klasVast && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "muted", style: { fontSize: ".78rem" }, children: "door je mentor toegewezen \u2014 niet aanpasbaar" })
-                  ] })
-                ] }),
-                onKoppelKlas && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(SchoolKlasBlok, { gebruiker, klassen: klassen || [], onKoppel: onKoppelKlas })
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { display: "flex", gap: 8, marginTop: 14 }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { className: "btn btn-accent", onClick: () => {
-                  const pe = profEdit || { naam: gebruiker.naam, geboortedatum: gebruiker.geboortedatum || "" };
-                  if (String(pe.naam || "").trim()) {
-                    onProfiel({ naam: String(pe.naam).trim(), geboortedatum: pe.geboortedatum });
-                    setProfEdit(null);
-                    setDetail(null);
-                  }
-                }, children: "Opslaan" }),
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { className: "btn btn-licht", onClick: () => {
+            detail === "gegevens" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+              MijnInstellingen,
+              {
+                gebruiker,
+                records,
+                onProfiel,
+                klassen,
+                onKoppelKlas,
+                onExport: exporteerData,
+                onWisData,
+                onNaarAvatar: () => {
+                  setDetail(null);
+                  setTab("identiteit");
+                },
+                onSluit: () => {
                   setProfEdit(null);
                   setDetail(null);
-                }, children: "Annuleren" })
-              ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(TaalInstelling, { gebruiker, onProfiel }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(AchtergrondInstelling, { gebruiker, onProfiel }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(BewegingInstelling, { gebruiker, onProfiel }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { borderTop: "1px solid var(--lijn)", marginTop: 16, paddingTop: 14 }, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { display: "flex", alignItems: "center", gap: 8 }, children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "lock", size: 15 }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "eyebrow", style: { margin: 0 }, children: "Privacy & mijn gegevens" })
-                ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "muted", style: { fontSize: ".82rem", margin: "8px 0 0", lineHeight: 1.5 }, children: "Jouw gegevens zijn van jou. Je kunt ze inzien, meenemen of laten verwijderen. Unfold gebruikt ze alleen om jou te begeleiden \u2014 nooit voor beoordeling of selectie, en ze worden nooit verkocht." }),
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 }, children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { className: "btn btn-licht", onClick: exporteerData, children: "Download mijn gegevens (JSON)" }),
-                  onWisData && (wisBevestig ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { style: { display: "inline-flex", alignItems: "center", gap: 8, flexWrap: "wrap" }, children: [
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "muted", style: { fontSize: ".82rem" }, children: "Weet je het zeker? Dit verwijdert je profiel en voortgang." }),
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { className: "btn btn-accent", style: { background: "#B71C1C" }, onClick: () => {
-                      setWisBevestig(false);
-                      onWisData();
-                    }, children: "Ja, verwijder" }),
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { className: "btn btn-licht", onClick: () => setWisBevestig(false), children: "Annuleren" })
-                  ] }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { className: "btn btn-licht", style: { color: "#B71C1C", borderColor: "#E4C4C4" }, onClick: () => setWisBevestig(true), children: "Mijn gegevens verwijderen" }))
-                ] })
-              ] })
-            ] }) }),
+                }
+              }
+            ),
             (() => {
               const dsc = gebruiker.discovery;
               const r = dsc && ROUTES[dsc.route] || ROUTES.groei;
@@ -87784,11 +88369,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
                         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LeerlingAvatar, { avatar: gebruiker.discovery && gebruiker.discovery.avatar, size: 34, naam: gebruiker.naam }),
                         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "hub-regel", children: avatarWeergave(gebruiker.discovery && gebruiker.discovery.avatar) ? "Je avatar en je tijdlijn" : "Maak je avatar \xB7 je tijdlijn" })
                       ] }) }),
-                      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(Tegel, { titel: "Mijn gegevens", icoon: "lock", onClick: () => {
-                        setProfEdit({ naam: gebruiker.naam, geboortedatum: gebruiker.geboortedatum || "" });
+                      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(Tegel, { titel: "Mijn instellingen", icoon: "lock", onClick: () => {
                         setDetail("gegevens");
                       }, children: [
-                        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "hub-regel", children: "Privacy en account" }),
+                        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "hub-regel", children: "Gegevens, Neo, achtergrond en privacy" }),
                         stats.open > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "hub-regel muted", children: [
                           stats.open,
                           " lopende uitdaging",
@@ -87988,24 +88572,101 @@ ${String(stapTekst).slice(0, 900)}` : ""
                       ] })
                     ] }),
                     /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(EigenschappenKnop, { topDims, dimLabel, id }),
-                    /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "card", style: { padding: 20 }, "data-av": "tijdlijn", children: [
-                      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "eyebrow", children: "Identity Timeline" }),
-                      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "muted", style: { margin: "6px 0 14px", fontSize: ".85rem" }, children: "Belangrijke momenten in jouw groeireis." }),
-                      mijlpalen.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "muted", style: { fontSize: ".88rem" }, children: "Je eerste moment verschijnt zodra je een uitdaging afrondt." }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ol", { className: "id-mijlpalen", children: mijlpalen.map((m, k) => {
-                        const laatste = k === mijlpalen.length - 1;
-                        return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("li", { className: laatste ? "is-nu" : "", "data-mp": m.soort, children: [
-                          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "id-mp-merk", "aria-hidden": "true", children: laatste ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LeerlingAvatar, { avatar: av, size: 32, naam: gebruiker.naam, titel: "" }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "id-mp-punt" }) }),
-                          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "id-mp-tekst", children: [
-                            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: m.titel }),
-                            m.sub && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "muted", children: [
-                              " \xB7 ",
-                              m.sub
-                            ] })
-                          ] }),
-                          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "id-mp-datum muted", children: m.datum ? new Date(m.datum).toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" }) : "" })
-                        ] }, k);
-                      }) })
-                    ] })
+                    (() => {
+                      const dsc2 = gebruiker.discovery || {};
+                      const eigen = (records || []).filter((r2) => r2 && r2.afgerond && r2.type !== "event" && r2.type !== "bonus" && (!r2.leerling || !r2.leerling.naam || r2.leerling.naam === gebruiker.naam)).slice().sort((x, y) => String(y.afgerondOp || y.datum || "").localeCompare(String(x.afgerondOp || x.datum || "")));
+                      const datumKort2 = (v) => v ? new Date(v).toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" }) : "";
+                      const lijstVan = (v) => (Array.isArray(v) ? v : []).map((x) => typeof x === "string" ? x : x && (x.naam || x.label || x.tekst) || "").map((x) => String(x).trim()).filter(Boolean);
+                      const routeNaam = { groei: "Persoonlijke groei", topsport: "Topsport & school", talent: "Talent & ambitie", bsm: "Bewegen, Sport & Maatschappij" }[dsc2.route] || "";
+                      const begin = dsc2.gestartOp || dsc2.aangemaaktOp || null;
+                      const ontdekt = lijstVan(dsc2.kernkwaliteiten).slice(0, 3);
+                      const eigenWoorden = (r2) => {
+                        const b = (Array.isArray(r2.bewijzen) ? r2.bewijzen : []).find((x) => x && x.soort === "tekst" && String(x.tekst || "").trim());
+                        const t = b ? String(b.tekst).trim() : "";
+                        return t.length > 110 ? t.slice(0, 107).trim() + "\u2026" : t;
+                      };
+                      const gedaan = eigen.slice(0, 3);
+                      const mf = eigen.map((r2) => r2.alpe && r2.alpe.mentorfeedback).find((x) => x && lijstVan(x.sterkePunten).length);
+                      const trots = mf ? lijstVan(mf.sterkePunten).slice(0, 2) : [];
+                      const volgendIntake = lijstVan(dsc2.ontwikkelpunten).slice(0, 2);
+                      const mfNog = eigen.map((r2) => r2.alpe && r2.alpe.mentorfeedback).find((x) => x && lijstVan(x.nogOntwikkelen).length);
+                      const volgendMentor = mfNog ? lijstVan(mfNog.nogOntwikkelen).slice(0, 1) : [];
+                      const titelVan = (r2) => r2.data && r2.data.titel || themaLabel(r2.thema);
+                      const leeg = !begin && !ontdekt.length && !gedaan.length && !mijlpalen.length;
+                      return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "card id-verhaal", style: { padding: 20 }, "data-av": "tijdlijn", children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "id-verhaal-kop", children: [
+                          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LeerlingAvatar, { avatar: av, size: 32, naam: gebruiker.naam, titel: "" }),
+                          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
+                            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "eyebrow", children: "Identity Timeline" }),
+                            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "muted", style: { margin: "2px 0 0", fontSize: ".85rem" }, children: "Jouw groeireis in het kort." })
+                          ] })
+                        ] }),
+                        leeg && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "muted", style: { fontSize: ".88rem", margin: "12px 0 0" }, children: "Je eerste moment verschijnt zodra je een uitdaging afrondt." }),
+                        (begin || routeNaam) && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("section", { className: "id-blok", "data-id": "begin", children: [
+                          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h3", { children: "Waar je begon" }),
+                          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { children: [
+                            begin ? "Je begon op " + datumKort2(begin) : "Je begon",
+                            routeNaam ? " met " + routeNaam : "",
+                            "."
+                          ] })
+                        ] }),
+                        ontdekt.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("section", { className: "id-blok", "data-id": "ontdekt", children: [
+                          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h3", { children: "Wat je ontdekte" }),
+                          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "id-chips", children: ontdekt.map((x, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "id-chip", children: x }, i)) }),
+                          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "id-bron", children: "Uit je intake" })
+                        ] }),
+                        (gedaan.length > 0 || mijlpalen.length > 0) && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("section", { className: "id-blok", "data-id": "gedaan", children: [
+                          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h3", { children: "Wat je deed" }),
+                          gedaan.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "id-gedaan", children: gedaan.map((r2, i) => {
+                            const w = eigenWoorden(r2);
+                            return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("li", { children: [
+                              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: titelVan(r2) }),
+                              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "muted", children: [
+                                " \xB7 ",
+                                datumKort2(r2.afgerondOp || r2.datum)
+                              ] }),
+                              w && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "id-eigen", children: [
+                                "\u201C",
+                                w,
+                                "\u201D"
+                              ] })
+                            ] }, i);
+                          }) }),
+                          mijlpalen.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "id-bron", style: { marginTop: gedaan.length ? 8 : 0 }, children: "Mijlpalen" }),
+                          mijlpalen.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ol", { className: "id-mijlpalen", children: mijlpalen.map((m, k) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("li", { "data-mp": m.soort, children: [
+                            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "id-mp-merk", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "id-mp-punt" }) }),
+                            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "id-mp-tekst", children: [
+                              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: m.titel }),
+                              m.sub && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "muted", children: [
+                                " \xB7 ",
+                                m.sub
+                              ] })
+                            ] }),
+                            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "id-mp-datum muted", children: datumKort2(m.datum) })
+                          ] }, k)) })
+                        ] }),
+                        trots.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("section", { className: "id-blok", "data-id": "trots", children: [
+                          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h3", { children: "Waar je trots op kunt zijn" }),
+                          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "id-punten", children: trots.map((x, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("li", { children: x }, i)) }),
+                          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "id-bron", children: "Volgens je mentor" })
+                        ] }),
+                        (volgendIntake.length > 0 || volgendMentor.length > 0) && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("section", { className: "id-blok", "data-id": "hierna", children: [
+                          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h3", { children: "Wat je hierna wilt leren" }),
+                          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("ul", { className: "id-punten", children: [
+                            volgendIntake.map((x, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("li", { children: [
+                              x,
+                              " ",
+                              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "id-bron is-inline", children: "uit je intake" })
+                            ] }, "i" + i)),
+                            volgendMentor.map((x, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("li", { children: [
+                              x,
+                              " ",
+                              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "id-bron is-inline", children: "tip van je mentor" })
+                            ] }, "m" + i))
+                          ] })
+                        ] })
+                      ] });
+                    })()
                   ] });
                 })(),
                 tab === "profiel" && (() => {
@@ -88390,10 +89051,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const inhoud = /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { role: "dialog", "aria-modal": "true", "aria-label": label || void 0, onClick: onSluit, className: "tc-portaal popup-laag", style: { padding: pad }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { ref: vak, className: "popup-inhoud", onClick: (e) => e.stopPropagation(), children }) });
     return typeof document !== "undefined" && document.body ? (0, import_react_dom.createPortal)(inhoud, document.body) : inhoud;
   }
-  function Popup({ titel, sub, onSluit, onTerug, terugLabel, breed, children }) {
+  function Popup({ titel, sub, onSluit, onTerug, terugLabel, breed, children, onEscape, vakKlasse }) {
     const vak = (0, import_react3.useRef)(null);
     const kopId = (0, import_react3.useMemo)(() => "popup-kop-" + Math.random().toString(36).slice(2, 9), []);
-    useModalGedrag(onSluit, vak);
+    useModalGedrag(onEscape || onSluit, vak);
     const inhoud = /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
       "div",
       {
@@ -88406,14 +89067,14 @@ ${String(stapTekst).slice(0, 900)}` : ""
         children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
           "div",
           {
-            className: "card popup-vak",
+            className: "card popup-vak" + (vakKlasse ? " " + vakKlasse : ""),
             onClick: (e) => e.stopPropagation(),
             "aria-labelledby": kopId,
             ref: vak,
             tabIndex: -1,
             style: { width: "100%", maxWidth: breed ? 720 : 460, maxHeight: "min(85vh, 85dvh)", overflow: "auto", padding: "20px 22px" },
             children: [
-              onTerug && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { onClick: onTerug, className: "muted", style: { fontSize: ".8rem", fontWeight: 700, marginBottom: 8, display: "inline-flex", alignItems: "center", gap: 4 }, children: [
+              onTerug && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { type: "button", onClick: onTerug, className: "muted popup-terug", "data-popup": "terug", style: { fontSize: ".8rem", fontWeight: 700, marginBottom: 8, display: "inline-flex", alignItems: "center", gap: 4 }, children: [
                 /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "left", size: 14 }),
                 " ",
                 terugLabel || "Terug"
@@ -88921,97 +89582,249 @@ ${String(stapTekst).slice(0, 900)}` : ""
       )) }) })
     ] });
   }
-  function bouwOntwikkelgesprek(records) {
-    const rs = (records || []).filter((r) => r && r.type !== "event" && r.type !== "bonus");
-    const af = rs.filter((r) => r.afgerond);
-    const titelVan = (r) => r.data && r.data.titel || themaLabel(r.thema);
-    const fbOp = (r) => String(r.alpe && r.alpe.mentorfeedback && r.alpe.mentorfeedback.op || r.afgerondOp || "");
-    const metFb = af.filter((r) => r.alpe && r.alpe.mentorfeedback).sort((a, b) => fbOp(b).localeCompare(fbOp(a)));
-    const wachtend = af.filter((r) => !(r.alpe && r.alpe.mentorfeedback)).sort((a, b) => String(b.afgerondOp || b.datum || "").localeCompare(String(a.afgerondOp || a.datum || "")));
-    const metBewijs = af.filter((r) => Array.isArray(r.bewijzen) && r.bewijzen.length > 0).length;
-    const rubric = {};
-    metFb.slice().reverse().forEach((r) => {
-      (r.alpe.mentorfeedback.rubricNiveaus || []).forEach((x) => {
-        if (x && x.criterium && typeof x.index === "number") rubric[x.criterium] = { index: x.index, niveau: x.niveau || GROEINIVEAU_LABELS[x.index] || "", titel: titelVan(r), op: fbOp(r) };
-      });
-    });
-    const rubricLijst = Object.keys(rubric).map((c) => ({ criterium: c, ...rubric[c] }));
-    const sterk = [];
-    rubricLijst.filter((x) => x.index >= 2).sort((a, b) => b.index - a.index).slice(0, 2).forEach((x) => sterk.push({ tekst: `${x.criterium}: ${String(x.niveau).toLowerCase()} volgens de rubric bij '${x.titel}'.` }));
-    metFb.forEach((r) => {
-      (r.alpe.mentorfeedback.sterkePunten || []).forEach((p) => {
-        if (sterk.length < 2 && p) sterk.push({ tekst: `${String(p).trim().replace(/\.$/, "")} \u2014 uit de feedback bij '${titelVan(r)}'.` });
-      });
-    });
-    if (sterk.length < 2 && af.length >= 3) sterk.push({ tekst: `${af.length} uitdagingen afgerond${metBewijs ? `, ${metBewijs} met bewijs` : ""}.` });
-    let ontwikkel = null;
-    for (const r of metFb) {
-      const n = (r.alpe.mentorfeedback.nogOntwikkelen || []).find(Boolean);
-      if (n) {
-        ontwikkel = `${String(n).trim().replace(/\.$/, "")} \u2014 uit de feedback bij '${titelVan(r)}'.`;
-        break;
-      }
-    }
-    if (!ontwikkel) {
-      const laag2 = rubricLijst.filter((x) => x.index <= 1).sort((a, b) => a.index - b.index)[0];
-      if (laag2) ontwikkel = `${laag2.criterium}: nog ${String(laag2.niveau).toLowerCase()} volgens de rubric bij '${laag2.titel}'.`;
-    }
-    let stap = null;
-    if (wachtend.length) stap = `Beoordeel '${titelVan(wachtend[0])}'${wachtend.length > 1 ? ` en ${wachtend.length - 1} andere` : ""} \u2014 dan wordt het beeld vollediger.`;
-    else if (ontwikkel) {
-      const crit = rubricLijst.filter((x) => x.index <= 1).sort((a, b) => a.index - b.index)[0];
-      stap = crit ? `Kies samen een volgende uitdaging waarin ${crit.criterium.toLowerCase()} centraal staat.` : `Kies samen een volgende uitdaging waarin het ontwikkelpunt terugkomt.`;
-    } else if (af.length) {
-      const laatste = af.slice().sort((a, b) => String(b.afgerondOp || b.datum || "").localeCompare(String(a.afgerondOp || a.datum || "")))[0];
-      stap = `Kies een nieuwe uitdaging in ${themaLabel(laatste.thema)}.`;
-    }
-    const onderbouwing2 = [];
-    onderbouwing2.push(`${af.length} uitdaging${af.length === 1 ? "" : "en"} afgerond, ${metFb.length} beoordeeld, ${wachtend.length} wacht${wachtend.length === 1 ? "" : "en"} op feedback, ${metBewijs} met bewijs.`);
-    metFb.slice(0, 4).forEach((r) => {
-      const mf = r.alpe.mentorfeedback;
-      const niv = (mf.rubricNiveaus || []).map((x) => `${x.criterium} ${String(x.niveau || "").toLowerCase()}`).join(", ");
-      onderbouwing2.push(`${datumNL(mf.op || r.afgerondOp)} \xB7 ${titelVan(r)}${mf.door ? " \xB7 " + mf.door : ""}${niv ? " \xB7 rubric: " + niv : ""}${mf.feedback ? ` \xB7 "${String(mf.feedback).length > 140 ? String(mf.feedback).slice(0, 140).trim() + "\u2026" : mf.feedback}"` : ""}`);
-    });
-    wachtend.slice(0, 3).forEach((r) => onderbouwing2.push(`${datumNL(r.afgerondOp || r.datum)} \xB7 ${titelVan(r)} \xB7 nog niet beoordeeld${Array.isArray(r.bewijzen) && r.bewijzen.length ? ` \xB7 ${r.bewijzen.length} bewijs` : ""}`));
-    return { sterk: sterk.slice(0, 2), ontwikkel, stap, onderbouwing: onderbouwing2, genoeg: af.length > 0 };
+  var GK_SOORTEN = [
+    ["Leerdoel", "Wat de uitdaging wil oefenen. Een doel, geen bewijs."],
+    ["Reflectievraag", "Een vraag aan de leerling. Het antwoord is een eigen beeld, geen bewijs."],
+    ["Zelfbeoordeling", "De score die de leerling zichzelf gaf."],
+    ["Docentbeoordeling", "Een rubricniveau of score van een mentor of vakdocent. Alleen dit stelt iets vast."],
+    ["Bewijs", "Wat de leerling echt inleverde."],
+    ["Aantoonbare ontwikkeling", "Pas bij minstens 3 docentbeoordelingen van hetzelfde criterium, op verschillende dagen."]
+  ];
+  var GK_TABS = [["uitdagingen", "Uitdagingen"], ["beoordelingen", "Beoordelingen"], ["rubric", "Rubric"], ["bewijs", "Bewijs"], ["reflecties", "Reflecties"], ["herkomst", "Herkomst"]];
+  function GkBron({ b }) {
+    if (!b) return null;
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "gk-bron", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "gk-soort", children: b.label }),
+      b.tekst
+    ] });
   }
-  function BespreekOntwikkeling({ records, leerling, klas }) {
-    const g = (0, import_react3.useMemo)(() => bouwOntwikkelgesprek(records), [records]);
-    const [onderbouwing2, setOnderbouwing] = (0, import_react3.useState)(false);
-    const voornaam = voornaamVan(leerling.naam) || leerling.naam;
-    const Kaart = ({ soort, icoon, label, tekst: tekst3 }) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "bo-kaart is-" + soort, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "bo-icoon", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: icoon, size: 18 }) }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "bo-tekst", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "bo-label", children: label }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "bo-zin", children: tekst3 })
+  function Gesprekskaart({ K: K2, onDetails }) {
+    const T = K2.tellers;
+    const rij = (k, label, inhoud, bron, extra) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "gk-rij", "data-gk": k, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("dt", { className: "gk-label", children: [
+        extra,
+        label
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("dd", { className: "gk-tekst", children: [
+        inhoud,
+        bron && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(GkBron, { b: bron })
       ] })
     ] });
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "bo", children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "gk", "data-gk": "kaart", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "gk-tellers", "data-gk": "tellers", children: [
+        T.afgerond,
+        " afgerond \xB7 ",
+        T.beoordeeld,
+        " beoordeeld",
+        T.wacht ? " \xB7 " + T.wacht + " wacht" + (T.wacht === 1 ? "" : "en") : ""
+      ] }),
+      K2.noot && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "gk-noot" + (K2.genoeg ? "" : " is-leeg"), "data-gk": "noot", children: K2.noot }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("dl", { className: "gk-lijst", children: [
+        K2.genoeg && rij(
+          "sterk",
+          "Sterk punt",
+          K2.sterk ? K2.sterk.tekst : "Geen sterk punt vastgelegd in de beoordelingen.",
+          K2.sterk && K2.sterk.bron,
+          K2.sterk && K2.sterk.soort === "ontwikkeling" ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "gk-groei", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "check", size: 12 }) }) : null
+        ),
+        K2.genoeg && rij("aandacht", "Aandachtspunt", K2.aandacht ? K2.aandacht.tekst : "Geen aandachtspunt vastgelegd in de beoordelingen.", K2.aandacht && K2.aandacht.bron),
+        K2.vraag && rij("vraag", K2.vraag.verkennend ? "Verkennende vraag" : "Gespreksvraag", K2.vraag.tekst, null),
+        K2.stap && rij("stap", "Volgende stap", K2.stap.tekst, null)
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "btn btn-licht gk-details", "data-gk": "details", onClick: onDetails, children: "Meer details" })
+    ] });
+  }
+  function GkDetails({ G, K: K2, tab, setTab, records, leerling, klas, onOpen }) {
+    const lijst2 = (0, import_react3.useRef)(null);
+    const toets = (e) => {
+      const i = GK_TABS.findIndex((x) => x[0] === tab);
+      let n = null;
+      if (e.key === "ArrowRight") n = (i + 1) % GK_TABS.length;
+      else if (e.key === "ArrowLeft") n = (i - 1 + GK_TABS.length) % GK_TABS.length;
+      else if (e.key === "Home") n = 0;
+      else if (e.key === "End") n = GK_TABS.length - 1;
+      if (n == null) return;
+      e.preventDefault();
+      setTab(GK_TABS[n][0]);
+      setTimeout(() => {
+        try {
+          lijst2.current.querySelector('[data-tab="' + GK_TABS[n][0] + '"]').focus();
+        } catch {
+        }
+      }, 0);
+    };
+    const open = (id) => {
+      const r = (records || []).find((x) => x && x.id === id);
+      if (r && onOpen) onOpen(r);
+    };
+    const Item = ({ u, children }) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("li", { className: "gk-item", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "gk-item-kop", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "gk-item-titel", children: u.titel }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "fbb-meta", children: [u.niveauNL, u.datum ? datumNL(u.datum) : ""].filter(Boolean).join(" \xB7 ") }),
+        onOpen && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "lp-link gk-open", onClick: () => open(u.id), children: "Open" })
+      ] }),
+      children
+    ] });
+    const leeg = (t) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "fbb-leeg", children: t });
+    let inhoud = null;
+    if (tab === "uitdagingen") inhoud = G.uitdagingen.length ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "gk-items", children: G.uitdagingen.slice(0, 12).map((u) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(Item, { u, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "gk-item-regel", children: u.status }),
+      u.leerdoelen[0] && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "gk-item-regel is-zacht", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "gk-soort", children: "Leerdoel" }),
+        u.leerdoelen[0]
+      ] })
+    ] }, u.id)) }) : leeg("Nog geen uitdagingen.");
+    if (tab === "beoordelingen") inhoud = G.metFeedback.length ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "fbb-lijst", children: G.metFeedback.slice(0, 10).map((u) => {
+      const r = (records || []).find((x) => x && x.id === u.id);
+      const mf = r && r.alpe && r.alpe.mentorfeedback;
+      return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(FeedbackBericht, { m: { ...mf || {}, titel: u.titel } }),
+        u.zelf != null && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "gk-zelf", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "gk-soort", children: "Zelfbeoordeling" }),
+          u.zelf,
+          "%",
+          tegenstrijdigVan(u) ? " \u2014 ligt ver van de docentbeoordeling" : ""
+        ] })
+      ] }, u.id);
+    }) }) : leeg("Er is nog geen werk beoordeeld." + (G.zelfAlleen.length ? " Wel " + G.zelfAlleen.length + " zelfbeoordeling" + (G.zelfAlleen.length === 1 ? "" : "en") + "." : ""));
+    if (tab === "rubric") inhoud = G.vastgesteld.length ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "gk-items", children: G.vastgesteld.map((c) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("li", { className: "gk-item", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "gk-item-kop", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "gk-item-titel", children: c.naam }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "fbb-status" + (c.laatste.index >= 2 ? " is-behaald" : ""), children: [
+          c.laatste.index >= 2 && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "check", size: 12 }),
+          c.laatste.niveau
+        ] })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "gk-item-regel is-zacht", children: [
+        c.ontwikkelingTekst,
+        " \xB7 laatst bij '",
+        c.laatste.uitdaging,
+        "'"
+      ] })
+    ] }, c.naam)) }) : leeg("Nog geen criterium door een docent beoordeeld.");
+    if (tab === "bewijs") inhoud = G.metBewijs.length ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "gk-items", children: G.metBewijs.slice(0, 12).map((u) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Item, { u, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "gk-item-regel", children: [
+      u.bewijs.aantal,
+      " ",
+      u.bewijs.aantal === 1 ? "stuk" : "stukken",
+      u.bewijs.vormen.length ? " \xB7 " + u.bewijs.vormen.join(", ") : "",
+      u.beoordeling && u.beoordeling.echt ? " \xB7 beoordeeld" : " \xB7 nog niet beoordeeld"
+    ] }) }, u.id)) }) : leeg("Er is nog geen bewijs ingeleverd.");
+    if (tab === "reflecties") {
+      const met = G.uitdagingen.filter((u) => u.reflecties.length);
+      inhoud = met.length ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "gk-noot", children: "Reflecties zijn het eigen beeld van de leerling, geen bewijs. Alleen bespreken met de leerling." }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "gk-items", children: met.slice(0, 8).map((u) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Item, { u, children: u.reflecties.slice(0, 4).map((x, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "gk-item-regel", children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "gk-soort", children: "Reflectievraag" }),
+          x.vraag,
+          x.antwoord ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "gk-antwoord", children: x.antwoord }) : x.waarde != null ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "fbb-meta", children: [
+            " \u2014 schaal ",
+            x.waarde
+          ] }) : null
+        ] }, i)) }, u.id)) })
+      ] }) : leeg("Er zijn nog geen reflecties ingevuld.");
+    }
+    if (tab === "herkomst") inhoud = /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "gk-items", children: [["Sterk punt", K2.sterk], ["Aandachtspunt", K2.aandacht], ["Gespreksvraag", K2.vraag], ["Volgende stap", K2.stap]].map(([l, x]) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("li", { className: "gk-item", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "gk-item-kop", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "gk-item-titel", children: l }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "gk-item-regel", children: x && x.bron ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "gk-soort", children: x.bron.label }),
+          x.bron.tekst
+        ] }) : K2.genoeg ? "Niet vastgesteld." : GK_ONVOLDOENDE })
+      ] }, l)) }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "gk-sub", children: "Zo houdt GROW de soorten informatie uit elkaar" }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("dl", { className: "gk-soorten", children: GK_SOORTEN.map(([a, b]) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_react3.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("dt", { children: a }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("dd", { children: b })
+      ] }, a)) }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        Vouw,
+        {
+          titel: "Volledige gesprekspunten uit de Growth Journey",
+          id: "gk-gesprekspunten",
+          kind: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(GesprekspuntenKaart, { records, gebruiker: { naam: leerling.naam, klas, leeftijd: leerling.leeftijd }, type: "mentor" })
+        }
+      )
+    ] });
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "gk-det", "data-gk": "detailweergave", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "gk-tabs", role: "tablist", "aria-label": "Bronnen", ref: lijst2, onKeyDown: toets, children: GK_TABS.map(([k, l]) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        "button",
+        {
+          type: "button",
+          role: "tab",
+          id: "gk-tab-" + k,
+          "data-tab": k,
+          "aria-selected": tab === k ? "true" : "false",
+          "aria-controls": "gk-paneel",
+          tabIndex: tab === k ? 0 : -1,
+          className: "gk-tab" + (tab === k ? " is-aan" : ""),
+          onClick: () => setTab(k),
+          children: l
+        },
+        k
+      )) }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "gk-paneel", id: "gk-paneel", role: "tabpanel", "aria-labelledby": "gk-tab-" + tab, tabIndex: 0, children: inhoud })
+    ] });
+  }
+  function BespreekOntwikkeling({ records, leerling, klas, onOpen }) {
+    const voornaam = voornaamVan(leerling.naam) || leerling.naam;
+    const G = (0, import_react3.useMemo)(() => {
+      try {
+        return rapportGegevens(records || [], { naam: leerling.naam, klas, discovery: leerling.discovery || {} }, rapportCtx());
+      } catch (e) {
+        return null;
+      }
+    }, [records, leerling, klas]);
+    const K2 = (0, import_react3.useMemo)(() => {
+      try {
+        return G ? gesprekskaart(G, { voornaam }) : null;
+      } catch (e) {
+        return null;
+      }
+    }, [G, voornaam]);
+    const [open, setOpen] = (0, import_react3.useState)(false);
+    const [det, setDet] = (0, import_react3.useState)(false);
+    const [tab, setTab] = (0, import_react3.useState)("uitdagingen");
+    if (!K2) return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "lp-stil", children: "De gesprekskaart kon niet worden opgebouwd." });
+    const T = K2.tellers;
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "bo", "data-gk": "blok", children: [
       /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "bo-intro", children: [
         "Bespreek met ",
         voornaam,
-        " wat goed gaat, \xE9\xE9n ontwikkelpunt en een concrete volgende stap."
+        " wat goed gaat, \xE9\xE9n aandachtspunt en een volgende stap."
       ] }),
-      g.sterk.length ? g.sterk.map((s, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Kaart, { soort: "sterk", icoon: "pijler_karakter", label: g.sterk.length > 1 ? "Sterk punt " + (i + 1) : "Sterk punt", tekst: s.tekst }, i)) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Kaart, { soort: "sterk", icoon: "pijler_karakter", label: "Sterke punten", tekst: "Nog onvoldoende gegevens om een sterk punt vast te stellen." }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Kaart, { soort: "ontwikkel", icoon: "target", label: "Ontwikkelpunt", tekst: g.ontwikkel || "Nog onvoldoende gegevens om een ontwikkelpunt vast te stellen." }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Kaart, { soort: "stap", icoon: "chevron", label: "Volgende stap", tekst: g.stap || "Nog onvoldoende gegevens om een volgende stap vast te stellen." }),
-      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { type: "button", className: "lp-link bo-onderbouwing", "aria-expanded": onderbouwing2 ? "true" : "false", "aria-controls": "bo-onderbouwing", onClick: () => setOnderbouwing((o) => !o), children: [
-        onderbouwing2 ? "Verberg onderbouwing" : "Bekijk onderbouwing",
-        " ",
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "chevron", size: 13 })
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "bo-rij", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "bo-tellers", children: [
+          T.afgerond,
+          " afgerond \xB7 ",
+          T.beoordeeld,
+          " beoordeeld",
+          T.wacht ? " \xB7 " + T.wacht + " wacht" + (T.wacht === 1 ? "" : "en") : ""
+        ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "btn btn-licht bo-open", "data-gk": "open", "aria-haspopup": "dialog", onClick: () => {
+          setDet(false);
+          setOpen(true);
+        }, children: "Open gesprekskaart" })
       ] }),
-      onderbouwing2 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "bo-onderbouwing-paneel", id: "bo-onderbouwing", children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "bo-onderbouwing-kop", children: "Waarop dit berust" }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "bo-onderbouwing-lijst", children: g.onderbouwing.map((t, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("li", { children: t }, i)) }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
-          Vouw,
-          {
-            titel: "Volledige gesprekspunten uit de Growth Journey",
-            id: "bo-gesprekspunten",
-            kind: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(GesprekspuntenKaart, { records, gebruiker: { naam: leerling.naam, klas, leeftijd: leerling.leeftijd }, type: "mentor" })
-          }
-        )
-      ] })
+      open && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+        Popup,
+        {
+          titel: det ? "Bronnen" : "Gesprekskaart",
+          sub: leerling.naam + (klas ? " \xB7 " + klas : ""),
+          breed: det,
+          vakKlasse: "gk-vak",
+          onSluit: () => setOpen(false),
+          onTerug: det ? () => setDet(false) : void 0,
+          terugLabel: "Terug naar de gesprekskaart",
+          onEscape: () => {
+            if (det) setDet(false);
+            else setOpen(false);
+          },
+          children: det ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(GkDetails, { ...{ G, K: K2, tab, setTab, records, leerling, klas }, onOpen: onOpen ? (r) => {
+            setOpen(false);
+            onOpen(r);
+          } : null }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Gesprekskaart, { K: K2, onDetails: () => setDet(true) })
+        }
+      )
     ] });
   }
   function VolgendeStap({ records, leerling, klas, feedbackGegeven, beoordeeld, onBespreek }) {
@@ -89548,11 +90361,11 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const [klasKeuze, setKlasKeuze] = (0, import_react3.useState)([]);
     const [llnKeuze, setLlnKeuze] = (0, import_react3.useState)([]);
     const [open, setOpen] = (0, import_react3.useState)("");
-    const kl = (Array.isArray(klassen) ? klassen : []).filter((k) => k && k.id);
+    const kl2 = (Array.isArray(klassen) ? klassen : []).filter((k) => k && k.id);
     const wissel = (set, v) => set((l) => l.includes(v) ? l.filter((x) => x !== v) : [...l, v]);
     const aantal = klasKeuze.length + llnKeuze.length;
     return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PfPaneel, { titel: "Toewijzen", sub: st.data.titel || "Uitdaging", icoon: "users", breed: 620, onSluit, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "tw-paneel", "data-tw": "paneel", children: [
-      kl.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "studio-hint", children: "Je hebt nog geen klassen. Maak eerst een klas aan bij Leerlingen." }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "tw-lijst", children: kl.map((k) => {
+      kl2.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "studio-hint", children: "Je hebt nog geen klassen. Maak eerst een klas aan bij Leerlingen." }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "tw-lijst", children: kl2.map((k) => {
         const lln = (k.leerlingen || []).filter((l) => l && l.naam);
         return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("li", { className: "tw-klas", children: [
           /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { className: "tw-rij", children: [
@@ -89583,12 +90396,12 @@ ${String(stapTekst).slice(0, 900)}` : ""
         /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { type: "button", className: "btn btn-accent studio-knop", "data-tw": "bevestig", disabled: !aantal, onClick: () => {
           const doelen = [
             ...klasKeuze.map((id) => {
-              const k = kl.find((x) => x.id === id);
+              const k = kl2.find((x) => x.id === id);
               return { soort: "klas", klasId: k.id, klasNaam: k.naam };
             }),
             ...llnKeuze.map((sl) => {
               const [kid, lid] = sl.split("|");
-              const k = kl.find((x) => x.id === kid) || { leerlingen: [] };
+              const k = kl2.find((x) => x.id === kid) || { leerlingen: [] };
               const l = (k.leerlingen || []).find((x) => (x.id || x.naam) === lid) || { naam: lid };
               return { soort: "leerling", leerlingId: l.id, leerlingen: [l.naam], klasNaam: k.naam };
             })
@@ -94225,7 +95038,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                     const eerder = alleRecs.filter((x) => x && x.id !== r.id && x.alpe && x.alpe.mentorfeedback && String(x.alpe.mentorfeedback.feedback || "").trim()).sort((a, b) => String(b.alpe.mentorfeedback.op || "").localeCompare(String(a.alpe.mentorfeedback.op || "")))[0];
                     if (!eerder) return null;
                     const mf = eerder.alpe.mentorfeedback;
-                    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "muted", style: { fontSize: ".8rem", lineHeight: 1.45, padding: "8px 12px", borderLeft: "3px solid var(--lijn)", background: "var(--tegel-licht,#FAF9F6)", borderRadius: "0 10px 10px 0" }, children: [
+                    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "muted fbb-ingebed", style: { fontSize: ".8rem", lineHeight: 1.45 }, children: [
                       /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { style: { fontWeight: 700 }, children: "Eerder" }),
                       " \xB7 ",
                       eerder.data && eerder.data.titel || "vorige uitdaging",
@@ -94598,23 +95411,13 @@ ${String(stapTekst).slice(0, 900)}` : ""
                             ] })
                           ] });
                         })() : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "lp-stil", children: "Zodra er afgerond werk is, kun je hier een uitdaging beoordelen." }),
-                        feedbackLijst.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { type: "button", className: "lp-link lp-eerder", "aria-expanded": N.llPaneel === "feedback" ? "true" : "false", onClick: () => zetNav({ llPaneel: N.llPaneel === "feedback" ? "" : "feedback" }, { vervang: true }), children: [
+                        feedbackLijst.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { type: "button", className: "lp-link lp-eerder", "aria-haspopup": "dialog", onClick: () => zetNav({ llPaneel: "feedback" }, { vervang: true }), children: [
                           /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "bewaar", size: 14 }),
                           " Eerdere feedback (",
                           feedbackLijst.length,
                           ")"
                         ] }),
-                        N.llPaneel === "feedback" && feedbackLijst.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "lp-eerderlijst", children: feedbackLijst.slice(0, 5).map((r) => {
-                          const mf = r.alpe.mentorfeedback;
-                          return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "lp-eerderrij", children: [
-                            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "lp-eerderrij-meta", children: [
-                              r.data && r.data.titel || themaLabel(r.thema),
-                              mf.op ? " \xB7 " + datumNL(mf.op) : "",
-                              mf.door ? " \xB7 " + mf.door : ""
-                            ] }),
-                            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "lp-eerderrij-tekst", children: String(mf.feedback).length > 200 ? String(mf.feedback).slice(0, 200).trim() + "\u2026" : mf.feedback })
-                          ] }, r.id);
-                        }) })
+                        N.llPaneel === "feedback" && feedbackLijst.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Popup, { titel: "Eerdere feedback", sub: l.naam + " \xB7 " + feedbackLijst.length + " " + (feedbackLijst.length === 1 ? "bericht" : "berichten"), onSluit: () => zetNav({ llPaneel: "" }, { vervang: true }), children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "lp-eerderlijst fbb-lijst", children: feedbackLijst.slice(0, 10).map((r) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(FeedbackBericht, { m: { ...r.alpe.mentorfeedback, titel: r.data && r.data.titel || themaLabel(r.thema) } }, r.id)) }) })
                       ] })
                     ] })
                   ] })
@@ -94675,7 +95478,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                     ] });
                   })(),
                   /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h4", { className: "lp-sectie", children: "Bespreek de ontwikkeling" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(BespreekOntwikkeling, { records: alleRecs, leerling: l, klas: openKlas.naam }),
+                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(BespreekOntwikkeling, { records: alleRecs, leerling: l, klas: openKlas.naam, onOpen }),
                   onPortfolio && st.recs.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { className: "btn btn-accent lp-hoofdactie", onClick: () => onPortfolio(l), children: [
                     "Open het volledige groeiportfolio ",
                     /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "chevron", size: 15 })
@@ -95250,7 +96053,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h3", { style: { margin: "0 0 12px", fontSize: "1.1rem", fontWeight: 800 }, children: "Scholen (tenants)" }),
         scholen.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "muted", style: { fontSize: ".9rem", margin: 0 }, children: "Nog geen scholen. Keur een aanvraag goed of laat een beheerder een school aanmaken." }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: { display: "grid", gap: 12 }, children: scholen.map((sc) => {
           const mods = sc.modules || { neo: true };
-          const kl = statusKleur(sc.licentiestatus);
+          const kl2 = statusKleur(sc.licentiestatus);
           return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { border: "1px solid var(--lijn)", borderRadius: 12, padding: "14px 16px" }, children: [
             /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap", alignItems: "baseline" }, children: [
               /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { style: { fontWeight: 800 }, children: [
@@ -95266,7 +96069,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
               ] })
             ] }),
             /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginTop: 10 }, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "pill", style: { background: kl.bg, color: kl.fg, fontWeight: 700 }, children: licentieLabel(sc.licentiestatus) }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "pill", style: { background: kl2.bg, color: kl2.fg, fontWeight: 700 }, children: licentieLabel(sc.licentiestatus) }),
               /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("select", { value: sc.licentiestatus || "actief", onChange: (e) => zetStatus(sc, e.target.value), style: { padding: "6px 8px", borderRadius: 8, border: "1.5px solid var(--lijn)", fontSize: ".8rem", background: "#fff", fontWeight: 700 }, children: LICENTIE_STATUS.map(([v, l]) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("option", { value: v, children: l }, v)) }),
               /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { style: { flex: 1 } }),
               ["neo", "pta", "projects"].map((k) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { onClick: () => toggleModule(sc, k), className: "pill", style: { background: mods[k] ? "var(--accent)" : "#EEE", color: mods[k] ? "#fff" : "#B4B4B4", fontWeight: 700, fontSize: ".72rem" }, children: modLabel[k] }, k))
@@ -101436,7 +102239,7 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
                   (async () => {
                     try {
                       const prof1 = (subthemaProgressie([r, ...eigenRecords], [r.data && r.data.subthema]) || [])[0] || null;
-                      const aifb = await genereerAIFeedbackAI({ record: r, prof: prof1, profiel: profielSnap });
+                      const aifb = await genereerAIFeedbackAI({ record: r, prof: prof1, profiel: profielSnap, tp: getLearnerLanguageProfile(gebruiker) });
                       if (aifb) {
                         const r2 = { ...r, alpe: pasFeedbackToe(r.alpe, aifb) };
                         setActief((prev) => prev && prev.id === r2.id ? r2 : prev);
@@ -101683,17 +102486,31 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
                     if (k in p) taalPatch[k] = k === "leerjaar" && p[k] === "" ? null : p[k];
                   });
                   let prof = null;
+                  let uitkomst = { ok: true, stand: null };
                   if (Object.keys(taalPatch).length && gebruiker && gebruiker.discovery) {
                     prof = { ...gebruiker.discovery, ...taalPatch, taalGewijzigdOp: (/* @__PURE__ */ new Date()).toISOString() };
                     try {
-                      await discoveryStore.set(slugVan(gebruiker), prof);
+                      uitkomst = await discoveryStore.set(slugVan(gebruiker), prof) || { ok: false };
                     } catch {
+                      uitkomst = { ok: false };
+                    }
+                    if (uitkomst.ok === false) return uitkomst;
+                  }
+                  if (("naam" in p || "geboortedatum" in p) && !(platform && platform.userId)) {
+                    try {
+                      const oud = JSON.parse(localStorage.getItem("tc:sessie:v1") || "null");
+                      if (oud && typeof oud === "object") {
+                        localStorage.setItem("tc:sessie:v1", JSON.stringify({ ...oud, ...p }));
+                      }
+                    } catch {
+                      return { ok: false, reden: "fout" };
                     }
                   }
                   setGebruiker((g) => {
                     const nw = { ...g, ...p, ...taalPatch, ...prof ? { discovery: prof } : {} };
                     return { ...nw, leeftijd: p.geboortedatum ? leeftijdUit(p.geboortedatum) || g.leeftijd : g.leeftijd };
                   });
+                  return uitkomst;
                 },
                 onAvatar: async (av) => {
                   const oud = gebruiker && gebruiker.discovery || {};
