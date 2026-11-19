@@ -63123,6 +63123,14 @@ button.admin-status-tekst:hover{background:rgba(28,27,25,.04)}
 .promo-inlog-knoppen{position:absolute;top:max(14px,env(safe-area-inset-top));right:14px;display:flex;gap:8px;z-index:2}
 .promo-inlog-knop{font:inherit;font-size:.88rem;font-weight:700;padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:rgba(21,23,26,.55);color:#FFFFFF;cursor:pointer}
 .promo-inlog-knop:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+/* v113.34: de film terugkijken \u2014 een rustige tekstlink op de regel van de sectiekop, zonder extra hoogte */
+.grow-sectierij{display:flex;align-items:baseline;justify-content:space-between;gap:4px 14px;flex-wrap:wrap;margin:clamp(24px,3.4vw,34px) 0 12px}
+.grow-sectierij .grow-sectiekop{margin:0}
+.grow-film{display:inline-flex;align-items:center;gap:6px;min-height:36px;margin:-9px -8px -9px 0;padding:6px 8px;border-radius:8px;background:none;border:0;font:inherit;font-size:.82rem;font-weight:600;color:var(--grijs);cursor:pointer}
+.grow-film:hover span{text-decoration:underline;text-underline-offset:3px}
+.grow-film:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.grow-film-mis{margin:0;font-size:.82rem;color:var(--grijs)}
+@media(max-width:430px){ .grow-film-duur{display:none} }   /* op een telefoon past de link zo naast de kop */
 .promo-kaart{width:100%;max-width:760px;background:#FFFFFF;border:1px solid var(--lijn);border-radius:24px;
   padding:clamp(20px,3.4vw,32px);box-shadow:0 24px 54px -34px rgba(60,44,28,.45);text-align:center}
 .promo-eyebrow{display:block;margin-bottom:6px}
@@ -90410,11 +90418,11 @@ ${String(stapTekst).slice(0, 900)}` : ""
     } catch {
     }
   }
-  function PromoBijInlog({ bron, onKlaar }) {
+  function PromoBijInlog({ bron, onKlaar, opVerzoek, onFout }) {
     const videoRef = (0, import_react3.useRef)(null);
     const stil = useGeenBeweging();
     const [speelt, setSpeelt] = (0, import_react3.useState)(false);
-    const [geluid, setGeluid] = (0, import_react3.useState)(false);
+    const [geluid, setGeluid] = (0, import_react3.useState)(!!opVerzoek);
     const url = promoBron(bron);
     const klaar = (0, import_react3.useRef)(false);
     const sluit = () => {
@@ -90437,15 +90445,19 @@ ${String(stapTekst).slice(0, 900)}` : ""
         setSpeelt(false);
       }
     };
+    const mis = () => {
+      if (opVerzoek && onFout && !klaar.current) onFout();
+      sluit();
+    };
     (0, import_react3.useEffect)(() => {
-      if (!stil) speel();
+      if (!stil || opVerzoek) speel();
       const esc = (e) => {
         if (e.key === "Escape") sluit();
       };
       window.addEventListener("keydown", esc);
       return () => window.removeEventListener("keydown", esc);
     }, []);
-    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "promo-inlog", role: "dialog", "aria-modal": "true", "aria-label": "Welkom terug bij 2scool GROW", "data-promo": "inlog", children: [
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "promo-inlog", role: "dialog", "aria-modal": "true", "aria-label": opVerzoek ? "Film over 2scool GROW" : "Welkom terug bij 2scool GROW", "data-promo": opVerzoek ? "opverzoek" : "inlog", children: [
       /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
         "video",
         {
@@ -90453,13 +90465,13 @@ ${String(stapTekst).slice(0, 900)}` : ""
           className: "promo-inlog-video",
           playsInline: true,
           muted: !geluid,
-          autoPlay: !stil,
+          autoPlay: !stil || !!opVerzoek,
           preload: "auto",
           poster: PROMO_POSTER,
           onPlay: () => setSpeelt(true),
           onEnded: sluit,
-          onError: sluit,
-          children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("source", { src: url, type: /^data:video\/webm|\.webm(\?|$)/i.test(url) ? "video/webm" : "video/mp4", onError: sluit })
+          onError: mis,
+          children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("source", { src: url, type: /^data:video\/webm|\.webm(\?|$)/i.test(url) ? "video/webm" : "video/mp4", onError: mis })
         }
       ),
       !speelt && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { type: "button", className: "promo-speel", onClick: speel, "aria-label": "Speel de film af", children: [
@@ -90474,7 +90486,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
           } catch {
           }
         }, children: "Geluid aan" }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "promo-inlog-knop", "data-promo": "sluit", onClick: sluit, autoFocus: true, children: "Overslaan" })
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "promo-inlog-knop", "data-promo": "sluit", onClick: sluit, autoFocus: true, children: opVerzoek ? "Sluiten" : "Overslaan" })
       ] })
     ] });
   }
@@ -90487,7 +90499,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
       /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "pg-a", children: tekst3 })
     ] }) }) });
   }
-  function LeerlingThuis({ gebruiker, xp, records, onUitdagingen, onProfiel, onStartRoute, onMaakFocus, onKiesFocus, onHervat, onVerjaardag, verjaardagOpen, toewijzingen, onStartToewijzing, lijstLaden }) {
+  function LeerlingThuis({ gebruiker, xp, records, onUitdagingen, onProfiel, onStartRoute, onMaakFocus, onKiesFocus, onHervat, onVerjaardag, verjaardagOpen, toewijzingen, onStartToewijzing, lijstLaden, onFilm, filmMis, filmRef }) {
     const primair = gebruiker && gebruiker.discovery && ROUTE_KEYS.includes(gebruiker.discovery.route) ? gebruiker.discovery.route : null;
     const voortgang = calculateRouteProgress(records);
     const [routeOpen, setRouteOpen] = (0, import_react3.useState)(null);
@@ -90601,7 +90613,16 @@ ${String(stapTekst).slice(0, 900)}` : ""
           /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "grow-pijl", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "chevron", size: 18 }) })
         ] }),
         onStartRoute && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("section", { "aria-labelledby": "grow-routes-kop", children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h2", { id: "grow-routes-kop", className: "grow-sectiekop", children: "Waar wil je aan werken?" }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "grow-sectierij", children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("h2", { id: "grow-routes-kop", className: "grow-sectiekop", children: "Waar wil je aan werken?" }),
+            onFilm && (filmMis ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "grow-film-mis", "data-promo": "mis", role: "status", children: "De film is hier nu niet beschikbaar." }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { type: "button", ref: filmRef, className: "grow-film", "data-promo": "opnieuw", onClick: onFilm, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "play", size: 11 }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { children: [
+                "Bekijk de film",
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "grow-film-duur", children: " \xB7 20 sec" })
+              ] })
+            ] }))
+          ] }),
           /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "grow-routes", children: ROUTE_KEYS.map((k) => {
             const Rk = ROUTES[k], focus = k === primair;
             return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
@@ -102515,6 +102536,9 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
     const [profielTab, setProfielTab] = (0, import_react3.useState)(null);
     const [checkinPopup, setCheckinPopup] = (0, import_react3.useState)(false);
     const [promoNa, setPromoNa] = (0, import_react3.useState)(null);
+    const [promoVraag, setPromoVraag] = (0, import_react3.useState)(false);
+    const [promoMis, setPromoMis] = (0, import_react3.useState)(false);
+    const promoLinkRef = (0, import_react3.useRef)(null);
     const [promoInlog, setPromoInlog] = (0, import_react3.useState)(false);
     const [verjaardag, setVerjaardag] = (0, import_react3.useState)(null);
     const [activeChallengeRoute, setActiveChallengeRoute] = (0, import_react3.useState)(null);
@@ -103438,6 +103462,23 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
             } }),
             step === "promo" && gebruiker && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PromoFilm, { bron: platform && platform.promoVideo, onKlaar: promoKlaar }),
             promoInlog && gebruiker && gebruiker.rol === "leerling" && step !== "promo" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PromoBijInlog, { bron: platform && platform.promoVideo, onKlaar: () => setPromoInlog(false) }),
+            promoVraag && !promoInlog && gebruiker && step !== "promo" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+              PromoBijInlog,
+              {
+                opVerzoek: true,
+                bron: platform && platform.promoVideo,
+                onFout: () => setPromoMis(true),
+                onKlaar: () => {
+                  setPromoVraag(false);
+                  setTimeout(() => {
+                    try {
+                      promoLinkRef.current && promoLinkRef.current.focus({ preventScroll: true });
+                    } catch {
+                    }
+                  }, 0);
+                }
+              }
+            ),
             step === "avatar" && gebruiker && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "wrap", style: { maxWidth: 1040, paddingTop: 24 }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
               AvatarKiezer,
               {
@@ -103766,6 +103807,9 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
                 gebruiker,
                 xp,
                 records: eigenRecords,
+                onFilm: () => setPromoVraag(true),
+                filmMis: promoMis,
+                filmRef: promoLinkRef,
                 onUitdagingen: () => {
                   setProfielTab("werken");
                   go("profiel");
