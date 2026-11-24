@@ -60299,6 +60299,48 @@ details.ma-context-blok>summary{cursor:pointer;min-height:32px;display:flex;alig
 .lp-actie{min-height:44px;max-width:100%;text-align:left}
 .lp-actie-sub{font-weight:600;opacity:.85}
 .lp-actie-meer{font-size:.82rem;color:var(--inkt-zacht)}
+/* v114.3: belletje en meldingenlijst */
+.mb-bel{appearance:none;position:relative;width:38px;height:38px;border-radius:10px;border:1px solid var(--lijn-fijn);background:#fff;color:var(--grijs);
+  display:grid;place-items:center;cursor:pointer;flex-shrink:0;transition:color .15s ease,border-color .15s ease}
+.mb-bel:hover{color:var(--inkt);border-color:rgba(28,27,25,.22)}
+.mb-bel.heeft-meldingen{color:var(--inkt)}
+.mb-bel:focus-visible{outline:3px solid var(--accent-diep);outline-offset:2px}
+.mb-bel.is-klein{width:36px;height:36px;border-radius:999px;background:transparent;border-color:transparent}
+.mb-bel.is-klein:hover{background:var(--accent-zacht);border-color:transparent}
+.mb-teller{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--accent-knop);color:var(--accent-opdruk);
+  font-size:.68rem;font-weight:800;line-height:18px;text-align:center;box-shadow:0 0 0 2px var(--bg,#FAF9F6)}
+.mb-lijst{display:flex;flex-direction:column;gap:6px}
+.mb-rij{appearance:none;font:inherit;display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:10px 12px;border:1px solid var(--lijn-fijn);border-radius:12px;
+  background:#fff;color:var(--inkt);text-align:left;cursor:pointer}
+.mb-rij:hover{border-color:rgba(28,27,25,.22);background:var(--tegel,#F6F4EF)}
+.mb-rij:focus-visible{outline:3px solid var(--accent-diep);outline-offset:2px}
+.mb-rij > svg{color:var(--grijs);flex-shrink:0}
+.mb-rij-tekst{flex:1;min-width:0;font-size:.9rem;line-height:1.35}
+.mb-rij-hoofd{font-weight:700}
+.mb-rij-sub{font-weight:500;color:var(--inkt-zacht);opacity:1}
+.mb-nieuw{flex-shrink:0;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--accent-zacht);color:var(--accent-diep)}
+.mb-leeg{margin:0;color:var(--inkt-zacht);font-size:.9rem}
+.mb-kop{margin:0 0 8px;font-size:.74rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--inkt-zacht)}
+.mb-kopregel{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.mb-kopregel .mb-kop{margin:0}
+.mb-datum{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:var(--inkt-zacht)}
+.mb-datum input{font:inherit;font-size:.86rem;color:var(--inkt);min-height:36px;padding:4px 8px;border:1px solid var(--lijn-fijn);border-radius:10px;background:#fff}
+.mb-wis{appearance:none;font:inherit;font-size:.82rem;font-weight:700;color:var(--accent-diep);background:none;border:0;padding:6px 4px;cursor:pointer;min-height:36px}
+.mb-voet{display:flex;justify-content:flex-end;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.mb-voet:empty{display:none}
+.mb-tabs{display:flex;gap:2px;border-bottom:1px solid var(--lijn-fijn);margin:0 0 12px;overflow-x:auto;scrollbar-width:none}
+.mb-tab{appearance:none;border:0;background:none;font:inherit;font-size:.86rem;font-weight:700;color:var(--inkt-zacht);padding:0 10px;min-height:40px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;box-shadow:inset 0 -2px 0 transparent}
+.mb-tab:hover{color:var(--inkt)}
+.mb-tab.is-aan{color:var(--inkt);box-shadow:inset 0 -2px 0 var(--accent-diep)}
+.mb-tab:focus-visible{outline:3px solid var(--accent-diep);outline-offset:-3px}
+.mb-tab-n{font-size:.72rem;font-weight:800;min-width:20px;padding:1px 6px;border-radius:999px;background:var(--tegel,#F1EFEA);color:var(--inkt-zacht);text-align:center}
+.mb-tab-n.is-nieuw{background:var(--accent-zacht);color:var(--accent-diep)}
+.mb-tab-kort{display:none}
+@media(max-width:520px){ .mb-tab-lang{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap} .mb-tab-kort{display:inline} .mb-tab{padding:0 8px} }
+.mb-bladeren{display:inline-flex;align-items:center;gap:8px;margin-left:auto}
+.mb-pagina{font-size:.82rem;color:var(--inkt-zacht);white-space:nowrap}
+.lp-kop .mb-bel{align-self:center}
 .lp-tabs{display:flex;gap:2px;border-bottom:1px solid var(--lijn-fijn);margin:0 0 16px;overflow-x:auto;scrollbar-width:none}
 .lp-tabs::-webkit-scrollbar{display:none}
 .lp-tab{appearance:none;border:0;background:none;font:inherit;font-size:.9rem;font-weight:700;color:var(--inkt-zacht);padding:0 14px;min-height:44px;cursor:pointer;
@@ -60798,6 +60840,10 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .ll-kopvorm .afrond-landschap{width:100%;height:100%;opacity:.9}
 .ll-kopvorm::after{content:"";position:absolute;left:0;right:0;bottom:0;height:54px;background:linear-gradient(to bottom,rgba(250,249,246,0),var(--bg,#FAF9F6))}
 @media (max-width:760px){ .ll-kopvorm{width:62%;height:120px} .ll-kopvorm .afrond-landschap{opacity:.5} }
+/* v114.3: de gekozen achtergrond van de leerling in de kop van zijn leerlingpagina (zelfde beeld en focuspunt als zijn groeiportfolio) */
+.ll-kopvorm.heeft-omg{height:170px;top:-24px}
+.ll-kopvorm .pf3-omg{width:100%;display:block}
+@media (max-width:760px){ .ll-kopvorm.heeft-omg{height:130px} .ll-kopvorm.heeft-omg .pf3-omg{opacity:.5} }
 .rp2 .go{margin:4px -2px 0;border:0;border-radius:0;background:transparent}   /* geen kaart in een kaart */
 .rp2 .go-kop,.rp2 .go-meta{padding-left:0;padding-right:0}
 @media (max-width:640px){
@@ -61042,6 +61088,16 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
   .kop-status{display:none}
   .kop-rechts .pill{font-size:.68rem;padding:5px 8px}
   .kop-rechts button.muted{font-size:.78rem;padding:6px 6px}
+}
+/* v114.3: met het belletje van de leerling erbij moet de bovenbalk op een smalle telefoon nog passen:
+   iets kleiner logo, kleiner belletje en minder ruimte ertussen (alleen als het belletje er staat) */
+@media(max-width:480px){
+  .kop-balk:has(.mb-bel) .kop-logo img{height:38px}
+  .kop-balk:has(.mb-bel) .kop-links{gap:8px}
+  .kop-balk:has(.mb-bel) .kop-rechts{gap:2px}
+  .kop-balk:has(.mb-bel) .kop-rechts nav{gap:2px!important}
+  .kop-rechts .mb-bel.is-klein{width:32px;height:32px}
+  .kop-balk:has(.mb-bel) .terug-knop{padding:7px 8px 7px 6px}
 }
 @media (prefers-reduced-motion:reduce){ .kop-logo,.kop-rechts button{transition:none} .kop-logo:hover{transform:none} }
 
@@ -70461,9 +70517,45 @@ ${xref}
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("circle", { cx: "12", cy: "12", r: "10" }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("circle", { cx: "12", cy: "12", r: "6" }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("circle", { cx: "12", cy: "12", r: "2" })
+      ] }),
+      /* v114.3 (JB): belletje voor meldingen — Lucide bell (ISC), zelfde raster en lijndikte als de rest */
+      bel: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("path", { d: "M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("path", { d: "M10.3 21a1.94 1.94 0 0 0 3.4 0" })
       ] })
     }[name] || null;
     return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("svg", { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true", style: { flexShrink: 0 }, children: p });
+  }
+  function MeldingBel({ aantal = 0, label, onClick, klein }) {
+    const n = Math.max(0, aantal | 0);
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
+      "button",
+      {
+        type: "button",
+        className: "mb-bel" + (klein ? " is-klein" : "") + (n ? " heeft-meldingen" : ""),
+        "data-mb": "bel",
+        onClick,
+        "aria-label": label + (n ? " (" + n + ")" : ""),
+        title: label,
+        children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "bel", size: klein ? 18 : 19 }),
+          n > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mb-teller", "data-mb": "teller", "aria-hidden": "true", children: n > 9 ? "9+" : n })
+        ]
+      }
+    );
+  }
+  function MeldingRij({ hoofd: hoofd2, sub, nieuw, onClick, className = "", bron }) {
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { type: "button", className: "mb-rij " + className, "data-mb": "rij", "data-ma-bron": bron, onClick, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "mb-rij-tekst", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { className: "mb-rij-hoofd", children: hoofd2 }),
+        sub && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "lp-actie-sub mb-rij-sub", children: [
+          " \xB7 ",
+          sub
+        ] })
+      ] }),
+      nieuw && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mb-nieuw", "data-mb": "nieuw", children: "Nieuw" }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "chevron", size: 15 })
+    ] });
   }
   function ThemaIcon({ theme, size = 24 }) {
     const p = {
@@ -77013,6 +77105,32 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
     const ontwLeeg = !a && g ? "Er is op dit moment geen ontwikkelpunt vastgesteld." : null;
     return { intro, sterkTekst, ontwTekst, stap, beoordeeld, sterkKort, sterkBron, sterkWaar, ontwKort, ontwBron, ontwLeeg, stapThema, stapKort, uitleg: P && P.uitleg };
   }
+  function omgevingSleutelVoorRecord(gebruiker) {
+    try {
+      const vk = achtergrondVoorkeur(gebruiker);
+      return vk.modus === "zelf" && vk.keuze ? vk.keuze : "dag";
+    } catch {
+      return null;
+    }
+  }
+  function omgevingUitRecords(records) {
+    let best = null, t = -1;
+    for (const r of records || []) {
+      const k = r && r.leerling && r.leerling.omgeving;
+      if (!k) continue;
+      const w = Date.parse(r.sync && r.sync.l || r.bijgewerkt || r.afgerondOp || r.datum || "") || 0;
+      if (w >= t) {
+        t = w;
+        best = k;
+      }
+    }
+    if (!best || best === "dag") return null;
+    try {
+      return omgevingVan(best) || null;
+    } catch {
+      return null;
+    }
+  }
   function gekozenOmgeving(leerling) {
     try {
       const vk = achtergrondVoorkeur(leerling);
@@ -77507,7 +77625,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
     const kruimelItems = (kruimels || []).filter((x) => x && x.label !== "Groeiportfolio");
     const terugLabel = kruimels && kruimels.length > 1 ? "Terug naar " + kruimels[kruimels.length - 2].label : "Terug";
     const laatsteFb = feedback.length ? feedback[feedback.length - 1] : null;
-    const omg = (0, import_react3.useMemo)(() => isOuder ? null : gekozenOmgeving(gebruiker), [gebruiker, isOuder]);
+    const omg = (0, import_react3.useMemo)(() => isOuder ? null : gekozenOmgeving(gebruiker) || (isMentor ? omgevingUitRecords(records) : null), [gebruiker, isOuder, isMentor, records]);
     const deeltInzicht = toon("patronen") || toon("themas");
     const magPassend = !isOuder && deeltInzicht && !!ins.stapThema;
     const [aanbod, setAanbod] = (0, import_react3.useState)({ toew: [], ontwerpen: [] });
@@ -80138,7 +80256,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
       }, children: "Opnieuw proberen" })
     ] });
   }
-  function Header({ gebruiker, go, uitloggen, wachtrij, step, naarProfiel, onStudio, onTerugBegeleider }) {
+  function Header({ gebruiker, go, uitloggen, wachtrij, step, naarProfiel, onStudio, onTerugBegeleider, meldingen }) {
     const meerdereRollen = Array.isArray(gebruiker && gebruiker.rollenBeschikbaar) && gebruiker.rollenBeschikbaar.length > 1;
     const breed = gebruiker && gebruiker.rol === "beheerder";
     const kopRef = (0, import_react3.useRef)(null);
@@ -80189,6 +80307,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
               ]
             }
           ),
+          gebruiker.rol === "leerling" && meldingen && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(MeldingBel, { klein: true, aantal: meldingen.aantal, label: meldingen.aantal ? "Nieuwe beoordelingen" : "Beoordelingen", onClick: meldingen.onOpen }),
           gebruiker.rol === "leerling" ? null : gebruiker.rol === "beheerder" ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
             /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(NavLink, { onClick: () => go("school"), children: "Schooldashboard" }),
             /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(NavLink, { onClick: () => go("developer"), children: "Sandbox" })
@@ -95616,6 +95735,12 @@ ${String(stapTekst).slice(0, 900)}` : ""
   function Mentor({ gebruiker, alle, klassen, onKlassen, onOpen, projecten, onBeoordeel, onBeoordeelUitdaging, onOntwikkelnotitie, onPortfolio, onSync, syncBezig, syncInfo, heeftSchool, bewijsApi, onBevestigBewijs, portfolioVan, vaardigStanden, nav, onNav, onTerugNav, platformNeo, studioVraag, lijstLaden, lijstFout, onHerlaad, beoordeelVraag }) {
     const readOnly = gebruiker.rol === "coach";
     const [mfRec, setMfRec] = (0, import_react3.useState)(null);
+    const [actiesOpen, setActiesOpenRuw] = (0, import_react3.useState)(false);
+    const [actiesPagina, setActiesPagina] = (0, import_react3.useState)(0);
+    const setActiesOpen = (v) => {
+      setActiesOpenRuw(v);
+      if (v) setActiesPagina(0);
+    };
     const [werkToon, setWerkToon] = (0, import_react3.useState)({ sleutel: "", n: WERK_TEGELS_PER_KEER });
     const [notitieRec, setNotitieRec] = (0, import_react3.useState)(null);
     const [notitieGelukt, setNotitieGelukt] = (0, import_react3.useState)(null);
@@ -96036,7 +96161,19 @@ ${String(stapTekst).slice(0, 900)}` : ""
     return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
       mentorView === "leerlingen" && !N.leerlingId && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(TalentAtmosphere, { category: null }),
       /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { position: "relative", zIndex: 1 }, children: [
-        mentorView === "leerlingen" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "ll-kopvorm", "data-ll": "kopvorm", "aria-hidden": "true", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(AfrondLandschap, {}) }),
+        mentorView === "leerlingen" && (() => {
+          let omg = null;
+          if (N.leerlingId) {
+            try {
+              const kk = klassen.find((k) => k.id === N.klasId);
+              const ll = kk && (kk.leerlingen || []).find((l) => l.id === N.leerlingId);
+              omg = ll ? omgevingUitRecords(recordsVanLeerling(alle || [], ll)) : null;
+            } catch {
+              omg = null;
+            }
+          }
+          return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "ll-kopvorm" + (omg ? " heeft-omg" : ""), "data-ll": "kopvorm", "data-omgeving": omg ? omg.key : "", "aria-hidden": "true", children: omg ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PfKopBeeld, { omg }, omg.key) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(AfrondLandschap, {}) });
+        })(),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(Section, { eyebrow: readOnly ? eyebrow : "Mentor \xB7 Vakdocent", titel: tabTitel, sub: tabSub, children: [
           /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(AdminTabs, { vast: true, tabs: [["leerlingen", "Leerlingen", "users"], ["bibliotheek", "Didactische bibliotheek", "briefcase"], ["studio", "GROW Studio", "edit"]], actief: mentorView, onKies: (k) => {
             if (k === mentorView) {
@@ -97156,6 +97293,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                         ] })
                       ] })
                     ] }),
+                    /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(MeldingBel, { aantal: mijnActies.length, label: mijnActies.length ? "Openstaande acties bij " + l.naam : "Geen openstaande acties bij " + l.naam, onClick: () => setActiesOpen(true) }),
                     /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
                       LeerlingMenu,
                       {
@@ -97176,34 +97314,41 @@ ${String(stapTekst).slice(0, 900)}` : ""
                       }
                     )
                   ] }),
-                  mijnActies.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "lp-acties", "data-lp": "acties", role: "region", "aria-label": "Openstaande acties", children: [
-                    mijnActies.slice(0, 3).map((a, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(
-                      "button",
+                  actiesOpen && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(PfPaneel, { titel: "Openstaande acties", sub: l.naam + (mijnActies.length ? " \xB7 " + (mijnActies.length === 1 ? "1 actie" : mijnActies.length + " acties") : ""), icoon: "bel", onSluit: () => setActiesOpen(false), children: [
+                    mijnActies.length ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "mb-lijst lp-acties", "data-lp": "acties", role: "list", "aria-label": "Openstaande acties", children: mijnActies.slice(Math.min(actiesPagina, Math.ceil(mijnActies.length / 5) - 1) * 5).slice(0, 5).map((a) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+                      MeldingRij,
                       {
-                        type: "button",
-                        className: "btn lp-actie " + (i === 0 ? "btn-accent" : "btn-licht"),
-                        "data-ma-bron": a.bron,
+                        className: "lp-actie",
+                        bron: a.bron,
+                        hoofd: readOnly && a.bron !== "gesprek" ? "Bekijk het werk" : a.knop,
+                        sub: (a.onderwerp || a.titel || "") + (a.sinds ? " \xB7 " + maSinds(a.sinds) : ""),
                         onClick: () => {
+                          setActiesOpen(false);
                           if (a.bron === "gesprek") zetNav({ llTab: "verder" }, { vervang: true });
                           else if (readOnly) onOpen(a.rec);
                           else naarBeoordeling(a.rec);
-                        },
-                        children: [
-                          readOnly && a.bron !== "gesprek" ? "Bekijk het werk" : a.knop,
-                          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "lp-actie-sub", children: [
-                            " \xB7 ",
-                            a.onderwerp || a.titel,
-                            a.sinds ? " \xB7 " + maSinds(a.sinds) : ""
-                          ] })
-                        ]
+                        }
                       },
                       a.id
-                    )),
-                    mijnActies.length > 3 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "lp-actie-meer", children: [
-                      "+",
-                      mijnActies.length - 3,
-                      " meer onder Uitdagingen"
-                    ] })
+                    )) }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "mb-leeg", children: [
+                      "Er staat bij ",
+                      l.naam,
+                      " niets open."
+                    ] }),
+                    mijnActies.length > 5 && (() => {
+                      const n = Math.ceil(mijnActies.length / 5), pg = Math.min(actiesPagina, n - 1);
+                      return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "mb-voet", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "mb-bladeren", "data-mb": "bladeren", children: [
+                        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "lp-wissel-knop", "data-mb": "vorige", "aria-label": "Vorige vijf", disabled: pg === 0, onClick: () => setActiesPagina(pg - 1), children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "left", size: 16 }) }),
+                        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "mb-pagina", "data-mb": "pagina", children: [
+                          pg * 5 + 1,
+                          "\u2013",
+                          Math.min(mijnActies.length, pg * 5 + 5),
+                          " van ",
+                          mijnActies.length
+                        ] }),
+                        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "lp-wissel-knop is-volgende", "data-mb": "volgende", "aria-label": "Volgende vijf", disabled: pg >= n - 1, onClick: () => setActiesPagina(pg + 1), children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "left", size: 16 }) })
+                      ] }) });
+                    })()
                   ] }),
                   /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("nav", { className: "lp-tabs", "aria-label": "Onderdelen van de leerling", children: [
                     [["", "Overzicht"], ["werk", "Uitdagingen"], ["verder", "Ontwikkeling"]].map(([k, lab]) => {
@@ -97448,7 +97593,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                         kanActie: kanGesprekActie,
                         titel: "Gesprekspunten met " + (voornaamVan(l.naam) || l.naam),
                         id: "go-ontw",
-                        alInActies: mijnActies.slice(0, 3).map((a) => a.rec && a.rec.id).filter(Boolean)
+                        alInActies: []
                       }
                     ),
                     onPortfolio && st.recs.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { className: "btn btn-accent lp-hoofdactie", onClick: () => onPortfolio(l), children: [
@@ -103722,6 +103867,71 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
       }, 600);
       return () => clearTimeout(t);
     }, [step, gebruiker && gebruiker.geboortedatum, gebruiker && gebruiker.rol, eigenAlle.length]);
+    const gezienSleutel = gebruiker && gebruiker.rol === "leerling" ? "grow:beoordeeld-gezien:v1:" + omgSleutel(gebruiker).toString(36) : "";
+    const [gezien, setGezien] = (0, import_react3.useState)(null);
+    const [meldOpen, setMeldOpenRuw] = (0, import_react3.useState)(false);
+    const [meldDatum, setMeldDatum] = (0, import_react3.useState)("");
+    const [meldTab, setMeldTab] = (0, import_react3.useState)("");
+    const [meldPagina, setMeldPagina] = (0, import_react3.useState)(0);
+    const setMeldOpen = (v) => {
+      setMeldOpenRuw(v);
+      if (v) {
+        setMeldDatum("");
+        setMeldTab("");
+        setMeldPagina(0);
+      }
+    };
+    const beoordeeldeRecs = (0, import_react3.useMemo)(() => gezienSleutel ? eigenRecords.filter((r) => r && r.alpe && r.alpe.mentorfeedback && r.data).map((r) => ({ r, op: String(r.alpe.mentorfeedback.op || r.alpe.mentorfeedback.datum || "1") })).sort((a, b) => b.op.localeCompare(a.op)) : [], [eigenRecords, gezienSleutel]);
+    (0, import_react3.useEffect)(() => {
+      if (!gezienSleutel) {
+        setGezien(null);
+        return;
+      }
+      let m = null;
+      try {
+        m = JSON.parse(localStorage.getItem(gezienSleutel) || "null");
+      } catch {
+        m = null;
+      }
+      if (!m || typeof m !== "object") {
+        m = {};
+        for (const x of beoordeeldeRecs) {
+          const t = Date.parse(x.op);
+          if (!(t && Date.now() - t <= 14 * 864e5)) m[x.r.id] = x.op;
+        }
+        try {
+          localStorage.setItem(gezienSleutel, JSON.stringify(m));
+        } catch {
+        }
+      }
+      setGezien(m);
+    }, [gezienSleutel, beoordeeldeRecs.length]);
+    const markeerGezien = (0, import_react3.useCallback)((lijst2) => {
+      if (!gezienSleutel) return;
+      setGezien((oud) => {
+        const m = { ...oud || {} };
+        let anders = false;
+        for (const x of lijst2) {
+          if (x && x.r && m[x.r.id] !== x.op) {
+            m[x.r.id] = x.op;
+            anders = true;
+          }
+        }
+        if (!anders) return oud;
+        try {
+          localStorage.setItem(gezienSleutel, JSON.stringify(m));
+        } catch {
+        }
+        return m;
+      });
+    }, [gezienSleutel]);
+    const nieuwBeoordeeld = gezien ? beoordeeldeRecs.filter((x) => gezien[x.r.id] !== x.op) : [];
+    (0, import_react3.useEffect)(() => {
+      if (step !== "uitdaging" || !actief || !gezien) return;
+      const x = beoordeeldeRecs.find((y) => y.r.id === actief.id);
+      if (x && gezien[x.r.id] !== x.op) markeerGezien([x]);
+    }, [step, actief && actief.id, gezien]);
+    const leerlingMeldingen = gezienSleutel ? { aantal: nieuwBeoordeeld.length, onOpen: () => setMeldOpen(true) } : null;
     const eigenProjecten = gebruiker ? projecten.filter((p) => p.leerling && p.leerling.naam === gebruiker.naam) : [];
     const stats = leerlingStats(eigenAlle, eigenProjecten);
     const xp = stats.xp, medals = stats.medals, behaald = stats.behaald;
@@ -104035,6 +104245,10 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
           }
         }
       }
+      if (gestempeld && gebruiker && gebruiker.rol === "leerling" && eigenWerk && gestempeld.leerling && typeof gestempeld.leerling === "object") {
+        const k = omgevingSleutelVoorRecord(gebruiker);
+        if (k && gestempeld.leerling.omgeving !== k) gestempeld = { ...gestempeld, leerling: { ...gestempeld.leerling, omgeving: k } };
+      }
       const zonder = basis.filter((u) => u.id !== gestempeld.id);
       const nieuw = [gestempeld, ...zonder];
       setUitdagingen(nieuw);
@@ -104181,12 +104395,104 @@ KRITIEK \u2014 GEEN AANNAMES: vul een onderdeel UITSLUITEND wanneer de antwoorde
           go,
           uitloggen,
           onTerugBegeleider: terugBegeleider,
+          meldingen: leerlingMeldingen,
           onStudio: (wat) => {
             setStudioVraag((v) => ({ wat, n: (v && v.n || 0) + 1 }));
             go("mentor", { ...MENTOR_NAV_LEEG, tab: "studio" });
           }
         }
       ),
+      meldOpen && leerlingMeldingen && (() => {
+        const nieuwIds = new Set(nieuwBeoordeeld.map((x) => x.r.id));
+        const wacht = eigenRecords.filter((r) => r && r.data && werkStatus(r).code === "ingeleverd").map((r) => ({ r, op: String(r.afgerondOp || r.bijgewerkt || r.datum || "") })).sort((a, b) => b.op.localeCompare(a.op));
+        const dag2 = (iso) => {
+          const t = Date.parse(iso);
+          if (!t) return "";
+          const d = new Date(t);
+          return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+        };
+        const eerder = beoordeeldeRecs.filter((x) => !nieuwIds.has(x.r.id));
+        const eerderGefilterd = meldDatum ? eerder.filter((x) => dag2(x.op) === meldDatum) : eerder;
+        const PER = 5;
+        const tab = meldTab || (nieuwBeoordeeld.length ? "nieuw" : wacht.length ? "wacht" : "eerder");
+        const bron = tab === "nieuw" ? nieuwBeoordeeld : tab === "wacht" ? wacht : eerderGefilterd;
+        const paginas = Math.max(1, Math.ceil(bron.length / PER));
+        const pg = Math.min(meldPagina, paginas - 1);
+        const zicht = bron.slice(pg * PER, pg * PER + PER);
+        const kies2 = (t) => {
+          setMeldTab(t);
+          setMeldPagina(0);
+        };
+        const rij = (x, nieuw) => {
+          const mf = x.r.alpe.mentorfeedback;
+          const titel = x.r.data && x.r.data.titel || "Je uitdaging";
+          return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+            MeldingRij,
+            {
+              hoofd: titel,
+              nieuw,
+              sub: [(mf.vervolg === "aanvullen" ? "aanvulling gevraagd" : "beoordeeld") + (mf.door ? " door " + mf.door : ""), mf.op || mf.datum ? datumNL(mf.op || mf.datum) : ""].filter(Boolean).join(" \xB7 "),
+              onClick: () => {
+                markeerGezien([x]);
+                setMeldOpen(false);
+                setActief(x.r);
+                go("uitdaging");
+              }
+            },
+            x.r.id
+          );
+        };
+        const TABS2 = [["nieuw", "Nieuw", nieuwBeoordeeld.length, ""], ["wacht", "Wacht op beoordeling", wacht.length, "Wacht"], ["eerder", "Eerder beoordeeld", eerder.length, "Eerder"]];
+        return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(PfPaneel, { titel: "Beoordelingen", sub: nieuwBeoordeeld.length ? nieuwBeoordeeld.length === 1 ? "1 nieuwe beoordeling van je docent" : nieuwBeoordeeld.length + " nieuwe beoordelingen van je docent" : "Je hebt alles gezien", icoon: "bel", onSluit: () => setMeldOpen(false), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "mb-tabs", role: "tablist", "aria-label": "Soort melding", children: TABS2.map(([k, lab, n, kort]) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { type: "button", role: "tab", "aria-selected": tab === k, className: "mb-tab" + (tab === k ? " is-aan" : ""), "data-mb-tab": k, onClick: () => kies2(k), children: [
+            kort ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mb-tab-lang", children: lab }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mb-tab-kort", "aria-hidden": "true", children: kort })
+            ] }) : lab,
+            n > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "mb-tab-n" + (k === "nieuw" ? " is-nieuw" : ""), children: n })
+          ] }, k)) }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("section", { className: "mb-deel", "data-mb": "deel-" + tab, role: "tabpanel", children: [
+            tab === "eerder" && eerder.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "mb-kopregel", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { className: "mb-datum", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: "Zoek op datum" }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("input", { type: "date", "data-mb": "datum", value: meldDatum, onChange: (e) => {
+                setMeldDatum(e.target.value);
+                setMeldPagina(0);
+              } }),
+              meldDatum && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "mb-wis", "data-mb": "wis", onClick: () => {
+                setMeldDatum("");
+                setMeldPagina(0);
+              }, children: "Wis" })
+            ] }) }),
+            zicht.length ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "mb-lijst", "data-mb": "lijst-" + tab, role: "list", children: tab === "wacht" ? zicht.map((x) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+              MeldingRij,
+              {
+                hoofd: x.r.data.titel || "Je uitdaging",
+                sub: "ingeleverd" + (x.op ? " op " + datumNL(x.op) : ""),
+                onClick: () => {
+                  setMeldOpen(false);
+                  setActief(x.r);
+                  go("uitdaging");
+                }
+              },
+              x.r.id
+            )) : zicht.map((x) => rij(x, tab === "nieuw")) }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "mb-leeg", children: tab === "nieuw" ? "Geen nieuwe beoordelingen." : tab === "wacht" ? "Er wacht niets op je docent." : meldDatum ? "Op " + datumNL(meldDatum) + " is niets beoordeeld." : "Nog geen eerdere beoordelingen." }),
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "mb-voet", children: [
+              tab === "nieuw" && nieuwBeoordeeld.length > 1 && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "btn btn-licht", "data-mb": "alles-gezien", style: { width: "auto" }, onClick: () => markeerGezien(nieuwBeoordeeld), children: "Alles als gezien markeren" }),
+              paginas > 1 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "mb-bladeren", "data-mb": "bladeren", children: [
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "lp-wissel-knop", "data-mb": "vorige", "aria-label": "Vorige vijf", disabled: pg === 0, onClick: () => setMeldPagina(pg - 1), children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "left", size: 16 }) }),
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "mb-pagina", "data-mb": "pagina", children: [
+                  pg * PER + 1,
+                  "\u2013",
+                  Math.min(bron.length, pg * PER + PER),
+                  " van ",
+                  bron.length
+                ] }),
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "lp-wissel-knop is-volgende", "data-mb": "volgende", "aria-label": "Volgende vijf", disabled: pg >= paginas - 1, onClick: () => setMeldPagina(pg + 1), children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "left", size: 16 }) })
+              ] })
+            ] })
+          ] })
+        ] });
+      })(),
       gebruiker && platform && platform.userId && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(SyncStrook, {}),
       uitlogVraag && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "afrond-sync is-mislukt", role: "alertdialog", "aria-labelledby": "uitlog-vraag", style: { margin: "10px auto", maxWidth: 720 }, children: [
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "waarschuwing", size: 14 }),
