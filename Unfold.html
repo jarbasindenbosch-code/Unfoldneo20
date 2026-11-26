@@ -50055,12 +50055,165 @@ INSTRUCTIES (stappen, opdracht): je-vorm of gebiedende wijs ("Maak een plan voor
     return uit;
   }
   function weergaveInhoud(st) {
-    if (typeof st === "string") return st.trim() ? [{ soort: "tekst", tekst: schoon(st) }] : [];
+    if (typeof st === "string") return !st.trim() ? [] : heeftVrijeOpmaak(st) ? tekstNaarBlokken(st) : herstelStructuur(st) || [{ soort: "tekst", tekst: schoon(st) }];
     if (!st || typeof st !== "object") return [];
     if (inhoudKlopt(st)) return st.inhoud;
+    const tipBlok = typeof st.tip === "string" && st.tip.trim() ? [{ soort: "tip", tekst: st.tip.replace(/\s+/g, " ").trim() }] : [];
+    if (heeftVrijeOpmaak(st.uitleg)) return [...tekstNaarBlokken(st.uitleg), ...tipBlok];
     const u = schoon(st.uitleg);
-    if (!u) return [];
-    return oudeInhoud(u) || [{ soort: "tekst", tekst: u }];
+    if (!u) return tipBlok;
+    return [...oudeInhoud(u) || herstelStructuur(u) || [{ soort: "tekst", tekst: u }], ...tipBlok];
+  }
+  var OPSOM = /^\s*(?:[-•*·]|–)\s+(.+)$/;
+  var NUMMER = /^\s*(\d{1,2})[.)]\s+(.+)$/;
+  var KOPJE = /^\s*(?:#{1,3}\s+(.+?)\s*#*|\*\*([^*]+)\*\*:?)\s*$/;
+  var TIJD_VOOR = /^\s*(\d{1,2}[:.]\d{2})\s*[–—-]\s*(\d{1,2}[:.]\d{2})\s*[:–—-]?\s*(.+)$/;
+  var TIJD_NA = /^\s*([^()]{2,60}?)\s*\(\s*(\d{1,2}[:.]\d{2})\s*[–—-]\s*(\d{1,2}[:.]\d{2})\s*\)\s*[:–—-]?\s*(.*)$/;
+  var TIP = /^\s*(?:tip|let op)\s*:\s*(.+)$/i;
+  var regelSchoon = (s2) => String(s2 == null ? "" : s2).replace(/[ \t ]+/g, " ").trim();
+  var tijdNet = (a, b) => a.replace(".", ":") + "\u2013" + b.replace(".", ":");
+  function heeftVrijeOpmaak(tekst3) {
+    const t = String(tekst3 == null ? "" : tekst3).replace(/\r/g, "");
+    return /\n/.test(t.trim()) || OPSOM.test(t) || KOPJE.test(t);
+  }
+  function tekstNaarBlokken(tekst3) {
+    const regels2 = String(tekst3 == null ? "" : tekst3).replace(/\r/g, "").split("\n").map(regelSchoon);
+    const uit = [];
+    let i = 0;
+    const laatste = () => uit[uit.length - 1];
+    const isGewoon = (r) => !!r && !OPSOM.test(r) && !NUMMER.test(r) && !KOPJE.test(r) && !TIJD_VOOR.test(r) && !TIJD_NA.test(r) && !TIP.test(r);
+    const kort = (r) => r.length <= 70 && !/[.!:;]$/.test(r);
+    while (i < regels2.length) {
+      const r = regels2[i];
+      let m;
+      if (!r) {
+        i++;
+        continue;
+      }
+      if (m = r.match(KOPJE)) {
+        uit.push({ soort: "tussenkop", tekst: regelSchoon(m[1] || m[2]) });
+        i++;
+        continue;
+      }
+      if (m = r.match(TIP)) {
+        uit.push({ soort: "tip", tekst: regelSchoon(m[1]) });
+        i++;
+        continue;
+      }
+      if (OPSOM.test(r)) {
+        const items = [];
+        while (i < regels2.length && (m = regels2[i].match(OPSOM))) {
+          items.push(regelSchoon(m[1]));
+          i++;
+        }
+        uit.push({ soort: "lijst", items });
+        continue;
+      }
+      if (NUMMER.test(r)) {
+        const items = [];
+        while (i < regels2.length && (m = regels2[i].match(NUMMER))) {
+          items.push(regelSchoon(m[2]));
+          i++;
+        }
+        uit.push({ soort: "genummerd", items });
+        continue;
+      }
+      if (TIJD_VOOR.test(r) || TIJD_NA.test(r)) {
+        const rijen = [];
+        while (i < regels2.length && regels2[i]) {
+          const x = regels2[i];
+          if (m = x.match(TIJD_VOOR)) rijen.push({ tijd: tijdNet(m[1], m[2]), titel: regelSchoon(m[3]) });
+          else if (m = x.match(TIJD_NA)) rijen.push({ tijd: tijdNet(m[2], m[3]), titel: regelSchoon(m[1]), ...regelSchoon(m[4]) ? { tekst: regelSchoon(m[4]) } : {} });
+          else if (rijen.length && isGewoon(x) && !(regels2[i + 1] && (TIJD_VOOR.test(regels2[i + 1]) || TIJD_NA.test(regels2[i + 1])) && kort(x) && false)) {
+            const v = rijen[rijen.length - 1];
+            v.tekst = v.tekst ? v.tekst + " " + x : x;
+          } else break;
+          i++;
+        }
+        uit.push({ soort: "tijd", rijen });
+        continue;
+      }
+      const groep2 = [];
+      while (i < regels2.length && isGewoon(regels2[i])) {
+        groep2.push(regels2[i]);
+        i++;
+      }
+      if (!groep2.length) {
+        uit.push({ soort: "tekst", tekst: r });
+        i++;
+        continue;
+      }
+      if (groep2.length >= 3 && /:$/.test(groep2[0])) {
+        uit.push({ soort: "tekst", tekst: groep2[0] });
+        uit.push({ soort: "lijst", items: groep2.slice(1) });
+        continue;
+      }
+      if (groep2.length >= 3 && groep2.every(kort) || groep2.length >= 2 && groep2.every((x) => /\?$/.test(x))) {
+        uit.push({ soort: "lijst", items: groep2 });
+        continue;
+      }
+      for (const g of groep2) uit.push({ soort: "tekst", tekst: g });
+    }
+    return uit;
+  }
+  function herstelStructuur(tekst3) {
+    let t = schoon(tekst3);
+    if (!t || t.length < 40) return null;
+    const uit = [];
+    let tip = null;
+    const tm = t.match(/^(.*?[.?!)])\s+Tip:\s+(.+)$/);
+    if (tm) {
+      t = tm[1];
+      tip = tm[2];
+    }
+    const TS = /(\(\s*\d{1,2}[:.]\d{2}\s*[–—-]\s*\d{1,2}[:.]\d{2}\s*\))/g;
+    const delen = t.split(TS);
+    if (delen.length >= 5) {
+      const rijen = [];
+      let voor = delen[0];
+      for (let k = 1; k < delen.length; k += 2) {
+        const zin2 = voor.match(/^(.*[.?!])\s+([^.?!]{2,60})$/);
+        const kop2 = regelSchoon(zin2 ? zin2[2] : voor);
+        const eerder = regelSchoon(zin2 ? zin2[1] : "");
+        if (eerder) {
+          if (rijen.length) rijen[rijen.length - 1].tekst = eerder;
+          else uit.push({ soort: "tekst", tekst: eerder });
+        }
+        const tt = delen[k].match(/(\d{1,2}[:.]\d{2})\s*[–—-]\s*(\d{1,2}[:.]\d{2})/);
+        rijen.push({ tijd: tijdNet(tt[1], tt[2]), titel: kop2 });
+        voor = delen[k + 1] || "";
+      }
+      if (regelSchoon(voor)) rijen[rijen.length - 1].tekst = regelSchoon(voor);
+      if (rijen.every((r) => r.titel && r.titel.length <= 60)) {
+        uit.push({ soort: "tijd", rijen });
+        if (tip) uit.push({ soort: "tip", tekst: tip });
+        return uit;
+      }
+      return null;
+    }
+    const z = zinnen(t);
+    const vragen = z.filter((x) => /\?$/.test(x));
+    if (vragen.length >= 3) {
+      let k = 0;
+      const voorZ = [];
+      while (k < z.length && !/\?$/.test(z[k])) voorZ.push(z[k++]);
+      const vr = [];
+      while (k < z.length && /\?$/.test(z[k])) vr.push(z[k++]);
+      const aanhef = vr.length ? vr[0].match(/^([^?]{3,80}:)\s+(.+\?)$/) : null;
+      if (aanhef) {
+        voorZ.push(aanhef[1]);
+        vr[0] = aanhef[2];
+      }
+      if (vr.length >= 3) {
+        if (voorZ.length) uit.push({ soort: "tekst", tekst: voorZ.join(" ") });
+        uit.push({ soort: "lijst", items: vr });
+        if (k < z.length) uit.push({ soort: "tekst", tekst: z.slice(k).join(" ") });
+        if (tip) uit.push({ soort: "tip", tekst: tip });
+        return uit;
+      }
+    }
+    if (tip) return [{ soort: "tekst", tekst: t }, { soort: "tip", tekst: tip }];
+    return null;
   }
 
   // didactiek.ts
@@ -55107,7 +55260,7 @@ INSTRUCTIES (stappen, opdracht): je-vorm of gebiedende wijs ("Maak een plan voor
     return zinnen2.length > 0 && zinnen2.every((z) => ALGEMEEN_COMPLIMENT.test(z));
   }
   var zinnenVan = (t) => (str(t).match(/[^.!?]+[.!?]*/g) || []).map((s2) => s2.trim()).filter(Boolean);
-  var TIP = /volgende keer|nog niet|nog veel|mist|ontbreekt|beter|probeer|let op|zou je|kun je nog|meer /i;
+  var TIP2 = /volgende keer|nog niet|nog veel|mist|ontbreekt|beter|probeer|let op|zou je|kun je nog|meer /i;
   function gesprekOverzicht(G, opties = {}) {
     const V = str(opties.voornaam) || "de leerling";
     const Vg = groot(V);
@@ -55137,7 +55290,7 @@ INSTRUCTIES (stappen, opdracht): je-vorm of gebiedende wijs ("Maak een plan voor
     const tipVan = (u) => {
       const b = u && u.beoordeling;
       if (!b) return "";
-      const z = zinnenVan(b.feedback).find((s2) => TIP.test(s2) && !isAlgemeen(s2) && !isVraag(s2)) || b.nog.find((x) => !isAlgemeen(x) && !isVraag(x));
+      const z = zinnenVan(b.feedback).find((s2) => TIP2.test(s2) && !isAlgemeen(s2) && !isVraag(s2)) || b.nog.find((x) => !isAlgemeen(x) && !isVraag(x));
       return z ? door(b) + ': "' + zin(z) + '"' : "";
     };
     const wacht = G.wacht.slice().sort((a, b) => (a.bewijs.laatste || a.datum).localeCompare(b.bewijs.laatste || b.datum));
@@ -61535,6 +61688,23 @@ button.kruimel:hover{background:var(--accent-hover);color:var(--accent-op-vlak)}
 .si-na{margin:4px 0 0;font-size:.92rem;line-height:1.45;color:var(--inkt-zacht)}
 .si-lijst{margin:0;padding:0;list-style:none;display:grid;gap:4px;font-size:1.02rem;line-height:1.5}
 .si-lijst li{position:relative;padding-left:16px}
+/* v114.6: vrije opmaak van de docent \u2014 binnen de bestaande kaart, geen nieuwe kaarten of kleuren */
+.si-tussenkop{margin:4px 0 -2px;font-size:1.02rem;font-weight:700;line-height:1.4}
+.si-nummers{counter-reset:none}
+.si-nummers li{padding-left:26px}
+.si-nummers li::before{content:none}
+.si-nr{position:absolute;left:0;top:0;font-weight:700;color:var(--inkt-zacht);font-variant-numeric:tabular-nums}
+.si-tijd{border-collapse:collapse;width:100%;font-size:.98rem;line-height:1.45}
+.si-tijd tbody th{text-align:left;vertical-align:top;white-space:nowrap;padding:6px 14px 6px 0;font-weight:600;font-variant-numeric:tabular-nums;color:var(--inkt-zacht);width:1%}
+.si-tijd td{padding:6px 0;vertical-align:top}
+.si-tijd td b{display:block;font-weight:650}
+.si-tijd td>.si-tijd-tekst{display:block}
+.si-tijd thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.si-tijd tr+tr th,.si-tijd tr+tr td{border-top:1px solid var(--lijn-fijn,var(--lijn))}
+.si-tip{margin:0;font-size:.96rem;line-height:1.55;color:var(--inkt-zacht)}
+.si-tip-label{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--inkt-zacht);border:1px solid var(--lijn);border-radius:6px;padding:1px 6px;margin-right:4px}
+.si-link{color:var(--accent-diep);text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.si-klein .si-p,.si-klein .si-lijst{font-size:.92rem;line-height:1.5}
 .si-lijst li::before{content:"";position:absolute;left:3px;top:.68em;width:5px;height:5px;border-radius:50%;background:var(--lijn-sterk,var(--grijs))}
 /* v113.33 \xB7 themategels in het groeiportfolio (mentor): compact raster met de bestaande thema-afbeeldingen */
 .pf2-themategels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:1fr;gap:10px}
@@ -63997,6 +64167,22 @@ textarea.studio-input{resize:vertical;min-height:0}
 .exp-keuze-tekst{display:flex;flex-direction:column;gap:2px;line-height:1.3}
 .exp-keuze-tekst b{font-weight:800;font-size:.95rem}
 .exp-keuze-tekst span{font-size:.84rem;color:var(--grijs)}
+.exp-keuze-tekst{flex:1;min-width:0}
+.studio-beeld.exp-duim{width:64px;height:40px;border-radius:8px;flex-shrink:0;align-self:center}
+.exp-fout{display:flex;gap:8px;align-items:flex-start;margin:-4px 0 14px;padding:10px 12px;border-radius:10px;border:1.5px solid var(--accent);background:#fff;color:var(--inkt);font-size:.86rem;line-height:1.5}
+.studio-rijk{display:grid;gap:6px}
+.studio-rijk-balk{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.studio-rijk-knop{min-height:32px;padding:4px 10px;border-radius:8px;border:1.5px solid var(--lijn);background:#fff;color:var(--inkt);font:inherit;font-size:.8rem;font-weight:600;cursor:pointer}
+.studio-rijk-knop.is-vet{font-weight:800}
+.studio-rijk-knop:hover{border-color:var(--accent)}
+.studio-rijk-knop:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
+.studio-rijk-hint{font-size:.78rem;color:var(--grijs)}
+.studio-rijk textarea{white-space:pre-wrap}
+.studio-taalsignalen{display:grid;gap:4px;margin:0 0 14px;padding:12px 14px;border-radius:12px;border:1.5px solid var(--lijn);background:#fff;font-size:.86rem;line-height:1.5}
+.studio-taal-sub{color:var(--grijs);font-size:.8rem}
+.studio-taalsignalen ul{margin:6px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+.studio-taalsignalen li{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.studio-taalsignalen li>span{flex:1;min-width:220px}
 .exp-maak{width:100%;justify-content:center}
 /* \u2550\u2550\u2550 v113.7: XP-groeireis (variant C) \u2014 dezelfde kaartvorm als de XP-route \u2550\u2550\u2550 */
 .xp-kaart{background:#fff;border:1px solid rgba(28,27,25,.07);border-radius:18px;padding:16px 18px 12px;margin-bottom:18px}
@@ -67763,14 +67949,15 @@ ${c.orientatie.uitleg}
     }
     if (c.werkvorm && c.werkvorm.naam) {
       m += `## Wat je gaat doen
-**${c.werkvorm.naam}** \u2014 ${c.werkvorm.beschrijving || ""}
+**${c.werkvorm.naam}**${c.werkvorm.beschrijving ? " \u2014 " + c.werkvorm.beschrijving : ""}
 
 `;
     }
     if (arr3(c.stappen).length) {
       const st = arr3(c.stappen).map((s2, i) => {
-        if (s2 && typeof s2 === "object") return `${i + 1}. **${s2.titel}**${s2.uitleg ? " \u2014 " + s2.uitleg : ""}`;
-        return `${i + 1}. ${s2}`;
+        const plat2 = (t) => String(t || "").replace(/\s*\n+\s*/g, " ").trim();
+        if (s2 && typeof s2 === "object") return `${i + 1}. **${s2.titel}**${s2.uitleg ? " \u2014 " + plat2(s2.uitleg) : ""}${s2.tip ? " Tip: " + plat2(s2.tip) : ""}`;
+        return `${i + 1}. ${plat2(s2)}`;
       }).join("\n");
       m += `## Uitdaging (stap voor stap)
 ${st}
@@ -69586,6 +69773,7 @@ VEILIGHEID: geef nooit medische diagnoses, geen gewichts- of calorie-adviezen, g
       pids.push(id++);
     }
     const infoId = id++;
+    const links = (opties.links || []).filter((l) => l && /^https?:\/\//i.test(l.url || "") && l.p >= 0 && l.p < N).map((l) => ({ ...l, id: id++ }));
     const titel = pdfEsc(pdfSan(String(opties.titel || "2scool GROW")));
     const objs = [];
     objs.push({ id: 1, body: `<< /Type /Catalog /Pages 2 0 R /Lang (nl-NL) /ViewerPreferences << /DisplayDocTitle true >> >>` });
@@ -69603,7 +69791,18 @@ VEILIGHEID: geef nooit medische diagnoses, geen gewichts- of calorie-adviezen, g
       objs.push({ id: cids[i], stream: opties.achtergrondEerst ? streams[i] + logoOp + footOp : logoOp + footOp + streams[i] });
       const xobj = hasLogo || beelden.length ? ` /XObject << ${hasLogo ? `/Logo ${imgId} 0 R ` : ""}${beelden.map((b) => `/${b.naam} ${b.id} 0 R`).join(" ")} >>` : "";
       const gs = opties.extGState ? ` /ExtGState ${opties.extGState}` : "";
-      objs.push({ id: pids[i], body: `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >>${xobj}${gs} >> /Contents ${cids[i]} 0 R >>` });
+      const an = links.filter((l) => l.p === i);
+      const annots = an.length ? ` /Annots [${an.map((l) => l.id + " 0 R").join(" ")}]` : "";
+      objs.push({ id: pids[i], body: `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >>${xobj}${gs} >> /Contents ${cids[i]} 0 R${annots} >>` });
+    }
+    for (const l of links) {
+      let u = String(l.url);
+      try {
+        u = encodeURI(decodeURI(u));
+      } catch (e) {
+        u = u.replace(/[^\x21-\x7E]/g, "");
+      }
+      objs.push({ id: l.id, body: `<< /Type /Annot /Subtype /Link /Rect [${l.rect.map((v) => (+v).toFixed(1)).join(" ")}] /Border [0 0 0] /A << /S /URI /URI (${pdfEsc(u.replace(/[^\x21-\x7E]/g, ""))}) >> >>` });
     }
     objs.sort((a, b) => a.id - b.id);
     let out = "%PDF-1.4\n";
@@ -69645,8 +69844,78 @@ ${xref}
   }
   function uitdagingPrintModel(rec, opties = {}) {
     const d = rec && rec.data || {}, ll = rec && rec.leerling || {};
+    const arr3 = (v) => Array.isArray(v) ? v.filter((x) => x != null && String(typeof x === "object" ? x.tekst || x.titel || x.uitleg || "" : x).trim()) : v ? [v] : [];
+    if (!rec || !rec.data || !arr3(d.stappen).length) return uitdagingPrintModelMd(rec, opties);
+    const txt = (x) => String(typeof x === "object" && x ? x.tekst || "" : x == null ? "" : x).trim();
+    const secties = [];
+    const sec = (kop2, blokken, extra) => {
+      const b = blokken.filter((x) => x && x.items && x.items.length);
+      if (b.length) secties.push({ kop: kop2, blokken: b, ...extra || {} });
+    };
+    const rijk = (tekst3) => {
+      const bl = weergaveInhoud(typeof tekst3 === "string" ? tekst3 : String(tekst3 || ""));
+      return bl.length ? [{ type: "rijk", items: bl.map((b) => ({ blokken: [b] })) }] : [];
+    };
+    const zelfde = (a, b) => String(a || "").replace(/\s+/g, " ").trim().toLowerCase() === String(b || "").replace(/\s+/g, " ").trim().toLowerCase();
+    {
+      const delen = [];
+      const hoofd2 = txt(d.hoofdopdracht);
+      if (hoofd2 && !zelfde(hoofd2, d.titel)) delen.push(hoofd2);
+      const sit2 = String(d.situatie || "").trim();
+      if (sit2 && !zelfde(sit2, hoofd2)) delen.push(sit2);
+      const wv = werkvormEigenTekst(d);
+      if (wv && !hoofd2 && !delen.some((x) => x.includes(wv))) delen.push(wv);
+      sec("Dit ga je doen", rijk(delen.join("\n\n")));
+    }
+    sec("Dit heb je nodig", [{ type: "feiten", items: [
+      arr3(d.benodigdheden).length ? { label: "Nodig", waarde: arr3(d.benodigdheden).map(String).join(", ") } : null,
+      d.samenwerking ? { label: "Met wie", waarde: String(d.samenwerking) } : null,
+      d.tijd ? { label: "Hoe lang", waarde: String(d.tijd) } : null,
+      d.eindproduct ? { label: "Dit maak je", waarde: String(d.eindproduct) } : null,
+      d.veiligheid ? { label: "Veiligheid", waarde: String(d.veiligheid) } : null
+    ].filter(Boolean) }]);
+    sec("Dit oefen je", [
+      arr3(d.leerdoelen).length ? { type: "lijst", items: arr3(d.leerdoelen).map(txt) } : null,
+      arr3(d.competenties).length ? { type: "feiten", items: [{ label: "Hier werk je aan", waarde: arr3(d.competenties).map(String).join(", ") }] } : null
+    ]);
+    {
+      const items = [];
+      const ori = d.orientatie && (d.orientatie.uitleg || d.orientatie.titel) ? d.orientatie : null;
+      if (ori) items.push({ nr: "\u2022", titel: String(ori.titel || "Doe dit eerst"), blokken: weergaveInhoud(ori) });
+      arr3(d.stappen).forEach((st, i) => items.push(typeof st === "string" ? { nr: String(i + 1), titel: "", blokken: weergaveInhoud(st) } : { nr: String(i + 1), titel: String(st.titel || ""), blokken: weergaveInhoud(st) }));
+      sec("Jouw stappenplan", [{ type: "stappen", items }], { stappen: true });
+    }
+    sec("Dit lever je in", rijk(String(d.bewijs || "")));
+    const crit = arr3(d.succescriteria).map(txt), vraag2 = (t) => d.bron === "studio" && /\?$/.test(t);
+    sec("Wanneer heb je het goed gedaan?", [{ type: "lijst", items: crit.filter((t) => !vraag2(t)) }]);
+    {
+      const vr = [...crit.filter(vraag2), ...arr3(d.reflectievragen).map(txt), ...arr3(d.reflectie).map(txt)];
+      sec("Kijk terug", [{ type: "lijst", items: [...new Set(vr)] }]);
+    }
+    {
+      const verd = String(d.verdieping || "").trim(), tr = String(d.transfer || "").trim();
+      if (verd) sec("Extra uitdaging", rijk(verd));
+      if (tr && !zelfde(tr, verd)) sec("Neem het mee", rijk(tr));
+    }
+    if (opties.begeleider && arr3(d.mentorCheck).length) sec("Mentor-check", [{ type: "check", items: arr3(d.mentorCheck).map(String) }]);
+    if (d.doorstroom) sec("Hierna", rijk(String(d.doorstroom)));
+    const pills = [`+${rec && rec.xp || 0} XP`];
+    if (d.tijd) pills.push(d.tijd);
+    if (d.werkvorm && d.werkvorm.naam) pills.push(d.werkvorm.naam);
+    if (d.subthema) pills.push(Array.isArray(d.subthema) ? d.subthema[0] : d.subthema);
+    return {
+      eyebrow: `${themaLabel(rec.thema)} \xB7 ${rec.niveau || ""}`.toUpperCase(),
+      titel: d.titel || "Jouw uitdaging",
+      meta: [ll.naam, ll.klas && ll.klas !== "\u2014" ? ll.klas : "", datumNL(rec.afgerondOp || rec.datum)].filter(Boolean).join(" \xB7 "),
+      pills,
+      secties,
+      bron: "gegevens"
+    };
+  }
+  function uitdagingPrintModelMd(rec, opties = {}) {
+    const d = rec && rec.data || {}, ll = rec && rec.leerling || {};
     const schoon2 = (t) => String(t || "").replace(/\*\*/g, "").replace(/(^|\s)\*([^*]+)\*/g, "$1$2").trim();
-    const md = String(rec && rec.markdown || "").replace(/\r/g, "");
+    const md = String(rec && rec.markdown || "").replace(/\r/g, "").replace(/^Ontwikkelde competenties:[ \t]*$/m, "Dit oefen je:");
     let titel = d.titel || "";
     const secties = [];
     let huidig = null;
@@ -69881,7 +70150,7 @@ ${xref}
     const rec = { id: zaad2 || "x" };
     const PW = 595, PH = 842, ML = 40, MR = 40, W3 = PW - ML - MR, TOP = PH - 40, ONDER = 56;
     const KL = PRINT ? { bg: "#FFFFFF", kaart: "#FFFFFF", inkt: "#1C1B19", grijs: "#55534F", accent: "#3A3936", accentDiep: "#1C1B19", zacht: "#FFFFFF", tegel: "#F4F4F3", lijn: "#C9C6C0", info: "#FFFFFF", infoTekst: "#3A3936" } : { bg: "#F4F3EF", kaart: "#FFFFFF", inkt: "#1C1B19", grijs: "#6B6A66", accent: "#F47721", accentDiep: "#AE4E0C", zacht: "#FDEEE2", tegel: "#F7F6F2", lijn: "#E7E4DD", info: "#EEF1F4", infoTekst: "#4A5568" };
-    const BAND = OMSLAG ? 170 : 0;
+    const BAND = OMSLAG ? Math.round(PW * OMSLAG.h / OMSLAG.w) : 0;
     const paginas = [];
     let ops = "", y = TOP;
     const alfas = /* @__PURE__ */ new Map();
@@ -69951,7 +70220,138 @@ ${xref}
     });
     y -= 34;
     const PAD = 16, BIN = W3 - PAD * 2;
+    const links = [];
+    const rijkRegels = (tekst3, size, max2, basisVet) => {
+      const woorden2 = [];
+      let spatie = false;
+      const voeg = (str2, vet, url) => String(str2).split(/(\s+)/).forEach((x) => {
+        if (!x) return;
+        if (/^\s+$/.test(x)) {
+          spatie = true;
+          return;
+        }
+        let rest = x;
+        while (pdfBreedte(rest, size, vet) > max2 && rest.length > 8) {
+          let n = rest.length;
+          while (n > 4 && pdfBreedte(rest.slice(0, n), size, vet) > max2) n--;
+          woorden2.push({ t: rest.slice(0, n), vet, url, sp: spatie });
+          spatie = false;
+          rest = rest.slice(n);
+        }
+        woorden2.push({ t: rest, vet, url, sp: spatie });
+        spatie = false;
+      });
+      rijkDelen(tekst3).forEach((d) => {
+        if (d.url) {
+          voeg(pdfTekst(d.url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")), !!basisVet, d.url);
+          if (d.staart) voeg(d.staart, !!basisVet, null);
+        } else voeg(pdfTekst(d.vet != null ? d.vet : d.t), d.vet != null || !!basisVet, null);
+      });
+      const regels2 = [];
+      let cur = [], cw = 0;
+      const sw = pdfBreedte(" ", size, false);
+      woorden2.forEach((w) => {
+        const ww = pdfBreedte(w.t, size, w.vet);
+        let s2 = w.sp && cur.length ? sw : 0;
+        if (cur.length && cw + s2 + ww > max2) {
+          regels2.push(cur);
+          cur = [];
+          cw = 0;
+          s2 = 0;
+        }
+        const vorige = cur[cur.length - 1];
+        if (vorige && vorige.vet === w.vet && vorige.url === w.url) {
+          vorige.t += (s2 ? " " : "") + w.t;
+          vorige.w = pdfBreedte(vorige.t, size, w.vet);
+          cw = vorige.x + vorige.w;
+        } else {
+          cur.push({ t: w.t, vet: w.vet, url: w.url, x: cw + s2, w: ww });
+          cw += s2 + ww;
+        }
+      });
+      if (cur.length) regels2.push(cur);
+      return regels2.length ? regels2 : [[]];
+    };
+    const tekenRijk = (regel, x, yy, size, kleur) => regel.forEach((r) => {
+      T(r.t, x + r.x, yy, size, { vet: r.vet, kleur: r.url ? KL.accentDiep : kleur });
+      if (r.url) {
+        ops += `q ${_hex(KL.accentDiep)} RG 0.5 w ${(x + r.x).toFixed(2)} ${(yy - 1.6).toFixed(2)} m ${(x + r.x + r.w).toFixed(2)} ${(yy - 1.6).toFixed(2)} l S Q
+`;
+        links.push({ p: paginas.length, rect: [x + r.x - 1, yy - 3, x + r.x + r.w + 1, yy + size * 0.78], url: r.url });
+      }
+    });
+    const blokRijen = (b, max2, size, kleur) => {
+      const L3 = +(size * 1.34).toFixed(2), rijen = [], basis = size * 0.98;
+      const tekst3 = (t, inspring, opt2 = {}) => rijkRegels(t, opt2.size || size, max2 - inspring, opt2.vet).forEach((rg, i) => rijen.push({ h: L3, teken: (x, yy) => {
+        if (i === 0 && opt2.voor) opt2.voor(x, yy - basis);
+        tekenRijk(rg, x + inspring, yy - basis, opt2.size || size, opt2.kleur || kleur);
+      } }));
+      const label = (t) => {
+        if (t) rijen.push({ h: L3 - 1, teken: (x, yy) => T(String(t).toUpperCase(), x, yy - basis + 1, size - 2.4, { vet: true, kleur: KL.accentDiep, tc: 0.5 }) });
+      };
+      const punt2 = (x, yy) => {
+        ops += `q ${_hex(KL.accent)} rg ${pdfEllips(x + 3.5, yy + size * 0.32, 1.9, 1.9)} f Q
+`;
+      };
+      if (!b) return rijen;
+      if (b.soort === "tekst") tekst3(b.tekst, 0);
+      else if (b.soort === "tussenkop") {
+        rijen.push({ h: 2, teken: () => {
+        } });
+        tekst3(b.tekst, 0, { vet: true, kleur: KL.inkt });
+      } else if (b.soort === "kop") {
+        label(b.kop);
+        tekst3(b.tekst, 0);
+      } else if (b.soort === "lijst") {
+        label(b.kop);
+        (b.items || []).forEach((it) => tekst3(it, 12, { voor: punt2 }));
+      } else if (b.soort === "genummerd") (b.items || []).forEach((it, i) => tekst3(it, 16, { voor: (x, yy) => T(i + 1 + ".", x, yy, size, { vet: true, kleur: KL.accentDiep }) }));
+      else if (b.soort === "opties") {
+        label(b.kop);
+        (b.items || []).forEach((it) => tekst3("**" + String(it.label || "").replace(/\*/g, "") + (/[.:?!]$/.test(String(it.label || "")) ? "" : ":") + "** " + it.tekst, 0));
+        if (b.na) tekst3(b.na, 0);
+      } else if (b.soort === "tijd") {
+        const tw = Math.min(96, Math.max(...b.rijen.map((r) => pdfBreedte(pdfTekst(r.tijd), size - 0.5, true))) + 12);
+        b.rijen.forEach((r, ri) => {
+          const start = rijen.length;
+          tekst3("**" + String(r.titel || "").replace(/\*/g, "") + "**", tw, { kleur: KL.inkt, voor: (x, yy) => {
+            if (ri) ops += `q ${_hex(KL.lijn)} RG 0.5 w ${x.toFixed(2)} ${(yy + size * 0.98 + 1.5).toFixed(2)} m ${(x + max2).toFixed(2)} ${(yy + size * 0.98 + 1.5).toFixed(2)} l S Q
+`;
+            T(r.tijd, x, yy, size - 0.5, { vet: true, kleur: KL.accentDiep });
+          } });
+          if (r.tekst) tekst3(r.tekst, tw);
+          rijen[rijen.length - 1].h += 5;
+        });
+      } else if (b.soort === "tip") {
+        const lw = pdfBreedte("TIP", size - 2.4, true) + 10;
+        tekst3(b.tekst, lw, { voor: (x, yy) => T("TIP", x, yy + 0.6, size - 2.4, { vet: true, kleur: KL.accentDiep, tc: 0.5 }) });
+      }
+      if (rijen.length) rijen[rijen.length - 1].h += 4;
+      return rijen;
+    };
+    const rijenVan = (blokken, max2, size, kleur) => [].concat(...(blokken || []).map((b) => blokRijen(b, max2, size, kleur)));
+    const tekenRijen = (rijen, x, yy) => {
+      let ty = yy;
+      rijen.forEach((r) => {
+        r.teken(x, ty);
+        ty -= r.h;
+      });
+    };
+    const som = (rijen) => rijen.reduce((a, r) => a + r.h, 0);
     const meet = (blok, item) => {
+      if (blok.type === "rijk") {
+        const rijen = rijenVan(item.blokken, BIN, 10, "#2E2B27");
+        return { h: som(rijen) + 2, rijen };
+      }
+      if (blok.type === "feiten") {
+        const w = rijkRegels(item.waarde, 10, BIN - 96, false);
+        return { h: w.length * 13.4 + 5, regels: w };
+      }
+      if (blok.type === "stappen" && item.blokken) {
+        const titel = item.titel ? pdfAfbreken(item.titel, 10.5, true, BIN - 58) : [];
+        const rijen = rijenVan(item.blokken, BIN - 58, 9.5, "#3A362F");
+        return { h: Math.max(26, titel.length * 13 + (titel.length ? 2 : 0) + som(rijen) - 4) + 20, titel, rijen };
+      }
       if (blok.type === "stappen") {
         const titel = item.titel ? pdfAfbreken(item.titel, 10.5, true, BIN - 58) : [];
         const uit = item.uitleg ? pdfAfbreken(item.uitleg, 9.5, false, BIN - 58) : [];
@@ -70005,9 +70405,26 @@ ${xref}
           T(r, x + 46, ty2, 10.5, { vet: true });
           ty2 -= 13;
         });
+        if (m.rijen) {
+          tekenRijen(m.rijen, x + 46, ty2 + 7.3);
+          return;
+        }
         m.uit.forEach((r) => {
           T(r, x + 46, ty2, 9.5, { kleur: "#3A362F" });
           ty2 -= 12.5;
+        });
+        return;
+      }
+      if (blok.type === "rijk") {
+        tekenRijen(m.rijen, x, yy);
+        return;
+      }
+      if (blok.type === "feiten") {
+        T(String(item.label || "").toUpperCase(), x, yy - 10, 7.5, { vet: true, kleur: KL.grijs, tc: 0.5 });
+        let ty2 = yy - 10.5;
+        m.regels.forEach((r) => {
+          tekenRijk(r, x + 96, ty2, 10, KL.inkt);
+          ty2 -= 13.4;
         });
         return;
       }
@@ -70084,7 +70501,7 @@ ${xref}
           hoogte = items[i].m.h;
           j = i + 1;
         }
-        if (eerste && j - i === 1 && items.length - i > 1 && y < TOP - 120) {
+        if (eerste && j - i === 1 && items.length - i > 1 && y < TOP - 120 && items[i].m.h < 80) {
           nieuwePagina();
           logoTegel();
           y = TOP - 60;
@@ -70115,7 +70532,7 @@ ${xref}
       96,
       +(96 * (PDF_LOGO_PXH / PDF_LOGO_PXW)).toFixed(1),
       pdfTekst("2scool GROW \u2014 onderdeel van Unfold Education \xB7 DISCOVER \xB7 LEARN \xB7 PERFORM"),
-      { extGState, achtergrondEerst: true, titel: [M && M.titel, M && M.meta ? String(M.meta).split(" \xB7 ")[0] : ""].filter(Boolean).join(" \u2014 "), beelden: OMSLAG ? [{ naam: "Omslag", bin: OMSLAG.bin, w: OMSLAG.w, h: OMSLAG.h }] : [] }
+      { extGState, achtergrondEerst: true, links, titel: [M && M.titel, M && M.meta ? String(M.meta).split(" \xB7 ")[0] : ""].filter(Boolean).join(" \u2014 "), beelden: OMSLAG ? [{ naam: "Omslag", bin: OMSLAG.bin, w: OMSLAG.w, h: OMSLAG.h }] : [] }
     );
   }
   var PDF_LOGO_DATAURL = "data:image/jpeg;base64," + PDF_LOGO_JPG_B64;
@@ -70552,14 +70969,78 @@ ${xref}
     _exportLeerlingOmg = o || null;
   }
   try {
-    if (typeof window !== "undefined" && window.__GROW_TEST) window.__growExportStijl = async (v) => {
-      const r = await exportStijl(v);
-      return r && { variant: r.variant, omslag: r.omslag ? { key: r.omslag.key, w: r.omslag.w, h: r.omslag.h } : null };
+    if (typeof window !== "undefined" && window.__GROW_TEST) window.__growExportStijl = async (v, rec) => {
+      const r = await exportStijl(v, rec);
+      return r && { variant: r.variant, omslagFout: !!r.omslagFout, omslagBron: r.omslagBron || null, omslag: r.omslag ? { key: r.omslag.key, w: r.omslag.w, h: r.omslag.h } : null };
     };
   } catch {
   }
-  async function exportStijl(variant) {
+  function exportBeeldVoor(rec) {
+    const d = rec && rec.data || null;
+    if (!d) return null;
+    const eigen = studioBeeldSchoon(d.themaBeeld);
+    if (eigen) {
+      const thema = eigen.soort === "grow" && eigen.ref === rec.thema;
+      return { beeld: eigen, bron: thema ? "thema" : "uitdaging" };
+    }
+    if (exportIsLeerling() || _exportLeerlingOmg) return null;
+    const th = themaBeeldVoorUitdaging(rec, d);
+    return th ? { beeld: th, bron: "thema" } : null;
+  }
+  function exportBeeldBron(b) {
+    b = studioBeeldSchoon(b);
+    if (!b) return null;
+    const pos = (str2) => {
+      const m = String(str2 || "").match(/(\d+(?:\.\d+)?)%/g) || [];
+      const y = m.length ? parseFloat(m[m.length - 1]) : 42;
+      const x = m.length > 1 ? parseFloat(m[0]) : 50;
+      return [x, y];
+    };
+    if (b.soort === "upload") return { src: b.data, focus: [50, 42] };
+    if (b.soort === "grow") return { src: THEMA_ACHTERGROND[b.ref], focus: pos(beeldPositie(b)) };
+    if (b.soort === "sport") return { src: sportBeeldVan(b.ref).src, focus: pos(beeldPositie(b)) };
+    const og = b.soort === "omgeving" ? omgevingVan(b.ref) : b.soort === "natuur" ? omgevingVan(STUDIO_NATUUR_OMGEVING[b.ref]) : null;
+    return og ? { src: og.src, focus: [50, 62] } : null;
+  }
+  async function omslagVanBeeld(beeld) {
+    const br = exportBeeldBron(beeld);
+    if (!br || !br.src || typeof document === "undefined") return null;
+    try {
+      const w = 1600, h = 540;
+      const im = await laadBeeld(br.src, 6e3);
+      const bw = im.naturalWidth || 0, bh = im.naturalHeight || 0;
+      if (!bw || !bh) return null;
+      const schaal = Math.max(w / bw, h / bh), sw = w / schaal, sh = h / schaal;
+      const sx = Math.max(0, Math.min(bw - sw, (bw - sw) * (br.focus[0] / 100))), sy = Math.max(0, Math.min(bh - sh, (bh - sh) * (br.focus[1] / 100)));
+      const c = document.createElement("canvas");
+      c.width = w;
+      c.height = h;
+      const ctx = c.getContext("2d");
+      if (!ctx) return null;
+      ctx.fillStyle = "#F4F3EF";
+      ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(im, sx, sy, sw, sh, 0, 0, w, h);
+      const gr = ctx.createLinearGradient(0, h * 0.7, 0, h);
+      gr.addColorStop(0, "rgba(244,243,239,0)");
+      gr.addColorStop(0.9, "rgba(244,243,239,1)");
+      gr.addColorStop(1, "rgba(244,243,239,1)");
+      ctx.fillStyle = gr;
+      ctx.fillRect(0, 0, w, h);
+      const url = c.toDataURL("image/jpeg", 0.82);
+      const b64 = url.split(",")[1] || "";
+      if (!b64 || typeof atob === "undefined") return null;
+      return { bin: atob(b64), w, h, naam: "uitdaging", key: beeld.soort + ":" + (beeld.ref || "eigen") };
+    } catch (e) {
+      return null;
+    }
+  }
+  async function exportStijl(variant, rec) {
     if (variant === "print") return { variant: "print" };
+    const ub = exportBeeldVoor(rec);
+    if (ub) {
+      const omslag2 = await omslagVanBeeld(ub.beeld);
+      return omslag2 ? { variant: "persoonlijk", omslag: omslag2, omslagBron: ub.bron } : { variant: "persoonlijk", omslagFout: true, omslagBron: ub.bron };
+    }
     if (!exportIsLeerling()) {
       const o = _exportLeerlingOmg;
       if (!o) return { variant: "persoonlijk" };
@@ -70575,20 +71056,40 @@ ${xref}
     const omslag = await omslagVoorPdf(omg);
     return omslag ? { variant: "persoonlijk", omslag } : { variant: "persoonlijk" };
   }
-  function ExportKeuze({ standaard, onMaak, onSluit, wat, persoonlijkTekst, actie, waarschuwing }) {
+  function ExportKeuze({ standaard, onMaak, onSluit, wat, persoonlijkTekst, actie, waarschuwing, rec }) {
     const [v, setV] = (0, import_react3.useState)(standaard || "persoonlijk");
     const [bezig, setBezig] = (0, import_react3.useState)(false);
+    const [fout, setFout] = (0, import_react3.useState)("");
+    const ub = rec ? exportBeeldVoor(rec) : null;
+    const eigenTekst = !rec ? "" : ub ? ub.bron === "uitdaging" ? exportIsLeerling() ? "Met de afbeelding van deze uitdaging." : "Met de afbeelding die je voor deze uitdaging hebt gekozen." : "Met de afbeelding van het thema " + themaLabel(rec.thema) + ". Bij deze uitdaging is geen eigen afbeelding gekozen." : !exportIsLeerling() && !_exportLeerlingOmg ? "Deze uitdaging heeft geen afbeelding. De PDF krijgt de standaard GROW-omslag." : "";
     const leerling = exportIsLeerling();
     const PRINT = actie === "print";
     const opties = [
-      { key: "persoonlijk", titel: PRINT ? "Persoonlijk" : "Persoonlijke PDF", tekst: persoonlijkTekst || (leerling ? "Met jouw gekozen sportachtergrond." : _exportLeerlingOmg ? "Met de sportachtergrond van de leerling." : "In de GROW-huisstijl, met de standaard GROW-omslag.") },
-      { key: "print", titel: PRINT ? "Printvriendelijk" : "Printvriendelijke PDF", tekst: "In het 2scool GROW-sjabloon, zonder sportachtergrond." }
+      { key: "persoonlijk", titel: PRINT ? "Persoonlijk" : "Persoonlijke PDF", beeld: ub ? ub.beeld : null, tekst: persoonlijkTekst || eigenTekst || (leerling ? "Met jouw gekozen sportachtergrond." : _exportLeerlingOmg ? "Met de sportachtergrond van de leerling." : "In de GROW-huisstijl, met de standaard GROW-omslag.") },
+      {
+        key: "print",
+        titel: PRINT ? "Printvriendelijk" : "Printvriendelijke PDF",
+        /* zonder uitdaging-afbeelding in de persoonlijke variant (leerling met eigen sportachtergrond) blijft de bestaande tekst */
+        tekst: rec && (ub || !exportIsLeerling() && !_exportLeerlingOmg) ? "In het 2scool GROW-sjabloon, zonder uitdaging-afbeelding." : "In het 2scool GROW-sjabloon, zonder sportachtergrond."
+      }
     ];
     const maak2 = async () => {
       if (bezig) return;
       setBezig(true);
+      setFout("");
+      let stijl = null;
       try {
-        await onMaak(await exportStijl(v));
+        stijl = await exportStijl(v, rec);
+      } catch (e) {
+        stijl = null;
+      }
+      if (v === "persoonlijk" && rec && ub && (!stijl || stijl.omslagFout)) {
+        setBezig(false);
+        setFout("De afbeelding van deze uitdaging kan niet worden geladen. Er is geen " + (PRINT ? "afdruk" : "PDF") + " gemaakt. Probeer het opnieuw of kies de printvriendelijke variant.");
+        return;
+      }
+      try {
+        await onMaak(stijl || { variant: v });
       } catch (e) {
         try {
           await onMaak({ variant: v });
@@ -70606,12 +71107,21 @@ ${xref}
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: waarschuwing })
       ] }),
       /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "exp-keuzes", role: "radiogroup", "aria-label": PRINT ? "Soort afdruk" : "Soort PDF", "data-exp-actie": PRINT ? "print" : "pdf", children: opties.map((o) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("label", { className: "exp-keuze" + (v === o.key ? " is-aan" : ""), "data-exp": o.key, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("input", { type: "radio", name: "exp-variant", value: o.key, checked: v === o.key, onChange: () => setV(o.key) }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("input", { type: "radio", name: "exp-variant", value: o.key, checked: v === o.key, onChange: () => {
+          setV(o.key);
+          setFout("");
+        } }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "exp-keuze-tekst", children: [
           /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: o.titel }),
           /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: o.tekst })
-        ] })
+        ] }),
+        o.beeld && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StudioBeeld, { beeld: o.beeld, className: "is-mini exp-duim" })
       ] }, o.key)) }),
+      fout && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "exp-fout", role: "alert", "data-exp": "fout", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "waarschuwing", size: 15 }),
+        " ",
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { children: fout })
+      ] }),
       /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { type: "button", className: "btn btn-accent exp-maak", onClick: maak2, disabled: bezig, "aria-busy": bezig ? "true" : void 0, children: [
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: PRINT ? "print" : "download", size: 15 }),
         " ",
@@ -70619,12 +71129,12 @@ ${xref}
       ] })
     ] });
   }
-  function ExportKnop({ className, style, children, ariaLabel, wat, begeleider, onMaak, persoonlijkTekst, actie, waarschuwing }) {
+  function ExportKnop({ className, style, children, ariaLabel, wat, begeleider, onMaak, persoonlijkTekst, actie, waarschuwing, rec }) {
     const [open, setOpen] = (0, import_react3.useState)(false);
     const standaard = actie === "print" || begeleider || !exportIsLeerling() ? "print" : "persoonlijk";
     return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
       /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className, style, "aria-label": ariaLabel, "aria-haspopup": "dialog", onClick: () => setOpen(true), children }),
-      open && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ExportKeuze, { wat, actie, persoonlijkTekst, standaard, waarschuwing, onMaak, onSluit: () => setOpen(false) })
+      open && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ExportKeuze, { wat, actie, rec, persoonlijkTekst, standaard, waarschuwing, onMaak, onSluit: () => setOpen(false) })
     ] });
   }
   function portfolioPrintModel(pf, weergave, deel2, samenvatting) {
@@ -80667,7 +81177,7 @@ UNFOLD INTELLIGENCE CORE (enige AI-beslislaag \u2014 alle engine-signalen ge\xEF
   }
   var _mh = (t) => String(t == null ? "" : t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   function mailHtml(rec) {
-    const M = uitdagingPrintModel(rec, {});
+    const M = uitdagingPrintModelMd(rec, {});
     const K2 = { bg: "#F4F3EF", kaart: "#FFFFFF", inkt: "#1C1B19", grijs: "#6B6A66", accent: "#F47721", diep: "#AE4E0C", zacht: "#FDEEE2", tegel: "#F7F6F2", lijn: "#E7E4DD", info: "#EEF1F4", infoTekst: "#4A5568" };
     const F = "font-family:Arial,Helvetica,sans-serif;";
     const pil = (t, i) => `<span style="display:inline-block;${F}font-size:12px;font-weight:bold;line-height:18px;padding:2px 10px;margin:0 6px 6px 0;border-radius:10px;background-color:${i === 0 ? K2.zacht : i === 2 ? "#FBEFE6" : K2.info};color:${i === 0 || i === 2 ? K2.diep : K2.infoTekst}">${_mh(t)}</span>`;
@@ -82463,7 +82973,7 @@ ${kiesInstr}${variatieInstr}${praktijkInstr}${actInstr}${adviesInstr}${persoonli
     return html;
   }
   function PrintUitdaging({ rec, begeleider }) {
-    const M = uitdagingPrintModel(rec, { begeleider });
+    const M = uitdagingPrintModelMd(rec, { begeleider });
     const alle = Object.values(TALENT_VISUALS).flat();
     const h = [...String(rec.id || rec.thema || "x")].reduce((a, c) => a * 31 + c.charCodeAt(0) >>> 0, 7);
     const vis = alle.length ? alle[h % alle.length] : null;
@@ -85075,14 +85585,15 @@ Antwoord UITSLUITEND met geldige JSON: dezelfde sleutels, de herschreven tekst a
   function StapInhoud({ stap, tp }) {
     const blokken = weergaveInhoud(stap);
     const enkel = blokken.length === 1 && blokken[0].soort === "tekst" && regels(blokken[0].tekst).length < 3;
+    const vrij = heeftVrijeOpmaak(typeof stap === "string" ? stap : stap && stap.uitleg);
     if (!blokken.length) return null;
-    if (enkel) return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "si-p", "data-si": "alinea", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LT, { tekst: blokken[0].tekst, tp }) });
+    if (enkel) return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "si-p", "data-si": "alinea", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Rijk, { tekst: blokken[0].tekst, tp }) });
     const regels2 = (t, k) => {
       const z = regels(t);
       return z.length >= 3 ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "si-lijst", "data-si": "lijst", children: z.map((x, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LT, { tekst: x, tp }) }, i)) }, k) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "si-p", "data-si": "tekst", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LT, { tekst: t, tp }) }, k);
     };
     return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "si", "data-si": "inhoud", children: blokken.map((b, k) => {
-      if (b.soort === "tekst") return regels2(b.tekst, k);
+      if (b.soort === "tekst") return vrij ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "si-p", "data-si": "tekst", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Rijk, { tekst: b.tekst, tp }) }, k) : regels2(b.tekst, k);
       if (b.soort === "kop") return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "si-blok", "data-si": "kop", children: [
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "si-kop", children: b.kop }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "si-p", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LT, { tekst: b.tekst, tp }) })
@@ -85097,10 +85608,48 @@ Antwoord UITSLUITEND met geldige JSON: dezelfde sleutels, de herschreven tekst a
       ] }, k);
       if (b.soort === "lijst") return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "si-blok", "data-si": "lijst", children: [
         b.kop && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "si-kop", children: b.kop }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "si-lijst", children: b.items.map((x, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LT, { tekst: x, tp }) }, i)) })
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "si-lijst", children: b.items.map((x, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Rijk, { tekst: x, tp }) }, i)) })
+      ] }, k);
+      if (b.soort === "tussenkop") return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "si-tussenkop", "data-si": "tussenkop", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Rijk, { tekst: b.tekst, tp }) }, k);
+      if (b.soort === "genummerd") return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ol", { className: "si-lijst si-nummers", "data-si": "genummerd", children: b.items.map((x, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("li", { children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "si-nr", "aria-hidden": "true", children: i + 1 }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Rijk, { tekst: x, tp })
+      ] }, i)) }, k);
+      if (b.soort === "tijd") return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("table", { className: "si-tijd", "data-si": "tijd", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("thead", { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("tr", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("th", { scope: "col", children: "Tijd" }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("th", { scope: "col", children: "Onderdeel" })
+        ] }) }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("tbody", { children: b.rijen.map((r, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("tr", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("th", { scope: "row", children: r.tijd }),
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("td", { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: r.titel }),
+            r.tekst && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "si-tijd-tekst", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Rijk, { tekst: r.tekst, tp }) })
+          ] })
+        ] }, i)) })
+      ] }, k);
+      if (b.soort === "tip") return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "si-tip", "data-si": "tip", children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "si-tip-label", children: "Tip" }),
+        " ",
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Rijk, { tekst: b.tekst, tp })
       ] }, k);
       return null;
     }) });
+  }
+  var RIJK_RE = /(\*\*[^*\n]+\*\*|https?:\/\/[^\s<>"')\]]+)/g;
+  function rijkDelen(tekst3) {
+    return String(tekst3 == null ? "" : tekst3).split(RIJK_RE).filter((x) => x !== "").map((x) => /^\*\*[^*]+\*\*$/.test(x) ? { vet: x.slice(2, -2) } : /^https?:\/\//.test(x) ? (() => {
+      const staart = (x.match(/[.,;:!?]+$/) || [""])[0];
+      return { url: x.slice(0, x.length - staart.length), staart };
+    })() : { t: x });
+  }
+  function Rijk({ tekst: tekst3, tp }) {
+    const d = rijkDelen(tekst3);
+    if (d.length === 1 && d[0].t != null) return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LT, { tekst: d[0].t, tp });
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(import_jsx_runtime3.Fragment, { children: d.map((x, i) => x.vet != null ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LT, { tekst: x.vet, tp }) }, i) : x.url ? /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_react3.Fragment, { children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("a", { className: "si-link", href: x.url, target: "_blank", rel: "noopener noreferrer", children: x.url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "") }),
+      x.staart
+    ] }, i) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LT, { tekst: x.t, tp }, i)) });
   }
   function LT({ tekst: tekst3, tp }) {
     if (tekst3 == null || tekst3 === "") return null;
@@ -87641,8 +88190,9 @@ ${String(stapTekst).slice(0, 900)}` : ""
   function doeOpdrachtZin(d, tp) {
     if (d && typeof d.hoofdopdracht === "string" && d.hoofdopdracht.trim()) return hoofdopdrachtNetjes(d.hoofdopdracht);
     const eerste = doeJijVorm(studioEersteZin(d.situatie || ""));
-    const wv = d.werkvorm && d.werkvorm.beschrijving ? doeJijVorm(studioEersteZin(d.werkvorm.beschrijving)) : "";
+    const wv = werkvormEigenTekst(d) ? doeJijVorm(studioEersteZin(werkvormEigenTekst(d))) : "";
     let z = studioIsDoeZin(eerste) ? eerste : wv && studioIsDoeZin(wv) ? wv : eerste || wv || d.titel || "";
+    if (d && d.bron === "studio" && !studioIsDoeZin(eerste) && !(wv && studioIsDoeZin(wv))) z = studioEersteZin(d.situatie || "") || d.titel || "";
     if (doeIsVmbo(tp)) z = studioPraktischeZin(studioDoeTaal(z));
     return z;
   }
@@ -87808,7 +88358,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
             /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "doe-stap-tekst", children: [
               /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "doe-stap-label", children: k === 0 ? "Dit ga je nu doen" : "Daarna" }),
               /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LTplat, { tekst: studioTekst(s2.titel, 90) || "Stap " + (k + 1), tp }) }),
-              s2.uitleg && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "doe-stap-uitleg", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LTplat, { tekst: studioEersteZin(s2.uitleg), tp }) })
+              s2.uitleg && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "doe-stap-uitleg", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LTplat, { tekst: stapKorteRegel(s2.uitleg), tp }) })
             ] })
           ] }, k)) }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "doe-stap-uitleg", children: "Volg de opdracht hierboven." }),
           meer > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "doe-meer", children: typeKey === "deep" ? "Daarna volgen nog " + meer + " stappen, steeds \xE9\xE9n tegelijk." : "Daarna nog " + meer + " korte " + (meer === 1 ? "stap" : "stappen") + "." })
@@ -87846,7 +88396,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
         ] })
       ] }),
       open === "uitleg" && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Popup, { titel: "Meer uitleg", onSluit: sluit, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "doe-pop", "data-doe": "uitleg", children: [
-        d.situatie && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LT, { tekst: d.situatie, tp }) }),
+        d.situatie && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StapInhoud, { stap: d.situatie, tp }),
         nodig.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("p", { className: "doe-feit", children: [
           /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "briefcase", size: 14 }),
           " ",
@@ -87878,14 +88428,26 @@ ${String(stapTekst).slice(0, 900)}` : ""
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "rubric", size: 20 }),
         " Wanneer heb ik het goed gedaan?"
       ] }), onSluit: sluit, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "doe-pop", "data-doe": "criteria", children: [
-        arr3(d.succescriteria).length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "doe-pop-intro", children: "Je bent klaar als:" }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "doe-lijst is-vink", children: arr3(d.succescriteria).slice(0, 5).map((x, k) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LT, { tekst: tekstVan(x), tp }) }, k)) })
-        ] }),
-        vragen && vragen.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "doe-pop-intro", children: "Hierop kijk je straks zelf terug" }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "doe-lijst", children: vragen.map((v, k) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LT, { tekst: v && v.v, tp }) }, k)) })
-        ] }),
+        (() => {
+          const alle = arr3(d.succescriteria).map(tekstVan).filter(Boolean);
+          const isVraag2 = (t) => d.bron === "studio" && /\?$/.test(String(t).trim());
+          const crit = alle.filter((t) => !isVraag2(t));
+          const toon = d.bron === "studio" ? crit : crit.slice(0, 5);
+          const terug = [.../* @__PURE__ */ new Set([...alle.filter(isVraag2), ...arr3(d.reflectievragen).map(tekstVan).filter(Boolean)])];
+          return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+            toon.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "doe-pop-intro", children: "Je bent klaar als:" }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { className: "doe-lijst is-vink", children: toon.map((x, k) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LT, { tekst: x, tp }) }, k)) })
+            ] }),
+            (terug.length > 0 || vragen && vragen.length > 0) && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { className: "doe-pop-intro", children: terug.length ? "Kijk terug" : "Hierop kijk je straks zelf terug" }),
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("ul", { className: "doe-lijst", "data-doe": "kijk-terug", children: [
+                terug.map((v, k) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LT, { tekst: v, tp }) }, "t" + k)),
+                (vragen || []).map((v, k) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("li", { children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LT, { tekst: v && v.v, tp }) }, k))
+              ] })
+            ] })
+          ] });
+        })(),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "doe-pop-voet", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "btn btn-licht", onClick: sluit, children: "Sluiten" }) })
       ] }) })
     ] });
@@ -87900,11 +88462,11 @@ ${String(stapTekst).slice(0, 900)}` : ""
       return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(Section, { eyebrow: `${themaLabel(rec.thema)} \xB7 ${rec.niveau}`, titel: "Jouw uitdaging", sub: `+${rec.xp} XP`, children: [
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(UitdagingFlow, { text: rec.markdown }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10, marginTop: 16 }, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(ExportKnop, { className: "btn btn-licht", actie: "print", wat: rec.data && rec.data.titel || themaLabel(rec.thema), onMaak: (st) => printNu(rec, st), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(ExportKnop, { rec, className: "btn btn-licht", actie: "print", wat: rec.data && rec.data.titel || themaLabel(rec.thema), onMaak: (st) => printNu(rec, st), children: [
             /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "print" }),
             " Print"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(ExportKnop, { className: "btn btn-licht", wat: rec.data && rec.data.titel || themaLabel(rec.thema), onMaak: (st) => downloadPdf(rec, st), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(ExportKnop, { rec, className: "btn btn-licht", wat: rec.data && rec.data.titel || themaLabel(rec.thema), onMaak: (st) => downloadPdf(rec, st), children: [
             /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "download" }),
             " PDF"
           ] }),
@@ -88212,7 +88774,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                   ] }),
                   /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "muted", style: { fontSize: ".84rem" }, children: praktijk.naam })
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { style: { fontSize: "1.02rem", lineHeight: 1.6, margin: 0 }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LT, { tekst: d.situatie, tp: tprofUitd }) }),
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StapInhoud, { stap: d.situatie, tp: tprofUitd }),
                 praktijk && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "praktijk-feiten", style: { marginTop: 14 }, children: [
                   /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "praktijk-feit", children: [
                     /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "clock", size: 13 }),
@@ -88331,7 +88893,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                   /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "camera", size: 15 }),
                   " Hoe laat je zien wat je hebt gedaan?"
                 ] }),
-                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("p", { style: { margin: "5px 0 0", fontSize: ".92rem", lineHeight: 1.5, color: "#3A4048" }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(LT, { tekst: d.bewijs, tp: tprofUitd }) })
+                /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "si-klein", style: { margin: "5px 0 0", color: "#3A4048" }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StapInhoud, { stap: d.bewijs, tp: tprofUitd }) })
               ] }),
               /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(BewijsVoorbeeldKaart, { rec }),
               rec.hulpmiddel && d.prestatie && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { style: { margin: "0 0 14px" }, children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(PgHulpmiddelBlok, { soort: rec.hulpmiddel.soort, waarde: rec.hulpmiddel, alleenLezen: true }) }),
@@ -88729,11 +89291,11 @@ ${String(stapTekst).slice(0, 900)}` : ""
                 /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "lu-save", size: 22 }),
                 /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Tip, { t: ibStand === "bezig" ? "Bezig met opslaan\u2026" : "Opslaan (later verder)" })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(ExportKnop, { className: "uitd-actie ib-knop", ariaLabel: "Printen", actie: "print", wat: titel, begeleider: false, onMaak: (st) => printNu(rec, { begeleider: false, ...st }), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(ExportKnop, { rec, className: "uitd-actie ib-knop", ariaLabel: "Printen", actie: "print", wat: titel, begeleider: false, onMaak: (st) => printNu(rec, { begeleider: false, ...st }), children: [
                 /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "lu-printer", size: 22 }),
                 /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Tip, { t: "Printen" })
               ] }),
-              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(ExportKnop, { className: "uitd-actie ib-knop", ariaLabel: "PDF downloaden", wat: titel, begeleider: false, onMaak: (st) => downloadPdf(rec, { begeleider: false, ...st }), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(ExportKnop, { rec, className: "uitd-actie ib-knop", ariaLabel: "PDF downloaden", wat: titel, begeleider: false, onMaak: (st) => downloadPdf(rec, { begeleider: false, ...st }), children: [
                 /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "lu-file-down", size: 22 }),
                 /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Tip, { t: "PDF downloaden" })
               ] }),
@@ -88753,11 +89315,11 @@ ${String(stapTekst).slice(0, 900)}` : ""
             /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "bewaar", size: 16 }),
             " Bewaar"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(ExportKnop, { className: "uitd-actie", ariaLabel: "Print", actie: "print", wat: rec.data && rec.data.titel || themaLabel(rec.thema), begeleider: !!begeleiderWeergave, onMaak: (st) => printNu(rec, { begeleider: begeleiderWeergave, ...st }), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(ExportKnop, { rec, className: "uitd-actie", ariaLabel: "Print", actie: "print", wat: rec.data && rec.data.titel || themaLabel(rec.thema), begeleider: !!begeleiderWeergave, onMaak: (st) => printNu(rec, { begeleider: begeleiderWeergave, ...st }), children: [
             /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "print", size: 16 }),
             " Print"
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(ExportKnop, { className: "uitd-actie", ariaLabel: "PDF", wat: rec.data && rec.data.titel || themaLabel(rec.thema), begeleider: !!begeleiderWeergave, onMaak: (st) => downloadPdf(rec, { begeleider: begeleiderWeergave, ...st }), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(ExportKnop, { rec, className: "uitd-actie", ariaLabel: "PDF", wat: rec.data && rec.data.titel || themaLabel(rec.thema), begeleider: !!begeleiderWeergave, onMaak: (st) => downloadPdf(rec, { begeleider: begeleiderWeergave, ...st }), children: [
             /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "pdf", size: 16 }),
             " Pdf"
           ] }),
@@ -89066,7 +89628,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const d = rec.data || {};
     let pm = { secties: [] };
     try {
-      pm = uitdagingPrintModel(rec, { begeleider: true });
+      pm = uitdagingPrintModelMd(rec, { begeleider: true });
     } catch {
     }
     const K2 = { overzicht: [], slag: [], stappen: [], afronden: [] };
@@ -89103,6 +89665,12 @@ ${String(stapTekst).slice(0, 900)}` : ""
       if (arr3(d.succescriteria).length) K2.afronden.push({ kop: "Succescriteria", blokken: [{ type: "lijst", items: arr3(d.succescriteria).map((x) => typeof x === "string" ? x : x && x.tekst || "").filter(Boolean) }] });
       if (arr3(d.reflectievragen).length) K2.afronden.push({ kop: "Reflectie", blokken: [{ type: "lijst", items: arr3(d.reflectievragen).map(String) }] });
       if (d.transfer) K2.afronden.push({ kop: "Transfer naar de praktijk", blokken: [{ type: "p", items: [String(d.transfer)] }] });
+    }
+    {
+      const bron = arr3(d.stappen);
+      K2.stappen.forEach((sec) => (sec.blokken || []).forEach((b) => {
+        if (b.type === "stappen" && b.items.length === bron.length && bron.every((x) => x && typeof x === "object")) b.items = b.items.map((it, i) => ({ ...it, bron: bron[i] }));
+      }));
     }
     const benodigd = arr3(d.benodigdheden).map(String);
     const bvLabels = arr3(d.bewijsvormen).map((b) => (BEWIJSVORMEN.find((x) => x.id === b) || { label: b }).label);
@@ -89143,8 +89711,10 @@ ${String(stapTekst).slice(0, 900)}` : ""
           /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "ub2-stapnr", "aria-hidden": "true", children: it.nr || ii + 1 }),
           /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { children: [
             it.titel && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: it.titel }),
-            it.titel && it.uitleg ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("br", {}) : null,
-            it.uitleg
+            it.bron && heeftVrijeOpmaak(it.bron.uitleg) ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("div", { className: "si-klein", children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StapInhoud, { stap: it.bron }) }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, { children: [
+              it.titel && it.uitleg ? /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("br", {}) : null,
+              it.uitleg
+            ] })
           ] })
         ] }, ii)) }, bi);
         if (b.type === "info") return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("dl", { className: "ub-info", children: b.items.map((it, ii) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)(import_react3.Fragment, { children: [
@@ -89623,6 +90193,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
       exp && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
         ExportKeuze,
         {
+          rec,
           wat,
           actie: exp === "print" ? "print" : void 0,
           standaard: "print",
@@ -92671,6 +93242,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
     }
   });
   var studioTekst = (v, max2 = 600) => String(v == null ? "" : v).replace(/<[^>]*>/g, "").replace(/javascript:/gi, "").replace(/\s+/g, " ").trim().slice(0, max2);
+  var studioTekstM = (v, max2 = 1500) => String(v == null ? "" : v).replace(/\r\n?/g, "\n").replace(/<[^>]*>/g, "").replace(/javascript:/gi, "").split("\n").map((r) => r.replace(/[ \t\u00a0]+/g, " ").trim()).join("\n").replace(/\n{3,}/g, "\n\n").trim().slice(0, max2);
   var studioLijst = (v, max2 = 12, len = 200) => (Array.isArray(v) ? v : []).map((x) => typeof x === "string" ? studioTekst(x, len) : x).filter((x) => x && (typeof x !== "string" || x.length)).slice(0, max2);
   function studioThemaLabel(d) {
     return d.thema === "eigen" ? studioTekst(d.themaEigen, 60) || "Eigen thema" : themaLabel(d.thema);
@@ -92700,6 +93272,19 @@ ${String(stapTekst).slice(0, 900)}` : ""
     if (!d.succescriteria.length) m.push("Minstens \xE9\xE9n succescriterium");
     return m;
   }
+  function studioIsReflectievraag(c) {
+    const t = String(typeof c === "string" ? c : c && c.tekst || "").trim();
+    return /\?$/.test(t) && (typeof c === "string" || !c.soort || c.soort === "reflectie" || /^(wat|hoe|waarom|welke?|wanneer|waar)\b/i.test(t));
+  }
+  function werkvormEigenTekst(d) {
+    const w = d && d.werkvorm;
+    if (!w || !w.beschrijving) return "";
+    if (d.bron === "studio") {
+      const std = WERKVORMEN.find((x) => x.naam === w.naam);
+      if (!std || String(std.beschrijving).trim() === String(w.beschrijving).trim()) return "";
+    }
+    return String(w.beschrijving);
+  }
   function studioNaarChallenge(st) {
     const d = st.data || {};
     const typeKey = d.challengeType === "auto" ? "core" : d.challengeType || "core";
@@ -92713,7 +93298,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
       thema: studioThemaLabel(d),
       subthema: studioSubLabel(d),
       niveau: d.niveau || "Silver",
-      situatie: studioTekst(d.beschrijving, 300) + (studioTekst(d.situatie, 700) ? " " + studioTekst(d.situatie, 700) : ""),
+      situatie: [studioTekstM(d.beschrijving, 600), studioTekstM(d.situatie, 1e3)].filter(Boolean).join("\n\n"),
       /* v112.7.3: de context (EVOT-situatie) staat achter 'Meer uitleg' */
       leerdoelen: studioLijst(d.leerdoelen, 5),
       competenties: studioLijst(d.competenties, 8),
@@ -92721,15 +93306,21 @@ ${String(stapTekst).slice(0, 900)}` : ""
       samenwerking: studioSamen(d),
       tijd: studioTijd(d),
       challengeType: STUDIO_TYPE_NAAM[typeKey] || "Core Challenge",
-      werkvorm: wv[0] ? { naam: wv[0].naam, beschrijving: wv[0].beschrijving, categorie: wv[0].type } : { naam: "Eigen opdracht", beschrijving: "", categorie: "praktisch" },
+      /* v114.6 (JB: "De inhoud die de docent in GROW Studio heeft ingevoerd, is leidend"): de werkvorm levert alleen naam en soort.
+         De standaardzin van de werkvorm ("Maak een mini-podcast van twee minuten …") gaat niet meer mee: die sprak de opdracht van
+         de docent tegen (duur, eindproduct). Geldt voor alle werkvormen. */
+      werkvorm: wv[0] ? { naam: wv[0].naam, beschrijving: "", categorie: wv[0].type } : { naam: "Eigen opdracht", beschrijving: "", categorie: "praktisch" },
       werkvormen: wv.map((w) => w.naam),
       eindproduct: wv.map((w) => w.naam).join(", "),
-      bewijs: studioTekst(d.bewijsOpdracht, 300) || (bewijsLabels.length ? "Laat zien wat je hebt gedaan met: " + bewijsLabels.join(", ").toLowerCase() + "." : ""),
+      bewijs: studioTekstM(d.bewijsOpdracht, 600) || (bewijsLabels.length ? "Laat zien wat je hebt gedaan met: " + bewijsLabels.join(", ").toLowerCase() + "." : ""),
       bewijsvormen: (d.bewijsvormen || []).map((id) => id === "reflectie" ? "tekst" : id),
       bewijsVereist: d.bewijsVereist || [],
-      stappen: studioLijst(d.stappen, 12).map((s2) => ({ titel: studioTekst(s2.titel, 80), uitleg: studioTekst(s2.uitleg, 400) + (studioTekst(s2.tip) ? " Tip: " + studioTekst(s2.tip, 200) : ""), bewijs: studioTekst(s2.bewijs, 200) || void 0 })),
-      succescriteria: studioLijst(d.succescriteria, 8).map((c) => typeof c === "string" ? c : studioTekst(c.tekst, 200)),
-      verdieping: studioTekst(d.verdieping, 600) || void 0,
+      /* v114.6: de instructie blijft zoals de docent hem typte (met regeleinden); de tip is een eigen veld en geen aangeplakte zin */
+      stappen: studioLijst(d.stappen, 12).map((s2) => ({ titel: studioTekst(s2.titel, 80), uitleg: studioTekstM(s2.uitleg, 1500), ...studioTekst(s2.tip, 300) ? { tip: studioTekst(s2.tip, 300) } : {}, bewijs: studioTekst(s2.bewijs, 200) || void 0 })),
+      /* v114.6: een reflectievraag is geen beoordelingscriterium. Criteria van de soort 'Reflectie' die een vraag zijn, gaan naar
+         'Kijk terug' (reflectievragen); al het andere blijft een criterium. Er verdwijnt niets. */
+      succescriteria: studioLijst(d.succescriteria, 8).filter((c) => !studioIsReflectievraag(c)).map((c) => typeof c === "string" ? c : studioTekst(c.tekst, 200)),
+      verdieping: studioTekstM(d.verdieping, 900) || void 0,
       bron: "studio",
       studioId: st.id,
       studioVersie: st.versie || 1,
@@ -92738,9 +93329,13 @@ ${String(stapTekst).slice(0, 900)}` : ""
       themaBeeld: studioBeeldVan(d) || void 0,
       eigenThema: d.thema === "eigen" && d.eigenThema ? { naam: studioTekst(d.eigenThema.naam, 60), omschrijving: studioTekst(d.eigenThema.omschrijving, 120), koppeling: d.eigenThema.koppeling || "" } : void 0
     };
-    ch.transfer = studioTekst(d.transfer, 400) || ch.verdieping || void 0;
+    ch.transfer = studioTekstM(d.transfer, 600) || ch.verdieping || void 0;
     if (isBsmThema(d.thema)) ch.bsm = bsmMeta(d.thema, d.subthema, "studio", Array.isArray(d.eindtermen) && d.eindtermen.length || d.pta ? { eindtermen: d.eindtermen || [], pta: d.pta } : void 0);
-    if (Array.isArray(d.reflectievragen) && d.reflectievragen.length) ch.reflectievragen = studioLijst(d.reflectievragen, 5, 200);
+    {
+      const vr = [...studioLijst(d.succescriteria, 8).filter(studioIsReflectievraag).map((c) => typeof c === "string" ? c : studioTekst(c.tekst, 200)), ...Array.isArray(d.reflectievragen) ? studioLijst(d.reflectievragen, 5, 200) : []];
+      const uniek2 = [...new Set(vr)];
+      if (uniek2.length) ch.reflectievragen = uniek2.slice(0, 8);
+    }
     if (d.evot && d.evot.methodiek) {
       const o = d.evot.origineel || {};
       ch.herkomst = { source: "EVOT", methodiek: d.evot.methodiek, bron: d.evot.bron };
@@ -92748,6 +93343,25 @@ ${String(stapTekst).slice(0, 900)}` : ""
       if (typeKey === "deep" && o.orientatie && o.orientatie.activiteit) ch.orientatie = { titel: "Ori\xEBntatie", uitleg: studioTekst(o.orientatie.activiteit, 500) };
     }
     return ch;
+  }
+  try {
+    if (typeof window !== "undefined" && window.__GROW_TEST) window.__growStudioTest = {
+      leeg: () => studioLeeg(),
+      schoon: (d) => studioDataSchoon(d),
+      record: (st, naam) => studioNaarRecord(st, naam),
+      model: (rec, o) => uitdagingPrintModel(rec, o || {}),
+      pdf: async (rec, variant, o) => {
+        const stijl = await exportStijl(variant, rec);
+        const uit = bouwUitdagingPdf(rec, { ...o || {}, ...stijl });
+        return { stijl: { variant: stijl.variant, omslagFout: !!stijl.omslagFout, omslagBron: stijl.omslagBron || null, omslag: stijl.omslag ? stijl.omslag.key : null }, b64: btoa(uit) };
+      },
+      blokken: (st) => weergaveInhoud(st),
+      signalen: (d) => studioTaalsignalen(d),
+      vervang: (d, sig) => studioVervangAfkorting(d, sig),
+      werkvormen: () => WERKVORMEN.map((w) => ({ naam: w.naam, beschrijving: w.beschrijving })),
+      omgevingen: () => OMGEVINGEN.map((o) => o.key)
+    };
+  } catch {
   }
   function studioNaarRecord(st, naam) {
     const ch = studioNaarChallenge(st);
@@ -92785,7 +93399,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const niveau = ["Bronze", "Silver", "Gold", "Platinum"].includes(v.niveau) ? v.niveau : d.niveau || "Silver";
     const werkvormen = studioLijst((Array.isArray(v.werkvormen) ? v.werkvormen : [v.werkvorm && (v.werkvorm.naam || v.werkvorm)]).filter(Boolean), 3, 80).filter((n) => WERKVORMEN.some((w) => w.naam === n));
     const bewijs = studioLijst(v.bewijsvormen, 4, 30).map((x) => String(x).toLowerCase()).filter((x) => STUDIO_BEWIJS.some((b) => b[0] === x));
-    const stappen = studioLijst(v.stappen, 8).map((s2) => typeof s2 === "string" ? { titel: studioTekst(s2, 80), uitleg: "", tip: "", bewijs: "" } : { titel: studioTekst(s2.titel, 80), uitleg: studioTekst(s2.uitleg || s2.instructie, 400), tip: studioTekst(s2.tip, 200), bewijs: studioTekst(s2.bewijs, 200) });
+    const stappen = studioLijst(v.stappen, 8).map((s2) => typeof s2 === "string" ? { titel: studioTekst(s2, 80), uitleg: "", tip: "", bewijs: "" } : { titel: studioTekst(s2.titel, 80), uitleg: studioTekstM(s2.uitleg || s2.instructie, 1500), tip: studioTekst(s2.tip, 200), bewijs: studioTekst(s2.bewijs, 200) });
     const crit = studioLijst(v.succescriteria, 6).map((c) => typeof c === "string" ? { tekst: studioTekst(c, 200), soort: "uitvoering" } : { tekst: studioTekst(c.tekst, 200), soort: STUDIO_CRITERIUM_SOORT.some((x) => x[0] === c.soort) ? c.soort : "uitvoering" });
     return {
       titel: studioTekst(v.titel, 100),
@@ -93564,8 +94178,21 @@ ${String(stapTekst).slice(0, 900)}` : ""
     }) || null;
   }
   var STUDIO_ONDERZOEK = /^(onderzoek|analyseer|verken|bestudeer|beschrijf|verklaar)\s+(wat|hoe|of|welke|waarom)?\s*(.+?)[.!?]*$/i;
+  var STUDIO_AFK_EIND = /(?:^|[\s(])(?:(?:[A-Za-z]\.){2,}|(?:bijv|bv|evt|incl|excl|ca|nr|vs|etc)\.)$/i;
   function studioZinnen(t) {
-    return String(t || "").split(/(?<=[.!?])\s+/).map((x) => x.trim()).filter(Boolean);
+    const uit = [];
+    String(t || "").split(/(?<=[.!?])\s+/).map((x) => x.trim()).filter(Boolean).forEach((x) => {
+      const v = uit[uit.length - 1];
+      if (v && STUDIO_AFK_EIND.test(v) && /^[a-zà-ÿ0-9]/.test(x)) uit[uit.length - 1] = v + " " + x;
+      else uit.push(x);
+    });
+    return uit;
+  }
+  function stapKorteRegel(uitleg) {
+    const u = String(uitleg || "");
+    if (!heeftVrijeOpmaak(u)) return studioEersteZin(u);
+    const r = (u.split("\n").map((x) => x.trim()).find(Boolean) || "").replace(/^(?:[-•*·–]\s+|\d+[.)]\s+|#+\s+)/, "").replace(/\*\*/g, "");
+    return studioEersteZin(r) || r;
   }
   function studioDoeTaal(t) {
     let u = String(t || "");
@@ -93831,7 +94458,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
     const d = {
       ...b,
       titel: studioTekst(v.titel, 100),
-      beschrijving: studioTekst(v.beschrijving, 300),
+      beschrijving: studioTekstM(v.beschrijving, 600),
       thema: v.thema === "eigen" ? "eigen" : THEMAS.some((t) => t.key === v.thema) || isBsmThema(v.thema) ? v.thema : "",
       themaEigen: v.thema === "eigen" ? studioTekst(eigenThema && eigenThema.naam || v.themaEigen, 60) : "",
       subthema: typeof v.subthema === "string" ? studioTekst(v.subthema, 60) : "",
@@ -93849,13 +94476,13 @@ ${String(stapTekst).slice(0, 900)}` : ""
       competenties: studioLijst(v.competenties, 8, 60),
       bewijsvormen: bewijs,
       bewijsVereist: studioLijst(v.bewijsVereist, 8, 30).filter((x) => bewijs.includes(x)),
-      bewijsOpdracht: studioTekst(v.bewijsOpdracht, 300),
-      verdieping: studioTekst(v.verdieping, 600),
-      situatie: studioTekst(v.situatie, 700),
-      transfer: studioTekst(v.transfer, 400),
+      bewijsOpdracht: studioTekstM(v.bewijsOpdracht, 600),
+      verdieping: studioTekstM(v.verdieping, 900),
+      situatie: studioTekstM(v.situatie, 1e3),
+      transfer: studioTekstM(v.transfer, 600),
       doorstroom: studioTekst(v.doorstroom, 300),
       reflectievragen: studioLijst(v.reflectievragen, 5, 200),
-      stappen: (Array.isArray(v.stappen) ? v.stappen : []).slice(0, 12).filter((s2) => s2 && typeof s2 === "object").map((s2) => ({ titel: studioTekst(s2.titel, 80), uitleg: studioTekst(s2.uitleg, 400), tip: studioTekst(s2.tip, 200), bewijs: studioTekst(s2.bewijs, 200) })),
+      stappen: (Array.isArray(v.stappen) ? v.stappen : []).slice(0, 12).filter((s2) => s2 && typeof s2 === "object").map((s2) => ({ titel: studioTekst(s2.titel, 80), uitleg: studioTekstM(s2.uitleg, 1500), tip: studioTekst(s2.tip, 300), bewijs: studioTekst(s2.bewijs, 200) })),
       succescriteria: (Array.isArray(v.succescriteria) ? v.succescriteria : []).slice(0, 8).map((c) => typeof c === "string" ? { tekst: studioTekst(c, 200), soort: "uitvoering" } : c && typeof c === "object" ? { tekst: studioTekst(c.tekst, 200), soort: STUDIO_CRITERIUM_SOORT.some((x) => x[0] === c.soort) ? c.soort : "uitvoering" } : null).filter((c) => c && c.tekst)
     };
     if (eigenThema) {
@@ -94014,6 +94641,103 @@ ${String(stapTekst).slice(0, 900)}` : ""
       ] })
     ] }) });
   }
+  function StudioRijkVeld({ value, onChange, rows = 4, maxLength = 1500, placeholder, ariaLabel, autoFocus }) {
+    const ref = (0, import_react3.useRef)(null);
+    const pas = (soort) => {
+      const el2 = ref.current;
+      if (!el2) return;
+      const v = String(value || "");
+      let a = el2.selectionStart || 0, b = el2.selectionEnd || 0;
+      let nieuw = v, na = b;
+      if (soort === "vet") {
+        const kern2 = v.slice(a, b) || "tekst";
+        nieuw = v.slice(0, a) + "**" + kern2 + "**" + v.slice(b);
+        na = a + kern2.length + 4;
+      } else {
+        const begin = v.lastIndexOf("\n", a - 1) + 1;
+        let eind = v.indexOf("\n", b);
+        if (eind < 0) eind = v.length;
+        const regels2 = v.slice(begin, eind).split("\n").map((r, i) => {
+          const kaal = r.replace(/^\s*(?:[-•*]\s+|\d+[.)]\s+|#+\s+)/, "");
+          return soort === "lijst" ? "- " + kaal : soort === "nummers" ? i + 1 + ". " + kaal : "# " + kaal;
+        });
+        nieuw = v.slice(0, begin) + regels2.join("\n") + v.slice(eind);
+        na = begin + regels2.join("\n").length;
+      }
+      if (nieuw.length > maxLength) return;
+      onChange(nieuw);
+      setTimeout(() => {
+        try {
+          el2.focus();
+          el2.setSelectionRange(na, na);
+        } catch {
+        }
+      }, 0);
+    };
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "studio-rijk", "data-studio": "rijkveld", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "studio-rijk-balk", role: "group", "aria-label": "Opmaak", children: [
+        [["lijst", "Opsomming", "\u2022 Lijst"], ["nummers", "Nummering", "1. Nummers"], ["vet", "Vet", "Vet"], ["kop", "Tussenkopje", "Kopje"]].map(([k, naam, label]) => /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "studio-rijk-knop" + (k === "vet" ? " is-vet" : ""), "aria-label": naam, title: naam, "data-rijk": k, onMouseDown: (e) => e.preventDefault(), onClick: () => pas(k), children: label }, k)),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "studio-rijk-hint", children: "Enter = nieuwe regel. Een link wordt vanzelf klikbaar." })
+      ] }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("textarea", { ref, className: "field studio-input", rows, maxLength, value: value || "", placeholder, autoFocus, onChange: (e) => onChange(e.target.value), "aria-label": ariaLabel })
+    ] });
+  }
+  var STUDIO_AFKORTINGEN = [["m.b.t.", "over"], ["d.m.v.", "met"], ["o.a.", "onder andere"], ["i.p.v.", "in plaats van"], ["t.o.v.", "vergeleken met"], ["m.b.v.", "met"], ["bijv.", "bijvoorbeeld"], ["bv.", "bijvoorbeeld"], ["evt.", "eventueel"], ["o.b.v.", "op basis van"], ["i.v.m.", "vanwege"], ["t.a.v.", "over"], ["n.a.v.", "naar aanleiding van"], ["m.u.v.", "behalve"], ["z.s.m.", "zo snel mogelijk"], ["a.d.h.v.", "aan de hand van"], ["incl.", "inclusief"], ["excl.", "zonder"]];
+  function studioTaalsignalen(d) {
+    const uit = [];
+    if (!d) return uit;
+    const velden2 = [
+      ["beschrijving", "Korte beschrijving", d.beschrijving],
+      ["situatie", "Situatie", d.situatie],
+      ["bewijsOpdracht", "Bewijsopdracht", d.bewijsOpdracht],
+      ...(Array.isArray(d.stappen) ? d.stappen : []).map((x, i) => ["stap:" + i, "Stap " + (i + 1), x && x.uitleg])
+    ];
+    const esc2 = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    velden2.forEach(([veld, naam, tekst3]) => {
+      const t = String(tekst3 || "");
+      if (!t.trim()) return;
+      const zin2 = ([].concat(...t.split(/\n+/).map(studioZinnen)).find((z) => /\b(?:de|een|iedere|elke)\s+leerling\b|\bde\s+leerlingen\b/i.test(z)) || "").trim();
+      if (zin2) uit.push({ veld, naam, soort: "aanspreekvorm", citaat: zin2.slice(0, 160), uitleg: "Deze zin gaat over de leerling. De leerling leest dit zelf: schrijf met je of jullie." + (/\bleerling\s+\S+t\b.*\ben\s+\S+en\b/i.test(zin2) ? " Let ook op enkelvoud en meervoud in deze zin." : "") });
+      STUDIO_AFKORTINGEN.forEach(([afk, voluit]) => {
+        if (new RegExp("(^|[\\s(])" + esc2(afk), "i").test(t)) uit.push({ veld, naam, soort: "afkorting", citaat: afk, voorstel: voluit, uitleg: "Afkorting. Voluit leest makkelijker: \u2018" + voluit + "\u2019." });
+      });
+    });
+    return uit;
+  }
+  function studioVervangAfkorting(d, sig) {
+    const re = new RegExp("(^|[\\s(])" + sig.citaat.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
+    const doe2 = (t) => String(t || "").replace(re, (m, voor) => voor + sig.voorstel);
+    if (sig.veld.startsWith("stap:")) {
+      const i = +sig.veld.slice(5);
+      return { stappen: d.stappen.map((x, j) => j === i ? { ...x, uitleg: doe2(x.uitleg) } : x) };
+    }
+    return { [sig.veld]: doe2(d[sig.veld]) };
+  }
+  function StudioTaalsignalen({ d, zet: zet2 }) {
+    const sig = studioTaalsignalen(d);
+    if (!sig.length) return null;
+    return /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "studio-taalsignalen", role: "note", "data-studio": "taalsignalen", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: "Taal voor de leerling" }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "studio-taal-sub", children: "Een voorstel. Er verandert niets tot je zelf iets aanpast." }),
+      /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("ul", { children: sig.map((x, i) => /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("li", { "data-taal": x.soort, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("i", { children: [
+            x.naam,
+            ":"
+          ] }),
+          " \u201C",
+          x.citaat,
+          "\u201D \u2014 ",
+          x.uitleg
+        ] }),
+        x.soort === "afkorting" && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { type: "button", className: "studio-pil is-klein", onClick: () => zet2(studioVervangAfkorting(d, x)), children: [
+          "Vervang door \u2018",
+          x.voorstel,
+          "\u2019"
+        ] })
+      ] }, i)) })
+    ] });
+  }
   function StudioStappenEditor({ stappen, onChange, max: max2 = 12, children }) {
     const l = stappen || [];
     const zetStap = (i, p) => onChange(l.map((x, j) => j === i ? { ...x, ...p } : x));
@@ -94036,7 +94760,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
             /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("button", { type: "button", className: "studio-icoonknop", "aria-label": "Verwijder stap " + (i + 1), onClick: () => onChange(l.filter((_, j) => j !== i)), children: /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(Icon, { name: "trash", size: 14 }) })
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("textarea", { className: "field studio-input", rows: 2, maxLength: 400, value: s2.uitleg, placeholder: "Duidelijke instructie", onChange: (e) => zetStap(i, { uitleg: e.target.value }), "aria-label": "Instructie stap " + (i + 1) }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StudioRijkVeld, { rows: 4, value: s2.uitleg, placeholder: "Duidelijke instructie. Zet keuzes, vragen of onderdelen elk op een eigen regel.", onChange: (v) => zetStap(i, { uitleg: v }), ariaLabel: "Instructie stap " + (i + 1) }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "studio-twee", children: [
           /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("input", { className: "field studio-input", maxLength: 200, value: s2.tip || "", placeholder: "Tip (optioneel)", onChange: (e) => zetStap(i, { tip: e.target.value }), "aria-label": "Tip stap " + (i + 1) }),
           /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("input", { className: "field studio-input", maxLength: 200, value: s2.bewijs || "", placeholder: "Bewijsopdracht bij deze stap (optioneel)", onChange: (e) => zetStap(i, { bewijs: e.target.value }), "aria-label": "Bewijs stap " + (i + 1) })
@@ -94511,7 +95235,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
                 /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "studio-nr", children: i + 1 }),
                 /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "okv-stap-velden", children: [
                   /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("input", { className: "field studio-input", maxLength: 80, value: s2.titel, placeholder: "Korte titel", onChange: (e) => zet2({ stappen: d.stappen.map((x, j) => j === i ? { ...x, titel: e.target.value } : x) }), "aria-label": "Titel stap " + (i + 1) }),
-                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("textarea", { className: "field studio-input", rows: 2, maxLength: 400, value: s2.uitleg, placeholder: "Wat doet de leerling?", onChange: (e) => zet2({ stappen: d.stappen.map((x, j) => j === i ? { ...x, uitleg: e.target.value } : x) }), "aria-label": "Instructie stap " + (i + 1) })
+                  /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StudioRijkVeld, { rows: 4, value: s2.uitleg, placeholder: "Wat doet de leerling?", onChange: (v) => zet2({ stappen: d.stappen.map((x, j) => j === i ? { ...x, uitleg: v } : x) }), ariaLabel: "Instructie stap " + (i + 1) })
                 ] })
               ] }, i) : /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("button", { type: "button", className: "studio-pil is-klein", onClick: () => zet2({ stappen: [...d.stappen || [], { titel: "", uitleg: "", tip: "", bewijs: "" }] }), children: [
                 /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(BewijsIcoon, { soort: "plus", size: 13 }),
@@ -94537,7 +95261,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
               /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "okv-stapnr", "aria-hidden": "true", children: i + 1 }),
               /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { children: [
                 /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("b", { children: studioTekst(s2.titel) || "Stap " + (i + 1) }),
-                studioTekst(s2.uitleg) && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "okv-stap-uitleg", children: studioEersteZin(s2.uitleg) })
+                studioTekst(s2.uitleg) && /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "okv-stap-uitleg", children: stapKorteRegel(s2.uitleg) })
               ] })
             ] }, i)) }) : /* @__PURE__ */ (0, import_jsx_runtime3.jsx)("span", { className: "okv-leeg", children: "E\xE9n of twee concrete stappen." }),
             stappen.length > 2 && /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("span", { className: "okv-meer-stappen", children: [
@@ -96168,6 +96892,7 @@ ${String(stapTekst).slice(0, 900)}` : ""
           " ",
           ontbreekt.join(" \xB7 ")
         ] }),
+        /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StudioTaalsignalen, { d, zet: zet2 }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(StudioOntwerpKaart, { st, zet: zet2, setSt, themas, onNieuwThema: () => setThemaModal({ start: null }), onBewerkThema: (t) => setThemaModal({ start: themas.find((x) => t && x.id === t.id) || t }), ingebed: true, platformNeo, onMelding: setMelding }),
         /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "studio-twee", children: [
           /* @__PURE__ */ (0, import_jsx_runtime3.jsxs)("div", { className: "studio-veld", children: [
